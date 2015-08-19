@@ -1,0 +1,6 @@
+#ifndef GAMEDATA_INTERFACE_H
+#define GAMEDATA_INTERFACE_H
+
+
+
+#endif
