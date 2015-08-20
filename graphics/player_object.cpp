@@ -1,27 +1,17 @@
 #include "player_object.h"
+#include <iostream>
 
 namespace GraphicsInterface
 {
 
 PlayerObject::PlayerObject()
 {
-
 }
 
 PlayerObject::~PlayerObject()
 {
-
 }
 
-void PlayerObject::setScaleX(double scale)
-{
-
-}
-
-void PlayerObject::setScaleY(double scale)
-{
-
-}
 
 void PlayerObject::setX(double x)
 {
@@ -33,7 +23,7 @@ void PlayerObject::setY(double y)
 
 }
 
-void PlayerObject::setZ(double z)
+void PlayerObject::setTh(double th)
 {
 
 }

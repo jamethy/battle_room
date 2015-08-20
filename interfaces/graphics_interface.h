@@ -21,11 +21,9 @@ enum AnimationType
 class DrawableObjectClass
 {
 public:
-    virtual void setScaleX(double scale) = 0;
-    virtual void setScaleY(double scale) = 0;
     virtual void setX(double x) = 0;
     virtual void setY(double y) = 0;
-    virtual void setZ(double z) = 0;
+    virtual void setTh(double th) = 0;
     virtual void startAnimation(AnimationType animation) = 0;
     virtual ~DrawableObjectClass();
 };

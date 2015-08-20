@@ -14,11 +14,9 @@ private:
 public:
     ~StarObject();
 
-    void setScaleX(double scale);
-    void setScaleY(double scale);
     void setX(double x);
     void setY(double y);
-    void setZ(double z);
+    void setTh(double th);
     void startAnimation(AnimationType animation);
 
     friend std::unique_ptr<DrawableObjectClass> createObject(ObjectType obj);
