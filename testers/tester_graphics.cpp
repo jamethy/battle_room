@@ -93,6 +93,11 @@ void objectHandlerSizeTest(objpair& op)
 
 
 
+void createWindowTest()
+{
+    UniqueGraphicsWindow w = createWindow(500,500);
+    check_test( w != nullptr, "createWindowTest 500 500");
+}
 
 
 int main()
@@ -104,8 +109,7 @@ int main()
     for(objpair& op : objs) moveObjectTest(op);
     for(objpair& op : objs) objectHandlerSizeTest(op);
 
-
-
+    createWindowTest();
 
     return 0;
 }

@@ -30,8 +30,20 @@ public:
 };
 
 typedef std::unique_ptr<DrawableObjectClass> UniqueDrawableObject;
-
 UniqueDrawableObject createObject(ObjectType obj);
+
+
+
+class GraphicsWindowClass
+{
+public:
+    virtual ~GraphicsWindowClass();
+    virtual void update() = 0;
+};
+
+
+typedef std::unique_ptr<GraphicsWindowClass> UniqueGraphicsWindow;
+UniqueGraphicsWindow createWindow(unsigned width, unsigned height);
 
 
 } // End GraphicsInterface
