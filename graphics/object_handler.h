@@ -4,7 +4,6 @@
 #include "../interfaces/graphics_interface.h"
 
 #include <vector>
-#include <memory>
 
 namespace GraphicsInterface
 {
@@ -12,27 +11,48 @@ namespace GraphicsInterface
 typedef std::vector< DrawableObjectClass* >::iterator ObjIt;
 
 
-class ObjectHandlerClass
+
+class ObjectVectorClass
+{
+
+public:
+
+    ObjIt begin();
+    ObjIt end();
+    unsigned int size();
+
+    ObjectVectorClass();
+    virtual ~ObjectVectorClass();
+
+protected:
+    std::vector< DrawableObjectClass* > m_objects;
+    void removeObject(DrawableObjectClass* obj);
+};
+
+
+
+
+
+class ObjectHandlerClass : public ObjectVectorClass
 {
 
 public:
 
     static ObjectHandlerClass* Instance();
 
-    void removeObject(DrawableObjectClass* obj);
-    void addObject(DrawableObjectClass* obj);
+    void update();
 
-    ObjIt begin();
-    ObjIt end();
-    unsigned int size();
+    void addObjectToAddQueue(DrawableObjectClass* obj);
+    void addObjectToRemoveQueue(DrawableObjectClass* obj);
+    ~ObjectHandlerClass();
 
 private:
     ObjectHandlerClass();
-    ~ObjectHandlerClass();
 
     static ObjectHandlerClass* m_ptr;
 
-    std::vector< DrawableObjectClass* > m_objects;
+    std::vector< DrawableObjectClass* > m_object_addqueue;
+    std::vector< DrawableObjectClass* > m_object_removequeue;
 };
 
 

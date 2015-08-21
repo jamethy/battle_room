@@ -68,11 +68,11 @@ void objectHandlerSizeTest(objpair& op)
     unsigned int start_size = ohc->size();
 
     // creating objects
-    UniqueDrawableObject obj1 = createObject(op.first);
+    UniqueDrawableObject obj1 = createObject(op.first); ohc->update();
     result = result && ohc->size() == start_size + 1;
-    UniqueDrawableObject obj2 = createObject(op.first);
+    UniqueDrawableObject obj2 = createObject(op.first); ohc->update();
     result = result && ohc->size() == start_size + 2;
-    UniqueDrawableObject obj3 = createObject(op.first);
+    UniqueDrawableObject obj3 = createObject(op.first); ohc->update();
     result = result && ohc->size() == start_size + 3;
 
     // looping over objects
@@ -81,11 +81,11 @@ void objectHandlerSizeTest(objpair& op)
     result = result && count == start_size + 3;
 
     // deleting objects
-    delete obj1.release();
+    delete obj1.release(); ohc->update();
     result = result && ohc->size() == start_size + 2;
-    delete obj2.release();
+    delete obj2.release(); ohc->update();
     result = result && ohc->size() == start_size + 1;
-    delete obj3.release();
+    delete obj3.release(); ohc->update();
     result = result && ohc->size() == start_size;
 
     check_test(result, "objectHandlerSizeTest " + op.second);
@@ -103,6 +103,9 @@ int main()
     for(objpair& op : objs) createObjectTest(op);
     for(objpair& op : objs) moveObjectTest(op);
     for(objpair& op : objs) objectHandlerSizeTest(op);
+
+
+
 
     return 0;
 }
