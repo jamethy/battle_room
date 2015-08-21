@@ -1,7 +1,7 @@
-project(utility)
+project(battleroom_utility)
 
 
-add_library(utility
+add_library(battleroom_utility SHARED
         vectors.h vectors.cpp
 	)
 

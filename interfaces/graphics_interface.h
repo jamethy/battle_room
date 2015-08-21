@@ -1,7 +1,10 @@
 #ifndef GRAPHICS_INTERFACE_H
 #define GRAPHICS_INTERFACE_H
 
+
 #include <memory>
+
+namespace Utility{ class vec2d; }
 
 namespace GraphicsInterface
 {
@@ -21,9 +24,7 @@ enum AnimationType
 class DrawableObjectClass
 {
 public:
-    virtual void setX(double x) = 0;
-    virtual void setY(double y) = 0;
-    virtual void setTh(double th) = 0;
+    virtual void setPos(Utility::vec2d& pos, double th) = 0;
     virtual void startAnimation(AnimationType animation) = 0;
     virtual ~DrawableObjectClass();
 };

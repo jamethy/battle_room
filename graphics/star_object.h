@@ -1,25 +1,21 @@
 #ifndef STAR_OBJECT_H
 #define STAR_OBJECT_H
 
-#include "../interfaces/graphics_interface.h"
+#include "graphics_layer.h"
 
 namespace GraphicsInterface
 {
 
-class StarObject : public DrawableObjectClass
+class StarObject : public GraphicsLayer
 {
-private:
-    StarObject();
 
 public:
+
     ~StarObject();
-
-    void setX(double x);
-    void setY(double y);
-    void setTh(double th);
-    void startAnimation(AnimationType animation);
-
     friend std::unique_ptr<DrawableObjectClass> createObject(ObjectType obj);
+
+private:
+    StarObject();
 };
 
 } // end GraphicsInterface

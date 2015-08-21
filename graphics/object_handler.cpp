@@ -46,7 +46,6 @@ ObjectHandlerClass::ObjectHandlerClass()
 
 ObjectHandlerClass::~ObjectHandlerClass()
 {
-    for (DrawableObjectClass* d : m_objects) delete d;
 }
 
 
@@ -78,6 +77,10 @@ void ObjectHandlerClass::addObject(DrawableObjectClass *obj)
     if (obj == nullptr) return;
     m_objects.push_back(obj);
 }
+
+ObjIt ObjectHandlerClass::begin() { return m_objects.begin(); }
+ObjIt ObjectHandlerClass::end() { return m_objects.end(); }
+unsigned int ObjectHandlerClass::size() { return m_objects.size(); }
 
 
 } // end GraphicsInterface

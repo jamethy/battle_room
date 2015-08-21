@@ -11,26 +11,4 @@ StarObject::~StarObject()
 {
 }
 
-
-void StarObject::setX(double x)
-{
-
-}
-
-void StarObject::setY(double y)
-{
-
-}
-
-void StarObject::setTh(double z)
-{
-
-}
-
-void StarObject::startAnimation(AnimationType animation)
-{
-
-}
-
-
 } // end GraphicsInterface

@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-namespace deathblade{
+namespace Utility{
 
 vec2d::vec2d(){}
 vec2d::vec2d(double x, double y) : m_x(x),m_y(y){}
