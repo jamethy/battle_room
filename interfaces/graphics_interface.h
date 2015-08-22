@@ -11,7 +11,7 @@ namespace GraphicsInterface
 
 enum ObjectType
 {
-    Player,
+    Player = 0,
     Star
 };
 
