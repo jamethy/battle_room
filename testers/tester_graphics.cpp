@@ -96,7 +96,27 @@ void objectHandlerSizeTest(objpair& op)
 void createWindowTest()
 {
     UniqueGraphicsWindow w = createWindow(500,500);
-    check_test( w != nullptr, "createWindowTest 500 500");
+    check_test( w.get() != nullptr, "createWindowTest 500 500");
+}
+
+
+void drawObjects(objpair& op)
+{
+    bool result = false;
+    UniqueGraphicsWindow w = createWindow(500,500);
+    if (w.get() != nullptr)
+    {
+        UniqueDrawableObject obj1 = createObject(op.first);
+        UniqueDrawableObject obj2 = createObject(op.first);
+        UniqueDrawableObject obj3 = createObject(op.first);
+
+        for(unsigned i = 0; i < 100; ++i)
+        {
+            w->update();
+        }
+    }
+
+    check_test( result, "drawObjects " + op.second);
 }
 
 
@@ -110,6 +130,7 @@ int main()
     for(objpair& op : objs) objectHandlerSizeTest(op);
 
     createWindowTest();
+    for(objpair& op : objs) drawObjects(op);
 
     return 0;
 }

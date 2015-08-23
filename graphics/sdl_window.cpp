@@ -1,5 +1,6 @@
 #include "sdl_window.h"
 #include "object_handler.h"
+#include "graphics_layer.h"
 
 #include <iostream>
 #include <memory>
@@ -36,17 +37,16 @@ SDLWindowClass::SDLWindowClass(unsigned width, unsigned height)
         throw std::exception();
     }
 
-    m_window = SDL_CreateWindow("deathblade_floating", 0, 0, width, height, SDL_WINDOW_SHOWN);
+    m_window = UniqueWindow(SDL_CreateWindow("deathblade_floating", 0, 0, width, height, SDL_WINDOW_SHOWN),SDL_Deleter());
     if (m_window == nullptr){
         std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         throw std::exception();
     }
 
-    m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+    m_renderer = UniqueRenderer(SDL_CreateRenderer(m_window.get(), -1, SDL_RENDERER_ACCELERATED),SDL_Deleter());
     if (m_renderer == nullptr){
         std::cerr << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
-        SDL_DestroyWindow(m_window);
         SDL_Quit();
         throw std::exception();
     }
@@ -54,8 +54,6 @@ SDLWindowClass::SDLWindowClass(unsigned width, unsigned height)
 
 SDLWindowClass::~SDLWindowClass()
 {
-    SDL_DestroyRenderer(m_renderer);
-    SDL_DestroyWindow(m_window);
     SDL_Quit();
 }
 
@@ -65,30 +63,31 @@ void SDLWindowClass::update()
     objs->update();
 
 
-    SDL_SetRenderDrawColor(m_renderer, 0,0,0,255);
-    SDL_RenderClear(m_renderer);
+    SDL_SetRenderDrawColor(m_renderer.get(), 0,0,0,255);
+    SDL_RenderClear(m_renderer.get());
 
 
 
 
-    SDL_RenderPresent(m_renderer);
+    SDL_RenderPresent(m_renderer.get());
 
 }
 
-void SDLWindowClass::draw_object(DrawableObjectClass &obj)
+bool SDLWindowClass::draw_object(GraphicsLayer &obj)
 {
-    /*SDL_Texture* obj_texture = (SDL_Texture*)obj.getTexture();
+    SDL_Texture* obj_texture = getTexture(obj.getType());
     if(obj_texture == NULL) return;
 
-    SDL_Rect dst = camera->calculate_display_destination(
-                x,
-                y,
-                texturewidth,
-                textureheight,
-                zplane);
+    Utility::vec2d pos = obj.getPos();
+    double th = obj.getTh();
 
-    SDL_RenderCopyEx(m_renderer, obj_texture, NULL, &dst, (th-camera->camyaw)*180.0/3.14159265359, NULL, SDL_FLIP_NONE);
-*/
+    SDL_Rect dst; // = getFromCamera(pos,th)
+    double TH; // getFromCamera(th)
+
+    return SDL_RenderCopyEx(m_renderer,
+                            obj_texture, NULL, &dst,
+                            TH,
+                            NULL, SDL_FLIP_NONE) != 0;
 }
 
 SDL_Texture *SDLWindowClass::getTexture(ObjectType object_type)
@@ -124,7 +123,7 @@ SDL_Texture* SDLWindowClass::loadTexture(ObjectType object_type)
     default:
         return nullptr;
     }
-    return IMG_LoadTexture(m_renderer, resource.c_str());
+    return IMG_LoadTexture(m_renderer.get(), resource.c_str());
 }
 
 std::string getResourcePath(const std::string &subDir){

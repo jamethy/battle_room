@@ -12,6 +12,7 @@ class PlayerObject : public GraphicsLayer
 public:
 
     ~PlayerObject();
+    ObjectType getType(){return Player;}
     friend std::unique_ptr<DrawableObjectClass> createObject(ObjectType obj);
 
 private:

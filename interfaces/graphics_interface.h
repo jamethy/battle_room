@@ -12,11 +12,13 @@ namespace GraphicsInterface
 enum ObjectType
 {
     Player = 0,
-    Star
+    Star,
+    TestObject
 };
 
 enum AnimationType
 {
+    NoAnimation = 0,
     TestAnimation
 };
 

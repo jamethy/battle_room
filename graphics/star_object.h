@@ -12,6 +12,7 @@ class StarObject : public GraphicsLayer
 public:
 
     ~StarObject();
+    ObjectType getType(){return Star;}
     friend std::unique_ptr<DrawableObjectClass> createObject(ObjectType obj);
 
 private:

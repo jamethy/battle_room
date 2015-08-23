@@ -19,7 +19,9 @@ struct SDL_Deleter
   void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p); }
 };
 
+typedef std::unique_ptr<SDL_Window,SDL_Deleter> UniqueWindow;
 typedef std::unique_ptr<SDL_Texture,SDL_Deleter> UniqueTexture;
+typedef std::unique_ptr<SDL_Renderer,SDL_Deleter> UniqueRenderer;
 
 class SDLWindowClass : public GraphicsWindowClass
 {
@@ -30,10 +32,10 @@ public:
 
 private:
 
-    void draw_object(DrawableObjectClass& obj);
+    bool draw_object(GraphicsLayer &obj);
 
-    SDL_Window* m_window = nullptr;
-    SDL_Renderer* m_renderer = nullptr;
+    UniqueWindow m_window;
+    UniqueRenderer m_renderer;
 
     SDL_Texture* loadTexture(ObjectType object_type);
     SDL_Texture *getTexture(ObjectType object_type);
