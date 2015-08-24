@@ -2,6 +2,8 @@
 #define SDL_WINDOW_H
 
 #include "../interfaces/graphics_interface.h"
+#include "../graphics/sdl_animations.h"
+#include "../graphics/camera.h"
 
 #include "SDL_image.h"
 #include "SDL_ttf.h"
@@ -12,17 +14,6 @@
 namespace GraphicsInterface
 {
 
-struct SDL_Deleter
-{
-  void operator()(SDL_Window *p) const { SDL_DestroyWindow(p); }
-  void operator()(SDL_Renderer *p) const { SDL_DestroyRenderer(p); }
-  void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p); }
-};
-
-typedef std::unique_ptr<SDL_Window,SDL_Deleter> UniqueWindow;
-typedef std::unique_ptr<SDL_Texture,SDL_Deleter> UniqueTexture;
-typedef std::unique_ptr<SDL_Renderer,SDL_Deleter> UniqueRenderer;
-
 class SDLWindowClass : public GraphicsWindowClass
 {
 public:
@@ -32,13 +23,17 @@ public:
 
 private:
 
-    bool draw_object(GraphicsLayer &obj);
+    void draw_object(GraphicsLayer &obj);
+
+    double getDrawTime();
+    void updateDrawTime();
+    double m_drawTime;
+
 
     UniqueWindow m_window;
     UniqueRenderer m_renderer;
+    CameraClass cam;
 
-    SDL_Texture* loadTexture(ObjectType object_type);
-    SDL_Texture *getTexture(ObjectType object_type);
     std::vector<UniqueTexture> m_textures;
 };
 

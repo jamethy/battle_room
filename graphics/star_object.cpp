@@ -11,4 +11,11 @@ StarObject::~StarObject()
 {
 }
 
+void StarObject::startAnimation(AnimationType animation)
+{
+    m_animation = createAnimation(getType(), animation);
+}
+
+
+
 } // end GraphicsInterface

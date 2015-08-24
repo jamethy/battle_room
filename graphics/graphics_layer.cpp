@@ -1,8 +1,9 @@
 #include "graphics_layer.h"
-#include "../utility/vectors.h"
 
 namespace GraphicsInterface
 {
+
+AnimationBaseClass::~AnimationBaseClass(){}
 
 GraphicsLayer::GraphicsLayer()
 {
@@ -23,10 +24,25 @@ double &GraphicsLayer::getTh()
     return m_th;
 }
 
+void GraphicsLayer::update()
+{
+    m_animation->setPlayerPos(getPos(),getTh());
+}
+
 void GraphicsLayer::setPos(Utility::vec2d &pos, double th)
 {
     m_pos = pos;
     m_th = th;
+}
+
+AnimationBaseClass *GraphicsLayer::getAnimation(double time)
+{
+    m_animation->update(time);
+    if(m_animation->isComplete())
+    {
+        m_animation = createAnimation(getType(),m_animation->after());
+    }
+    return m_animation.get();
 }
 
 

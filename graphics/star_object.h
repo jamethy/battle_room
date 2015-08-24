@@ -13,7 +13,8 @@ public:
 
     ~StarObject();
     ObjectType getType(){return Star;}
-    friend std::unique_ptr<DrawableObjectClass> createObject(ObjectType obj);
+    void startAnimation(AnimationType animation);
+    friend UniqueDrawableObject createObject(ObjectType obj);
 
 private:
     StarObject();

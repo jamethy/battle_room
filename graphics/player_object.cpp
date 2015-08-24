@@ -12,5 +12,10 @@ PlayerObject::~PlayerObject()
 {
 }
 
+void PlayerObject::startAnimation(AnimationType animation)
+{
+    m_animation = createAnimation(getType(), animation);
+}
+
 
 } // end GraphicsInterface

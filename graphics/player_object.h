@@ -13,7 +13,8 @@ public:
 
     ~PlayerObject();
     ObjectType getType(){return Player;}
-    friend std::unique_ptr<DrawableObjectClass> createObject(ObjectType obj);
+    void startAnimation(AnimationType animation);
+    friend UniqueDrawableObject createObject(ObjectType obj);
 
 private:
     PlayerObject();

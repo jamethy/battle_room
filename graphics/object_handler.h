@@ -2,13 +2,14 @@
 #define OBJECT_HANDLER_H
 
 #include "../interfaces/graphics_interface.h"
+#include "../graphics/graphics_layer.h"
 
 #include <vector>
 
 namespace GraphicsInterface
 {
 
-typedef std::vector< DrawableObjectClass* >::iterator ObjIt;
+typedef std::vector< GraphicsLayer* >::iterator ObjIt;
 
 
 
@@ -25,8 +26,8 @@ public:
     virtual ~ObjectVectorClass();
 
 protected:
-    std::vector< DrawableObjectClass* > m_objects;
-    void removeObject(DrawableObjectClass* obj);
+    std::vector< GraphicsLayer* > m_objects;
+    void removeObject(GraphicsLayer* obj);
 };
 
 
@@ -42,8 +43,8 @@ public:
 
     void update();
 
-    void addObjectToAddQueue(DrawableObjectClass* obj);
-    void addObjectToRemoveQueue(DrawableObjectClass* obj);
+    void addObjectToAddQueue(GraphicsLayer* obj);
+    void addObjectToRemoveQueue(GraphicsLayer* obj);
     ~ObjectHandlerClass();
 
 private:
@@ -51,8 +52,8 @@ private:
 
     static ObjectHandlerClass* m_ptr;
 
-    std::vector< DrawableObjectClass* > m_object_addqueue;
-    std::vector< DrawableObjectClass* > m_object_removequeue;
+    std::vector< GraphicsLayer* > m_object_addqueue;
+    std::vector< GraphicsLayer* > m_object_removequeue;
 };
 
 

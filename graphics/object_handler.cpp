@@ -11,7 +11,8 @@ namespace GraphicsInterface
 
 DrawableObjectClass::~DrawableObjectClass()
 {
-    ObjectHandlerClass::Instance()->addObjectToRemoveQueue(this);
+    GraphicsLayer* gl = dynamic_cast<GraphicsLayer*>(this);
+    ObjectHandlerClass::Instance()->addObjectToRemoveQueue(gl);
 }
 
 
@@ -38,7 +39,7 @@ UniqueDrawableObject createObject(ObjectType obj)
 
     }
 
-    ObjectHandlerClass::Instance()->addObjectToAddQueue(retobj.get());
+    ObjectHandlerClass::Instance()->addObjectToAddQueue((GraphicsLayer*)retobj.get());
     return retobj;
 }
 
@@ -56,9 +57,9 @@ ObjIt ObjectVectorClass::begin() { return m_objects.begin(); }
 ObjIt ObjectVectorClass::end() { return m_objects.end(); }
 unsigned int ObjectVectorClass::size() { return m_objects.size(); }
 
-void ObjectVectorClass::removeObject(DrawableObjectClass *obj)
+void ObjectVectorClass::removeObject(GraphicsLayer *obj)
 {
-    std::vector<DrawableObjectClass*>::reverse_iterator rd;
+    std::vector<GraphicsLayer*>::reverse_iterator rd;
     for (rd = m_objects.rbegin(); rd != m_objects.rend(); std::advance(rd,1))
     {
         if (*rd == obj)
@@ -92,22 +93,24 @@ ObjectHandlerClass* ObjectHandlerClass::Instance()
 
 void ObjectHandlerClass::update()
 {
-    for(DrawableObjectClass* addobj : m_object_addqueue) m_objects.push_back(addobj);
+    for(GraphicsLayer* addobj : m_object_addqueue) m_objects.push_back(addobj);
     m_object_addqueue.clear();
 
-    for(DrawableObjectClass* remobj : m_object_removequeue) removeObject(remobj);
+    for(GraphicsLayer* remobj : m_object_removequeue) removeObject(remobj);
     m_object_removequeue.clear();
+
+    for(GraphicsLayer* obj : m_objects) obj->update();
 }
 
 
-void ObjectHandlerClass::addObjectToAddQueue(DrawableObjectClass *obj)
+void ObjectHandlerClass::addObjectToAddQueue(GraphicsLayer *obj)
 {
     if (obj == nullptr) return;
     m_object_addqueue.push_back(obj);
 }
 
 
-void ObjectHandlerClass::addObjectToRemoveQueue(DrawableObjectClass *obj)
+void ObjectHandlerClass::addObjectToRemoveQueue(GraphicsLayer *obj)
 {
     if (obj == nullptr) return;
     m_object_removequeue.push_back(obj);
