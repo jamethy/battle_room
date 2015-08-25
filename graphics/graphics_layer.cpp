@@ -5,8 +5,9 @@ namespace GraphicsInterface
 
 AnimationBaseClass::~AnimationBaseClass(){}
 
-GraphicsLayer::GraphicsLayer()
+GraphicsLayer::GraphicsLayer(ObjectType type) : m_type(type)
 {
+    m_animation = createAnimation(getType(), NoAnimation);
 }
 
 GraphicsLayer::~GraphicsLayer()
@@ -26,7 +27,8 @@ double &GraphicsLayer::getTh()
 
 void GraphicsLayer::update()
 {
-    m_animation->setPlayerPos(getPos(),getTh());
+    if(m_animation != nullptr)
+        m_animation->setPosition(getPos(),getTh());
 }
 
 void GraphicsLayer::setPos(Utility::vec2d &pos, double th)
@@ -43,6 +45,11 @@ AnimationBaseClass *GraphicsLayer::getAnimation(double time)
         m_animation = createAnimation(getType(),m_animation->after());
     }
     return m_animation.get();
+}
+
+ObjectType GraphicsLayer::getType()
+{
+    return m_type;
 }
 
 

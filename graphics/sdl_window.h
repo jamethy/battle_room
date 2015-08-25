@@ -37,9 +37,6 @@ private:
     std::vector<UniqueTexture> m_textures;
 };
 
-
-std::string getResourcePath(const std::string &subDir = "");
-
 }
 
 #endif // SDL_WINDOW_H

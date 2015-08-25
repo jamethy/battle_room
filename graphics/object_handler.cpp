@@ -1,6 +1,4 @@
 #include "object_handler.h"
-#include "player_object.h"
-#include "star_object.h"
 
 namespace GraphicsInterface
 {
@@ -11,7 +9,7 @@ namespace GraphicsInterface
 
 DrawableObjectClass::~DrawableObjectClass()
 {
-    GraphicsLayer* gl = dynamic_cast<GraphicsLayer*>(this);
+    GraphicsLayer* gl = (GraphicsLayer*)this;
     ObjectHandlerClass::Instance()->addObjectToRemoveQueue(gl);
 }
 
@@ -22,23 +20,7 @@ DrawableObjectClass::~DrawableObjectClass()
 
 UniqueDrawableObject createObject(ObjectType obj)
 {
-    UniqueDrawableObject retobj;
-
-    switch (obj)
-    {
-
-    case Player:
-        retobj = UniqueDrawableObject(new PlayerObject());
-        break;
-    case Star:
-        retobj = UniqueDrawableObject(new StarObject());
-        break;
-    default:
-        return nullptr;
-        break;
-
-    }
-
+    UniqueDrawableObject retobj = UniqueDrawableObject(new GraphicsLayer(obj));
     ObjectHandlerClass::Instance()->addObjectToAddQueue((GraphicsLayer*)retobj.get());
     return retobj;
 }

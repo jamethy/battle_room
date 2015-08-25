@@ -5,8 +5,8 @@ add_library(battleroom_graphics SHARED
         object_handler.h object_handler.cpp
         camera.h camera.cpp
         graphics_layer.h graphics_layer.cpp
-        player_object.h player_object.cpp
-        star_object.h star_object.cpp
+        animation_player.h animation_player.cpp
+        animation_star.h animation_star.cpp
         sdl_window.h sdl_window.cpp
         sdl_animations.h sdl_animations.cpp
         )

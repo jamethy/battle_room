@@ -1,8 +1,6 @@
 #include "interfaces/graphics_interface.h"
 #include "graphics/object_handler.h"
 #include "graphics/graphics_layer.h"
-#include "graphics/player_object.h"
-#include "graphics/star_object.h"
 
 #include "utility/br_vectors.h"
 
@@ -31,7 +29,8 @@ void check_test(bool result, std::string name)
 void createObjectTest(objpair& op)
 {
     UniqueDrawableObject p1 = createObject(op.first);
-    if(p1 != nullptr) check_test( op.second.compare(typeid(*p1).name())==0, "createObject " + op.second);
+    GraphicsLayer* gl = (GraphicsLayer*)p1.get();
+    if(p1 != nullptr) check_test( op.first == gl->getType(), "createObject " + op.second);
     else check_test(false, "createObjectTest " + op.second);
 }
 
@@ -46,7 +45,7 @@ void moveObjectTest(objpair& op)
     double th = 3;
 
     obj->setPos(pos,th);
-    GraphicsLayer* gl = dynamic_cast<GraphicsLayer*>( obj.get() );
+    GraphicsLayer* gl = (GraphicsLayer*)obj.get();
 
     if(gl != nullptr)
     {
@@ -102,17 +101,21 @@ void createWindowTest()
 
 void drawObjects(objpair& op)
 {
-    bool result = false;
+    Utility::vec2d pos(0.25,0.25);
+    bool result = true;
     UniqueGraphicsWindow w = createWindow(500,500);
-    if (w.get() != nullptr)
+    if (w.get() == nullptr) result = false;
+    else
     {
-        UniqueDrawableObject obj1 = createObject(op.first);
-        UniqueDrawableObject obj2 = createObject(op.first);
-        UniqueDrawableObject obj3 = createObject(op.first);
+        UniqueDrawableObject obj1 = createObject(op.first); obj1->setPos(pos,0);
+        UniqueDrawableObject obj2 = createObject(op.first); obj2->setPos(pos,0);
+        UniqueDrawableObject obj3 = createObject(op.first); obj3->setPos(pos,0);
 
-        for(unsigned i = 0; i < 100; ++i)
+        for(unsigned i = 0; i < 60; ++i)
         {
+            std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
             w->update();
+            std::this_thread::sleep_until(t1+std::chrono::milliseconds(17));
         }
     }
 
@@ -122,8 +125,8 @@ void drawObjects(objpair& op)
 
 int main()
 {
-    objs.push_back(make_pair( Player, typeid(PlayerObject).name() ));
-    objs.push_back(make_pair( Star, typeid(StarObject).name() ));
+    objs.push_back(make_pair( Player, "Player" ));
+    objs.push_back(make_pair( Star, "Star" ));
 
     for(objpair& op : objs) createObjectTest(op);
     for(objpair& op : objs) moveObjectTest(op);

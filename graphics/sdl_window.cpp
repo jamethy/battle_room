@@ -70,10 +70,7 @@ void SDLWindowClass::update()
     SDL_SetRenderDrawColor(m_renderer.get(), 0,0,0,255);
     SDL_RenderClear(m_renderer.get());
 
-    for (DrawableObjectClass* obj : *objs)
-    {
-
-    }
+    for (GraphicsLayer* obj : *objs) draw_object(*obj);
 
 
     SDL_RenderPresent(m_renderer.get());
@@ -93,7 +90,7 @@ double SDLWindowClass::getDrawTime()
 
 void SDLWindowClass::updateDrawTime()
 {
-    m_drawTime = Utility::TimeBase::getTime();
+    m_drawTime = Utility::getTime();
 }
 
 

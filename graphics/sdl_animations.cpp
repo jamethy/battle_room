@@ -1,4 +1,6 @@
 #include "sdl_animations.h"
+#include "animation_player.h"
+#include "animation_star.h"
 
 #include "../utility/br_time.h"
 
@@ -46,158 +48,24 @@ UniqueTexture getUniqueTexture(SDL_Renderer* renderer, std::string str)
 ////// SDLAnimationClass //////////////////////////////////////////////////////////////////////
 ////// SDLAnimationClass //////////////////////////////////////////////////////////////////////
 SDLAnimationClass::SDLAnimationClass(double duration) :
-    m_starttime(Utility::TimeBase::getTime()),
+    m_starttime(Utility::getTime()),
     m_duration(duration)
 {
 
 }
 
-void SDLAnimationClass::setPlayerPos(Utility::vec2d& pos, double th)
+void SDLAnimationClass::setPosition(Utility::vec2d& pos, double th)
 {
     m_playerPos = pos;
     m_playerTh = th;
 }
 
-Utility::vec2d& SDLAnimationClass::getPlayerPos(){ return m_playerPos; }
-double SDLAnimationClass::getPlayerTh(){ return m_playerTh; }
-
-typedef std::map<SDL_Renderer*, UniqueTexture> TextureMap;
-
-////// PlayerAnimation //////////////////////////////////////////////////////////////////////
-////// PlayerAnimation //////////////////////////////////////////////////////////////////////
-////// PlayerAnimation //////////////////////////////////////////////////////////////////////
-class PlayerAnimation : public SDLAnimationClass
-{
-public:
-    PlayerAnimation(double duration): SDLAnimationClass(duration){}
-    virtual ~PlayerAnimation(){}
-
-    static TextureMap textureMap;
-    double playerWidth = 0.1;
-    double playerHeight = 0.1;
-    Utility::vec2d PlayerCenter;
-};
-
-TextureMap PlayerAnimation::textureMap = TextureMap();
-
-class PlayerNoAnimation : public PlayerAnimation
-{
-public:
-    PlayerNoAnimation() : PlayerAnimation(0) {}
-    ~PlayerNoAnimation(){}
-    void update(double time){}
-    bool isComplete(){ return false; }
-    AnimationType after(){ return NoAnimation; }
-
-    void renderOn(SDL_Renderer* renderer, CameraClass& cam)
-    {
-        SDL_Texture* texture = PlayerAnimation::textureMap[renderer].get();
-        if(texture == nullptr) PlayerAnimation::textureMap[renderer] = getUniqueTexture(renderer, "initialstar.png");
-
-        ScreenPos sp = cam.posFromWorld(getPlayerPos());
-
-        SDL_Rect dst_rect;
-        dst_rect.x = sp.x();
-        dst_rect.y = sp.y();
-        dst_rect.w = cam.wFromWorld(playerWidth);
-        dst_rect.h = cam.hFromWorld(playerHeight);
-
-
-        SDL_Point center;
-        center.x = cam.wFromWorld(PlayerCenter.x());
-        center.y = cam.hFromWorld(PlayerCenter.y());
-
-        SDL_RenderCopyEx(renderer,
-                        texture,
-                        src_rect,
-                        &dst_rect,
-                        getPlayerTh(),
-                        &center, SDL_FLIP_NONE);
-    }
-    SDL_Rect* src_rect = nullptr;
-};
-
-
-////// StarAnimation //////////////////////////////////////////////////////////////////////
-////// StarAnimation //////////////////////////////////////////////////////////////////////
-////// StarAnimation //////////////////////////////////////////////////////////////////////
-
-class StarAnimation : public SDLAnimationClass
-{
-public:
-    StarAnimation(double duration): SDLAnimationClass(duration){}
-    virtual ~StarAnimation(){}
-
-    static TextureMap textureMap;
-    double playerWidth = 0.1;
-    double playerHeight = 0.1;
-    Utility::vec2d PlayerCenter;
-};
-
-TextureMap StarAnimation::textureMap = TextureMap();
-
-
-class StarNoAnimation : public StarAnimation
-{
-public:
-    StarNoAnimation() : StarAnimation(0) {}
-    ~StarNoAnimation(){}
-    void update(double time){}
-    bool isComplete(){ return false; }
-    AnimationType after(){ return NoAnimation; }
-
-    void renderOn(SDL_Renderer* renderer, CameraClass& cam)
-    {
-        SDL_Texture* texture = StarAnimation::textureMap[renderer].get();
-        if(texture == nullptr) StarAnimation::textureMap[renderer] = getUniqueTexture(renderer, "initialcharacter.png");
-
-        ScreenPos sp = cam.posFromWorld(getPlayerPos());
-
-        SDL_Rect dst_rect;
-        dst_rect.x = sp.x();
-        dst_rect.y = sp.y();
-        dst_rect.w = cam.wFromWorld(playerWidth);
-        dst_rect.h = cam.hFromWorld(playerHeight);
-
-
-        SDL_Point center;
-        center.x = cam.wFromWorld(PlayerCenter.x());
-        center.y = cam.hFromWorld(PlayerCenter.y());
-
-        SDL_RenderCopyEx(renderer,
-                        texture,
-                        src_rect,
-                        &dst_rect,
-                        getPlayerTh(),
-                        &center, SDL_FLIP_NONE);
-    }
-    SDL_Rect* src_rect = nullptr;
-};
-
-
+Utility::vec2d& SDLAnimationClass::getPosition(){ return m_playerPos; }
+double SDLAnimationClass::getTheta(){ return m_playerTh; }
 
 ////// Create Functions //////////////////////////////////////////////////////////////////////
 ////// Create Functions //////////////////////////////////////////////////////////////////////
 ////// Create Functions //////////////////////////////////////////////////////////////////////
-UniqueAnimation createPlayerAnimation(AnimationType animation)
-{
-    switch (animation) {
-    case NoAnimation:
-        return UniqueAnimation(new PlayerNoAnimation());
-    default:
-        return UniqueAnimation(new PlayerNoAnimation());
-    }
-}
-
-UniqueAnimation createStarAnimation(AnimationType animation)
-{
-    switch (animation) {
-    case NoAnimation:
-        return UniqueAnimation(new StarNoAnimation());
-    default:
-        return UniqueAnimation(new StarNoAnimation());
-    }
-}
 
 UniqueAnimation createAnimation(ObjectType obj, AnimationType animation)
 {

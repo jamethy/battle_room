@@ -2,7 +2,7 @@
 #define OBJECT_HANDLER_H
 
 #include "../interfaces/graphics_interface.h"
-#include "../graphics/graphics_layer.h"
+#include "graphics_layer.h"
 
 #include <vector>
 

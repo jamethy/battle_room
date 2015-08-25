@@ -20,9 +20,9 @@ public:
     virtual AnimationType after() = 0;
 
     // Position update functions
-    virtual void setPlayerPos(Utility::vec2d& pos, double th) = 0;
-    virtual Utility::vec2d& getPlayerPos() = 0;
-    virtual double getPlayerTh() = 0;
+    virtual void setPosition(Utility::vec2d& pos, double th) = 0;
+    virtual Utility::vec2d& getPosition() = 0;
+    virtual double getTheta() = 0;
 };
 
 typedef std::unique_ptr<AnimationBaseClass> UniqueAnimation;
@@ -32,17 +32,18 @@ class GraphicsLayer : public DrawableObjectClass
 
 public:
 
-    virtual Utility::vec2d& getPos();
-    virtual double& getTh();
-    virtual ObjectType getType() = 0;
-    virtual void update();
+    Utility::vec2d& getPos();
+    double& getTh();
+    void update();
 
     // inherited from DrawableObjectClass
-    virtual void setPos(Utility::vec2d& pos, double th);
-    virtual void startAnimation(AnimationType animation) = 0;
-    virtual AnimationBaseClass* getAnimation(double time);
+    void setPos(Utility::vec2d& pos, double th);
+    void startAnimation(AnimationType animation);
+    AnimationBaseClass* getAnimation(double time);
 
-    GraphicsLayer();
+
+    ObjectType getType();
+    GraphicsLayer(ObjectType type);
     virtual ~GraphicsLayer();
 
 protected:
@@ -50,6 +51,9 @@ protected:
     Utility::vec2d m_pos;
     double m_th = 0;
     UniqueAnimation m_animation;
+
+private:
+    ObjectType m_type;
 };
 
 UniqueAnimation createAnimation(ObjectType obj, AnimationType animation);

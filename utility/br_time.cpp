@@ -3,20 +3,16 @@
 
 namespace Utility {
 
-TimeBase* TimeBase::m_time = nullptr;
-TimeBase::~TimeBase(){}
-
-
 typedef std::chrono::steady_clock clock;
 typedef std::chrono::duration<double> seconds;
 
-class ChronoTime : public TimeBase
+class ChronoTime
 {
 public:
     ChronoTime();
     ~ChronoTime();
-    double m_getTime();
-    void m_resetTime(double offset);
+    double getTime();
+    void resetTime(double offset);
 private:
 
     clock::time_point m_start;
@@ -31,30 +27,28 @@ ChronoTime::ChronoTime() :
 
 ChronoTime::~ChronoTime(){}
 
-double ChronoTime::m_getTime()
+double ChronoTime::getTime()
 {
     seconds time_span = std::chrono::duration_cast< seconds > (clock::now() - m_start);
     return time_span.count() + m_offset;
 }
 
-void ChronoTime::m_resetTime(double offset)
+void ChronoTime::resetTime(double offset)
 {
     m_start = clock::now();
     m_offset = offset;
 }
 
+ChronoTime m_time;
 
-
-double TimeBase::getTime()
+double getTime()
 {
-    if(m_time == nullptr) m_time = new ChronoTime();
-    return m_time->getTime();
+    return m_time.getTime();
 }
 
-void TimeBase::resetTime(double offset)
+void resetTime(double offset)
 {
-    if(m_time == nullptr) m_time = new ChronoTime();
-    m_time->resetTime(offset);
+    m_time.resetTime(offset);
 }
 
 } // Utility namespace

@@ -37,9 +37,9 @@ public:
     virtual void update(double time) = 0;
     virtual bool isComplete() = 0;
     virtual AnimationType after() = 0;
-    virtual void setPlayerPos(Utility::vec2d& pos, double th);
-    Utility::vec2d& getPlayerPos();
-    double getPlayerTh();
+    virtual void setPosition(Utility::vec2d& pos, double th);
+    Utility::vec2d& getPosition();
+    double getTheta();
 
 private:
     double m_duration;
@@ -47,6 +47,9 @@ private:
     Utility::vec2d m_playerPos;
     double m_playerTh;
 };
+
+
+std::string getResourcePath(const std::string &subDir = "");
 
 } // GraphicsInterface namespace
 #endif // SDL_ANIMATIONS_H
