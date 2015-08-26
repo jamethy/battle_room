@@ -12,7 +12,7 @@ CameraClass::CameraClass(int width, int height, double fieldOfView) :
     m_camz(7.5),
     m_fov(fieldOfView)
 {
-    getZeroCalculator().setCameraPos(m_camera_pos,m_camth,m_camz);
+    getZeroCalculator().setCameraPos(getCameraPosition());
 }
 
 
@@ -21,7 +21,7 @@ CameraClass::~CameraClass()
 
 }
 
-void CameraClass::setCameraBounds(WorldPos& min, WorldPos& max)
+void CameraClass::setCameraBounds(const WorldPos& min, const WorldPos& max)
 {
     m_minview = min;
     m_maxview = max;
@@ -32,35 +32,51 @@ void CameraClass::setWindowSize(int width, int height)
     getZeroCalculator().setWindowProperties(width,height,m_fov);
 }
 
+void CameraClass::setCameraPosition(const CameraPos &pos)
+{
+    m_camera_pos = pos.pos;
+    m_camz = pos.z;
+    m_camth = pos.th;
+}
+
+CameraPos CameraClass::getCameraPosition()
+{
+    return CameraPos(m_camera_pos,m_camz,m_camth);
+}
 
 
-void CameraClass::moveInX(double changeInX)
+
+void CameraClass::moveInX(const double& changeInX)
 {
     m_camera_pos.x() += changeInX;
-    checkBounds();
 }
 
-void CameraClass::moveInY(double changeInY)
+void CameraClass::moveInY(const double& changeInY)
 {
     m_camera_pos.y() += changeInY;
-    checkBounds();
 }
 
-void CameraClass::moveInZ(double changeInZ)
+void CameraClass::moveInZ(const double& changeInZ)
 {
     m_camz += changeInZ;
-    checkBounds();
+}
+
+void CameraClass::rotate(const double& changeInTh)
+{
+    m_camth += changeInTh;
 }
 
 void CameraClass::update()
 {
-    getZeroCalculator().setCameraPos(m_camera_pos,m_camth,m_camz);
+    checkBounds();
+    getZeroCalculator().setCameraPos(getCameraPosition());
 }
 
 ZeroCalculator &CameraClass::getZeroCalculator()
 {
     return m_zerocalculator;
 }
+
 
 void CameraClass::checkBounds()
 {
@@ -91,12 +107,12 @@ void ZeroCalculator::setWindowProperties(int width, int height, double fieldOfVi
    m_fov = fieldOfView;
 }
 
-void ZeroCalculator::setCameraPos(const WorldPos &pos, const double &theta, const double &z)
+void ZeroCalculator::setCameraPos(const CameraPos &pos)
 {
-    m_camera_pos = pos;
-    m_camera_th = theta;
+    m_camera_pos = pos.pos;
+    m_camera_th = pos.th;
 
-    double width_of_view = 2.0*z*std::tan(m_fov/2.0); // in meters
+    double width_of_view = 2.0*pos.z*std::tan(m_fov/2.0); // in meters
     m_ppm_at_zero = m_window_width/width_of_view;
 }
 
@@ -165,6 +181,15 @@ double ZeroCalculator::wFromScreen(double w)
 double ZeroCalculator::hFromScreen(double h)
 {
     return h/m_ppm_at_zero;
+}
+
+
+CameraPos::CameraPos(){}
+CameraPos::CameraPos(const WorldPos& position, const double& Z, const double& theta)
+    :pos(position), z(Z), th(theta) {}
+bool operator==(const CameraPos& a, const CameraPos& b)
+{
+    return (a.pos == b.pos) && (a.z == b.z) && (a.th == b.th);
 }
 
 } // end

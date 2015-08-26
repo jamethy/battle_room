@@ -6,8 +6,18 @@
 namespace GraphicsInterface
 {
 
-typedef Utility::vec2d WorldPos;
-typedef Utility::vec2i ScreenPos;
+using Utility::WorldPos;
+using Utility::ScreenPos;
+
+struct CameraPos
+{
+    CameraPos();
+    CameraPos(const WorldPos& position, const double& Z, const double& theta);
+
+    WorldPos pos;
+    double z;
+    double th;
+};
 
 class ZeroCalculator
 {
@@ -16,7 +26,7 @@ public:
     ~ZeroCalculator();
 
     void setWindowProperties(int width, int height, double fieldOfView);
-    void setCameraPos(const WorldPos& pos, const double& theta, const double& z);
+    void setCameraPos(const CameraPos& pos);
 
     int xFromWorld(WorldPos& pos);
     int yFromWorld(WorldPos& pos);
@@ -50,12 +60,16 @@ public:
     CameraClass(int width, int height, double fieldOfView = 1.3083);
     ~CameraClass();
 
-    void setCameraBounds(WorldPos& min, WorldPos& max);
+    void setCameraBounds(const WorldPos &min, const WorldPos &max);
     void setWindowSize(int width, int height);
 
-    void moveInX(double changeInX);
-    void moveInY(double changeInY);
-    void moveInZ(double changeInZ);
+    void setCameraPosition(const CameraPos& pos);
+    CameraPos getCameraPosition();
+
+    void moveInX(const double& changeInX);
+    void moveInY(const double& changeInY);
+    void moveInZ(const double& changeInZ);
+    void rotate(const double& changeInTh);
 
     void update();
 
@@ -77,6 +91,10 @@ private:
     double m_fov; // radians
 
 };
+
+
+bool operator==(const CameraPos& a, const CameraPos& b);
+
 }
 
 #endif // CAMERA_H

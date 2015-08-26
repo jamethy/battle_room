@@ -1,6 +1,7 @@
 #include "interfaces/graphics_interface.h"
 #include "graphics/object_handler.h"
 #include "graphics/graphics_layer.h"
+#include "graphics/camera.h"
 
 #include "utility/br_vectors.h"
 
@@ -13,6 +14,7 @@
 
 using namespace std;
 using namespace GraphicsInterface;
+using namespace Utility;
 
 typedef pair<ObjectType,string> objpair;
 vector<objpair> objs;
@@ -122,6 +124,66 @@ void drawObjects(objpair& op)
     check_test( result, "drawObjects " + op.second);
 }
 
+void setCameraPosition()
+{
+    bool result = true;
+    CameraClass cam(500,500);
+    cam.setCameraBounds(WorldPos(-5000,-50000),WorldPos(50000,50000));
+
+    CameraPos campos(WorldPos(1,2),3,4);
+
+    cam.setCameraPosition(campos);
+    CameraPos newpos = cam.getCameraPosition();
+
+    result = result && newpos.pos == WorldPos(1,2);
+    result = result && newpos.th == 3;
+    result = result && newpos.z == 4;
+
+    check_test( result, "setCameraPosition");
+}
+
+void moveCamera()
+{
+    bool result = true;
+    CameraClass cam(500,500);
+    cam.setCameraBounds(WorldPos(-5000,-50000),WorldPos(50000,50000));
+
+    CameraPos campos(WorldPos(0,0),0,0);
+    cam.setCameraPosition(campos);
+    cam.moveInX(2); cam.moveInY(3); cam.moveInZ(4); cam.rotate(1);
+    CameraPos newpos = cam.getCameraPosition();
+
+    result = result && newpos.pos == WorldPos(2,3);
+    result = result && newpos.z == 4;
+    result = result && newpos.th == 1;
+
+    check_test( result, "moveCamera");
+}
+
+
+void moveCameraOutOfBounds()
+{
+    bool result = true;
+    CameraClass cam(500,500);
+    cam.setCameraBounds(WorldPos(-50,-50),WorldPos(50,50));
+    typedef std::pair<CameraPos,bool> campair; // position and if in bounds
+
+    std::vector<campair> cam_positions;
+    cam_positions.push_back(campair(CameraPos(WorldPos(0,0),0,0),true));
+    cam_positions.push_back(campair(CameraPos(WorldPos(10000,0),0,0),false));
+
+    for(campair& p : cam_positions)
+    {
+        cam.setCameraPosition(p.first);
+        cam.update();
+        bool at_pos = (p.first == cam.getCameraPosition());
+        result = result && (at_pos == p.second);
+    }
+
+    check_test( result, "moveCameraOutOfBounds");
+
+}
+
 
 int main()
 {
@@ -134,6 +196,9 @@ int main()
 
     createWindowTest();
     for(objpair& op : objs) drawObjects(op);
+
+    moveCamera();
+    moveCameraOutOfBounds();
 
     return 0;
 }
