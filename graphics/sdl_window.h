@@ -19,6 +19,7 @@ class SDLWindowClass : public GraphicsWindowClass
 public:
     SDLWindowClass(unsigned width, unsigned height);
     ~SDLWindowClass();
+    void setViewBounds(Utility::vec2d& worldMin, Utility::vec2d& worldMax);
     void update();
 
 private:

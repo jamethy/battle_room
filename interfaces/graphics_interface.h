@@ -40,6 +40,7 @@ class GraphicsWindowClass
 {
 public:
     virtual ~GraphicsWindowClass();
+    virtual void setViewBounds(Utility::vec2d& worldMin, Utility::vec2d& worldMax) = 0;
     virtual void update() = 0;
 };
 

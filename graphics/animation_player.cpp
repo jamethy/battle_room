@@ -37,27 +37,22 @@ public:
     bool isComplete(){ return false; }
     AnimationType after(){ return NoAnimation; }
 
-    void renderOn(SDL_Renderer* renderer, CameraClass& cam)
+    void renderOn(SDL_Renderer* renderer, ZeroCalculator& camcalc)
     {
-        ScreenPos sp = cam.posFromWorld(getPosition());
+        ScreenPos sp = camcalc.posFromWorld(getPosition());
 
         SDL_Rect dst_rect;
         dst_rect.x = sp.x();
         dst_rect.y = sp.y();
-        dst_rect.w = cam.wFromWorld(0.05);
-        dst_rect.h = cam.hFromWorld(0.05);
-
-
-        SDL_Point center;
-        center.x = cam.wFromWorld(0.5);
-        center.y = cam.hFromWorld(0.5);
+        dst_rect.w = camcalc.wFromWorld(1);
+        dst_rect.h = camcalc.hFromWorld(1);
 
         SDL_RenderCopyEx(renderer,
                         getTexture(renderer),
                         src_rect,
                         &dst_rect,
                         getTheta(),
-                        &center, SDL_FLIP_NONE);
+                        nullptr, SDL_FLIP_NONE);
     }
     SDL_Rect* src_rect = nullptr;
 };

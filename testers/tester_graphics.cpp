@@ -101,7 +101,7 @@ void createWindowTest()
 
 void drawObjects(objpair& op)
 {
-    Utility::vec2d pos(0.25,0.25);
+    Utility::vec2d pos(0,0);
     bool result = true;
     UniqueGraphicsWindow w = createWindow(500,500);
     if (w.get() == nullptr) result = false;

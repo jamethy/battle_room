@@ -85,6 +85,9 @@ private:
     int m_y = 0; ///< Second position in the vector
 };
 
+typedef vec2d WorldPoint;
+typedef vec2i ScreenPoint;
+
 } // Utility namespace
 
 #endif // BR_VECTORS_H

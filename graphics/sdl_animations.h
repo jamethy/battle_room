@@ -31,7 +31,7 @@ public:
     SDLAnimationClass(){}
     virtual ~SDLAnimationClass(){}
 
-    virtual void renderOn(SDL_Renderer* renderer, CameraClass& cam) = 0;
+    virtual void renderOn(SDL_Renderer* renderer, ZeroCalculator& camcalc) = 0;
 
     // Time update functions
     virtual void update(double time) = 0;
@@ -42,10 +42,10 @@ public:
     double getTheta();
 
 private:
-    double m_duration;
     double m_starttime;
-    Utility::vec2d m_playerPos;
-    double m_playerTh;
+    double m_duration;
+    Utility::vec2d m_position;
+    double m_th;
 };
 
 

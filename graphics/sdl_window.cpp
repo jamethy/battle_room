@@ -27,6 +27,7 @@ UniqueGraphicsWindow createWindow(unsigned width, unsigned height)
 }
 
 SDLWindowClass::SDLWindowClass(unsigned width, unsigned height)
+    : cam(CameraClass(width,height))
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
         std::cerr << "SDL_Init error: " << SDL_GetError() << std::endl;
@@ -59,6 +60,15 @@ SDLWindowClass::~SDLWindowClass()
     SDL_Quit();
 }
 
+
+
+void SDLWindowClass::setViewBounds(Utility::vec2d& worldMin, Utility::vec2d& worldMax)
+{
+    cam.setCameraBounds(worldMin,worldMax);
+}
+
+
+
 void SDLWindowClass::update()
 {
     updateDrawTime();
@@ -80,7 +90,7 @@ void SDLWindowClass::update()
 void SDLWindowClass::draw_object(GraphicsLayer &obj)
 {
     SDLAnimationClass* animation = (SDLAnimationClass*)obj.getAnimation(getDrawTime());
-    animation->renderOn(m_renderer.get(), cam);
+    animation->renderOn(m_renderer.get(), cam.getZeroCalculator());
 }
 
 double SDLWindowClass::getDrawTime()

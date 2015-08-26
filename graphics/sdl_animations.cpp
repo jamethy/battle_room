@@ -56,12 +56,12 @@ SDLAnimationClass::SDLAnimationClass(double duration) :
 
 void SDLAnimationClass::setPosition(Utility::vec2d& pos, double th)
 {
-    m_playerPos = pos;
-    m_playerTh = th;
+    m_position = pos;
+    m_th = th;
 }
 
-Utility::vec2d& SDLAnimationClass::getPosition(){ return m_playerPos; }
-double SDLAnimationClass::getTheta(){ return m_playerTh; }
+Utility::vec2d& SDLAnimationClass::getPosition(){ return m_position; }
+double SDLAnimationClass::getTheta(){ return m_th; }
 
 ////// Create Functions //////////////////////////////////////////////////////////////////////
 ////// Create Functions //////////////////////////////////////////////////////////////////////
