@@ -53,6 +53,7 @@ private:
 
 std::string getResourcePath(const std::string &subDir = "");
 UniqueTexture loadUniqueTexture(SDL_Renderer* renderer, std::string str);
+bool isInFrame(SDL_Rect& rect, int window_width, int window_height);
 
 } // GraphicsInterface namespace
 #endif // SDL_ANIMATIONS_H

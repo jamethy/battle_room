@@ -36,6 +36,9 @@ public:
 
     void renderOn(SDL_Renderer* renderer, ZeroCalculator& camcalc)
     {
+        SDL_Texture* texture = getTexture(renderer);
+        if(texture == nullptr) return;
+
         ScreenPos sp = camcalc.posFromWorld(getPosition());
 
         SDL_Rect dst_rect;
@@ -43,13 +46,16 @@ public:
         dst_rect.y = sp.y();
         dst_rect.w = camcalc.wFromWorld(2);
         dst_rect.h = camcalc.hFromWorld(2);
+        if(isInFrame(dst_rect,camcalc.getWindowWidth(), camcalc.getWindowHeight()))
+        {
 
-        SDL_RenderCopyEx(renderer,
-                        getTexture(renderer),
-                        src_rect,
-                        &dst_rect,
-                        getTheta(),
-                        nullptr, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(renderer,
+                            texture,
+                            src_rect,
+                            &dst_rect,
+                            getTheta(),
+                            nullptr, SDL_FLIP_NONE);
+        }
 
     }
     SDL_Rect* src_rect = nullptr;

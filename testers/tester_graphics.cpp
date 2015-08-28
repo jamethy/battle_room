@@ -137,7 +137,7 @@ void setCameraPosition()
 
     result = result && newpos.pos == WorldPos(1,2);
     result = result && newpos.th == 3;
-    result = result && newpos.z == 4;
+    result = result && newpos._z == 4;
 
     check_test( result, "setCameraPosition");
 }
@@ -154,7 +154,7 @@ void moveCamera()
     CameraPos newpos = cam.getCameraPosition();
 
     result = result && newpos.pos == WorldPos(2,3);
-    result = result && newpos.z == 4;
+    result = result && newpos._z == 4;
     result = result && newpos.th == 1;
 
     check_test( result, "moveCamera");

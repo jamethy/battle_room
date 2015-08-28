@@ -9,9 +9,7 @@ using Utility::ScreenPos;
 
 CameraClass::CameraClass(int width, int height, double fieldOfView) :
     m_zerocalculator(width, height, fieldOfView),
-    m_camera_pos(WorldPos(0,0)),
-    m_camth(0),
-    m_camz(7.5),
+    m_camera_pos(WorldPos(0,0),7.5,0),
     m_fov(fieldOfView),
     m_window_width(width),
     m_window_height(height)
@@ -40,14 +38,12 @@ void CameraClass::setWindowSize(int width, int height)
 
 void CameraClass::setCameraPosition(const CameraPos &pos)
 {
-    m_camera_pos = pos.pos;
-    m_camz = pos.z;
-    m_camth = pos.th;
+    m_camera_pos = pos;
 }
 
 CameraPos CameraClass::getCameraPosition()
 {
-    return CameraPos(m_camera_pos,m_camz,m_camth);
+    return m_camera_pos;
 }
 
 
@@ -64,12 +60,12 @@ void CameraClass::moveInY(const double& changeInY)
 
 void CameraClass::moveInZ(const double& changeInZ)
 {
-    m_camz += changeInZ;
+    m_camera_pos.z() += changeInZ;
 }
 
 void CameraClass::rotate(const double& changeInTh)
 {
-    m_camth += changeInTh;
+    m_camera_pos.th += changeInTh;
     calculateBounds();
 }
 
@@ -88,25 +84,27 @@ ZeroCalculator &CameraClass::getZeroCalculator()
 void CameraClass::checkBounds()
 {
 
-    double camx = m_camera_pos.x();
-    double camy = m_camera_pos.y();
+    double& camx = m_camera_pos.x();
+    double& camy = m_camera_pos.y();
+    double& camz = m_camera_pos.z();
+    double& camth = m_camera_pos.th;
 
-    double minx = -m_camz*tan(m_fov/2)   + camx*cos(-m_camth) - camy*sin(-m_camth);
-    double miny = -m_camz*tan(m_fov_h/2) + camx*sin(-m_camth) + camy*cos(-m_camth);
-    double maxx =  m_camz*tan(m_fov/2)   + camx*cos(-m_camth) - camy*sin(-m_camth);
-    double maxy =  m_camz*tan(m_fov_h/2) + camx*sin(-m_camth) + camy*cos(-m_camth);
+    double minx = -camz*tan(m_fov/2)   + camx*cos(-camth) - camy*sin(-camth);
+    double miny = -camz*tan(m_fov_h/2) + camx*sin(-camth) + camy*cos(-camth);
+    double maxx =  camz*tan(m_fov/2)   + camx*cos(-camth) - camy*sin(-camth);
+    double maxy =  camz*tan(m_fov_h/2) + camx*sin(-camth) + camy*cos(-camth);
 
     if (camx < m_minbound.x())
         camx = m_minbound.x();
     else if (camx > m_maxbound.x())
         camx = m_maxbound.x();
     else if (maxx > m_maxview_w){
-        camx -=  (maxx-m_maxview_w)*cos(-m_camth);
-        camy -= -(maxx-m_maxview_w)*sin(-m_camth);
+        camx -=  (maxx-m_maxview_w)*cos(-camth);
+        camy -= -(maxx-m_maxview_w)*sin(-camth);
     }
     else if (minx < m_minview_w){
-        camx -=  (minx-m_minview_w)*cos(-m_camth);
-        camy -= -(minx-m_minview_w)*sin(-m_camth);
+        camx -=  (minx-m_minview_w)*cos(-camth);
+        camy -= -(minx-m_minview_w)*sin(-camth);
     }
 
     if (camy < m_minbound.y())
@@ -114,50 +112,50 @@ void CameraClass::checkBounds()
     else if (camy > m_maxbound.y())
         camy = m_maxbound.y();
     else if (maxy > m_maxview_h){
-        camx -= (maxy-m_maxview_h)*sin(-m_camth);
-        camy -= (maxy-m_maxview_h)*cos(-m_camth);
+        camx -= (maxy-m_maxview_h)*sin(-camth);
+        camy -= (maxy-m_maxview_h)*cos(-camth);
     }
     else if (miny < m_minview_h){
-        camx -= (miny-m_minview_h)*sin(-m_camth);
-        camy -= (miny-m_minview_h)*cos(-m_camth);
+        camx -= (miny-m_minview_h)*sin(-camth);
+        camy -= (miny-m_minview_h)*cos(-camth);
     }
-
-    m_camera_pos = WorldPos(camx,camy);
 
 }
 
 void CameraClass::calculateBounds()
 {
 
+    double& camth = m_camera_pos.th;
+
     // find horizontal
-    m_minview_w = m_minbound.x()*cos(-m_camth) - m_minbound.y()*sin(-m_camth);
+    m_minview_w = m_minbound.x()*cos(-camth) - m_minbound.y()*sin(-camth);
     m_maxview_w = m_minview_w;
 
-    double p = m_minbound.x()*cos(-m_camth) - m_maxbound.y()*sin(-m_camth);
+    double p = m_minbound.x()*cos(-camth) - m_maxbound.y()*sin(-camth);
     if (p < m_minview_w) m_minview_w = p;
     else if (p > m_maxview_w) m_maxview_w = p;
 
-    p = m_maxbound.x()*cos(-m_camth) - m_maxbound.y()*sin(-m_camth);
+    p = m_maxbound.x()*cos(-camth) - m_maxbound.y()*sin(-camth);
     if (p < m_minview_w) m_minview_w = p;
     else if (p > m_maxview_w) m_maxview_w = p;
 
-    p = m_maxbound.x()*cos(-m_camth) - m_minbound.y()*sin(-m_camth);
+    p = m_maxbound.x()*cos(-camth) - m_minbound.y()*sin(-camth);
     if (p < m_minview_w) m_minview_w = p;
     else if (p > m_maxview_w) m_maxview_w = p;
 
     // find vertical
-    m_minview_h = m_minbound.x()*sin(-m_camth) + m_minbound.y()*cos(-m_camth);
+    m_minview_h = m_minbound.x()*sin(-camth) + m_minbound.y()*cos(-camth);
     m_maxview_h = m_minview_h;
 
-    p = m_minbound.x()*sin(-m_camth) + m_maxbound.y()*cos(-m_camth);
+    p = m_minbound.x()*sin(-camth) + m_maxbound.y()*cos(-camth);
     if (p < m_minview_h) m_minview_h = p;
     else if (p > m_maxview_h) m_maxview_h = p;
 
-    p = m_maxbound.x()*sin(-m_camth) + m_maxbound.y()*cos(-m_camth);
+    p = m_maxbound.x()*sin(-camth) + m_maxbound.y()*cos(-camth);
     if (p < m_minview_h) m_minview_h = p;
     else if (p > m_maxview_h) m_maxview_h = p;
 
-    p = m_maxbound.x()*sin(-m_camth) + m_minbound.y()*cos(-m_camth);
+    p = m_maxbound.x()*sin(-camth) + m_minbound.y()*cos(-camth);
     if (p < m_minview_h) m_minview_h = p;
     else if (p > m_maxview_h) m_maxview_h = p;
 
@@ -205,14 +203,17 @@ void ZeroCalculator::setWindowProperties(int width, int height, double fieldOfVi
    m_window_width = width;
    m_window_height = height;
    m_fov = fieldOfView;
+   setCameraPos(m_camera_pos);
 }
+
+int ZeroCalculator::getWindowWidth(){ return m_window_width; }
+int ZeroCalculator::getWindowHeight(){ return m_window_height; }
 
 void ZeroCalculator::setCameraPos(const CameraPos &pos)
 {
-    m_camera_pos = pos.pos;
-    m_camera_th = pos.th;
+    m_camera_pos = pos;
 
-    double width_of_view = 2.0*pos.z*std::tan(m_fov/2.0); // in meters
+    double width_of_view = 2.0*m_camera_pos.z()*std::tan(m_fov/2.0); // in meters
     m_ppm_at_zero = m_window_width/width_of_view;
 }
 
@@ -220,20 +221,20 @@ void ZeroCalculator::setCameraPos(const CameraPos &pos)
 
 int ZeroCalculator::xFromWorld(GraphicsInterface::WorldPos &pos)
 {
-    double dx = (pos.x()- m_camera_pos.x())*cos(-m_camera_th) - (pos.y()-m_camera_pos.y())*sin(-m_camera_th);
+    double dx = (pos.x()- m_camera_pos.x())*cos(-m_camera_pos.th) - (pos.y()-m_camera_pos.y())*sin(-m_camera_pos.th);
     return dx*m_ppm_at_zero + m_window_width/2.0;
 }
 
 int ZeroCalculator::yFromWorld(WorldPos &pos)
 {
-    double dy = (pos.x()- m_camera_pos.x())*sin(-m_camera_th) + (pos.y()-m_camera_pos.y())*cos(-m_camera_th);
+    double dy = (pos.x()- m_camera_pos.x())*sin(-m_camera_pos.th) + (pos.y()-m_camera_pos.y())*cos(-m_camera_pos.th);
     return dy*m_ppm_at_zero + m_window_height/2.0;
 }
 
 ScreenPos ZeroCalculator::posFromWorld(WorldPos &pos)
 {
-    Utility::vec2d v = pos-m_camera_pos;
-    v.rotate(-m_camera_th);
+    Utility::vec2d v = pos-m_camera_pos.pos;
+    v.rotate(-m_camera_pos.th);
     v.x() = m_ppm_at_zero*v.x() + m_window_width/2.0;
     v.y() = m_ppm_at_zero*v.y() + m_window_height/2.0;
     return ScreenPos(v.x(),v.y());
@@ -253,14 +254,14 @@ double ZeroCalculator::xFromScreen(ScreenPos &pos)
 {
     double dx = (pos.x() - m_window_width/2.0)/m_ppm_at_zero;
     double dy = (pos.y() - m_window_height/2.0)/m_ppm_at_zero;
-    return dx*cos(m_camera_th) - dy*sin(m_camera_th) + m_camera_pos.x();
+    return dx*cos(m_camera_pos.th) - dy*sin(m_camera_pos.th) + m_camera_pos.x();
 }
 
 double ZeroCalculator::yFromScreen(ScreenPos &pos)
 {
     double dx = (pos.x() - m_window_width/2.0)/m_ppm_at_zero;
     double dy = (pos.y() - m_window_height/2.0)/m_ppm_at_zero;
-    return dx*sin(m_camera_th) + dy*cos(m_camera_th) + m_camera_pos.y();
+    return dx*sin(m_camera_pos.th) + dy*cos(m_camera_pos.th) + m_camera_pos.y();
 }
 
 WorldPos ZeroCalculator::posFromScreen(ScreenPos &pos)
@@ -268,8 +269,8 @@ WorldPos ZeroCalculator::posFromScreen(ScreenPos &pos)
     WorldPos retvec;
     double dx = (pos.x() - m_window_width/2.0)/m_ppm_at_zero;
     double dy = (pos.y() - m_window_height/2.0)/m_ppm_at_zero;
-    retvec.x() = dx*cos(m_camera_th) - dy*sin(m_camera_th) + m_camera_pos.x();
-    retvec.y() = dx*sin(m_camera_th) + dy*cos(m_camera_th) + m_camera_pos.y();
+    retvec.x() = dx*cos(m_camera_pos.th) - dy*sin(m_camera_pos.th) + m_camera_pos.x();
+    retvec.y() = dx*sin(m_camera_pos.th) + dy*cos(m_camera_pos.th) + m_camera_pos.y();
     return retvec;
 }
 
@@ -286,10 +287,16 @@ double ZeroCalculator::hFromScreen(double h)
 
 CameraPos::CameraPos(){}
 CameraPos::CameraPos(const WorldPos& position, const double& Z, const double& theta)
-    :pos(position), z(Z), th(theta) {}
+    :pos(position), _z(Z), th(theta) {}
+
+double& CameraPos::x(){ return pos.x(); }
+double& CameraPos::y(){ return pos.y(); }
+double& CameraPos::z(){ return _z; }
+
+
 bool operator==(const CameraPos& a, const CameraPos& b)
 {
-    return (a.pos == b.pos) && (a.z == b.z) && (a.th == b.th);
+    return (a.pos == b.pos) && (a._z == b._z) && (a.th == b.th);
 }
 
 } // end

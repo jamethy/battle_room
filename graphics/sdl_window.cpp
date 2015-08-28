@@ -27,7 +27,7 @@ UniqueGraphicsWindow createWindow(unsigned width, unsigned height)
 }
 
 SDLWindowClass::SDLWindowClass(unsigned width, unsigned height)
-    : cam(CameraClass(width,height))
+    : m_camera(CameraClass(width,height))
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
         std::cerr << "SDL_Init error: " << SDL_GetError() << std::endl;
@@ -64,43 +64,49 @@ SDLWindowClass::~SDLWindowClass()
 
 void SDLWindowClass::setViewBounds(Utility::vec2d& worldMin, Utility::vec2d& worldMax)
 {
-    cam.setCameraBounds(worldMin,worldMax);
+    m_camera.setCameraBounds(worldMin,worldMax);
 }
 
 
 
 void SDLWindowClass::update()
 {
-    updateDrawTime();
+    checkWindowSize();
+    double drawTime = Utility::getTime(); // used for animations
 
-    ObjectHandlerClass* objs = ObjectHandlerClass::Instance();
-    objs->update();
+    ObjectHandlerClass* objectHandler = ObjectHandlerClass::Instance();
+    objectHandler->update();
 
 
     SDL_SetRenderDrawColor(m_renderer.get(), 0,0,0,255);
     SDL_RenderClear(m_renderer.get());
 
-    for (GraphicsLayer* obj : *objs) draw_object(*obj);
-
+    for (GraphicsLayer* obj : *objectHandler) draw_object(*obj, drawTime);
 
     SDL_RenderPresent(m_renderer.get());
 
 }
 
-void SDLWindowClass::draw_object(GraphicsLayer &obj)
+void SDLWindowClass::draw_object(GraphicsLayer &obj, double drawTime)
 {
-    SDLAnimationClass* animation = (SDLAnimationClass*)obj.getAnimation(getDrawTime());
-    if(animation != nullptr) animation->renderOn(m_renderer.get(), cam.getZeroCalculator());
+    SDLAnimationClass* animation = (SDLAnimationClass*)obj.getAnimation(drawTime);
+    if(animation != nullptr) animation->renderOn(m_renderer.get(), m_camera.getZeroCalculator());
 }
 
-double SDLWindowClass::getDrawTime()
-{
-    return m_drawTime;
-}
 
-void SDLWindowClass::updateDrawTime()
+void SDLWindowClass::checkWindowSize()
 {
-    m_drawTime = Utility::getTime();
+    static int oldWidth = 0;
+    static int oldHeight = 0;
+    int newWidth = 0;
+    int newHeight = 0;
+    SDL_GetWindowSize(m_window.get(), &newWidth, &newHeight);
+    if(newWidth != oldWidth || newHeight != oldHeight)
+    {
+        oldWidth = newWidth;
+        oldHeight = newHeight;
+        m_camera.setWindowSize(newWidth, newHeight);
+    }
 }
 
 

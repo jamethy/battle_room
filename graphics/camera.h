@@ -15,8 +15,12 @@ struct CameraPos
     CameraPos(const WorldPos& position, const double& Z, const double& theta);
 
     WorldPos pos;
-    double z;
+    double _z;
     double th;
+
+    double& x();
+    double& y();
+    double& z();
 };
 
 class ZeroCalculator
@@ -26,6 +30,8 @@ public:
     ~ZeroCalculator();
 
     void setWindowProperties(int width, int height, double fieldOfView);
+    int getWindowWidth();
+    int getWindowHeight();
     void setCameraPos(const CameraPos& pos);
 
     int xFromWorld(WorldPos& pos);
@@ -46,8 +52,7 @@ private:
     int m_window_height;
 
     double m_ppm_at_zero; // pixels per meter at zero
-    WorldPos m_camera_pos;
-    double m_camera_th;
+    CameraPos m_camera_pos;
     double m_fov;
 };
 
@@ -92,9 +97,7 @@ private:
     double m_minview_w;
     double m_minview_h;
 
-    WorldPos m_camera_pos;
-    double m_camth = 0;
-    double m_camz = 0;
+    CameraPos m_camera_pos;
 
     WorldPos m_minbound;
     WorldPos m_maxbound;

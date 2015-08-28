@@ -24,18 +24,13 @@ public:
 
 private:
 
-    void draw_object(GraphicsLayer &obj);
+    void draw_object(GraphicsLayer &obj, double drawTime);
 
-    double getDrawTime();
-    void updateDrawTime();
-    double m_drawTime;
-
+    void checkWindowSize();
 
     UniqueWindow m_window;
     UniqueRenderer m_renderer;
-    CameraClass cam;
-
-    std::vector<UniqueTexture> m_textures;
+    CameraClass m_camera;
 };
 
 }

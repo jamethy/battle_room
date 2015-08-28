@@ -45,6 +45,15 @@ UniqueTexture loadUniqueTexture(SDL_Renderer* renderer, std::string str)
 
 
 
+bool isInFrame(SDL_Rect &rect, int window_width, int window_height)
+{
+    SDL_Rect window;
+    window.x = 0; window.y = 0;
+    window.w = window_width;
+    window.h = window_height;
+    return SDL_HasIntersection(&rect, &window);
+}
+
 
 ////// SDLAnimationClass //////////////////////////////////////////////////////////////////////
 ////// SDLAnimationClass //////////////////////////////////////////////////////////////////////

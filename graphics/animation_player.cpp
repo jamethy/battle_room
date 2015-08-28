@@ -48,12 +48,17 @@ public:
         dst_rect.w = camcalc.wFromWorld(1);
         dst_rect.h = camcalc.hFromWorld(1);
 
-        SDL_RenderCopyEx(renderer,
-                        texture,
-                        src_rect,
-                        &dst_rect,
-                        getTheta(),
-                        nullptr, SDL_FLIP_NONE);
+        if(isInFrame(dst_rect,camcalc.getWindowWidth(), camcalc.getWindowHeight()))
+        {
+
+            SDL_RenderCopyEx(renderer,
+                            texture,
+                            src_rect,
+                            &dst_rect,
+                            getTheta(),
+                            nullptr, SDL_FLIP_NONE);
+        }
+
     }
     SDL_Rect* src_rect = nullptr;
 };
