@@ -7,6 +7,7 @@ add_library(battleroom_graphics SHARED
         graphics_layer.h graphics_layer.cpp
         animation_player.h animation_player.cpp
         animation_star.h animation_star.cpp
+        animation_wall.h animation_wall.cpp
         sdl_window.h sdl_window.cpp
         sdl_animations.h sdl_animations.cpp
         )

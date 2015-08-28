@@ -4,10 +4,7 @@
 namespace GraphicsInterface
 {
 
-PlayerAnimation::PlayerAnimation(double duration) : SDLAnimationClass(duration)
-{
-}
-
+PlayerAnimation::PlayerAnimation(double duration) : SDLAnimationClass(duration){}
 PlayerAnimation::~PlayerAnimation(){}
 
 TextureMap PlayerAnimation::textureMap = TextureMap();

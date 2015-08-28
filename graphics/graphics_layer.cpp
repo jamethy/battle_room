@@ -39,6 +39,7 @@ void GraphicsLayer::setPos(Utility::vec2d &pos, double th)
 
 AnimationBaseClass *GraphicsLayer::getAnimation(double time)
 {
+    if(m_animation == nullptr) return nullptr;
     m_animation->update(time);
     if(m_animation->isComplete())
     {

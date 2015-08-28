@@ -166,18 +166,17 @@ void moveCameraOutOfBounds()
     bool result = true;
     CameraClass cam(500,500);
     cam.setCameraBounds(WorldPos(-50,-50),WorldPos(50,50));
-    typedef std::pair<CameraPos,bool> campair; // position and if in bounds
+    typedef std::pair<CameraPos,CameraPos> campair; // position and if in bounds
 
     std::vector<campair> cam_positions;
-    cam_positions.push_back(campair(CameraPos(WorldPos(0,0),0,0),true));
-    cam_positions.push_back(campair(CameraPos(WorldPos(10000,0),0,0),false));
+    cam_positions.push_back(campair(CameraPos(WorldPos(0,0),0,0),    CameraPos(WorldPos(0,0),0,0)));
+    cam_positions.push_back(campair(CameraPos(WorldPos(10000,0),0,0),CameraPos(WorldPos(10000,0),0,0)));
 
     for(campair& p : cam_positions)
     {
         cam.setCameraPosition(p.first);
         cam.update();
-        bool at_pos = (p.first == cam.getCameraPosition());
-        result = result && (at_pos == p.second);
+        result = result && (p.second == cam.getCameraPosition());
     }
 
     check_test( result, "moveCameraOutOfBounds");
@@ -185,10 +184,14 @@ void moveCameraOutOfBounds()
 }
 
 
+
+
+
 int main()
 {
     objs.push_back(make_pair( Player, "Player" ));
     objs.push_back(make_pair( Star, "Star" ));
+    objs.push_back(make_pair( Wall, "Wall" ));
 
     for(objpair& op : objs) createObjectTest(op);
     for(objpair& op : objs) moveObjectTest(op);

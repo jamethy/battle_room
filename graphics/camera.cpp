@@ -123,6 +123,7 @@ void CameraClass::checkBounds()
     }
 
     m_camera_pos = WorldPos(camx,camy);
+
 }
 
 void CameraClass::calculateBounds()

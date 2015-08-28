@@ -4,10 +4,7 @@ namespace GraphicsInterface
 {
 
 
-StarAnimation::StarAnimation(double duration) : SDLAnimationClass(duration)
-{
-}
-
+StarAnimation::StarAnimation(double duration) : SDLAnimationClass(duration){}
 StarAnimation::~StarAnimation(){}
 
 TextureMap StarAnimation::textureMap = TextureMap();

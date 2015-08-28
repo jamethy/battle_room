@@ -13,6 +13,7 @@ enum ObjectType
 {
     Player = 0,
     Star,
+    Wall,
     TestObject
 };
 

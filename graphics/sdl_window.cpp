@@ -90,7 +90,7 @@ void SDLWindowClass::update()
 void SDLWindowClass::draw_object(GraphicsLayer &obj)
 {
     SDLAnimationClass* animation = (SDLAnimationClass*)obj.getAnimation(getDrawTime());
-    animation->renderOn(m_renderer.get(), cam.getZeroCalculator());
+    if(animation != nullptr) animation->renderOn(m_renderer.get(), cam.getZeroCalculator());
 }
 
 double SDLWindowClass::getDrawTime()

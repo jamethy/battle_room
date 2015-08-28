@@ -1,6 +1,7 @@
 #include "sdl_animations.h"
 #include "animation_player.h"
 #include "animation_star.h"
+#include "animation_wall.h"
 
 #include "../utility/br_time.h"
 
@@ -75,6 +76,8 @@ UniqueAnimation createAnimation(ObjectType obj, AnimationType animation)
         return createPlayerAnimation(animation);
     case Star:
         return createStarAnimation(animation);
+    case Wall:
+        return createWallAnimation(animation);
     default:
         return UniqueAnimation(nullptr);
     }
