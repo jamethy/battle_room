@@ -10,21 +10,21 @@ StarAnimation::StarAnimation(double duration) : SDLAnimationClass(duration)
 
 StarAnimation::~StarAnimation(){}
 
-UniqueTexture StarAnimation::StarTexture = UniqueTexture(nullptr);
-
+TextureMap StarAnimation::textureMap = TextureMap();
 
 SDL_Texture* StarAnimation::getTexture(SDL_Renderer* renderer)
 {
-    if(StarAnimation::StarTexture == nullptr)
+    UniqueTexture& texture = StarAnimation::textureMap[renderer];
+    if(texture.get() == nullptr)
     {
-        std::string filename = getResourcePath() + "star.png";
-        StarAnimation::StarTexture = UniqueTexture(IMG_LoadTexture(renderer,filename.c_str()),SDL_Deleter());
-        if(StarAnimation::StarTexture.get() == nullptr)
+        texture = loadUniqueTexture(renderer, "star.png");
+
+        if(texture.get() == nullptr)
         {
             std::cerr << "Failed to load star texture.\n";
         }
     }
-    return StarAnimation::StarTexture.get();
+    return texture.get();
 }
 
 

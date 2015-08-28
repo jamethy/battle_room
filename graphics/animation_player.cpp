@@ -10,21 +10,22 @@ PlayerAnimation::PlayerAnimation(double duration) : SDLAnimationClass(duration)
 
 PlayerAnimation::~PlayerAnimation(){}
 
-UniqueTexture PlayerAnimation::PlayerTexture = UniqueTexture(nullptr);
+TextureMap PlayerAnimation::textureMap = TextureMap();
 
 
 SDL_Texture* PlayerAnimation::getTexture(SDL_Renderer* renderer)
 {
-    if(PlayerAnimation::PlayerTexture == nullptr)
+    UniqueTexture& texture = PlayerAnimation::textureMap[renderer];
+    if(texture.get() == nullptr)
     {
-        std::string filename = getResourcePath() + "initialcharacter.png";
-        PlayerAnimation::PlayerTexture = UniqueTexture(IMG_LoadTexture(renderer,filename.c_str()),SDL_Deleter());
-        if(PlayerAnimation::PlayerTexture.get() == nullptr)
+        texture = loadUniqueTexture(renderer, "initialcharacter.png");
+
+        if(texture.get() == nullptr)
         {
             std::cerr << "Failed to load player texture.\n";
         }
     }
-    return PlayerAnimation::PlayerTexture.get();
+    return texture.get();
 }
 
 
@@ -39,6 +40,9 @@ public:
 
     void renderOn(SDL_Renderer* renderer, ZeroCalculator& camcalc)
     {
+        SDL_Texture* texture = getTexture(renderer);
+        if(texture == nullptr) return;
+
         ScreenPos sp = camcalc.posFromWorld(getPosition());
 
         SDL_Rect dst_rect;
@@ -48,7 +52,7 @@ public:
         dst_rect.h = camcalc.hFromWorld(1);
 
         SDL_RenderCopyEx(renderer,
-                        getTexture(renderer),
+                        texture,
                         src_rect,
                         &dst_rect,
                         getTheta(),

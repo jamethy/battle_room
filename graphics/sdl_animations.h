@@ -9,8 +9,9 @@
 #include "SDL_ttf.h"
 #include "SDL.h"
 
-namespace GraphicsInterface {
+#include <map>
 
+namespace GraphicsInterface {
 
 struct SDL_Deleter
 {
@@ -22,6 +23,7 @@ struct SDL_Deleter
 typedef std::unique_ptr<SDL_Window,SDL_Deleter> UniqueWindow;
 typedef std::unique_ptr<SDL_Texture,SDL_Deleter> UniqueTexture;
 typedef std::unique_ptr<SDL_Renderer,SDL_Deleter> UniqueRenderer;
+typedef std::map<SDL_Renderer*,UniqueTexture> TextureMap;
 
 
 class SDLAnimationClass : public AnimationBaseClass
@@ -50,6 +52,7 @@ private:
 
 
 std::string getResourcePath(const std::string &subDir = "");
+UniqueTexture loadUniqueTexture(SDL_Renderer* renderer, std::string str);
 
 } // GraphicsInterface namespace
 #endif // SDL_ANIMATIONS_H

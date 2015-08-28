@@ -36,11 +36,12 @@ std::string getResourcePath(const std::string &subDir){
     return subDir.empty() ? baseRes : baseRes + subDir + PATH_SEP;
 }
 
-UniqueTexture getUniqueTexture(SDL_Renderer* renderer, std::string str)
+UniqueTexture loadUniqueTexture(SDL_Renderer* renderer, std::string str)
 {
     std::string path = getResourcePath("") + str;
     return UniqueTexture(IMG_LoadTexture(renderer, path.c_str()), SDL_Deleter());
 }
+
 
 
 
