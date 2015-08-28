@@ -4,14 +4,19 @@
 namespace GraphicsInterface
 {
 
+using Utility::WorldPos;
+using Utility::ScreenPos;
 
 CameraClass::CameraClass(int width, int height, double fieldOfView) :
     m_zerocalculator(width, height, fieldOfView),
     m_camera_pos(WorldPos(0,0)),
     m_camth(0),
     m_camz(7.5),
-    m_fov(fieldOfView)
+    m_fov(fieldOfView),
+    m_window_width(width),
+    m_window_height(height)
 {
+    m_fov_h = 2*atan(height*tan(m_fov/2.0)/width);
     getZeroCalculator().setCameraPos(getCameraPosition());
 }
 
@@ -21,10 +26,11 @@ CameraClass::~CameraClass()
 
 }
 
-void CameraClass::setCameraBounds(const WorldPos& min, const WorldPos& max)
+void CameraClass::setCameraBounds(const Utility::WorldPos &minPoint, const Utility::WorldPos &maxPoint)
 {
-    m_minview = min;
-    m_maxview = max;
+    m_minbound = minPoint;
+    m_maxbound = maxPoint;
+    calculateBounds();
 }
 
 void CameraClass::setWindowSize(int width, int height)
@@ -64,6 +70,7 @@ void CameraClass::moveInZ(const double& changeInZ)
 void CameraClass::rotate(const double& changeInTh)
 {
     m_camth += changeInTh;
+    calculateBounds();
 }
 
 void CameraClass::update()
@@ -81,6 +88,98 @@ ZeroCalculator &CameraClass::getZeroCalculator()
 void CameraClass::checkBounds()
 {
 
+    double camx = m_camera_pos.x();
+    double camy = m_camera_pos.y();
+
+    double minx = -m_camz*tan(m_fov/2)   + camx*cos(-m_camth) - camy*sin(-m_camth);
+    double miny = -m_camz*tan(m_fov_h/2) + camx*sin(-m_camth) + camy*cos(-m_camth);
+    double maxx =  m_camz*tan(m_fov/2)   + camx*cos(-m_camth) - camy*sin(-m_camth);
+    double maxy =  m_camz*tan(m_fov_h/2) + camx*sin(-m_camth) + camy*cos(-m_camth);
+
+    if (camx < m_minbound.x())
+        camx = m_minbound.x();
+    else if (camx > m_maxbound.x())
+        camx = m_maxbound.x();
+    else if (maxx > m_maxview_w){
+        camx -=  (maxx-m_maxview_w)*cos(-m_camth);
+        camy -= -(maxx-m_maxview_w)*sin(-m_camth);
+    }
+    else if (minx < m_minview_w){
+        camx -=  (minx-m_minview_w)*cos(-m_camth);
+        camy -= -(minx-m_minview_w)*sin(-m_camth);
+    }
+
+    if (camy < m_minbound.y())
+        camy = m_minbound.y();
+    else if (camy > m_maxbound.y())
+        camy = m_maxbound.y();
+    else if (maxy > m_maxview_h){
+        camx -= (maxy-m_maxview_h)*sin(-m_camth);
+        camy -= (maxy-m_maxview_h)*cos(-m_camth);
+    }
+    else if (miny < m_minview_h){
+        camx -= (miny-m_minview_h)*sin(-m_camth);
+        camy -= (miny-m_minview_h)*cos(-m_camth);
+    }
+
+    m_camera_pos = WorldPos(camx,camy);
+}
+
+void CameraClass::calculateBounds()
+{
+
+    // find horizontal
+    m_minview_w = m_minbound.x()*cos(-m_camth) - m_minbound.y()*sin(-m_camth);
+    m_maxview_w = m_minview_w;
+
+    double p = m_minbound.x()*cos(-m_camth) - m_maxbound.y()*sin(-m_camth);
+    if (p < m_minview_w) m_minview_w = p;
+    else if (p > m_maxview_w) m_maxview_w = p;
+
+    p = m_maxbound.x()*cos(-m_camth) - m_maxbound.y()*sin(-m_camth);
+    if (p < m_minview_w) m_minview_w = p;
+    else if (p > m_maxview_w) m_maxview_w = p;
+
+    p = m_maxbound.x()*cos(-m_camth) - m_minbound.y()*sin(-m_camth);
+    if (p < m_minview_w) m_minview_w = p;
+    else if (p > m_maxview_w) m_maxview_w = p;
+
+    // find vertical
+    m_minview_h = m_minbound.x()*sin(-m_camth) + m_minbound.y()*cos(-m_camth);
+    m_maxview_h = m_minview_h;
+
+    p = m_minbound.x()*sin(-m_camth) + m_maxbound.y()*cos(-m_camth);
+    if (p < m_minview_h) m_minview_h = p;
+    else if (p > m_maxview_h) m_maxview_h = p;
+
+    p = m_maxbound.x()*sin(-m_camth) + m_maxbound.y()*cos(-m_camth);
+    if (p < m_minview_h) m_minview_h = p;
+    else if (p > m_maxview_h) m_maxview_h = p;
+
+    p = m_maxbound.x()*sin(-m_camth) + m_minbound.y()*cos(-m_camth);
+    if (p < m_minview_h) m_minview_h = p;
+    else if (p > m_maxview_h) m_maxview_h = p;
+
+    // change to be ratio of screen
+    double w = m_maxview_w - m_minview_w;
+    double h = m_maxview_h - m_minview_h;
+    double R = m_window_width/(1.0*m_window_height);
+    if (R*h > w){
+        double midx = (m_maxview_w + m_minview_w)/2;
+        m_minview_w = midx - R*h/2;
+        m_maxview_w = midx + R*h/2;
+    }
+    else{
+        double midy = (m_maxview_h + m_minview_h)/2;
+        m_minview_h = midy - w/R/2;
+        m_maxview_h = midy + w/R/2;
+    }
+
+    double zw = (m_maxview_w - m_minview_w)/2/tan(m_fov/2);
+    double zh = (m_maxview_h - m_minview_h)/2/tan(m_fov_h/2);
+
+    m_maxz = (zw > zh) ? zw : zh;
+    m_minz = 1.5;
 }
 
 //////////// Zero Calculator /////////////////////////////////////////////////////////////////
