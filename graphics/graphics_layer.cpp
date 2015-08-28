@@ -31,7 +31,7 @@ void GraphicsLayer::update()
         m_animation->setPosition(getPos(),getTh());
 }
 
-void GraphicsLayer::setPos(Utility::vec2d &pos, double th)
+void GraphicsLayer::setPos(const Utility::vec2d &pos, double th)
 {
     m_pos = pos;
     m_th = th;

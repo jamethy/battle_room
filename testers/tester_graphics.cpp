@@ -184,7 +184,33 @@ void moveCameraOutOfBounds()
 }
 
 
+void InterfaceTest()
+{
+    UniqueGraphicsWindow w = createWindow(500,500);
+    UniqueGraphicsWindow w2 = createWindow(500,500);
 
+    UniqueDrawableObject obj1 = createObject(Player); obj1->setPos(WorldPos(-1.5,0),0);
+    UniqueDrawableObject obj2 = createObject(Star); obj2->setPos(WorldPos(0,0),0);
+    UniqueDrawableObject obj3 = createObject(Wall); obj3->setPos(WorldPos(2.5,0),0);
+
+    WorldPos obj1pos = WorldPos(-1.5,0);
+    double obj2th = 0;
+    WorldPos obj3pos = WorldPos(2.5,0);
+
+
+    for(unsigned i = 0; i < 120; ++i)
+    {
+        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+
+        obj1pos.x() -= 0.01;    obj1->setPos(obj1pos,0);
+        obj2th += 2;            obj2->setPos(WorldPos(0,0),obj2th);
+        obj3pos.y() += 0.01;    obj3->setPos(obj3pos,0);
+
+        if(w != nullptr) w->update();
+        if(w2 != nullptr) w2->update();
+        std::this_thread::sleep_until(t1+std::chrono::milliseconds(17));
+    }
+}
 
 
 int main()
@@ -202,6 +228,6 @@ int main()
 
     moveCamera();
     moveCameraOutOfBounds();
-
+    InterfaceTest();
     return 0;
 }

@@ -27,7 +27,7 @@ enum AnimationType
 class DrawableObjectClass
 {
 public:
-    virtual void setPos(Utility::vec2d& pos, double th) = 0;
+    virtual void setPos(const Utility::vec2d& pos, double th) = 0;
     virtual void startAnimation(AnimationType animation) = 0;
     virtual ~DrawableObjectClass();
 };
