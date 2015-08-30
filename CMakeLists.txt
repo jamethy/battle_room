@@ -39,4 +39,6 @@ link_directories(
 add_subdirectory( utility )
 add_subdirectory( interfaces )
 add_subdirectory( graphics )
+add_subdirectory( gamedata )
+add_subdirectory( userlayer )
 add_subdirectory( testers )
