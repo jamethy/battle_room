@@ -37,7 +37,7 @@ public:
     void update();
 
     // inherited from DrawableObjectClass
-    void setPos(Utility::vec2d& pos, double th);
+    void setPos(const Utility::vec2d& pos, double th);
     void startAnimation(AnimationType animation);
     AnimationBaseClass* getAnimation(double time);
 

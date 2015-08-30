@@ -6,40 +6,110 @@
 namespace GraphicsInterface
 {
 
-typedef Utility::vec2d WorldPos;
-typedef Utility::vec2i ScreenPos;
+using Utility::WorldPos;
+using Utility::ScreenPos;
+
+struct CameraPos
+{
+    CameraPos();
+    CameraPos(const WorldPos& position, const double& Z, const double& theta);
+
+    WorldPos pos;
+    double _z;
+    double th;
+
+    double& x();
+    double& y();
+    double& z();
+};
+
+class ZeroCalculator
+{
+public:
+    ZeroCalculator(int width, int height, double fieldOfView);
+    ~ZeroCalculator();
+
+    void setWindowProperties(int width, int height, double fieldOfView);
+    int getWindowWidth();
+    int getWindowHeight();
+    void setCameraPos(const CameraPos& pos);
+
+    int xFromWorld(WorldPos& pos);
+    int yFromWorld(WorldPos& pos);
+    int wFromWorld(double w);
+    int hFromWorld(double h);
+    ScreenPos posFromWorld(WorldPos& pos);
+
+    double xFromScreen(ScreenPos& pos);
+    double yFromScreen(ScreenPos& pos);
+    double wFromScreen(double w);
+    double hFromScreen(double h);
+    WorldPos posFromScreen(ScreenPos& pos);
+
+private:
+
+    int m_window_width;
+    int m_window_height;
+
+    double m_ppm_at_zero; // pixels per meter at zero
+    CameraPos m_camera_pos;
+    double m_fov;
+};
+
 
 class CameraClass
 {
 
-
 public:
 
-    CameraClass();
+    CameraClass(int width, int height, double fieldOfView = 1.3083);
     ~CameraClass();
 
-    int xFromWorld(WorldPos& pos);
-    int yFromWorld(WorldPos& pos);
-    ScreenPos posFromWorld(WorldPos& pos);
-    int wFromWorld(double w);
-    int hFromWorld(double h);
+    void setCameraBounds(const WorldPos& minPoint, const WorldPos& maxPoint);
+    void setWindowSize(int width, int height);
 
+    void setCameraPosition(const CameraPos& pos);
+    CameraPos getCameraPosition();
 
-    double xFromScreen(ScreenPos& pos);
-    double yFromScreen(ScreenPos& pos);
-    WorldPos posFromScreen(ScreenPos& pos);
-    double wFromScreen(double w);
-    double hFromScreen(double h);
+    void moveInX(const double& changeInX);
+    void moveInY(const double& changeInY);
+    void moveInZ(const double& changeInZ);
+    void rotate(const double& changeInTh);
+
+    void update();
+
+    ZeroCalculator& getZeroCalculator();
 
 private:
 
-    WorldPos& camPos();
-    double& camTh();
+    void checkBounds();
+    void calculateBounds();
 
-    WorldPos m_camera_pos;
-    double m_theta = 0;
+    ZeroCalculator m_zerocalculator;
+
+    int m_window_width;
+    int m_window_height;
+
+    double m_minz;
+    double m_maxz;
+    double m_maxview_w;
+    double m_maxview_h;
+    double m_minview_w;
+    double m_minview_h;
+
+    CameraPos m_camera_pos;
+
+    WorldPos m_minbound;
+    WorldPos m_maxbound;
+
+    double m_fov; // radians
+    double m_fov_h;
 
 };
+
+
+bool operator==(const CameraPos& a, const CameraPos& b);
+
 }
 
 #endif // CAMERA_H

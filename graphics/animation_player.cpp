@@ -4,27 +4,25 @@
 namespace GraphicsInterface
 {
 
-PlayerAnimation::PlayerAnimation(double duration) : SDLAnimationClass(duration)
-{
-}
-
+PlayerAnimation::PlayerAnimation(double duration) : SDLAnimationClass(duration){}
 PlayerAnimation::~PlayerAnimation(){}
 
-UniqueTexture PlayerAnimation::PlayerTexture = UniqueTexture(nullptr);
+TextureMap PlayerAnimation::textureMap = TextureMap();
 
 
 SDL_Texture* PlayerAnimation::getTexture(SDL_Renderer* renderer)
 {
-    if(PlayerAnimation::PlayerTexture == nullptr)
+    UniqueTexture& texture = PlayerAnimation::textureMap[renderer];
+    if(texture.get() == nullptr)
     {
-        std::string filename = getResourcePath() + "initialcharacter.png";
-        PlayerAnimation::PlayerTexture = UniqueTexture(IMG_LoadTexture(renderer,filename.c_str()),SDL_Deleter());
-        if(PlayerAnimation::PlayerTexture.get() == nullptr)
+        texture = loadUniqueTexture(renderer, "initialcharacter.png");
+
+        if(texture.get() == nullptr)
         {
             std::cerr << "Failed to load player texture.\n";
         }
     }
-    return PlayerAnimation::PlayerTexture.get();
+    return texture.get();
 }
 
 
@@ -37,27 +35,30 @@ public:
     bool isComplete(){ return false; }
     AnimationType after(){ return NoAnimation; }
 
-    void renderOn(SDL_Renderer* renderer, CameraClass& cam)
+    void renderOn(SDL_Renderer* renderer, ZeroCalculator& camcalc)
     {
-        ScreenPos sp = cam.posFromWorld(getPosition());
+        SDL_Texture* texture = getTexture(renderer);
+        if(texture == nullptr) return;
+
+        ScreenPos sp = camcalc.posFromWorld(getPosition());
 
         SDL_Rect dst_rect;
         dst_rect.x = sp.x();
         dst_rect.y = sp.y();
-        dst_rect.w = cam.wFromWorld(0.05);
-        dst_rect.h = cam.hFromWorld(0.05);
+        dst_rect.w = camcalc.wFromWorld(1);
+        dst_rect.h = camcalc.hFromWorld(1);
 
+        if(isInFrame(dst_rect,camcalc.getWindowWidth(), camcalc.getWindowHeight()))
+        {
 
-        SDL_Point center;
-        center.x = cam.wFromWorld(0.5);
-        center.y = cam.hFromWorld(0.5);
+            SDL_RenderCopyEx(renderer,
+                            texture,
+                            src_rect,
+                            &dst_rect,
+                            getTheta(),
+                            nullptr, SDL_FLIP_NONE);
+        }
 
-        SDL_RenderCopyEx(renderer,
-                        getTexture(renderer),
-                        src_rect,
-                        &dst_rect,
-                        getTheta(),
-                        &center, SDL_FLIP_NONE);
     }
     SDL_Rect* src_rect = nullptr;
 };

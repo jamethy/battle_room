@@ -1,35 +1,36 @@
-#include "animation_star.h"
+#include "animation_wall.h"
 #include <iostream>
+
 namespace GraphicsInterface
 {
 
+WallAnimation::WallAnimation(double duration) : SDLAnimationClass(duration){}
+WallAnimation::~WallAnimation(){}
 
-StarAnimation::StarAnimation(double duration) : SDLAnimationClass(duration){}
-StarAnimation::~StarAnimation(){}
+TextureMap WallAnimation::textureMap = TextureMap();
 
-TextureMap StarAnimation::textureMap = TextureMap();
 
-SDL_Texture* StarAnimation::getTexture(SDL_Renderer* renderer)
+SDL_Texture* WallAnimation::getTexture(SDL_Renderer* renderer)
 {
-    UniqueTexture& texture = StarAnimation::textureMap[renderer];
+    UniqueTexture& texture = WallAnimation::textureMap[renderer];
     if(texture.get() == nullptr)
     {
-        texture = loadUniqueTexture(renderer, "star.png");
+        texture = loadUniqueTexture(renderer, "wall.png");
 
         if(texture.get() == nullptr)
         {
-            std::cerr << "Failed to load star texture.\n";
+            std::cerr << "Failed to load player texture.\n";
         }
     }
     return texture.get();
 }
 
 
-class StarNoAnimation : public StarAnimation
+class WallNoAnimation : public WallAnimation
 {
 public:
-    StarNoAnimation() : StarAnimation(0) {}
-    ~StarNoAnimation(){}
+    WallNoAnimation() : WallAnimation(0) {}
+    ~WallNoAnimation(){}
     void update(double time){}
     bool isComplete(){ return false; }
     AnimationType after(){ return NoAnimation; }
@@ -44,8 +45,9 @@ public:
         SDL_Rect dst_rect;
         dst_rect.x = sp.x();
         dst_rect.y = sp.y();
-        dst_rect.w = camcalc.wFromWorld(2);
-        dst_rect.h = camcalc.hFromWorld(2);
+        dst_rect.w = camcalc.wFromWorld(1);
+        dst_rect.h = camcalc.hFromWorld(1);
+
         if(isInFrame(dst_rect,camcalc.getWindowWidth(), camcalc.getWindowHeight()))
         {
 
@@ -56,23 +58,18 @@ public:
                             getTheta(),
                             nullptr, SDL_FLIP_NONE);
         }
-
     }
     SDL_Rect* src_rect = nullptr;
 };
 
-
-
-
-UniqueAnimation createStarAnimation(AnimationType animation)
+UniqueAnimation createWallAnimation(AnimationType animation)
 {
     switch (animation) {
     case NoAnimation:
-        return UniqueAnimation(new StarNoAnimation());
+        return UniqueAnimation(new WallNoAnimation());
     default:
-        return UniqueAnimation(new StarNoAnimation());
+        return UniqueAnimation(new WallNoAnimation());
     }
 }
-
 
 } // end GraphicsInterface

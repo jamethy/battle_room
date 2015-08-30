@@ -13,6 +13,7 @@ enum ObjectType
 {
     Player = 0,
     Star,
+    Wall,
     TestObject
 };
 
@@ -26,7 +27,7 @@ enum AnimationType
 class DrawableObjectClass
 {
 public:
-    virtual void setPos(Utility::vec2d& pos, double th) = 0;
+    virtual void setPos(const Utility::vec2d& pos, double th) = 0;
     virtual void startAnimation(AnimationType animation) = 0;
     virtual ~DrawableObjectClass();
 };
@@ -40,6 +41,7 @@ class GraphicsWindowClass
 {
 public:
     virtual ~GraphicsWindowClass();
+    virtual void setViewBounds(Utility::vec2d& worldMin, Utility::vec2d& worldMax) = 0;
     virtual void update() = 0;
 };
 

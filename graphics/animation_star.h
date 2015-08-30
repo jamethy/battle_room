@@ -13,7 +13,7 @@ public:
     virtual ~StarAnimation();
 
     SDL_Texture* getTexture(SDL_Renderer* renderer);
-    static UniqueTexture StarTexture;
+    static TextureMap textureMap;
 };
 
 

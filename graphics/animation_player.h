@@ -13,7 +13,7 @@ public:
     virtual ~PlayerAnimation();
 
     SDL_Texture* getTexture(SDL_Renderer* renderer);
-    static UniqueTexture PlayerTexture;
+    static TextureMap textureMap;
 };
 
 

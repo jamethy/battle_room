@@ -1,6 +1,7 @@
 #include "sdl_animations.h"
 #include "animation_player.h"
 #include "animation_star.h"
+#include "animation_wall.h"
 
 #include "../utility/br_time.h"
 
@@ -36,12 +37,22 @@ std::string getResourcePath(const std::string &subDir){
     return subDir.empty() ? baseRes : baseRes + subDir + PATH_SEP;
 }
 
-UniqueTexture getUniqueTexture(SDL_Renderer* renderer, std::string str)
+UniqueTexture loadUniqueTexture(SDL_Renderer* renderer, std::string str)
 {
     std::string path = getResourcePath("") + str;
     return UniqueTexture(IMG_LoadTexture(renderer, path.c_str()), SDL_Deleter());
 }
 
+
+
+bool isInFrame(SDL_Rect &rect, int window_width, int window_height)
+{
+    SDL_Rect window;
+    window.x = 0; window.y = 0;
+    window.w = window_width;
+    window.h = window_height;
+    return SDL_HasIntersection(&rect, &window);
+}
 
 
 ////// SDLAnimationClass //////////////////////////////////////////////////////////////////////
@@ -56,12 +67,12 @@ SDLAnimationClass::SDLAnimationClass(double duration) :
 
 void SDLAnimationClass::setPosition(Utility::vec2d& pos, double th)
 {
-    m_playerPos = pos;
-    m_playerTh = th;
+    m_position = pos;
+    m_th = th;
 }
 
-Utility::vec2d& SDLAnimationClass::getPosition(){ return m_playerPos; }
-double SDLAnimationClass::getTheta(){ return m_playerTh; }
+Utility::vec2d& SDLAnimationClass::getPosition(){ return m_position; }
+double SDLAnimationClass::getTheta(){ return m_th; }
 
 ////// Create Functions //////////////////////////////////////////////////////////////////////
 ////// Create Functions //////////////////////////////////////////////////////////////////////
@@ -74,6 +85,8 @@ UniqueAnimation createAnimation(ObjectType obj, AnimationType animation)
         return createPlayerAnimation(animation);
     case Star:
         return createStarAnimation(animation);
+    case Wall:
+        return createWallAnimation(animation);
     default:
         return UniqueAnimation(nullptr);
     }

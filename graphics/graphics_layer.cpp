@@ -31,7 +31,7 @@ void GraphicsLayer::update()
         m_animation->setPosition(getPos(),getTh());
 }
 
-void GraphicsLayer::setPos(Utility::vec2d &pos, double th)
+void GraphicsLayer::setPos(const Utility::vec2d &pos, double th)
 {
     m_pos = pos;
     m_th = th;
@@ -39,6 +39,7 @@ void GraphicsLayer::setPos(Utility::vec2d &pos, double th)
 
 AnimationBaseClass *GraphicsLayer::getAnimation(double time)
 {
+    if(m_animation == nullptr) return nullptr;
     m_animation->update(time);
     if(m_animation->isComplete())
     {

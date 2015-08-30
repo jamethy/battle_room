@@ -1,6 +1,7 @@
 #include "interfaces/graphics_interface.h"
 #include "graphics/object_handler.h"
 #include "graphics/graphics_layer.h"
+#include "graphics/camera.h"
 
 #include "utility/br_vectors.h"
 
@@ -13,6 +14,7 @@
 
 using namespace std;
 using namespace GraphicsInterface;
+using namespace Utility;
 
 typedef pair<ObjectType,string> objpair;
 vector<objpair> objs;
@@ -101,7 +103,7 @@ void createWindowTest()
 
 void drawObjects(objpair& op)
 {
-    Utility::vec2d pos(0.25,0.25);
+    Utility::vec2d pos(0,0);
     bool result = true;
     UniqueGraphicsWindow w = createWindow(500,500);
     if (w.get() == nullptr) result = false;
@@ -122,11 +124,100 @@ void drawObjects(objpair& op)
     check_test( result, "drawObjects " + op.second);
 }
 
+void setCameraPosition()
+{
+    bool result = true;
+    CameraClass cam(500,500);
+    cam.setCameraBounds(WorldPos(-5000,-50000),WorldPos(50000,50000));
+
+    CameraPos campos(WorldPos(1,2),3,4);
+
+    cam.setCameraPosition(campos);
+    CameraPos newpos = cam.getCameraPosition();
+
+    result = result && newpos.pos == WorldPos(1,2);
+    result = result && newpos.th == 3;
+    result = result && newpos._z == 4;
+
+    check_test( result, "setCameraPosition");
+}
+
+void moveCamera()
+{
+    bool result = true;
+    CameraClass cam(500,500);
+    cam.setCameraBounds(WorldPos(-5000,-50000),WorldPos(50000,50000));
+
+    CameraPos campos(WorldPos(0,0),0,0);
+    cam.setCameraPosition(campos);
+    cam.moveInX(2); cam.moveInY(3); cam.moveInZ(4); cam.rotate(1);
+    CameraPos newpos = cam.getCameraPosition();
+
+    result = result && newpos.pos == WorldPos(2,3);
+    result = result && newpos._z == 4;
+    result = result && newpos.th == 1;
+
+    check_test( result, "moveCamera");
+}
+
+
+void moveCameraOutOfBounds()
+{
+    bool result = true;
+    CameraClass cam(500,500);
+    cam.setCameraBounds(WorldPos(-50,-50),WorldPos(50,50));
+    typedef std::pair<CameraPos,CameraPos> campair; // position and if in bounds
+
+    std::vector<campair> cam_positions;
+    cam_positions.push_back(campair(CameraPos(WorldPos(0,0),0,0),    CameraPos(WorldPos(0,0),0,0)));
+    cam_positions.push_back(campair(CameraPos(WorldPos(10000,0),0,0),CameraPos(WorldPos(10000,0),0,0)));
+
+    for(campair& p : cam_positions)
+    {
+        cam.setCameraPosition(p.first);
+        cam.update();
+        result = result && (p.second == cam.getCameraPosition());
+    }
+
+    check_test( result, "moveCameraOutOfBounds");
+
+}
+
+
+void InterfaceTest()
+{
+    UniqueGraphicsWindow w = createWindow(500,500);
+    UniqueGraphicsWindow w2 = createWindow(500,500);
+
+    UniqueDrawableObject obj1 = createObject(Player); obj1->setPos(WorldPos(-1.5,0),0);
+    UniqueDrawableObject obj2 = createObject(Star); obj2->setPos(WorldPos(0,0),0);
+    UniqueDrawableObject obj3 = createObject(Wall); obj3->setPos(WorldPos(2.5,0),0);
+
+    WorldPos obj1pos = WorldPos(-1.5,0);
+    double obj2th = 0;
+    WorldPos obj3pos = WorldPos(2.5,0);
+
+
+    for(unsigned i = 0; i < 120; ++i)
+    {
+        std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
+
+        obj1pos.x() -= 0.01;    obj1->setPos(obj1pos,0);
+        obj2th += 2;            obj2->setPos(WorldPos(0,0),obj2th);
+        obj3pos.y() += 0.01;    obj3->setPos(obj3pos,0);
+
+        if(w != nullptr) w->update();
+        if(w2 != nullptr) w2->update();
+        std::this_thread::sleep_until(t1+std::chrono::milliseconds(17));
+    }
+}
+
 
 int main()
 {
     objs.push_back(make_pair( Player, "Player" ));
     objs.push_back(make_pair( Star, "Star" ));
+    objs.push_back(make_pair( Wall, "Wall" ));
 
     for(objpair& op : objs) createObjectTest(op);
     for(objpair& op : objs) moveObjectTest(op);
@@ -135,5 +226,8 @@ int main()
     createWindowTest();
     for(objpair& op : objs) drawObjects(op);
 
+    moveCamera();
+    moveCameraOutOfBounds();
+    InterfaceTest();
     return 0;
 }
