@@ -2,7 +2,10 @@ project(userlayer)
 
 
 
-add_executable(battleroom main.cpp)
+add_executable(battleroom
+    state_machine.h state_machine.cpp
+    main.cpp
+    )
 
 target_link_libraries(battleroom
     ${SDL2_LIBRARY}
