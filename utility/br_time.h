@@ -6,6 +6,8 @@
 namespace Utility {
 
 double getTime();
+void pauseTime();
+void unpauseTime();
 void resetTime(double offset);
 
 } // Utility namespace

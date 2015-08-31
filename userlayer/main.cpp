@@ -1,5 +1,6 @@
 #include "interfaces/graphics_interface.h"
 #include "interfaces/gamedata_interface.h"
+#include "utility/br_vectors.h"
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -19,6 +20,7 @@ void updateNongraphics(
 {
     steady_clock::time_point start = steady_clock::now();
     std::thread game(updateGame,gd);
+
     // maybe process some input
     // maybe some other stuff
     game.join();
@@ -34,7 +36,8 @@ int main()
 {
     GraphicsInterface::UniqueGraphicsWindow w = GraphicsInterface::createWindow(500,500);
     GameInterface::UniqueGameData gd = GameInterface::createGameData();
-
+    GraphicsInterface::UniqueDrawableObject obj = GraphicsInterface::createObject(GraphicsInterface::Player);
+    double playerth = 0;
     duration<double> g_time;
     unsigned g_count = 0;
 
@@ -43,6 +46,8 @@ int main()
         steady_clock::time_point start = steady_clock::now(); // temporary max fps of 60
 
         std::thread nongraphics(updateNongraphics,gd.get());
+        playerth += 0.1;
+        obj->setPos(Utility::vec2d(0,0),playerth);
         w->update();
         nongraphics.join();
         steady_clock::time_point stop = steady_clock::now();
