@@ -50,7 +50,8 @@ void ObjectVectorClass::removeObject(GraphicsLayer *obj)
             m_objects.erase(rd.base());
             return;
         }
-    }}
+    }
+}
 
 
 

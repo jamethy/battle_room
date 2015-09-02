@@ -1,6 +1,5 @@
 #include "interfaces/graphics_interface.h"
 #include "interfaces/gamedata_interface.h"
-#include "utility/br_vectors.h"
 
 #include <chrono>
 #include <thread>

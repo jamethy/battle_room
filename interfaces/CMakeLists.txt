@@ -8,5 +8,6 @@ graphics_interface.h
 networking_interface.h
 sound_interface.h
 user_interface.h
+playerinput_interface.h
 
 )

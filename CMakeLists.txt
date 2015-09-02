@@ -42,3 +42,18 @@ add_subdirectory( graphics )
 add_subdirectory( gamedata )
 add_subdirectory( userlayer )
 add_subdirectory( testers )
+
+
+
+add_executable(battleroom main.cpp )
+
+target_link_libraries(battleroom
+    ${SDL2_LIBRARY}
+    ${SDL2_IMAGE_LIBRARY}
+    ${SDL2_gfx_LIBRARY}
+    ${SDL2_TTF_LIBRARY}
+    battleroom_graphics
+    battleroom_gamedata
+    battleroom_userlayer
+    battleroom_utility
+)
