@@ -23,6 +23,9 @@ public:
 class GameDataClass
 {
 public:
+
+    virtual void startTestWorld() = 0;
+
     virtual void update() = 0;
     virtual ~GameDataClass(){}
 

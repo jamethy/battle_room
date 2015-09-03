@@ -13,10 +13,16 @@ WorldHandler::~WorldHandler()
 
 }
 
-BaseWorldObject *WorldHandler::addObject()
+BaseWorldObject *WorldHandler::addObject(GraphicsInterface::ObjectType type)
 {
-
-    m_objects.push_back(UniqueWorldObject(new StarObject()));
+    switch (type) {
+    case GraphicsInterface::Star:
+        m_objects.push_back(UniqueWorldObject(new StarObject()));
+        break;
+    default:
+        return nullptr;
+        break;
+    }
     return m_objects.back().get();
 }
 
@@ -38,6 +44,8 @@ std::vector<UniqueWorldObject>::iterator WorldHandler::begin()
     { return m_objects.begin(); }
 std::vector<UniqueWorldObject>::iterator WorldHandler::end()
     { return m_objects.end(); }
+void WorldHandler::clear()
+    { return m_objects.clear(); }
 
 
 

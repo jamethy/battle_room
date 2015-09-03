@@ -25,6 +25,7 @@ int main()
 {
     GraphicsInterface::UniqueGraphicsWindow w = GraphicsInterface::createWindow(1000,1000);
     GameInterface::UniqueGameData gd = GameInterface::createGameData();
+    gd.get()->startTestWorld();
 
     for(unsigned i = 0; i < 120; ++i){
 

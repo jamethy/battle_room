@@ -14,11 +14,12 @@ public:
     WorldHandler();
     ~WorldHandler();
 
-    BaseWorldObject *addObject();
+    BaseWorldObject *addObject(GraphicsInterface::ObjectType type);
     void removeObject(BaseWorldObject* object);
 
     std::vector<UniqueWorldObject>::iterator begin();
     std::vector<UniqueWorldObject>::iterator end();
+    void clear();
 
 private:
 

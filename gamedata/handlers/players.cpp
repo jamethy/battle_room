@@ -37,6 +37,8 @@ std::vector<UniquePlayer>::iterator PlayerHandler::begin()
     { return m_objects.begin(); }
 std::vector<UniquePlayer>::iterator PlayerHandler::end()
     { return m_objects.end(); }
+void PlayerHandler::clear()
+    { return m_objects.clear(); }
 
 
 

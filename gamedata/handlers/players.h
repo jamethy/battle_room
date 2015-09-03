@@ -19,6 +19,7 @@ public:
 
     std::vector<UniquePlayer>::iterator begin();
     std::vector<UniquePlayer>::iterator end();
+    void clear();
 
 private:
 

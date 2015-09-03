@@ -13,7 +13,6 @@ UniqueGameData createGameData()
 
 
 
-
 GameHandler::GameHandler()
 {
 
@@ -26,7 +25,8 @@ GameHandler::~GameHandler()
 
 void GameHandler::update()
 {
-
+    for(UniquePlayer& p : m_players) p.get()->updateGraphics();
+    for(UniqueWorldObject& p : m_world) p.get()->updateGraphics();
 }
 
 PlayerControl* GameHandler::getHumanPlayer()
@@ -60,5 +60,23 @@ std::vector<PlayerControl*> GameHandler::getAIPlayers()
     }
     return retvec;
 }
+
+
+
+void GameHandler::startTestWorld()
+{
+    m_players.clear();
+    m_world.clear();
+
+    m_players.addPlayer()->getControl()->changeControlTo(Human);
+    m_players.addPlayer()->moveTo(Utility::WorldPos(1,-3));
+    m_players.addPlayer()->moveTo(Utility::WorldPos(2,3));
+
+    m_world.addObject(GraphicsInterface::Star)->moveTo(Utility::WorldPos(0,2));
+    m_world.addObject(GraphicsInterface::Star)->moveTo(Utility::WorldPos(2,4));
+    m_world.addObject(GraphicsInterface::Star)->moveTo(Utility::WorldPos(-2,3));
+}
+
+
 
 } // GameInterface namespace

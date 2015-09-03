@@ -2,6 +2,7 @@
 #define OBJECTBASE_H
 
 #include "interfaces/graphics_interface.h"
+#include "utility/br_vectors.h"
 
 #include <memory>
 
@@ -12,8 +13,11 @@ class ObjectBaseClass
 {
 public:
 
+    virtual void updateGraphics();
 
     virtual ~ObjectBaseClass();
+    virtual void moveTo(const Utility::WorldPos& position);
+    virtual void rotateTo(const double& theta);
 
 protected:
     ObjectBaseClass(GraphicsInterface::ObjectType type);
@@ -21,6 +25,9 @@ protected:
 private:
 
     GraphicsInterface::UniqueDrawableObject m_graphics;
+
+    Utility::WorldPos m_centroid;
+    double m_theta;
 };
 
 } // GameInterface namespace

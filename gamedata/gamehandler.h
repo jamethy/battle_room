@@ -2,7 +2,8 @@
 #define GAMEHANDLER_H
 
 #include "interfaces/gamedata_interface.h"
-#include "handlers/players.h"
+#include "gamedata/handlers/players.h"
+#include "gamedata/handlers/world.h"
 
 namespace GameInterface
 {
@@ -11,6 +12,8 @@ namespace GameInterface
 class GameHandler : public GameDataClass
 {
 public:
+
+
     GameHandler();
     ~GameHandler();
 
@@ -20,9 +23,13 @@ public:
     std::vector<PlayerControl*> getNetworkPlayers();
     std::vector<PlayerControl*> getAIPlayers();
 
+
+    void startTestWorld();
+
 private:
 
     PlayerHandler m_players;
+    WorldHandler m_world;
 };
 
 } // GameInterface namespace
