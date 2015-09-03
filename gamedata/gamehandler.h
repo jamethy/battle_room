@@ -18,6 +18,7 @@ public:
     ~GameHandler();
 
     void update();
+    void updateGraphics();
 
     PlayerControl* getHumanPlayer();
     std::vector<PlayerControl*> getNetworkPlayers();

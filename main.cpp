@@ -31,6 +31,7 @@ int main()
 
         steady_clock::time_point start = steady_clock::now(); // temporary max fps of 60
 
+        gd.get()->updateGraphics();
         std::thread nongraphics(updateNongraphics,gd.get());
         w->update();
 

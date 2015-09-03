@@ -27,6 +27,7 @@ public:
     virtual void startTestWorld() = 0;
 
     virtual void update() = 0;
+    virtual void updateGraphics() = 0;
     virtual ~GameDataClass(){}
 
     virtual PlayerControl* getHumanPlayer() = 0;

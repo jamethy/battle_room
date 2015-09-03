@@ -25,6 +25,10 @@ GameHandler::~GameHandler()
 
 void GameHandler::update()
 {
+}
+
+void GameHandler::updateGraphics()
+{
     for(UniquePlayer& p : m_players) p.get()->updateGraphics();
     for(UniqueWorldObject& p : m_world) p.get()->updateGraphics();
 }
