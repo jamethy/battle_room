@@ -2,7 +2,6 @@
 #include "sdl_animations.h"
 #include "object_handler.h"
 #include "graphics_layer.h"
-#include "../utility/br_time.h"
 
 #include <iostream>
 #include <memory>
@@ -29,15 +28,20 @@ UniqueGraphicsWindow createWindow(unsigned width, unsigned height)
 SDLWindowClass::SDLWindowClass(unsigned width, unsigned height)
     : m_camera(CameraClass(width,height))
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
-        std::cerr << "SDL_Init error: " << SDL_GetError() << std::endl;
-        throw std::exception();
+    if(SDL_WasInit(SDL_INIT_EVERYTHING) == 0)
+    {
+        if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
+            std::cerr << "SDL_Init error: " << SDL_GetError() << std::endl;
+            throw std::exception();
+        }
     }
-
-    if (TTF_Init() != 0){
-        std::cerr << "TTF_Init error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        throw std::exception();
+    if(TTF_WasInit() == 0)
+    {
+        if (TTF_Init() != 0){
+            std::cerr << "TTF_Init error: " << SDL_GetError() << std::endl;
+            SDL_Quit();
+            throw std::exception();
+        }
     }
 
     m_window = UniqueWindow(SDL_CreateWindow("deathblade_floating", 0, 0, width, height, SDL_WINDOW_SHOWN),SDL_Deleter());
@@ -53,11 +57,19 @@ SDLWindowClass::SDLWindowClass(unsigned width, unsigned height)
         SDL_Quit();
         throw std::exception();
     }
+    ++sdl_window_count;
 }
+
+
+int SDLWindowClass::sdl_window_count = 0;
 
 SDLWindowClass::~SDLWindowClass()
 {
-    SDL_Quit();
+    if(--sdl_window_count <= 0)
+    {
+        TTF_Quit();
+        SDL_Quit();
+    }
 }
 
 
@@ -67,12 +79,16 @@ void SDLWindowClass::setViewBounds(Utility::vec2d& worldMin, Utility::vec2d& wor
     m_camera.setCameraBounds(worldMin,worldMax);
 }
 
+CameraObjectClas *SDLWindowClass::getCamera()
+{
+    return &m_camera;
+}
 
 
-void SDLWindowClass::update()
+
+void SDLWindowClass::update(const double &gameTime)
 {
     checkWindowSize();
-    double drawTime = Utility::getTime(); // used for animations
 
     ObjectHandlerClass* objectHandler = ObjectHandlerClass::Instance();
     objectHandler->update();
@@ -81,7 +97,7 @@ void SDLWindowClass::update()
     SDL_SetRenderDrawColor(m_renderer.get(), 0,0,0,255);
     SDL_RenderClear(m_renderer.get());
 
-    for (GraphicsLayer* obj : *objectHandler) draw_object(*obj, drawTime);
+    for (GraphicsLayer* obj : *objectHandler) draw_object(*obj, gameTime);
 
     SDL_RenderPresent(m_renderer.get());
 

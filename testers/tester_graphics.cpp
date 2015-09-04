@@ -116,7 +116,7 @@ void drawObjects(objpair& op)
         for(unsigned i = 0; i < 60; ++i)
         {
             std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-            w->update();
+            w->update(0);
             std::this_thread::sleep_until(t1+std::chrono::milliseconds(17));
         }
     }
@@ -141,25 +141,6 @@ void setCameraPosition()
 
     check_test( result, "setCameraPosition");
 }
-
-void moveCamera()
-{
-    bool result = true;
-    CameraClass cam(500,500);
-    cam.setCameraBounds(WorldPos(-5000,-50000),WorldPos(50000,50000));
-
-    CameraPos campos(WorldPos(0,0),0,0);
-    cam.setCameraPosition(campos);
-    cam.moveInX(2); cam.moveInY(3); cam.moveInZ(4); cam.rotate(1);
-    CameraPos newpos = cam.getCameraPosition();
-
-    result = result && newpos.pos == WorldPos(2,3);
-    result = result && newpos._z == 4;
-    result = result && newpos.th == 1;
-
-    check_test( result, "moveCamera");
-}
-
 
 void moveCameraOutOfBounds()
 {
@@ -206,8 +187,8 @@ void InterfaceTest()
         obj2th += 2;            obj2->setPos(WorldPos(0,0),obj2th);
         obj3pos.y() += 0.01;    obj3->setPos(obj3pos,0);
 
-        if(w != nullptr) w->update();
-        if(w2 != nullptr) w2->update();
+        if(w != nullptr) w->update(0);
+        if(w2 != nullptr) w2->update(0);
         std::this_thread::sleep_until(t1+std::chrono::milliseconds(17));
     }
 }
@@ -226,7 +207,6 @@ int main()
     createWindowTest();
     for(objpair& op : objs) drawObjects(op);
 
-    moveCamera();
     moveCameraOutOfBounds();
     InterfaceTest();
     return 0;

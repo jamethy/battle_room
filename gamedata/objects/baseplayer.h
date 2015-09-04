@@ -16,6 +16,7 @@ public:
     BasePlayerObject(GraphicsInterface::ObjectType type);
     virtual ~BasePlayerObject();
 
+    virtual void update(const double& timestep);
     UserInput* getControl(){ return &m_playerControl; }
 
 

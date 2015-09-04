@@ -23,14 +23,17 @@ GameHandler::~GameHandler()
 
 }
 
-void GameHandler::update()
+void GameHandler::update(const double& gameTime)
 {
+    static double last_time = 0;
+    double delta_time = gameTime - last_time;
+    for(UniquePlayer& p : m_players) p->update(delta_time);
 }
 
 void GameHandler::updateGraphics()
 {
-    for(UniquePlayer& p : m_players) p.get()->updateGraphics();
-    for(UniqueWorldObject& p : m_world) p.get()->updateGraphics();
+    for(UniquePlayer& p : m_players) p->updateGraphics();
+    for(UniqueWorldObject& p : m_world) p->updateGraphics();
 }
 
 PlayerControl* GameHandler::getHumanPlayer()
@@ -76,9 +79,9 @@ void GameHandler::startTestWorld()
     m_players.addPlayer()->moveTo(Utility::WorldPos(1,-3));
     m_players.addPlayer()->moveTo(Utility::WorldPos(2,3));
 
+    m_world.addObject(GraphicsInterface::Star)->moveTo(Utility::WorldPos(2.5,3));
+    m_world.addObject(GraphicsInterface::Star)->moveTo(Utility::WorldPos(-2.5,3));
     m_world.addObject(GraphicsInterface::Star)->moveTo(Utility::WorldPos(0,2));
-    m_world.addObject(GraphicsInterface::Star)->moveTo(Utility::WorldPos(2,4));
-    m_world.addObject(GraphicsInterface::Star)->moveTo(Utility::WorldPos(-2,3));
 }
 
 

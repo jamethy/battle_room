@@ -22,12 +22,12 @@ public:
 protected:
     ObjectBaseClass(GraphicsInterface::ObjectType type);
 
+    Utility::WorldPos m_centroid;
+    double m_theta;
+
 private:
 
     GraphicsInterface::UniqueDrawableObject m_graphics;
-
-    Utility::WorldPos m_centroid;
-    double m_theta;
 };
 
 } // GameInterface namespace

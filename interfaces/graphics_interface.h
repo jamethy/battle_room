@@ -36,13 +36,29 @@ typedef std::unique_ptr<DrawableObjectClass> UniqueDrawableObject;
 UniqueDrawableObject createObject(ObjectType obj);
 
 
+class CameraObjectClas
+{
+public:
+
+    virtual void setPos(const Utility::vec2d& pos) = 0;
+    virtual void setTh(const double& theta) = 0;
+    virtual void setZ(const double& z) = 0;
+
+    virtual Utility::vec2d& getPos() = 0;
+    virtual double& getTh() = 0;
+    virtual double& getZ() = 0;
+};
 
 class GraphicsWindowClass
 {
 public:
-    virtual ~GraphicsWindowClass();
+
+    virtual void update(const double& gameTime) = 0;
+
     virtual void setViewBounds(Utility::vec2d& worldMin, Utility::vec2d& worldMax) = 0;
-    virtual void update() = 0;
+    virtual CameraObjectClas* getCamera() = 0;
+
+    virtual ~GraphicsWindowClass();
 };
 
 

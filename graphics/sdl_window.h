@@ -18,9 +18,13 @@ class SDLWindowClass : public GraphicsWindowClass
 {
 public:
     SDLWindowClass(unsigned width, unsigned height);
-    ~SDLWindowClass();
+
+    void update(const double& gameTime);
+
     void setViewBounds(Utility::vec2d& worldMin, Utility::vec2d& worldMax);
-    void update();
+    CameraObjectClas* getCamera();
+
+    ~SDLWindowClass();
 
 private:
 
@@ -31,6 +35,8 @@ private:
     UniqueWindow m_window;
     UniqueRenderer m_renderer;
     CameraClass m_camera;
+
+    static int sdl_window_count;
 };
 
 }

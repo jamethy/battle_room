@@ -14,6 +14,10 @@ BasePlayerObject::~BasePlayerObject()
 
 }
 
+void BasePlayerObject::update(const double &timestep)
+{
+}
+
 
 
 } // GameInterface namespace

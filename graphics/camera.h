@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "interfaces/graphics_interface.h"
 #include "../utility/br_vectors.h"
 
 namespace GraphicsInterface
@@ -57,7 +58,7 @@ private:
 };
 
 
-class CameraClass
+class CameraClass : public CameraObjectClas
 {
 
 public:
@@ -71,14 +72,18 @@ public:
     void setCameraPosition(const CameraPos& pos);
     CameraPos getCameraPosition();
 
-    void moveInX(const double& changeInX);
-    void moveInY(const double& changeInY);
-    void moveInZ(const double& changeInZ);
-    void rotate(const double& changeInTh);
-
     void update();
 
     ZeroCalculator& getZeroCalculator();
+
+    // inherited
+    void setPos(const Utility::vec2d& pos);
+    void setTh(const double& theta);
+    void setZ(const double& z);
+
+    Utility::vec2d& getPos();
+    double& getTh();
+    double& getZ();
 
 private:
 
@@ -103,7 +108,7 @@ private:
     WorldPos m_maxbound;
 
     double m_fov; // radians
-    double m_fov_h;
+    double m_fov_vert;
 
 };
 

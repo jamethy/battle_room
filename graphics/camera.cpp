@@ -14,7 +14,7 @@ CameraClass::CameraClass(int width, int height, double fieldOfView) :
     m_window_width(width),
     m_window_height(height)
 {
-    m_fov_h = 2*atan(height*tan(m_fov/2.0)/width);
+    m_fov_vert = 2*atan(height*tan(m_fov/2.0)/width);
     getZeroCalculator().setCameraPos(getCameraPosition());
 }
 
@@ -46,29 +46,6 @@ CameraPos CameraClass::getCameraPosition()
     return m_camera_pos;
 }
 
-
-
-void CameraClass::moveInX(const double& changeInX)
-{
-    m_camera_pos.x() += changeInX;
-}
-
-void CameraClass::moveInY(const double& changeInY)
-{
-    m_camera_pos.y() += changeInY;
-}
-
-void CameraClass::moveInZ(const double& changeInZ)
-{
-    m_camera_pos.z() += changeInZ;
-}
-
-void CameraClass::rotate(const double& changeInTh)
-{
-    m_camera_pos.th += changeInTh;
-    calculateBounds();
-}
-
 void CameraClass::update()
 {
     checkBounds();
@@ -80,6 +57,14 @@ ZeroCalculator &CameraClass::getZeroCalculator()
     return m_zerocalculator;
 }
 
+void CameraClass::setPos(const Utility::vec2d &pos) { m_camera_pos.pos = pos; }
+void CameraClass::setTh(const double &theta) { m_camera_pos.th = theta; calculateBounds(); }
+void CameraClass::setZ(const double &z) { m_camera_pos.z() = z; }
+
+Utility::vec2d &CameraClass::getPos() { return m_camera_pos.pos; }
+double &CameraClass::getTh() { return m_camera_pos.th; }
+double &CameraClass::getZ() { return m_camera_pos.z(); }
+
 
 void CameraClass::checkBounds()
 {
@@ -90,9 +75,9 @@ void CameraClass::checkBounds()
     double& camth = m_camera_pos.th;
 
     double minx = -camz*tan(m_fov/2)   + camx*cos(-camth) - camy*sin(-camth);
-    double miny = -camz*tan(m_fov_h/2) + camx*sin(-camth) + camy*cos(-camth);
+    double miny = -camz*tan(m_fov_vert/2) + camx*sin(-camth) + camy*cos(-camth);
     double maxx =  camz*tan(m_fov/2)   + camx*cos(-camth) - camy*sin(-camth);
-    double maxy =  camz*tan(m_fov_h/2) + camx*sin(-camth) + camy*cos(-camth);
+    double maxy =  camz*tan(m_fov_vert/2) + camx*sin(-camth) + camy*cos(-camth);
 
     if (camx < m_minbound.x())
         camx = m_minbound.x();
@@ -175,7 +160,7 @@ void CameraClass::calculateBounds()
     }
 
     double zw = (m_maxview_w - m_minview_w)/2/tan(m_fov/2);
-    double zh = (m_maxview_h - m_minview_h)/2/tan(m_fov_h/2);
+    double zh = (m_maxview_h - m_minview_h)/2/tan(m_fov_vert/2);
 
     m_maxz = (zw > zh) ? zw : zh;
     m_minz = 1.5;

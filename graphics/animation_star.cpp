@@ -46,9 +46,9 @@ public:
         dst_rect.y = sp.y();
         dst_rect.w = camcalc.wFromWorld(2);
         dst_rect.h = camcalc.hFromWorld(2);
+
         if(isInFrame(dst_rect,camcalc.getWindowWidth(), camcalc.getWindowHeight()))
         {
-
             SDL_RenderCopyEx(renderer,
                             texture,
                             src_rect,

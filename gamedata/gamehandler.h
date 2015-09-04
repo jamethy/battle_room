@@ -17,7 +17,7 @@ public:
     GameHandler();
     ~GameHandler();
 
-    void update();
+    void update(const double& gameTime);
     void updateGraphics();
 
     PlayerControl* getHumanPlayer();

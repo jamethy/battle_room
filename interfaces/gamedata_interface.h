@@ -26,7 +26,7 @@ public:
 
     virtual void startTestWorld() = 0;
 
-    virtual void update() = 0;
+    virtual void update(const double& gameTime) = 0;
     virtual void updateGraphics() = 0;
     virtual ~GameDataClass(){}
 
