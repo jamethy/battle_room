@@ -1,6 +1,0 @@
-#ifndef NETWORKING_INTERFACE_H
-#define NETWORKING_INTERFACE_H
-
-
-
-#endif
