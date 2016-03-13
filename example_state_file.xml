@@ -1,0 +1,74 @@
+<!-- List of aniamtions for image file with same base name -->
+
+<!-- Example of static, box intersection animation -->
+<Animation name="static_example_animation">
+    <!-- Default dimensions of clip is whole file -->
+    <!-- Default end time is maximum integer -->
+    <Clip x="0" y="0" width="256" height="256" endtime="99999999">
+
+        <!-- Scales label equality of meters in game per pixel of image -->
+        <!-- These are required -->
+        <XScale pixels="256" meters="1" />
+        <YScale pixels="256" meters="1" />
+
+        <!-- Default bounding is none - it will not intersect -->
+        <!-- Default center is center of image -->
+        <BoundingBox width="1" height="1" center="(128,128)"/>
+
+    </Clip>
+
+    <!-- Default next animation is self -->
+    <!-- Set this to "null" if object should be destroyed after -->
+    <NextAnimation name="static_example_animation" />
+</Animation>
+
+<!-- Above example could have been done as such -->
+<Animation name="static_example_animation"><Clip /></Animation>
+
+<!-- Example of dynamic animation (that repeates itself)-->
+<Animation name="dynamic_circle">
+    <!-- Clip from upper left of image -->
+    <!-- Will last 123 milliseconds -->
+    <Clip x="0" y="0" width="127" height="127" endtime="123">
+
+        <XScale pixels="128" meters="1" />
+        <YScale pixels="128" meters="1" />
+
+        <BoundingCircle radius="1" />
+    </Clip>
+
+    <!-- Clip from upper right of image -->
+    <!-- Will last 123 milliseconds -->
+    <Clip x="128" y="0" width="127" height="127" endtime="246">
+
+        <XScale pixels="128" meters="1" />
+        <YScale pixels="128" meters="1" />
+
+        <!-- Object shrinks to half its radius -->
+        <BoundingCircle radius="0.5" />
+    </Clip>
+
+    <!-- Clip from bottom right of image -->
+    <!-- Will last 754 milliseconds -->
+    <Clip x="128" y="128" width="127" height="127" endtime="1000">
+
+        <XScale pixels="128" meters="1" />
+        <YScale pixels="128" meters="1" />
+
+        <!-- Object morphs into triangle? -->
+        <BoundingPoints>
+            <Point x="0" y="0"/>
+            <Point x="1" y="0"/>
+            <Point x="1" y="1"/>
+        </BoundingPoints>
+    </Clip>
+</Animation>
+
+<!-- Example of animation that, after running, goes to dynamic_circle -->
+<Animation name="before_dynamic_circle">
+    <Clip endtime="932">
+        <XScale pixels="128" meters="1" />
+        <YScale pixels="128" meters="1" />
+    </Clip>
+    <NextAnimation name="dynamic_circle" />
+</Animation>
