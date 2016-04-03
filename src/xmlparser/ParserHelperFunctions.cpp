@@ -41,8 +41,8 @@ std::string removeAllComments(const std::string& str) {
 
 std::string expandAllSelfenclosed(const std::string& str) {
 
-    std::regex comments ("<(\\w*)([^>]*)/>");
-    return std::regex_replace(str, comments, "<$1$2></$1>");
+    std::regex selfEnclosed ("<(\\w*)([^>]*)/>");
+    return std::regex_replace(str, selfEnclosed, "<$1$2></$1>");
 }
 
 std::unordered_map<std::string,std::string> parseAttributes( 
