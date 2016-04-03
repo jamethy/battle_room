@@ -129,22 +129,14 @@ TEST(Test_parseAttributes, empty) {
 
 TEST(Test_parseAttributes, ACouple) {
     auto attrs = parseAttributes("one=\"ONE\" two=\"TWO\"");
-    ASSERT_THAT(
-        attrs,
-        testing::ElementsAre(
-            testing::Pair("one","ONE"),
-            testing::Pair("two","TWO"))
-     );
+    EXPECT_EQ("ONE",attrs["one"]);
+    EXPECT_EQ("TWO",attrs["two"]);
 }
 
 TEST(Test_parseAttributes, extraSpace) {
     auto attrs = parseAttributes(" one=\"ONE\" two=\"TWO\" ");
-    ASSERT_THAT(
-        attrs,
-        testing::ElementsAre(
-            testing::Pair("one","ONE"),
-            testing::Pair("two","TWO"))
-     );
+    EXPECT_EQ("ONE",attrs["one"]);
+    EXPECT_EQ("TWO",attrs["two"]);
 }
 
 } // XmlParser namespace

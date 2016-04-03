@@ -17,7 +17,7 @@ XmlItem::XmlItem(const std::string& formattedString) {
     std::string str = formattedString;
     while(std::regex_search(str, sm, rgx_tags)) {
         m_tag = sm[1].str();
-        m_attributes = parseAttributes(sm[2].str());
+        m_attributes = AttributeSet(sm[2].str());
         if(sm.size() > 3 && sm[3].length() > 0) {
             m_subitems.push_back(XmlItem(sm[3])); 
         }
@@ -38,18 +38,25 @@ XmlItem XmlItem::fromXmlString(const std::string& xml) {
 ////////////////////////////////////////////////////////////////////////////////
 // Getters
 ////////////////////////////////////////////////////////////////////////////////
-std::string XmlItem::getTag() { 
+const std::string& XmlItem::getTag() { 
     return m_tag;
 }
 
-std::string XmlItem::getAttribute(std::string attr) {
-    auto at = m_attributes.find(attr);
-    if(at == m_attributes.end()) { return ""; }
-    else { return at->second; }
+const AttributeSet& XmlItem::getAttributeSet() {
+    return m_attributes;
 }
 
 std::vector<XmlItem> XmlItem::getItems() {
     return m_subitems;
 }
 
+std::vector<XmlItem> XmlItem::getItems(const std::string& tag) {
+    std::vector<XmlItem> returnItems;
+    for(XmlItem item : m_subitems) {
+        if(item.getTag().compare(tag) == 0) {
+            returnItems.push_back(item);
+        }
+    }
+    return returnItems;
+}
 } // XmlParser namespace

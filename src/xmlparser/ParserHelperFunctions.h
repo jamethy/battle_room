@@ -2,7 +2,7 @@
 #define PARSERFUNCIONS_H
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 namespace XmlParser {
 
@@ -44,7 +44,7 @@ std::string expandAllSelfenclosed(const std::string& str);
  * \param attribute_set String containing a list of attribute pairs
  * \return Map containing paris of attributes and values
  */
-std::map<std::string,std::string> 
+std::unordered_map<std::string,std::string> 
 parseAttributes(const std::string& attribute_set);
 
 /*!

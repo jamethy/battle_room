@@ -1,6 +1,8 @@
 #ifndef XMLPARSER_H
 #define XMLPARSER_H
 
+#include "battleroom/AttributeSet.h"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -21,9 +23,11 @@ class XmlItem {
 
 public:
     
-    std::string getTag();
-    std::string getAttribute(std::string attr);
+    const std::string& getTag();
+    const AttributeSet& getAttributeSet();
+
     std::vector<XmlItem> getItems();
+    std::vector<XmlItem> getItems(const std::string& tag);
 
     /*!
      * Parses the XML file with the name given and returns an XmlItem containing
@@ -44,7 +48,7 @@ public:
 private:
     
     XmlItem(const std::string& formattedString);
-    std::map<std::string, std::string> m_attributes;
+    AttributeSet m_attributes;
     std::vector<XmlItem> m_subitems;
     std::string m_tag;
 

@@ -1,6 +1,7 @@
 #include "battleroom/XmlParser.h"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+
 #include <iostream>
 
 namespace XmlParser {
@@ -26,7 +27,9 @@ TEST(test_TopLevel, get_attribute) {
     );
 
     ASSERT_EQ((unsigned long)1,xml.getItems().size());
-    std::string actual = xml.getItems()[0].getAttribute("name");
+    std::string actual = xml.getItems()[0]
+                            .getAttributeSet()
+                            .getString("name","defaultvalue");
     EXPECT_EQ(expected, actual);
 }
 
@@ -45,8 +48,9 @@ TEST(test_TopLevel, get_sub) {
 
     ASSERT_EQ((unsigned long)1,subitems.size());
     std::string actualTag = subitems[0].getTag();
-    std::string actualAttr = subitems[0].getAttribute("stuff");
-
+    std::string actualAttr = subitems[0]
+                            .getAttributeSet()
+                            .getString("stuff","defaultvalue");
     EXPECT_EQ(expectedTag, actualTag);
     EXPECT_EQ(expectedAttr, actualAttr);
 }
@@ -66,13 +70,17 @@ TEST(Test_filterXmlString, simpleTest) {
     ASSERT_EQ((unsigned long)1, actual.getItems().size());
     XmlItem lvl1 = actual.getItems()[0];
     EXPECT_EQ("Head",lvl1.getTag());
-    EXPECT_EQ("myHead",lvl1.getAttribute("name"));
+    EXPECT_EQ("myHead",lvl1
+                        .getAttributeSet()
+                        .getString("name","defaultvalue"));
 
     // level 2
     ASSERT_EQ((unsigned long)1, lvl1.getItems().size());
     XmlItem lvl2 = lvl1.getItems()[0];
     EXPECT_EQ("body",lvl2.getTag());
-    EXPECT_EQ("myBody",lvl2.getAttribute("type"));
+    EXPECT_EQ("myBody",lvl2
+                        .getAttributeSet()
+                        .getString("type","defaultvalue"));
 
     // level 3
     EXPECT_EQ((unsigned long)0, lvl2.getItems().size());

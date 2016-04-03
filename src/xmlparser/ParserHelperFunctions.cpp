@@ -45,12 +45,12 @@ std::string expandAllSelfenclosed(const std::string& str) {
     return std::regex_replace(str, comments, "<$1$2></$1>");
 }
 
-std::map<std::string,std::string> parseAttributes( 
+std::unordered_map<std::string,std::string> parseAttributes( 
                                   const std::string& attribute_set) {
 
-    std::map<std::string,std::string> attrs_map;
+    std::unordered_map<std::string,std::string> attrs_map;
 
-    std::regex rgx_attr("\\s*(\\w+)=\"(\\w+)\"");
+    std::regex rgx_attr("\\s*(\\w+)=\"([^\\\"]+)\"");
     std::smatch sm;
     std::string str = attribute_set;
     while(std::regex_search(str, sm, rgx_attr)) {
