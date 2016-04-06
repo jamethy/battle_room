@@ -14,3 +14,4 @@ include_directories(
         )
 
 add_subdirectory(xmlparser)
+add_subdirectory(animation)

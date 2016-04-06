@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(include)
 
 add_subdirectory(xmlparser)
+add_subdirectory(animation)
 
 add_executable(battleroom main.cpp )
 
