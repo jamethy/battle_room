@@ -1,4 +1,3 @@
-#include "battleroom/AttributeSet.h"
 #include <iostream>
 
 int main() {
