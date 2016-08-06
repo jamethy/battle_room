@@ -3,7 +3,7 @@ set( BUILD_GTEST ON )
 unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
-add_definitions(-DTEST_FILES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/test_files")
+add_definitions(-DTEST_FILES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/tests/test_files")
 
 add_subdirectory( lib/googletest )
 
@@ -13,5 +13,3 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src/include
         )
 
-add_subdirectory(xmlparser)
-add_subdirectory(animation)
