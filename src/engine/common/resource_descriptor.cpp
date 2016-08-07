@@ -1,5 +1,10 @@
 
-#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/engine/common/resource_descriptor.h"
+
+#include <fstream>
+#include <iostream>
+#include <algorithm>
+#include <regex>
 
 using std::string;
 using std::vector;
@@ -30,11 +35,81 @@ void ResourceDescriptor::setSubResources(vector<ResourceDescriptor> subResources
     m_subResources = subResources;
 }
 
-void ResourceDescriptor::fillFromInput(vector<string> lines) {
-    // TODO fill this function
+string parseOutValue(std::string line) {
+
+    string value = "";
+
+    std::regex rgx_value("^\\s*.*: (.*)$");
+    std::smatch sm;
+    if(std::regex_search(line, sm, rgx_value)) {
+         value = sm[1].str();
+    }
+    return value;
 }
 
 
+string parseOutKey(string line) {
 
+    string key = "";
+
+    std::regex rgx_key("^\\s*(.*):.*");
+    std::smatch sm;
+    if(std::regex_search(line, sm, rgx_key)) {
+         key = sm[1].str();
+    }
+    return key;
+}
+
+bool isLineEmpty(string line) {
+
+    std::regex rgx_char("\\S");
+    std::smatch sm;
+    return !std::regex_search(line, sm, rgx_char);
+}
+
+int getLevel(string line) {
+
+    std::regex rgx_tab("\\t");
+    string newline = std::regex_replace(line,rgx_tab,"    ");
+
+    size_t firstNonSpace = newline.find_first_not_of(' ');
+    return (firstNonSpace + 2) / 4;
+
+}
+
+void ResourceDescriptor::fillFromInput(vector<string> lines, unsigned& start) {
+    
+    if (lines.size() > start) {
+        string firstLine = lines[start];
+
+        setKey(parseOutKey(firstLine));
+        setValue(parseOutValue(firstLine));
+        int firstLevel = getLevel(firstLine);
+
+        vector<ResourceDescriptor> subs;
+
+        while (++start < lines.size()) {
+            string nextLine = lines[start];
+
+            if (!isLineEmpty(nextLine)) {
+                if (getLevel(nextLine) <= firstLevel) {
+                    --start;
+                    break;
+                } else {
+                    ResourceDescriptor sub;
+                    sub.fillFromInput(lines,start);
+                    subs.push_back(sub);
+                }
+            }
+        }
+
+        setSubResources(subs);
+    }
+}
+
+ResourceDescriptor::ResourceDescriptor() :
+    m_key(""), m_value("")
+{
+}
 
 } // Common namespace

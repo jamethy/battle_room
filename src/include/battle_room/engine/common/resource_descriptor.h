@@ -2,7 +2,6 @@
 #define RESOURCE_DESCRIPTOR_H
 
 #include <vector>
-#include <iosfwd>
 #include <string>
 
 namespace Common {
@@ -35,7 +34,7 @@ public:
      * Reads in an input file or string and fills resource descriptor.
      * Assumes first line describes the top level descriptor
      */
-    void fillFromInput(std::vector<std::string> lines);
+    void fillFromInput(std::vector<std::string> lines, unsigned& start);
 
     void setKey(std::string key);
     void setValue(std::string value);
