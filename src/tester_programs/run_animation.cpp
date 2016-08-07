@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "battle_room/engine/common/resource_descriptor.h"
-#include "battle_room/engine/common/file_utils.h"
+#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/file_utils.h"
 
 int main() {
 

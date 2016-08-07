@@ -1,5 +1,5 @@
 
-#include "battle_room/engine/common/resource_descriptor.h"
+#include "battle_room/common/resource_descriptor.h"
 
 #include <fstream>
 #include <iostream>
