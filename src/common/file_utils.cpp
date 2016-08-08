@@ -14,6 +14,10 @@ string getFileName(string fullFilePath) {
 
     string filename = fullFilePath;
 
+    // .*\\/ file path and the last forward slash
+    // (.*) the filename (group 1)
+    // \\.[\\w]+ the dot and at least one word character designating the extension
+    // $ end of line
     std::regex rgx_name(".*\\/(.*)\\.[\\w]+$");
     std::smatch sm;
     if(std::regex_search(fullFilePath, sm, rgx_name)) {
@@ -27,6 +31,10 @@ string getFileExtension(string filename) {
 
     string ext = filename;
 
+
+    // .*\\. file name and path including the dot before the extension
+    // ([\\w]+) at least one word character designating the extension (group 1)
+    // $ end of line
     std::regex rgx_ext(".*\\.([\\w]+)$");
     std::smatch sm;
     if(std::regex_search(filename, sm, rgx_ext)) {

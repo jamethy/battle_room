@@ -39,6 +39,11 @@ string parseOutValue(std::string line) {
 
     string value = "";
 
+    // ^ beginning of line
+    // \\s* All whitespace between beginning and key
+    // .*:  Key and colon-space deliminator
+    // (.*) The value (group 1)
+    // $ end of line
     std::regex rgx_value("^\\s*.*: (.*)$");
     std::smatch sm;
     if(std::regex_search(line, sm, rgx_value)) {
@@ -52,6 +57,10 @@ string parseOutKey(string line) {
 
     string key = "";
 
+    // ^ beginning of line
+    // \\s* All whitespace between beginning and key
+    // (.*) The Key (group 1)
+    // :.* The colon-space deliminator and the rest of the line
     std::regex rgx_key("^\\s*(.*):.*");
     std::smatch sm;
     if(std::regex_search(line, sm, rgx_key)) {
@@ -62,6 +71,7 @@ string parseOutKey(string line) {
 
 bool isLineEmpty(string line) {
 
+    // \\S any non-whitespace character
     std::regex rgx_char("\\S");
     std::smatch sm;
     return !std::regex_search(line, sm, rgx_char);
@@ -69,6 +79,7 @@ bool isLineEmpty(string line) {
 
 int getLevel(string line) {
 
+    // \\t A tab character
     std::regex rgx_tab("\\t");
     string newline = std::regex_replace(line,rgx_tab,"    ");
 
