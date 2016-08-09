@@ -1,6 +1,7 @@
 #ifndef FRAME_H
 #define FRAME_H
 
+#include "battle_room/common/pixel.h"
 #include "battle_room/common/resource_descriptor.h"
 
 namespace Animation {
@@ -11,22 +12,13 @@ class Frame {
 
 public:
 
-    void setEndTime(seconds endTime);
-
-    void setTopRow(px topRow);
-    void setLeftCol(px leftCol);
-    void setBottomRow(px bottomRow);
-    void setRightCol(px rightCol);
-
-    void setXScale(double xScale);
-    void setYScale(double yScale);
+    Frame(seconds endTime, Common::Pixel topLeft, Common::Pixel bottomRight, 
+            double xScale, double yScale);
 
     seconds getEndTime();
 
-    px getTopRow();
-    px getLeftCol();
-    px getBottomRow();
-    px getRightCol();
+    const Common::Pixel& getTopLeft();
+    const Common::Pixel& getBottomRight();
 
     double getXScale();
     double getYScale();
@@ -34,16 +26,22 @@ public:
 
 private:
     
-    seconds m_endTime;
+    const seconds m_endTime;
 
-    px m_topRow;
-    px m_leftCol;
-    px m_bottomRow;
-    px m_rightCol;
+    const Common::Pixel m_topLeft;
+    const Common::Pixel m_bottomRight;
 
-    double m_xScale; // meters per pixel
-    double m_yScale; // meters per pixel
+    const double m_xScale; // meters per pixel
+    const double m_yScale; // meters per pixel
     
 }; // Frame class
+
+
+/**
+ * Parses the string for seconds
+ */
+seconds toSeconds(std::string str);
+
+
 } // Animation namespace
 #endif // FRAME_H

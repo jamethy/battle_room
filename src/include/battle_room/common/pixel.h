@@ -1,6 +1,8 @@
 #ifndef PIXEL_H
 #define PIXEL_H
 
+#include <string>
+
 namespace Common {
 
 typedef double px;
@@ -8,6 +10,8 @@ typedef double px;
 class Pixel {
 
 public:
+
+    Pixel(px row, px col);
 
     /*!
      * The row is the number of pixels from the TOP of the image
@@ -34,5 +38,11 @@ private:
     px m_col = 0.0;
 
 }; // Pixel class
+
+/**
+ * Parses a string and resturns a pixel count
+ */
+px stopx(std::string s);
+
 } // namespace Common
-#endif PIXEL_H
+#endif // PIXEL_H

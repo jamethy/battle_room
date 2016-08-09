@@ -1,8 +1,13 @@
 #include "battle_room/common/pixel.h"
 
 #include <cmath>
+#include <string>
 
 namespace Common {
+
+Pixel::Pixel(px row, px col)
+    : m_row(row), m_col(col) 
+{ }
 
 void Pixel::setRow(px row) {
     m_row = row;
@@ -26,6 +31,10 @@ int Pixel::getRowInt() {
 
 int Pixel::getColInt() {
     return (int)std::round(m_col);
+}
+
+px stopx(std::string s) {
+    return stod(s);
 }
 
 } // namespace Common

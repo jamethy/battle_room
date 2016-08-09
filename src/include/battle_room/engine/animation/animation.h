@@ -8,27 +8,25 @@
 
 namespace Animation {
 
+class Animation {
+
 public:
 
-    void setImageFile(std::string imageFile);
+    Animation(std::string imageFile, std::string nextAnimation, std::vector<Frame> frames);
 
-    void setNextAnimation(std::string nextAnimation);
+    const std::string& getImageFile();
 
-    void setFrames(std::vector<Frame> frames);
+    const std::string& getNextAnimation();
 
-    std::string getImageFile();
-
-    std::string getNextAnimation();
-
-    std::vector<Frame> getFrames();
+    const std::vector<Frame>& getFrames();
 
 private:
     
-    std::string m_imageFile;
+    const std::string m_imageFile;
     
-    std::string m_nextAnimation;
+    const std::string m_nextAnimation;
 
-    std::vector<Frame> m_frames;
+    const std::vector<Frame> m_frames;
 
 
 }; // Animation class

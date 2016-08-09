@@ -1,54 +1,25 @@
 #include "battle_room/engine/animation/frame.h"
 
+using Common::Pixel;
+
 namespace Animation {
 
-
-void Frame::setEndTime(seconds endTime) {
-    m_endTime = endTime;
-}
-
-void Frame::setTopRow(px topRow) {
-    m_topRow = topRow;
-}
-
-void Frame::setLeftCol(px leftCol) {
-    m_leftCol = leftCol;
-}
-
-void Frame::setBottomRow(px bottomRow) {
-    m_bottomRow = bottomRow;
-}
-
-void Frame::setRightCol(px rightCol) {
-    m_rightCol = rightCol;
-}
-
-void Frame::setXScale(double xScale) {
-    m_xScale = xScale;
-}
-
-void Frame::setYScale(double yScale) {
-    m_yScale = yScale;
-}
+Frame::Frame(seconds endTime, Pixel topLeft, Pixel bottomRight, double xScale, double yScale)
+    : m_endTime(endTime), 
+    m_topLeft(topLeft), m_bottomRight(bottomRight), 
+    m_xScale(xScale), m_yScale(yScale)
+{ }
 
 seconds Frame::getEndTime() {
     return m_endTime;
 }
 
-px Frame::getTopRow() {
-    return m_topRow;
+const Pixel& Frame::getTopLeft() {
+    return m_topLeft;
 }
 
-px Frame::getLeftCol() {
-    return m_leftCol;
-}
-
-px Frame::getBottomRow() {
-    return m_bottomRow;
-}
-
-px Frame::getRightCol() {
-    return m_rightCol;
+const Pixel& Frame::getBottomRight() {
+    return m_bottomRight;
 }
 
 double Frame::getXScale() {

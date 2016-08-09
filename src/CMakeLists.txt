@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 include_directories(include)
 
 add_subdirectory(common)
+add_subdirectory(engine)
 add_subdirectory(tester_programs)
 
 add_executable(battleroom main.cpp )

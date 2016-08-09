@@ -5,27 +5,19 @@ using std::vector;
 
 namespace Animation {
 
-void Animation::setImageFile(string imageFile) {
-    m_imageFile = imageFile;
-}
+Animation::Animation(string imageFile, string nextAnimation, vector<Frame> frames)
+    : m_imageFile(imageFile), m_nextAnimation(nextAnimation), m_frames(frames)
+{ }
 
-void Animation::setNextAnimation(string nextAnimation) {
-    m_nextAnimation = nextAnimation;
-}
-
-void Animation::setFrames(vector<Frame> frames) {
-    m_frames = frames;
-}
-
-string Animation::getImageFile() {
+const string& Animation::getImageFile() {
     return m_imageFile;
 }
 
-string Animation::getNextAnimation() {
+const string& Animation::getNextAnimation() {
     return m_nextAnimation;
 }
 
-vector<Frame> Animation::getFrames() {
+const vector<Frame>& Animation::getFrames() {
     return m_frames;
 }
 
