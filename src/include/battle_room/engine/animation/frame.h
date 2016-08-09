@@ -1,6 +1,8 @@
 #ifndef FRAME_H
 #define FRAME_H
 
+#include "battle_room/common/resource_descriptor.h"
+
 namespace Animation {
 
 typedef double seconds;
