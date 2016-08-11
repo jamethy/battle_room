@@ -1,6 +1,8 @@
 
 #include "battle_room/engine/graphics/display_window.h"
 
+#include "sdl_texture_manager.h"
+
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "SDL.h"
@@ -51,12 +53,12 @@ public:
             SDL_DestroyWindow(m_window);
             SDL_Quit();
         }
+
+        m_sdlTextureManager.setRenderer(m_renderer);
     }
 
     ~SdlWindow() {
-//        for (std::pair<string,SDL_Texture*> texture : m_textureMap) {
-//            SDL_DestroyTexture(texture->second);
-//        }
+        m_sdlTextureManager.clear();
         SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);
         SDL_Quit();
@@ -89,10 +91,9 @@ public:
 
 private:
 
+    SdlTextureManager m_sdlTextureManager;
     SDL_Renderer* m_renderer;
     SDL_Window* m_window;
-
-    map<string,SDL_Texture*> m_textureMap;
 
 }; // SdlWindow class
 

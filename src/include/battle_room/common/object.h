@@ -1,6 +1,8 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "battle_room/engine/animation/animation.h"
+
 namespace Common {
 
 // TODO fill class
@@ -10,7 +12,7 @@ public:
 
 private:
 
-    // animation
+    Animation::Animation m_currentAnimation;
     // point in animation
     // position
 

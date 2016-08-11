@@ -3,6 +3,7 @@
 
 #include "battle_room/common/object.h"
 #include "battle_room/common/inputs.h"
+#include "battle_room/engine/graphics/texture_manager.h"
 
 #include <vector>
 
@@ -15,32 +16,29 @@ public:
     /*!
      * Returns the collection of user inputs that have been gathered
      */
-    Common::Inputs getInputs();
+    virtual Common::Inputs getInputs();
     
     /*!
      * Add the game world objects that need to be rendered
      */
-    void addWorldObjects(std::vector<Common::Object> objects);
+    virtual void addWorldObjects(std::vector<Common::Object> objects);
 
     /*!
      * Add the UI objects that need to be rendered
      */
-    void addUiObjects(std::vector<Common::Object> objects);
+    virtual void addUiObjects(std::vector<Common::Object> objects);
 
     /*!
      * Add the Menu objects that need to be rendered
      */
-    void addMenuObjects(std::vector<Common::Object> objects);
+    virtual void addMenuObjects(std::vector<Common::Object> objects);
 
     /*!
      * Draws the world, UI, and then menu objects
      */
-    void drawScreen();
+    virtual void drawScreen();
 
-protected:
-
-    // made it protected so it can't be created
-    DisplayWindow();
+    virtual TextureManager& getTextureManager();
 
 }; // DisplayWindow class
 
