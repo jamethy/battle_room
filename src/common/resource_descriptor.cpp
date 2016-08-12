@@ -1,5 +1,6 @@
 
 #include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/file_utils.h"
 
 #include <fstream>
 #include <iostream>
@@ -121,6 +122,17 @@ void ResourceDescriptor::fillFromInput(vector<string> lines, unsigned& start) {
 ResourceDescriptor::ResourceDescriptor() :
     m_key(""), m_value("")
 {
+}
+
+ResourceDescriptor ResourceDescriptor::readFile(string filePath) {
+
+    ResourceDescriptor descriptor;
+
+    vector<string> resourceFile = readEntireFile(filePath);
+    unsigned start = 0;
+    descriptor.fillFromInput(resourceFile, start);
+
+    return descriptor;
 }
 
 } // Common namespace

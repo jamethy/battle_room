@@ -30,6 +30,8 @@ public:
      */
     std::vector<ResourceDescriptor> getSubResources();
 
+    static ResourceDescriptor readFile(std::string filePath);
+
     /*!
      * Reads in an input file or string and fills resource descriptor.
      * Assumes first line describes the top level descriptor
@@ -49,5 +51,6 @@ private:
     std::vector<ResourceDescriptor> m_subResources;
 
 }; // RecourseDescriptor class
+
 } // Common namespace
 #endif // RESOURCE_DESCRIPTOR_H

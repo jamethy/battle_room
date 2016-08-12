@@ -21,4 +21,10 @@ const vector<Frame>& Animation::getFrames() {
     return m_frames;
 }
 
+Animation defaultAnimation("default", "default", vector<Frame>());
+
+Animation& getDefaultAnimation() {
+    return defaultAnimation;
+}
+
 } // Animation namespace

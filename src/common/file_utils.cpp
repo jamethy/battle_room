@@ -9,7 +9,6 @@ using std::vector;
 
 namespace Common {
 
-
 string getFileName(string fullFilePath) {
 
     string filename = fullFilePath;
@@ -30,7 +29,6 @@ string getFileName(string fullFilePath) {
 string getFileExtension(string filename) {
 
     string ext = filename;
-
 
     // .*\\. file name and path including the dot before the extension
     // ([\\w]+) at least one word character designating the extension (group 1)

@@ -30,5 +30,8 @@ private:
 
 
 }; // Animation class
+
+Animation& getDefaultAnimation();
+
 } // Animation namespace
 #endif // ANIMATION_H

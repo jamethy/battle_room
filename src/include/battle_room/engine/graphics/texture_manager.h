@@ -7,6 +7,8 @@
 
 namespace Graphics {
 
+std::string getResourcePath();
+
 class TextureManager {
 
 public:

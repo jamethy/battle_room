@@ -50,12 +50,9 @@ void testFrameResource(ResourceDescriptor frame, string time, string toprow, str
 }
 
 TEST(Test_fillFromInput, testFile) {
-    string test_file = string(TEST_FILES_DIR) + "/test_animation.txt";
-    vector<string> lines = readEntireFile(test_file);
 
-    ResourceDescriptor rd;
-    unsigned start = 0;
-    rd.fillFromInput(lines,start);
+    string test_file = string(TEST_FILES_DIR) + "/test_animation.txt";
+    ResourceDescriptor rd = ResourceDescriptor::readFile(test_file);
 
     EXPECT_EQ("test_animation", rd.getKey());
     EXPECT_EQ("txt", rd.getValue());

@@ -1,11 +1,39 @@
 
 #include "sdl_texture_manager.h"
 
+#include "battle_room/common/file_utils.h"
+
+#include <iostream>
+
 using std::string;
 
 using Common::px;
+using Common::ResourceDescriptor;
 
 namespace Graphics {
+
+string getResourcePath() {
+    static string resourcePath;
+    if (resourcePath.empty()) {
+        char *path = SDL_GetBasePath();
+        if (path) {
+            resourcePath = path;
+            SDL_free(path);
+        }
+        else {
+            std::cerr << "Error getting resource path: " << SDL_GetError() << std::endl;
+            return "";
+        }
+        
+		size_t pos = resourcePath.rfind("bin");
+		resourcePath = resourcePath.substr(0, pos) + "res/";
+	}
+    return resourcePath;
+}
+
+
+SdlTextureManager::SdlTextureManager() {
+}
 
 SdlTextureManager::~SdlTextureManager() {
     clear(); // attempt to clear but should already be clear
@@ -54,8 +82,7 @@ px SdlTextureManager::getTextureHeight(string texture) {
 SDL_Texture* SdlTextureManager::getTexture(string texture) {
 
     if (m_textureMap.count(texture) == 0) {
-        // TODO get texture path?
-        string texture_path = texture;
+        string texture_path = getResourcePath() + texture;
         m_textureMap[texture] = IMG_LoadTexture(m_renderer, texture_path.c_str());
     }
 
