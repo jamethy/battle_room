@@ -8,7 +8,6 @@
 using std::string;
 
 using Common::px;
-using Common::ResourceDescriptor;
 
 namespace Graphics {
 

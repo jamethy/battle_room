@@ -13,10 +13,10 @@ class TextureManager {
 
 public:
 
-    virtual bool isTextureAvailable(std::string texture);
+    virtual bool isTextureAvailable(std::string texture) = 0;
 
-    virtual Common::px getTextureWidth(std::string texture);
-    virtual Common::px getTextureHeight(std::string texture);
+    virtual Common::px getTextureWidth(std::string texture) = 0;
+    virtual Common::px getTextureHeight(std::string texture) = 0;
 
 }; // TextureManager class
 } // Graphics namespace

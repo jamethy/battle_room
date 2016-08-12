@@ -13,5 +13,8 @@ target_link_libraries(battleroom
     ${SDL2_IMAGE_LIBRARY}
     ${SDL2_gfx_LIBRARY}
     ${SDL2_TTF_LIBRARY}
+    Common
+    Animation
+    Graphics
 )
 

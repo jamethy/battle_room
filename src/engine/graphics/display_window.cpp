@@ -10,6 +10,7 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <exception>
 
 using std::string;
 using std::map;
@@ -65,28 +66,32 @@ public:
     }
 
 
-    Inputs getInputs() {
+    Inputs getInputs() override {
         //SDL_Event event;
         //SDL_GetTicks();
         //while (SDL_PollEvent(&event) {
         return Inputs();
     }
 
-    void addWorldObjects(vector<Object> objects) {
+    void addWorldObjects(vector<Object> objects) override {
         
         //if (!m_textureMap.contains(object.getTexture()) {
                 //SDL_Texture* texture = IMG_LoadTexture(m_renderer, object.getTexture().c_str());
         //}
     }
 
-    void addUiObjects(vector<Object> objects) {
+    void addUiObjects(vector<Object> objects) override {
     }
 
-    void addMenuObjects(vector<Object> objects) {
+    void addMenuObjects(vector<Object> objects) override {
     }
 
-    void drawScreen() {
+    void drawScreen() override {
         //SDL_SetRenderDrawColor();
+    }
+
+    TextureManager& getTextureManager() override {
+        return m_sdlTextureManager;
     }
 
 private:
@@ -98,8 +103,17 @@ private:
 }; // SdlWindow class
 
 
-DisplayWindow* createDisplayWindow(string settingsFilename) {
-    return new SdlWindow(settingsFilename);
+UniqueDisplayWindow createDisplayWindow(string settingsFilename) {
+
+    try
+    {
+        return UniqueDisplayWindow(new SdlWindow(settingsFilename));
+    }
+    catch(std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+        return nullptr;
+    }
 }
 
 } // Graphics namespace

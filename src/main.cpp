@@ -1,8 +1,11 @@
+#include "battle_room/engine/graphics/display_window.h"
+
 #include <iostream>
 
 int main() {
 
     std::cout << "Hello World!\n";
+    std::string resourcePath = Graphics::getResourcePath();
 
     ///// Game States
     // dedicated server
@@ -16,7 +19,8 @@ int main() {
 
     // Create main components of game
     //ProgramState state;
-    //DisplayWindow window;
+    Graphics::UniqueDisplayWindow window = Graphics::createDisplayWindow("");
+
     //Menus menus;
     //UserInterfaces uis;
     //GameWorld game;
@@ -39,4 +43,6 @@ int main() {
         //window.drawScreen();
     //}
     // cleanup
+    
+    return 0;
 }

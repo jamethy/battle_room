@@ -1,15 +1,53 @@
-#include <iostream>
+#include "battle_room/engine/graphics/display_window.h"
 
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/file_utils.h"
 
-int main() {
+#include <fstream>
+#include <iostream>
+
+int main(int argc, char** argv) {
 
     std::cout << "Hello world.\n";
 
-    std::string filename = "../battle_room/src/tester_programs/res/boy_walking.txt";
+    std::string arg = "";
 
-    Common::readEntireFile(filename);
+    // check if argument was given, request if not
+    if (argc < 2) {
+        std::cout << "Please enter animation name or file path: \n";
+        std::cin >> arg;
+    }
+    else {
+        arg = argv[1];
+    }
+
+    // check file extension, if not there add text
+    if (arg.find(".txt") == std::string::npos) {
+        arg += ".txt";
+    }
+
+    std::ifstream infile;
+
+    // see if file exists
+    infile.open(arg);
+    if (!infile.is_open()) {
+
+        std::cout << "Looking in resource path: " << Graphics::getResourcePath() << std::endl;
+        arg = Graphics::getResourcePath() + arg;
+
+        infile.open(arg);
+        if(!infile.is_open()) {
+            std::cerr << "Unable to find file.\n";
+        }
+    }
+
+    infile.close();
+
+    Common::readEntireFile(arg);
+
+    Graphics::UniqueDisplayWindow window = Graphics::createDisplayWindow("");
+
+
 
     return 0;
 }
