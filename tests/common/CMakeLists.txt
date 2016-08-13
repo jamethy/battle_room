@@ -2,6 +2,7 @@
 add_executable(runCommonTests
                     testResourceDescriptor.cpp 
                     testFileUtils.cpp 
+                    testStringUtils.cpp
                )
 
 target_link_libraries(runCommonTests gtest gmock gtest_main Common)

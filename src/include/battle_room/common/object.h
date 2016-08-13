@@ -3,28 +3,28 @@
 
 #include "battle_room/engine/animation/animation.h"
 
-namespace Common {
+namespace BattleRoom {
 
 // TODO fill class
 class Object {
 
 public:
 
-    Animation::Animation getAnimation();
-    void setAnimation(Animation::Animation animation);
+    Animation getAnimation();
+    void setAnimation(Animation animation);
 
-    Animation::seconds getAnimationState();
-    void setAnimationState(Animation::seconds animationState);
+    seconds getAnimationState();
+    void setAnimationState(seconds animationState);
 
     Object();
 
 private:
 
-    Animation::Animation& m_currentAnimation;
-    Animation::seconds m_animationState;
+    Animation& m_currentAnimation;
+    seconds m_animationState;
     // point in animation
     // position
 
 }; // Object class
-} // Common namespace
+} // BattleRoom namespace
 #endif // OBJECT_H

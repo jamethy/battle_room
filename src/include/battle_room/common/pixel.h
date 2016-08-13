@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace Common {
+namespace BattleRoom {
 
 typedef double px;
 
@@ -11,26 +11,27 @@ class Pixel {
 
 public:
 
+    Pixel();
     Pixel(px row, px col);
 
     /*!
      * The row is the number of pixels from the TOP of the image
      */
     void setRow(px row);
-    px getRow();
+    px getRow() const;
 
     
     /*!
      * The col (column) is the number of pixels from the LEFT of the image
      */
     void setCol(px col);
-    px getCol();
+    px getCol() const;
 
     /*!
      * These functions round and return the row/column to integers
      */
-    int getRowInt();
-    int getColInt();
+    int getRowInt() const;
+    int getColInt() const;
 
 private:
 
@@ -42,7 +43,7 @@ private:
 /**
  * Parses a string and resturns a pixel count
  */
-px stopx(std::string s);
+px toPx(std::string s);
 
-} // namespace Common
+} // namespace BattleRoom
 #endif // PIXEL_H

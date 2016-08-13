@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace Common {
+namespace BattleRoom {
 
 /*!
  * Parses a file path and returns the filename without extension
@@ -21,5 +21,5 @@ std::string getFileExtension(std::string filename);
  */
 std::vector<std::string> readEntireFile(std::string filename);
 
-} // Common namespace
+} // BattleRoom namespace
 #endif // FILE_UTILS_H

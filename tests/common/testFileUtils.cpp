@@ -7,14 +7,14 @@
 using std::string;
 using std::vector;
 
-namespace Common {
+namespace BattleRoom {
 
 TEST(Test_getFileName, typical) {
     string test_file = "/path/to/test_file.txt";
     string expected = "test_file";
     string actual = getFileName(test_file);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_STREQ(expected.c_str(), actual.c_str());
 }
 
 TEST(Test_getFileName, weirdExtension) {
@@ -22,7 +22,7 @@ TEST(Test_getFileName, weirdExtension) {
     string expected = "test_file";
     string actual = getFileName(test_file);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_STREQ(expected.c_str(), actual.c_str());
 }
 
 TEST(Test_getFileName, moreDots) {
@@ -30,7 +30,7 @@ TEST(Test_getFileName, moreDots) {
     string expected = "test_file.middle";
     string actual = getFileName(test_file);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_STREQ(expected.c_str(), actual.c_str());
 }
 
 TEST(Test_getExtension, typical) {
@@ -38,7 +38,7 @@ TEST(Test_getExtension, typical) {
     string expected = "txt";
     string actual = getFileExtension(test_file);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_STREQ(expected.c_str(), actual.c_str());
 }
 
 TEST(Test_getExtension, moreDots) {
@@ -46,7 +46,7 @@ TEST(Test_getExtension, moreDots) {
     string expected = "pjg";
     string actual = getFileExtension(test_file);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_STREQ(expected.c_str(), actual.c_str());
 }
 
 TEST(Test_getExtension, weirdExtension) {
@@ -54,7 +54,7 @@ TEST(Test_getExtension, weirdExtension) {
     string expected = "l3txt";
     string actual = getFileExtension(test_file);
 
-    EXPECT_EQ(expected, actual);
+    EXPECT_STREQ(expected.c_str(), actual.c_str());
 }
 
-} // Common namespace
+} // BattleRoom namespace

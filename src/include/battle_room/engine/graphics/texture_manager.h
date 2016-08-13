@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace Graphics {
+namespace BattleRoom {
 
 std::string getResourcePath();
 
@@ -15,9 +15,9 @@ public:
 
     virtual bool isTextureAvailable(std::string texture) = 0;
 
-    virtual Common::px getTextureWidth(std::string texture) = 0;
-    virtual Common::px getTextureHeight(std::string texture) = 0;
+    virtual px getTextureWidth(std::string texture) = 0;
+    virtual px getTextureHeight(std::string texture) = 0;
 
 }; // TextureManager class
-} // Graphics namespace
+} // BattleRoom namespace
 #endif // TEXTURE_MANAGER

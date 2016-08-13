@@ -8,7 +8,7 @@
 #include <vector>
 #include <memory>
 
-namespace Graphics {
+namespace BattleRoom {
 
 class DisplayWindow {
 
@@ -17,22 +17,22 @@ public:
     /*!
      * Returns the collection of user inputs that have been gathered
      */
-    virtual Common::Inputs getInputs() = 0;
+    virtual Inputs getInputs() = 0;
     
     /*!
      * Add the game world objects that need to be rendered
      */
-    virtual void addWorldObjects(std::vector<Common::Object> objects) = 0;
+    virtual void addWorldObjects(std::vector<Object> objects) = 0;
 
     /*!
      * Add the UI objects that need to be rendered
      */
-    virtual void addUiObjects(std::vector<Common::Object> objects) = 0;
+    virtual void addUiObjects(std::vector<Object> objects) = 0;
 
     /*!
      * Add the Menu objects that need to be rendered
      */
-    virtual void addMenuObjects(std::vector<Common::Object> objects) = 0;
+    virtual void addMenuObjects(std::vector<Object> objects) = 0;
 
     /*!
      * Draws the world, UI, and then menu objects
@@ -49,5 +49,5 @@ public:
 typedef std::unique_ptr<DisplayWindow> UniqueDisplayWindow;
 UniqueDisplayWindow createDisplayWindow(std::string settingsFilename);
 
-} // Graphics namespace
+} // BattleRoom namespace
 #endif // DISPLAY_WINDOW_H

@@ -7,9 +7,7 @@
 
 using std::string;
 
-using Common::px;
-
-namespace Graphics {
+namespace BattleRoom {
 
 string getResourcePath() {
     static string resourcePath;
@@ -88,4 +86,4 @@ SDL_Texture* SdlTextureManager::getTexture(string texture) {
     return m_textureMap[texture];
 }
 
-} // Graphics namespace
+} // BattleRoom namespace

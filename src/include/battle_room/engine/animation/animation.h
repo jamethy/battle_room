@@ -2,17 +2,18 @@
 #define ANIMATION_H
 
 #include "battle_room/engine/animation/frame.h"
+#include "battle_room/common/resource_descriptor.h"
 
 #include <string>
 #include <vector>
 
-namespace Animation {
+namespace BattleRoom {
 
 class Animation {
 
 public:
 
-    Animation(std::string imageFile, std::string nextAnimation, std::vector<Frame> frames);
+    Animation(ResourceDescriptor descriptor);
 
     const std::string& getImageFile();
 
@@ -22,16 +23,13 @@ public:
 
 private:
     
-    const std::string m_imageFile;
+    std::string m_imageFile;
     
-    const std::string m_nextAnimation;
+    std::string m_nextAnimation;
 
-    const std::vector<Frame> m_frames;
+    std::vector<Frame> m_frames;
 
 
 }; // Animation class
-
-Animation& getDefaultAnimation();
-
-} // Animation namespace
+} // BattleRoom namespace
 #endif // ANIMATION_H

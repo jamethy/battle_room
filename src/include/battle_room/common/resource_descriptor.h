@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace Common {
+namespace BattleRoom {
 
 /*!
  * Stores the contents of a resource file describing an object such
@@ -28,7 +28,9 @@ public:
     /*!
      * Any resource descriptors within the current one, e.g. bounding box within a frame.
      */
-    std::vector<ResourceDescriptor> getSubResources();
+    std::vector<ResourceDescriptor> getSubResources(std::string filter = "");
+
+    ResourceDescriptor getSubResource(std::string filter);
 
     static ResourceDescriptor readFile(std::string filePath);
 
@@ -52,5 +54,5 @@ private:
 
 }; // RecourseDescriptor class
 
-} // Common namespace
+} // BattleRoom namespace
 #endif // RESOURCE_DESCRIPTOR_H

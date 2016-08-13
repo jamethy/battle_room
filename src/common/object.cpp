@@ -1,9 +1,6 @@
 #include "battle_room/common/object.h"
 
-using Animation::Animation;
-using Animation::seconds;
-
-namespace Common {
+namespace BattleRoom {
 
 Object::Object() : 
     m_currentAnimation(Animation::getDefaultAnimation()), 
@@ -26,4 +23,4 @@ void setAnimationState(seconds animationState) {
     m_animationState = animationState;
 }
 
-} // Common namespace
+} // BattleRoom namespace

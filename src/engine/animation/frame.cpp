@@ -1,14 +1,44 @@
 #include "battle_room/engine/animation/frame.h"
 
-using Common::Pixel;
+namespace BattleRoom {
 
-namespace Animation {
+Frame::Frame(ResourceDescriptor descriptor) {
+    
+    ResourceDescriptor sub = descriptor.getSubResource("EndTime");
+    if (!sub.getKey().empty()) {
+        m_endTime = toSeconds(sub.getValue());
+    }
 
-Frame::Frame(seconds endTime, Pixel topLeft, Pixel bottomRight, double xScale, double yScale)
-    : m_endTime(endTime), 
-    m_topLeft(topLeft), m_bottomRight(bottomRight), 
-    m_xScale(xScale), m_yScale(yScale)
-{ }
+    sub = descriptor.getSubResource("TopRow");
+    if (!sub.getKey().empty()) {
+        m_topLeft.setRow( toPx(sub.getValue()) );
+    }
+
+    sub = descriptor.getSubResource("LeftCol");
+    if (!sub.getKey().empty()) {
+        m_topLeft.setRow( toPx(sub.getValue()) );
+    }
+
+    sub = descriptor.getSubResource("BottomRow");
+    if (!sub.getKey().empty()) {
+        m_bottomRight.setRow( toPx(sub.getValue()) );
+    }
+
+    sub = descriptor.getSubResource("RightCol");
+    if (!sub.getKey().empty()) {
+        m_bottomRight.setCol( toPx(sub.getValue()) );
+    }
+
+    sub = descriptor.getSubResource("XScale");
+    if (!sub.getKey().empty()) {
+        m_xScale = toPx(sub.getValue());
+    }
+
+    sub = descriptor.getSubResource("YScale");
+    if (!sub.getKey().empty()) {
+        m_yScale = toPx(sub.getValue());
+    }
+}
 
 seconds Frame::getEndTime() {
     return m_endTime;
@@ -30,4 +60,8 @@ double Frame::getYScale() {
     return m_yScale;
 }
 
-} // Animation namespace
+seconds toSeconds(std::string str) {
+    return stod(str);
+}
+
+} // BattleRoom namespace

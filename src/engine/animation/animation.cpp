@@ -3,11 +3,25 @@
 using std::string;
 using std::vector;
 
-namespace Animation {
+namespace BattleRoom {
 
-Animation::Animation(string imageFile, string nextAnimation, vector<Frame> frames)
-    : m_imageFile(imageFile), m_nextAnimation(nextAnimation), m_frames(frames)
-{ }
+Animation::Animation(ResourceDescriptor descriptor) {
+
+    ResourceDescriptor sub = descriptor.getSubResource("ImageFile");
+    if (!sub.getKey().empty()) {
+        m_imageFile = sub.getValue();
+    } 
+
+    sub = descriptor.getSubResource("NextAnimation");
+    if (!sub.getKey().empty()) {
+        m_nextAnimation = sub.getValue();
+    } 
+
+    vector<ResourceDescriptor> subs = descriptor.getSubResources("Frame");
+    for (ResourceDescriptor& rd : subs) {
+        m_frames.push_back(Frame(rd));
+    }
+}
 
 const string& Animation::getImageFile() {
     return m_imageFile;
@@ -21,10 +35,4 @@ const vector<Frame>& Animation::getFrames() {
     return m_frames;
 }
 
-Animation defaultAnimation("default", "default", vector<Frame>());
-
-Animation& getDefaultAnimation() {
-    return defaultAnimation;
-}
-
-} // Animation namespace
+} // BattleRoom namespace

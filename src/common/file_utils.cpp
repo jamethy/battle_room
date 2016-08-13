@@ -7,7 +7,7 @@
 using std::string;
 using std::vector;
 
-namespace Common {
+namespace BattleRoom {
 
 string getFileName(string fullFilePath) {
 
@@ -66,4 +66,4 @@ vector<string> readEntireFile(string filepath) {
 }
 
 
-} // Common namesace
+} // BattleRoom namesace

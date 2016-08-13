@@ -10,7 +10,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace Graphics {
+namespace BattleRoom {
 
 class SdlTextureManager : public TextureManager {
 
@@ -20,8 +20,8 @@ public:
     
     bool isTextureAvailable(std::string texture);
 
-    Common::px getTextureWidth(std::string texture);
-    Common::px getTextureHeight(std::string texture);
+    px getTextureWidth(std::string texture);
+    px getTextureHeight(std::string texture);
 
     void setRenderer(SDL_Renderer* renderer);
 
@@ -37,8 +37,8 @@ private:
 
     std::unordered_map<std::string,SDL_Texture*> m_textureMap;
 
-    Common::ResourceDescriptor m_resourceList;
+    ResourceDescriptor m_resourceList;
 
 }; // SdlTextureManager class
-} // Graphics namespace
+} // BattleRoom namespace
 #endif // SDL_TEXTURE_MANAGER

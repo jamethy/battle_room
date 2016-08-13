@@ -5,7 +5,7 @@
 int main() {
 
     std::cout << "Hello World!\n";
-    std::string resourcePath = Graphics::getResourcePath();
+    std::string resourcePath = BattleRoom::getResourcePath();
 
     ///// Game States
     // dedicated server
@@ -19,7 +19,7 @@ int main() {
 
     // Create main components of game
     //ProgramState state;
-    Graphics::UniqueDisplayWindow window = Graphics::createDisplayWindow("");
+    BattleRoom::UniqueDisplayWindow window = BattleRoom::createDisplayWindow("");
 
     //Menus menus;
     //UserInterfaces uis;
@@ -45,4 +45,5 @@ int main() {
     // cleanup
     
     return 0;
-}
+
+} // end main

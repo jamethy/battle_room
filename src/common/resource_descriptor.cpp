@@ -10,7 +10,7 @@
 using std::string;
 using std::vector;
 
-namespace Common {
+namespace BattleRoom {
 
 string ResourceDescriptor::getKey() {
     return m_key;
@@ -20,8 +20,30 @@ string ResourceDescriptor::getValue() {
     return m_value;
 }
 
-vector<ResourceDescriptor> ResourceDescriptor::getSubResources() {
-    return m_subResources;
+vector<ResourceDescriptor> ResourceDescriptor::getSubResources(string filter) {
+
+    if (filter.empty()) {
+        return m_subResources;
+    }
+
+    vector<ResourceDescriptor> returnVector;
+    for (ResourceDescriptor& descriptor : m_subResources) {
+        if (filter.compare(descriptor.getKey()) == 0) {
+            returnVector.push_back(descriptor);
+        }
+    }
+
+    return returnVector;
+}
+
+ResourceDescriptor ResourceDescriptor::getSubResource(string filter) {
+    
+    for (ResourceDescriptor& descriptor : m_subResources) {
+        if (filter.compare(descriptor.getKey()) == 0) {
+            return descriptor;
+        }
+    }
+    return ResourceDescriptor();
 }
 
 void ResourceDescriptor::setKey(string key) {
@@ -135,4 +157,4 @@ ResourceDescriptor ResourceDescriptor::readFile(string filePath) {
     return descriptor;
 }
 
-} // Common namespace
+} // BattleRoom namespace

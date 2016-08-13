@@ -4,7 +4,7 @@
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/resource_descriptor.h"
 
-namespace Animation {
+namespace BattleRoom {
 
 typedef double seconds;
 
@@ -12,13 +12,13 @@ class Frame {
 
 public:
 
-    Frame(seconds endTime, Common::Pixel topLeft, Common::Pixel bottomRight, 
-            double xScale, double yScale);
+
+    Frame(ResourceDescriptor descriptor);
 
     seconds getEndTime();
 
-    const Common::Pixel& getTopLeft();
-    const Common::Pixel& getBottomRight();
+    const Pixel& getTopLeft();
+    const Pixel& getBottomRight();
 
     double getXScale();
     double getYScale();
@@ -26,13 +26,13 @@ public:
 
 private:
     
-    const seconds m_endTime;
+    seconds m_endTime;
 
-    const Common::Pixel m_topLeft;
-    const Common::Pixel m_bottomRight;
+    Pixel m_topLeft;
+    Pixel m_bottomRight;
 
-    const double m_xScale; // meters per pixel
-    const double m_yScale; // meters per pixel
+    double m_xScale; // meters per pixel
+    double m_yScale; // meters per pixel
     
 }; // Frame class
 
@@ -43,5 +43,5 @@ private:
 seconds toSeconds(std::string str);
 
 
-} // Animation namespace
+} // BattleRoom namespace
 #endif // FRAME_H

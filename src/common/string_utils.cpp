@@ -1,12 +1,14 @@
 
 #include "battle_room/common/string_utils.h"
 
-#include<sstream>
+#include <sstream>
+#include <string>
+#include <algorithm>
 
 using std::string;
 using std::vector;
 
-namespace Common {
+namespace BattleRoom {
 
 vector<string> split(const string& str, char delim) {
 
@@ -22,5 +24,15 @@ vector<string> split(const string& str, char delim) {
     return items;
 }
 
+string toLower(string str) {
 
-} // Common namespace
+    string returnStr;
+    std::transform(str.begin(), str.end(), returnStr.begin(), ::tolower);
+    return returnStr;
+}
+
+bool keyMatch(string a, string b) {
+    return toLower(a).compare(toLower(b)) == 0;
+}
+
+} // BattleRoom namespace

@@ -16,10 +16,7 @@ using std::string;
 using std::map;
 using std::vector;
 
-using Common::Inputs;
-using Common::Object;
-
-namespace Graphics {
+namespace BattleRoom {
 
 class SdlWindow : public DisplayWindow {
 
@@ -116,4 +113,4 @@ UniqueDisplayWindow createDisplayWindow(string settingsFilename) {
     }
 }
 
-} // Graphics namespace
+} // BattleRoom namespace

@@ -32,8 +32,8 @@ int main(int argc, char** argv) {
     infile.open(arg);
     if (!infile.is_open()) {
 
-        std::cout << "Looking in resource path: " << Graphics::getResourcePath() << std::endl;
-        arg = Graphics::getResourcePath() + arg;
+        std::cout << "Looking in resource path: " << BattleRoom::getResourcePath() << std::endl;
+        arg = BattleRoom::getResourcePath() + arg;
 
         infile.open(arg);
         if(!infile.is_open()) {
@@ -43,9 +43,9 @@ int main(int argc, char** argv) {
 
     infile.close();
 
-    Common::readEntireFile(arg);
+    BattleRoom::readEntireFile(arg);
 
-    Graphics::UniqueDisplayWindow window = Graphics::createDisplayWindow("");
+    BattleRoom::UniqueDisplayWindow window = BattleRoom::createDisplayWindow("");
 
 
 
