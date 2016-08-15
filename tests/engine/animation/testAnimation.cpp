@@ -1,6 +1,7 @@
 
 #include "battle_room/engine/animation/frame.h"
 #include "battle_room/engine/animation/animation.h"
+#include "battle_room/engine/animation/animation_handler.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
@@ -70,6 +71,22 @@ TEST(Test_gen, typical) {
     EXPECT_EQ(100, frame.getBottomRight().getCol());
     EXPECT_EQ(2.1, frame.getXScale());
     EXPECT_EQ(2.3, frame.getYScale());
+}
+
+TEST(Test_AnimationHandler, typical) {
+    
+    AnimationHandler handler(string(TEST_FILES_DIR) + "/");
+    Animation animation = handler.getAnimation("test_animation");
+
+    EXPECT_STREQ("test_animation.jpg", animation.getImageFile().c_str());
+}
+
+TEST(Test_AnimationHandler, missing) {
+    
+    AnimationHandler handler(string(TEST_FILES_DIR) + "/");
+    Animation animation = handler.getAnimation("lkjsldkfjsldkfjsd");
+
+    EXPECT_STREQ("missing_animation.png", animation.getImageFile().c_str());
 }
 
 } // BattleRoom namespace

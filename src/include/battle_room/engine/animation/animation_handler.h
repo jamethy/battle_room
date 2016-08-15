@@ -4,7 +4,7 @@
 #include "battle_room/engine/animation/animation.h"
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 namespace BattleRoom {
 

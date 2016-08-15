@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iostream>
 
+using namespace BattleRoom;
+
 int main(int argc, char** argv) {
 
     std::cout << "Hello world.\n";
@@ -32,8 +34,8 @@ int main(int argc, char** argv) {
     infile.open(arg);
     if (!infile.is_open()) {
 
-        std::cout << "Looking in resource path: " << BattleRoom::getResourcePath() << std::endl;
-        arg = BattleRoom::getResourcePath() + arg;
+        std::cout << "Looking in resource path: " << getResourcePath() << std::endl;
+        arg = getResourcePath() + arg;
 
         infile.open(arg);
         if(!infile.is_open()) {
@@ -43,9 +45,9 @@ int main(int argc, char** argv) {
 
     infile.close();
 
-    BattleRoom::readEntireFile(arg);
+    readEntireFile(arg);
 
-    BattleRoom::UniqueDisplayWindow window = BattleRoom::createDisplayWindow("");
+    UniqueDisplayWindow window = createDisplayWindow("");
 
 
 

@@ -2,10 +2,12 @@
 
 #include <iostream>
 
+using namespace BattleRoom;
+
 int main() {
 
     std::cout << "Hello World!\n";
-    std::string resourcePath = BattleRoom::getResourcePath();
+    std::string resourcePath = getResourcePath();
 
     ///// Game States
     // dedicated server
@@ -19,7 +21,7 @@ int main() {
 
     // Create main components of game
     //ProgramState state;
-    BattleRoom::UniqueDisplayWindow window = BattleRoom::createDisplayWindow("");
+    UniqueDisplayWindow window = createDisplayWindow("");
 
     //Menus menus;
     //UserInterfaces uis;

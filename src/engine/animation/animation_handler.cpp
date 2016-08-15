@@ -3,26 +3,33 @@
 
 using std::string;
 
-namespace Animation {
+namespace BattleRoom {
 
 AnimationHandler::AnimationHandler(string resourcePath) 
     : m_resourcePath(resourcePath)
-{ }
-
-
-Animation loadAnimation(string animationFilePath) {
-    
+{
+    getAnimation(MISSING_ANIMATION);
 }
+
 
 Animation& AnimationHandler::getAnimation(string animation) {
 
     if (m_animationMap.count(animation) == 0) {
-        Animation anm = loadAnimation loadAnimation(m_resourcePath + animation + ".txt");
-        if (anm
-        m_animationMap.insert(animation,
+        string animationFilePath = m_resourcePath + "/" + animation + ".txt";
+        ResourceDescriptor descriptor = ResourceDescriptor::readFile(animationFilePath);
+        Animation anim(descriptor);
+
+        if (anim.getImageFile().empty()) {
+            m_animationMap.insert(
+                    std::pair<string,Animation>(animation,m_animationMap.at(MISSING_ANIMATION))
+            );
+        }
+        else {
+            m_animationMap.insert(std::pair<string,Animation>(animation,anim));
+        }
     }
 
-
+    return m_animationMap.at(animation);
 }
 
 } // Animation namespace
