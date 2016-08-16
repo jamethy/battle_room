@@ -1,4 +1,5 @@
 #include "battle_room/engine/graphics/display_window.h"
+#include "battle_room/engine/animation/animation_handler.h"
 
 #include <iostream>
 
@@ -18,10 +19,12 @@ int main() {
     // game client as server
     // game client as single player
     // single player game paused
+    
+    AnimationHandler::get().setResourcePath(resourcePath);
 
     // Create main components of game
     //ProgramState state;
-    UniqueDisplayWindow window = createDisplayWindow("");
+    UniqueDisplayWindow window = createDisplayWindow("window.txt");
 
     //Menus menus;
     //UserInterfaces uis;

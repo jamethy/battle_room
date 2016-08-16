@@ -2,6 +2,7 @@
 #define OBJECT_H
 
 #include "battle_room/engine/animation/animation.h"
+#include "battle_room/common/position.h"
 
 namespace BattleRoom {
 
@@ -11,10 +12,12 @@ class Object {
 public:
 
     Animation getAnimation();
-    void setAnimation(Animation animation);
-
     seconds getAnimationState();
+    Position getPosition();
+
     void setAnimationState(seconds animationState);
+    void setAnimation(Animation animation);
+    void setPosition(Position pos);
 
     Object();
 
@@ -23,7 +26,7 @@ private:
     Animation& m_currentAnimation;
     seconds m_animationState;
     // point in animation
-    // position
+    Position m_pos;
 
 }; // Object class
 } // BattleRoom namespace

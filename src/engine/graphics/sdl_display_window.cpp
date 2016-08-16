@@ -1,5 +1,6 @@
 
 #include "battle_room/engine/graphics/display_window.h"
+#include "battle_room/common/resource_descriptor.h"
 
 #include "sdl_texture_manager.h"
 
@@ -24,10 +25,28 @@ public:
 
     SdlWindow(string settingsFile) {
 
-        // read in settings file
         string name = "name";
         int width = 250;
         int height = 250;
+
+        // read in settings file
+        ResourceDescriptor settings = ResourceDescriptor::readFile(settingsFile);
+
+        ResourceDescriptor sub = settings.getSubResource("Name");
+        if (!sub.getKey().empty()) {
+            name = sub.getValue();
+        }
+
+        sub = settings.getSubResource("Width");
+        if (!sub.getKey().empty()) {
+            width = stoi(sub.getValue());
+        }
+
+        sub = settings.getSubResource("Height");
+        if (!sub.getKey().empty()) {
+            height = stoi(sub.getValue());
+        }
+
 
         // TODO throw exceptions instead of cerr
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0){

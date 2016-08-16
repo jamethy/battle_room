@@ -5,4 +5,5 @@ add_library(Common
         file_utils.cpp
         resource_descriptor.cpp
         pixel.cpp
+        object.cpp
     )

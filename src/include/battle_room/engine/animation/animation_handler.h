@@ -14,14 +14,19 @@ class AnimationHandler {
 
 public:
 
-    AnimationHandler(std::string resourcePath);
+    // get the singleton instance
+    static AnimationHandler& get();
 
     Animation& getAnimation(std::string animation);
 
-private:
+    void setResourcePath(std::string resourcePath);
+
+protected:
 
     std::string m_resourcePath;
     std::unordered_map<std::string,Animation> m_animationMap;
+
+    AnimationHandler();
 
 }; // AnimationHandler class
 } // BattleRoom namespace

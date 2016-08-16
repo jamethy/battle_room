@@ -5,12 +5,18 @@ using std::string;
 
 namespace BattleRoom {
 
-AnimationHandler::AnimationHandler(string resourcePath) 
-    : m_resourcePath(resourcePath)
-{
-    getAnimation(MISSING_ANIMATION);
+AnimationHandler::AnimationHandler() 
+{ }
+
+AnimationHandler& AnimationHandler::get() {
+    static AnimationHandler handler;
+    return handler;
 }
 
+void AnimationHandler::setResourcePath(string resourcePath) {
+    m_resourcePath = resourcePath;
+    getAnimation(MISSING_ANIMATION);
+}
 
 Animation& AnimationHandler::getAnimation(string animation) {
 

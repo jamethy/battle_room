@@ -75,7 +75,8 @@ TEST(Test_gen, typical) {
 
 TEST(Test_AnimationHandler, typical) {
     
-    AnimationHandler handler(string(TEST_FILES_DIR) + "/");
+    AnimationHandler& handler = AnimationHandler::get();
+    handler.setResourcePath(string(TEST_FILES_DIR) + "/");
     Animation animation = handler.getAnimation("test_animation");
 
     EXPECT_STREQ("test_animation.jpg", animation.getImageFile().c_str());
@@ -83,7 +84,8 @@ TEST(Test_AnimationHandler, typical) {
 
 TEST(Test_AnimationHandler, missing) {
     
-    AnimationHandler handler(string(TEST_FILES_DIR) + "/");
+    AnimationHandler& handler = AnimationHandler::get();
+    handler.setResourcePath(string(TEST_FILES_DIR) + "/");
     Animation animation = handler.getAnimation("lkjsldkfjsldkfjsd");
 
     EXPECT_STREQ("missing_animation.png", animation.getImageFile().c_str());
