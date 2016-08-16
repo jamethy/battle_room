@@ -71,14 +71,20 @@ public:
             SDL_Quit();
         }
 
+        ++m_windowCount;
+
         m_sdlTextureManager.setRenderer(m_renderer);
     }
 
     ~SdlWindow() {
+
         m_sdlTextureManager.clear();
         SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);
-        SDL_Quit();
+
+        if (--m_windowCount <= 0) {
+            SDL_Quit();
+        }
     }
 
 
@@ -115,6 +121,8 @@ private:
     SdlTextureManager m_sdlTextureManager;
     SDL_Renderer* m_renderer;
     SDL_Window* m_window;
+
+    int m_windowCount = 0;
 
 }; // SdlWindow class
 
