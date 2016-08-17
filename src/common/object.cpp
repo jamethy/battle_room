@@ -32,4 +32,12 @@ void Object::setPosition(Position pos) {
     m_pos = pos;
 }
 
+Orientation Object::getOrientation() {
+    return m_orientation;
+}
+
+void Object::setOrientation(Orientation orientation) {
+    m_orientation = orientation;
+}
+
 } // BattleRoom namespace
