@@ -24,20 +24,16 @@ void Object::setAnimationState(seconds animationState) {
     m_animationState = animationState;
 }
 
+Position& Object::position() {
+    return m_position;
+}
+
 Position Object::getPosition() {
-    return m_pos;
+    return m_position;
 }
 
 void Object::setPosition(Position pos) {
-    m_pos = pos;
-}
-
-Orientation Object::getOrientation() {
-    return m_orientation;
-}
-
-void Object::setOrientation(Orientation orientation) {
-    m_orientation = orientation;
+    m_position = pos;
 }
 
 } // BattleRoom namespace

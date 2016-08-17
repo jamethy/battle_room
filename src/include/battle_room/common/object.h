@@ -3,7 +3,6 @@
 
 #include "battle_room/engine/animation/animation.h"
 #include "battle_room/common/position.h"
-#include "battle_room/common/orientation.h"
 
 namespace BattleRoom {
 
@@ -14,21 +13,20 @@ public:
     Animation getAnimation();
     seconds getAnimationState();
     Position getPosition();
-    Orientation getOrientation();
 
-    void setAnimationState(seconds animationState);
     void setAnimation(Animation animation);
+    void setAnimationState(seconds animationState);
     void setPosition(Position pos);
-    void setOrientation(Orientation orientation);
     
     Object();
+
+    Position& position();
 
 private:
 
     Animation& m_currentAnimation;
     seconds m_animationState;
-    Position m_pos;
-    Orientation m_orientation;
+    Position m_position;
 
 }; // Object class
 } // BattleRoom namespace

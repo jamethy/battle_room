@@ -5,7 +5,8 @@ add_library(Common
         file_utils.cpp
         resource_descriptor.cpp
         pixel.cpp
-        position.cpp
+        location.cpp
         orientation.cpp
+        position.cpp
         object.cpp
     )

@@ -2,20 +2,31 @@
 
 namespace BattleRoom {
 
-meters Position::getX() {
-    return m_x;
+
+Location& Position::location() {
+    return m_location;
 }
 
-void Position::setX(meters x) {
-    m_x = x;
+Orientation& Position::orientation() {
+    return m_orientation;
 }
 
-meters Position::getY() {
-    return m_y;
+
+Location Position::getLocation() {
+    return m_location;
 }
 
-void Position::setY(meters y) {
-    m_y = y;
+Orientation Position::getOrientation() {
+    return m_orientation;
+}
+
+
+void Position::setLocation(Location location) {
+    m_location = location;
+}
+
+void Position::setOrientation(Orientation orientation) {
+    m_orientation = orientation;
 }
 
 } // BattleRoom namespace

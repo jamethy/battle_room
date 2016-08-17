@@ -5,4 +5,5 @@ add_library ( Animation
         frame.cpp
         animation.cpp
         animation_handler.cpp
+        camera.cpp
 )
