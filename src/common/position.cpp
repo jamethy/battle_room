@@ -3,30 +3,47 @@
 namespace BattleRoom {
 
 
-Location& Position::location() {
+Vector3D& Position::location() {
     return m_location;
 }
 
-Orientation& Position::orientation() {
+Quaternion& Position::orientation() {
     return m_orientation;
 }
 
 
-Location Position::getLocation() {
+Vector3D Position::getLocation() {
     return m_location;
 }
 
-Orientation Position::getOrientation() {
+Quaternion Position::getOrientation() {
     return m_orientation;
 }
 
 
-void Position::setLocation(Location location) {
+void Position::setLocation(Vector3D location) {
     m_location = location;
 }
 
-void Position::setOrientation(Orientation orientation) {
+void Position::setOrientation(Quaternion orientation) {
     m_orientation = orientation;
+}
+
+void Position::applySettings(ResourceDescriptor settings) {
+
+    ResourceDescriptor sub = settings.getSubResource("Location");
+    if (!sub.getKey().empty()) {
+        m_location.applySettings(sub);
+    } 
+
+    sub = settings.getSubResource("Orientation");
+    if (!sub.getKey().empty()) {
+        m_orientation.applySettings(sub);
+    } 
+}
+
+radians toRadians(std::string str) {
+    return stod(str);
 }
 
 } // BattleRoom namespace

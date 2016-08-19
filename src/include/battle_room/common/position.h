@@ -1,29 +1,37 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include "battle_room/common/location.h"
-#include "battle_room/common/orientation.h"
+#include "battle_room/common/vector3d.h"
+#include "battle_room/common/quaternion.h"
+#include "battle_room/common/resource_descriptor.h"
 
 namespace BattleRoom {
+
+typedef double radians;
 
 class Position {
 
 public:
 
-    Location& location();
-    Orientation& orientation();
+    Vector3D& location();
+    Quaternion& orientation();
 
-    Location getLocation();
-    Orientation getOrientation();
+    Vector3D getLocation();
+    Quaternion getOrientation();
 
-    void setLocation(Location location);
-    void setOrientation(Orientation orientation);
+    void setLocation(Vector3D location);
+    void setOrientation(Quaternion orientation);
+
+    void applySettings(ResourceDescriptor settings);
 
 private:
 
-    Location m_location;
-    Orientation m_orientation;
+    Vector3D m_location;
+    Quaternion m_orientation;
 
 }; // Position class
+
+radians toRadians(std::string str);
+
 } // BattleRoom namespace
 #endif // POSITION_H
