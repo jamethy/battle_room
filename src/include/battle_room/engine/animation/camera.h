@@ -12,12 +12,18 @@ class Camera {
 
 public:
 
+    Camera();
+
     Position& position();
 
     Position getPosition();
     void setPosition(Position pos);
 
-    Pixel fromZeroPlane(Vector3D location);
+    void rotateUpDown(radians theta);
+    void rotateLeftRight(radians theta);
+    void rotateClockwise(radians theta);
+
+    Pixel fromLocation(Vector3D location);
     Vector3D zeroPlaneIntersection(Pixel pixel);
 
     void applySettings(ResourceDescriptor settings);
@@ -30,6 +36,10 @@ public:
 private:
 
     Position m_position;
+
+    Vector3D m_forward;
+    Vector3D m_up;
+    Vector3D m_right;
 
     radians m_horizontalFov = 1.308333; // 75 deg
     radians m_verticalFov = 1.308333; // based on window size

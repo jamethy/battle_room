@@ -11,17 +11,25 @@ class Vector3D {
 
 public:
 
+    Vector3D();
+    Vector3D(meters x, meters y, meters z);
+
     meters& x();
     meters& y();
     meters& z();
+
+    meters dot(Vector3D b);
+    Vector3D cross(Vector3D b);
+    Vector3D minus(Vector3D b);
+    Vector3D times(double scalar);
 
     void applySettings(ResourceDescriptor settings);
 
 private:
 
-    meters m_x = 0;
-    meters m_y = 0;
-    meters m_z = 0;
+    meters m_x;
+    meters m_y;
+    meters m_z;
 
 }; // Vector3D class
 

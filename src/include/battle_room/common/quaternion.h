@@ -2,6 +2,7 @@
 #define QUATERNION_H
 
 #include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/vector3d.h"
 
 namespace BattleRoom {
 
@@ -12,6 +13,8 @@ public:
     Quaternion();
     Quaternion(double w, double i, double j, double k);
 
+    Vector3D getRotated(Vector3D vec);
+    Quaternion getRotated(Quaternion p);
 
     double w();
     double i();
