@@ -16,6 +16,8 @@ class DisplayWindow {
 
 public:
 
+    //virtual void applySettings(ResourceDescriptor settings);
+
     /*!
      * Returns the collection of user inputs that have been gathered
      */

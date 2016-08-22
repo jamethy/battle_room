@@ -16,6 +16,11 @@ Camera::Camera() {
     m_position.setLocation(Vector3D(0,0,10));
 }
 
+Camera::Camera(ResourceDescriptor settings) : Camera()
+{
+    applySettings(settings);
+}
+
 Position& Camera::position() {
     return m_position;
 }

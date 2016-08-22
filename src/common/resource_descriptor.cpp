@@ -150,7 +150,7 @@ ResourceDescriptor ResourceDescriptor::readFile(string filePath) {
 
     ResourceDescriptor descriptor;
 
-    vector<string> resourceFile = readEntireFile(filePath);
+    vector<string> resourceFile = readEntireResourceFile(filePath);
     unsigned start = 0;
     descriptor.fillFromInput(resourceFile, start);
 

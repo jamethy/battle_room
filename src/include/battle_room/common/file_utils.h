@@ -7,24 +7,48 @@
 namespace BattleRoom {
 
 /*!
- * Parses a file path and returns the path without the filename at the end
+ * \brief Parses a file path and returns the path without the filename at the end
+ *
+ * Returns "./" if path is not found in input
+ *
+ * \param fullFilePath String containing path and possibly a filename at the end
+ * \return New string of just the path including the last forward slash
  */
 std::string getFilePath(std::string fullFilePath);
 
 /*!
- * Parses a file path and returns the filename without extension
+ * \brief Parses a file path and returns the filename without extension
+ *
+ * Returns the input string if filename not found in argument
+ *
+ * \param fullFilePath String containing path and a filename at the end
+ * \return New string of just the filename (without the . or extension at end)
  */
 std::string getFileName(std::string fullFilePath);
 
 /*!
- * Parses a file name or path and returns the extension (without the .)
+ * \breif Parses a file name or path and returns the extension (without the .)
+ *
+ * Returns the input string if extension not found
+ *
+ * \param filename Filename or full file path that has a . and extension at the end
+ * \return New string of just the extension
  */
 std::string getFileExtension(std::string filename);
 
 /*!
- * Reads in the file and puts each line in a vector
+ * \breif Reads in the resource file and puts each line in a vector
+ *
+ * Additionally adds a line at the top that contains "<filename>: <extension>" and
+ * adds a tab before every line thereafter. This is so the ResourceDescriptor class
+ * can parse it correctly
+ *
+ * Returns an empty vector if file not found
+ *
+ * \param fullFilePath String containing the full file path and name 
+ * \return A string of each line in the file as a string
  */
-std::vector<std::string> readEntireFile(std::string filename);
+std::vector<std::string> readEntireResourceFile(std::string fullFilePath);
 
 } // BattleRoom namespace
 #endif // FILE_UTILS_H

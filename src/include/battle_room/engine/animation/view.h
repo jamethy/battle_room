@@ -12,7 +12,8 @@ class View {
 
 public:
 
-    View(ResourceDescriptor descriptor);
+    View(ResourceDescriptor settings);
+    void applySettings(ResourceDescriptor settings);
 
     void setName(std::string name);
     void setLayer(int layer);

@@ -4,30 +4,32 @@ namespace BattleRoom {
 
 Camera emptyCamera;
 
-View::View(ResourceDescriptor descriptor)
+View::View(ResourceDescriptor settings)
     : m_camera(emptyCamera)
-{ 
-    if (descriptor.getValue().empty()) {
-        // freak out
-    }
-    m_name = descriptor.getValue();
+{
+    applySettings(settings);
+}
 
-    ResourceDescriptor sub = descriptor.getSubResource("Top");
+void View::applySettings(ResourceDescriptor settings) {
+
+    m_name = settings.getValue();
+
+    ResourceDescriptor sub = settings.getSubResource("Top");
     if (!sub.getKey().empty()) {
         m_topLeft.setRow(toPx(sub.getValue()));
     }
 
-    sub = descriptor.getSubResource("Left");
+    sub = settings.getSubResource("Left");
     if (!sub.getKey().empty()) {
         m_topLeft.setCol(toPx(sub.getValue()));
     }
 
-    sub = descriptor.getSubResource("Bottom");
+    sub = settings.getSubResource("Bottom");
     if (!sub.getKey().empty()) {
         m_bottomRight.setRow(toPx(sub.getValue()));
     }
 
-    sub = descriptor.getSubResource("Right");
+    sub = settings.getSubResource("Right");
     if (!sub.getKey().empty()) {
         m_bottomRight.setCol(toPx(sub.getValue()));
     }

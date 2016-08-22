@@ -58,16 +58,16 @@ string getFileExtension(string filename) {
     return ext;
 }
 
-vector<string> readEntireFile(string filepath) {
+vector<string> readEntireResourceFile(string fullFilePath) {
 
     vector<string> lines;
 
-    std::ifstream file(filepath);
+    std::ifstream file(fullFilePath);
 
     if (file.is_open()) {
 
         // create header line
-        lines.push_back(getFileName(filepath) + ": " + getFileExtension(filepath));
+        lines.push_back(getFileName(fullFilePath) + ": " + getFileExtension(fullFilePath));
 
         string line;
         while (getline(file,line)) {
@@ -75,7 +75,7 @@ vector<string> readEntireFile(string filepath) {
         }
     }
     else {
-        std::cerr << "Unable to open file " << filepath << std::endl;
+        std::cerr << "Unable to open file " << fullFilePath << std::endl;
     }
 
     return lines;

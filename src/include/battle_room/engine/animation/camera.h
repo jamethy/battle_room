@@ -13,6 +13,7 @@ class Camera {
 public:
 
     Camera();
+    Camera(ResourceDescriptor settings);
 
     Position& position();
 

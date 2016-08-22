@@ -9,27 +9,17 @@ namespace BattleRoom {
 const std::string DESCRIPTOR_EXTENSION = ".yml";
 
 /*!
- * Stores the contents of a resource file describing an object such
- * as an animation. Files will be parsed into these objects which will
- * be read into specific classes.
+ * \breif Stores the contents of a resource file describing an object, such
+ * as an animation. 
+ *
+ * These will containg all the settings for objects such as animation, frame, camera, and
+ * display window, and instances of the level map, character info, or weapon
  */
 class ResourceDescriptor {
 
 public:
 
-    /*!
-     * Key of resource descriptor, labeling what is being described.
-     */
-    std::string getKey();
 
-    /*!
-     * Value of resource descriptor, string representation of what is labeled.
-     */
-    std::string getValue();
-
-    /*!
-     * Any resource descriptors within the current one, e.g. bounding box within a frame.
-     */
     std::vector<ResourceDescriptor> getSubResources(std::string filter = "");
 
     ResourceDescriptor getSubResource(std::string filter);
@@ -42,8 +32,14 @@ public:
      */
     void fillFromInput(std::vector<std::string> lines, unsigned& start);
 
+    // Setters and Getters
+
     void setKey(std::string key);
+    std::string getKey();
+
     void setValue(std::string value);
+    std::string getValue();
+
     void setSubResources(std::vector<ResourceDescriptor> subResources);
 
     ResourceDescriptor();

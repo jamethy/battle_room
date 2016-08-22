@@ -9,11 +9,11 @@
 #include <chrono>
 
 using namespace BattleRoom;
+
 using std::vector;
 using std::string;
-
-typedef std::chrono::steady_clock steadyclock;
-typedef std::chrono::duration<double> secs;
+using std::chrono::steady_clock;
+using std::chrono::duration;
 
 int main(int argc, char** argv) {
 
@@ -105,8 +105,7 @@ int main(int argc, char** argv) {
     ResourceDescriptor descriptor;
     descriptor.fillFromInput(settings, start);
 
-    Camera camera;
-    camera.applySettings(descriptor.getSubResource("Camera"));
+    Camera camera(descriptor.getSubResource("Camera"));
 
     View view(descriptor.getSubResource("View"));
     view.setCamera(camera);
@@ -114,14 +113,13 @@ int main(int argc, char** argv) {
     UniqueDisplayWindow window = createDisplayWindow(descriptor.getSubResource("Window"));
     window->addView(view);
 
-
     seconds maxTime = animation.getFrame(99999999).getEndTime();
-    steadyclock::time_point startTime = steadyclock::now();
+    steady_clock::time_point startTime = steady_clock::now();
 
     while(window->getInputs().m_quit != true) {
 
-        steadyclock::time_point newtime = steadyclock::now();
-        double diff = std::chrono::duration_cast<secs> (newtime - startTime).count();
+        steady_clock::time_point newtime = steady_clock::now();
+        double diff = std::chrono::duration_cast<duration<double>> (newtime - startTime).count();
         if (diff > maxTime) {
             startTime = newtime;
         }

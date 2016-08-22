@@ -21,25 +21,23 @@ namespace BattleRoom {
 class SdlWindow : public DisplayWindow {
 
 public:
-
-    SdlWindow(ResourceDescriptor descriptor) {
-
+    SdlWindow(ResourceDescriptor settings)
+    {
         // read in settings
         string name = "name";
         int width = 500;
         int height = 500;
 
-
-        if (!descriptor.getValue().empty()) {
-            name = descriptor.getValue();
+        if (!settings.getValue().empty()) {
+            name = settings.getValue();
         }
 
-        ResourceDescriptor sub = descriptor.getSubResource("Width");
+        ResourceDescriptor sub = settings.getSubResource("Width");
         if (!sub.getKey().empty()) {
             width = stoi(sub.getValue());
         }
 
-        sub = descriptor.getSubResource("Height");
+        sub = settings.getSubResource("Height");
         if (!sub.getKey().empty()) {
             height = stoi(sub.getValue());
         }
@@ -231,11 +229,11 @@ private:
 }; // SdlWindow class
 
 
-UniqueDisplayWindow createDisplayWindow(ResourceDescriptor descriptor) {
+UniqueDisplayWindow createDisplayWindow(ResourceDescriptor settings) {
 
     try
     {
-        return UniqueDisplayWindow(new SdlWindow(descriptor));
+        return UniqueDisplayWindow(new SdlWindow(settings));
     }
     catch(std::exception& e)
     {
