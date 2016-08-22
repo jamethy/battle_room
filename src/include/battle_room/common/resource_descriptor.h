@@ -19,16 +19,47 @@ class ResourceDescriptor {
 
 public:
 
-
+    /**
+     * \brief Returns the filtered subresources whose Key matches fileter (ignoring case)
+     *
+     * Use this function to fill a collection within a resource, such as frames in an animation
+     *
+     * \param filter Filter to Key
+     * \return Vector of descriptors that match the filter
+     */
     std::vector<ResourceDescriptor> getSubResources(std::string filter = "");
 
+    /**
+     * \brief Gets the first resource descriptor that matches the filter
+     * 
+     * Helps fill a member variable by passing the return value into the variable's settings
+     * Returns empty resource descriptor if none was found
+     *
+     * \param filter Filter to keys
+     * \return ResourceDescriptor that matches the fitler
+     */
     ResourceDescriptor getSubResource(std::string filter);
 
+    /**
+     * \brief Gets the resource Descriptor from the file
+     *
+     * The key of the result is the file path and the value is the extension
+     * The file is all the sub resources, e.g. the animation resource file will have an 
+     * Animation sub resource.
+     *
+     * \param filePath Full file path to the text file
+     * \return Resource descriptor filled by the file
+     */
     static ResourceDescriptor readFile(std::string filePath);
 
     /*!
-     * Reads in an input file or string and fills resource descriptor.
-     * Assumes first line describes the top level descriptor
+     * \brief Reads in an input file or string and fills resource descriptor.
+     *
+     * Mainly used in readFile or manually creating a resource descriptor
+     * Assumes first line describes the top level descriptor (and is not empty)
+     *
+     * \param lines Vector of lines in the file
+     * \param start Current position in lines
      */
     void fillFromInput(std::vector<std::string> lines, unsigned& start);
 
@@ -42,15 +73,15 @@ public:
 
     void setSubResources(std::vector<ResourceDescriptor> subResources);
 
+    // Constructor
     ResourceDescriptor();
 
 private:
 
-    std::string m_key;
-    std::string m_value;
-    std::vector<ResourceDescriptor> m_subResources;
+    std::string m_key; ///< What the descriptor is describing
+    std::string m_value; ///< The value of what the descriptor is describing
+    std::vector<ResourceDescriptor> m_subResources; ///< Entites contained in the current
 
 }; // RecourseDescriptor class
-
 } // BattleRoom namespace
 #endif // RESOURCE_DESCRIPTOR_H

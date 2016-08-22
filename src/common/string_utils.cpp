@@ -32,6 +32,7 @@ string toLower(string str) {
 }
 
 bool keyMatch(string a, string b) {
+    // compare returns the number of characters that differ
     return toLower(a).compare(toLower(b)) == 0;
 }
 

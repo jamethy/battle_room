@@ -12,13 +12,9 @@ using std::vector;
 
 namespace BattleRoom {
 
-string ResourceDescriptor::getKey() {
-    return m_key;
-}
-
-string ResourceDescriptor::getValue() {
-    return m_value;
-}
+ResourceDescriptor::ResourceDescriptor() 
+    : m_key(""), m_value("")
+{ }
 
 vector<ResourceDescriptor> ResourceDescriptor::getSubResources(string filter) {
 
@@ -43,21 +39,15 @@ ResourceDescriptor ResourceDescriptor::getSubResource(string filter) {
             return descriptor;
         }
     }
+    // if none matched, return empty descriptor
     return ResourceDescriptor();
 }
 
-void ResourceDescriptor::setKey(string key) {
-    m_key = key;
-}
-
-void ResourceDescriptor::setValue(string value) {
-    m_value = value;
-}
-
-void ResourceDescriptor::setSubResources(vector<ResourceDescriptor> subResources) {
-    m_subResources = subResources;
-}
-
+/**
+ * \brief Utility function to get the resource's value from a line
+ * \param line String with white space, key, ': ', and the value
+ * \return The matched Value
+ */ 
 string parseOutValue(std::string line) {
 
     string value = "";
@@ -75,7 +65,11 @@ string parseOutValue(std::string line) {
     return value;
 }
 
-
+/**
+ * \brief Utility function to get the resource's key from a line
+ * \param line String with white space, key, ': ', and the value
+ * \return The matched Key
+ */
 string parseOutKey(string line) {
 
     string key = "";
@@ -92,6 +86,11 @@ string parseOutKey(string line) {
     return key;
 }
 
+/**
+ * \brief Utility function to see if a line only contains whitespace
+ * \param line String containing anything
+ * \return True if line only contains whitespace
+ */
 bool isLineEmpty(string line) {
 
     // \\S any non-whitespace character
@@ -100,6 +99,14 @@ bool isLineEmpty(string line) {
     return !std::regex_search(line, sm, rgx_char);
 }
 
+/**
+ * \brief Utility function to count the number of tabs before the key
+ *
+ * A tab is considered 4 spaces (and 4 spaces a tab) and the result is rounded half
+ *
+ * \param line containing key-value pair
+ * \return Number of tabs before the key
+ */
 int getLevel(string line) {
 
     // \\t A tab character
@@ -107,32 +114,41 @@ int getLevel(string line) {
     string newline = std::regex_replace(line,rgx_tab,"    ");
 
     size_t firstNonSpace = newline.find_first_not_of(' ');
-    return (firstNonSpace + 2) / 4;
+
+    // since zero-index, firstNonSpace = number of spaces
+    return (firstNonSpace + 1) / 4;
 
 }
 
 void ResourceDescriptor::fillFromInput(vector<string> lines, unsigned& start) {
     
+    // if we haven't reached end of file
     if (lines.size() > start) {
+
         string firstLine = lines[start];
 
+        // set this resource descriptor's values
         setKey(parseOutKey(firstLine));
         setValue(parseOutValue(firstLine));
-        int firstLevel = getLevel(firstLine);
 
+        // then get it's subs
         vector<ResourceDescriptor> subs;
 
         while (++start < lines.size()) {
             string nextLine = lines[start];
 
             if (!isLineEmpty(nextLine)) {
-                if (getLevel(nextLine) <= firstLevel) {
-                    --start;
-                    break;
-                } else {
+
+                // if the next line is a sub of this one
+                if (getLevel(nextLine) > getLevel(firstLine)) {
                     ResourceDescriptor sub;
                     sub.fillFromInput(lines,start);
                     subs.push_back(sub);
+                } 
+                // else, undo iteration and let the upper layer handle the next line
+                else {
+                    --start;
+                    break;
                 }
             }
         }
@@ -141,20 +157,40 @@ void ResourceDescriptor::fillFromInput(vector<string> lines, unsigned& start) {
     }
 }
 
-ResourceDescriptor::ResourceDescriptor() :
-    m_key(""), m_value("")
-{
-}
-
 ResourceDescriptor ResourceDescriptor::readFile(string filePath) {
 
-    ResourceDescriptor descriptor;
 
     vector<string> resourceFile = readEntireResourceFile(filePath);
+
     unsigned start = 0;
+    ResourceDescriptor descriptor;
     descriptor.fillFromInput(resourceFile, start);
 
     return descriptor;
+}
+
+
+// setters and getters
+
+string ResourceDescriptor::getKey() {
+    return m_key;
+}
+
+string ResourceDescriptor::getValue() {
+    return m_value;
+}
+
+
+void ResourceDescriptor::setKey(string key) {
+    m_key = key;
+}
+
+void ResourceDescriptor::setValue(string value) {
+    m_value = value;
+}
+
+void ResourceDescriptor::setSubResources(vector<ResourceDescriptor> subResources) {
+    m_subResources = subResources;
 }
 
 } // BattleRoom namespace
