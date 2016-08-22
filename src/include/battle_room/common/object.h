@@ -10,9 +10,9 @@ class Object {
 
 public:
 
-    Animation getAnimation();
-    seconds getAnimationState();
-    Position getPosition();
+    Animation& getAnimation() const;
+    seconds getAnimationState() const;
+    Position getPosition() const;
 
     void setAnimation(Animation animation);
     void setAnimationState(seconds animationState);
@@ -21,6 +21,14 @@ public:
     Object();
 
     Position& position();
+
+    //TODO figure out how to get rid of this
+    Object& operator=(const Object& other) {
+        m_currentAnimation = other.m_currentAnimation;
+        m_animationState = other.m_animationState;
+        m_position = other.m_position;
+        return *this;
+    }
 
 private:
 

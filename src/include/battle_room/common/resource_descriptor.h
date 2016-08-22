@@ -6,6 +6,8 @@
 
 namespace BattleRoom {
 
+const std::string DESCRIPTOR_EXTENSION = ".yml";
+
 /*!
  * Stores the contents of a resource file describing an object such
  * as an animation. Files will be parsed into these objects which will

@@ -35,6 +35,10 @@ Vector3D Vector3D::cross(Vector3D b) {
     return Vector3D(x,y,z);
 }
 
+Vector3D Vector3D::plus(Vector3D b) {
+    return Vector3D(m_x+b.x(), m_y+b.y(), m_z+b.z());
+}
+
 Vector3D Vector3D::minus(Vector3D b) {
     return Vector3D(m_x-b.x(), m_y-b.y(), m_z-b.z());
 }

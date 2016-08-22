@@ -13,6 +13,7 @@ Camera::Camera() {
     m_forward = Vector3D(0,0,-1);
     m_up = Vector3D(0,1,0);
     m_right = Vector3D(1,0,0);
+    m_position.setLocation(Vector3D(0,0,10));
 }
 
 Position& Camera::position() {
@@ -71,7 +72,6 @@ void Camera::rotateClockwise(radians theta) {
     double k = m_forward.z()*sin(theta/2.0);
 
     Quaternion rot = Quaternion(w,i,j,k);
-    Quaternion nw = rot.getRotated(old);
 
     pos.setOrientation(rot.getRotated(old));
     setPosition(pos);
@@ -80,17 +80,7 @@ void Camera::rotateClockwise(radians theta) {
 
 void Camera::applySettings(ResourceDescriptor settings) {
 
-    ResourceDescriptor sub = settings.getSubResource("Width");
-    if (!sub.getKey().empty()) {
-        m_width = toPx(sub.getValue());
-    } 
-
-    sub = settings.getSubResource("Height");
-    if (!sub.getKey().empty()) {
-        m_height = toPx(sub.getValue());
-    } 
-
-    sub = settings.getSubResource("HorizontalFieldOfView");
+    ResourceDescriptor sub = settings.getSubResource("HorizontalFieldOfView");
     if (!sub.getKey().empty()) {
         m_horizontalFov = toRadians(sub.getValue());
     } 
@@ -106,9 +96,7 @@ void Camera::applySettings(ResourceDescriptor settings) {
     } 
 }
 
-Pixel Camera::fromLocation(Vector3D location) {
-
-    Quaternion orientation = m_position.getOrientation();
+RelPixel Camera::fromLocation(Vector3D location) {
 
     Vector3D delta = location.minus(m_position.getLocation());
     meters dist = delta.dot(m_forward);
@@ -119,22 +107,16 @@ Pixel Camera::fromLocation(Vector3D location) {
     meters qx = q.dot(m_right);
     meters qy = q.dot(m_up);
     
-    px col = m_width*(0.5 + qx/width);
-    px row = m_height*(0.5 - qy/height);
+    relpx col = (0.5 + qx/width);
+    relpx row = (0.5 - qy/height);
 
-    return Pixel(row,col);
+    return RelPixel(row,col);
 }
 
-Vector3D Camera::zeroPlaneIntersection(Pixel pixel) {
+Vector3D Camera::zeroPlaneIntersection(RelPixel pixel) {
     return Vector3D();
 }
 
-px Camera::getHeight() {
-    return m_height;
-}
-px Camera::getWidth() {
-    return m_width;
-}
 radians Camera::getHorizontalFov() {
     return m_horizontalFov;
 }

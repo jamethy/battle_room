@@ -21,7 +21,7 @@ void AnimationHandler::setResourcePath(string resourcePath) {
 Animation& AnimationHandler::getAnimation(string animation) {
 
     if (m_animationMap.count(animation) == 0) {
-        string animationFilePath = m_resourcePath + "/" + animation + ".txt";
+        string animationFilePath = m_resourcePath + "/" + animation + DESCRIPTOR_EXTENSION;
         ResourceDescriptor descriptor = ResourceDescriptor::readFile(animationFilePath);
         Animation anim(descriptor);
 

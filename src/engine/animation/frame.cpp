@@ -16,7 +16,7 @@ Frame::Frame(ResourceDescriptor descriptor) {
 
     sub = descriptor.getSubResource("LeftCol");
     if (!sub.getKey().empty()) {
-        m_topLeft.setRow( toPx(sub.getValue()) );
+        m_topLeft.setCol( toPx(sub.getValue()) );
     }
 
     sub = descriptor.getSubResource("BottomRow");
@@ -40,23 +40,23 @@ Frame::Frame(ResourceDescriptor descriptor) {
     }
 }
 
-seconds Frame::getEndTime() {
+seconds Frame::getEndTime() const {
     return m_endTime;
 }
 
-const Pixel& Frame::getTopLeft() {
+const Pixel& Frame::getTopLeft() const {
     return m_topLeft;
 }
 
-const Pixel& Frame::getBottomRight() {
+const Pixel& Frame::getBottomRight() const {
     return m_bottomRight;
 }
 
-double Frame::getXScale() {
+double Frame::getXScale() const {
     return m_xScale;
 }
 
-double Frame::getYScale() {
+double Frame::getYScale() const {
     return m_yScale;
 }
 

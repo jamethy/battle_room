@@ -7,6 +7,11 @@
 namespace BattleRoom {
 
 /*!
+ * Parses a file path and returns the path without the filename at the end
+ */
+std::string getFilePath(std::string fullFilePath);
+
+/*!
  * Parses a file path and returns the filename without extension
  */
 std::string getFileName(std::string fullFilePath);

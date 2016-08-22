@@ -9,6 +9,22 @@ using std::vector;
 
 namespace BattleRoom {
 
+string getFilePath(string fullFilePath) {
+
+    string filepath = "./";
+
+    // (.*\\/) file path and the last forward slash (group 1)
+    // [^\\/]* everything but a forward stash
+    // $ end of line
+    std::regex rgx_path("(.*\\/)[^\\/]*$");
+    std::smatch sm;
+    if(std::regex_search(fullFilePath, sm, rgx_path)) {
+        filepath = sm[1].str();
+    }
+
+    return filepath;
+}
+
 string getFileName(string fullFilePath) {
 
     string filename = fullFilePath;

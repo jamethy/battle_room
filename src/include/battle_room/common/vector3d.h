@@ -20,6 +20,7 @@ public:
 
     meters dot(Vector3D b);
     Vector3D cross(Vector3D b);
+    Vector3D plus(Vector3D b);
     Vector3D minus(Vector3D b);
     Vector3D times(double scalar);
 

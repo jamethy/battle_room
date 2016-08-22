@@ -1,3 +1,4 @@
+#include "battle_room/common/resource_descriptor.h"
 #include "battle_room/engine/graphics/display_window.h"
 #include "battle_room/engine/animation/animation_handler.h"
 
@@ -9,6 +10,9 @@ int main() {
 
     std::cout << "Hello World!\n";
     std::string resourcePath = getResourcePath();
+
+    std::string settings_file = resourcePath + "/startup" + DESCRIPTOR_EXTENSION;
+    ResourceDescriptor rd = ResourceDescriptor::readFile(settings_file);
 
     ///// Game States
     // dedicated server
@@ -24,7 +28,17 @@ int main() {
 
     // Create main components of game
     //ProgramState state;
-    UniqueDisplayWindow window = createDisplayWindow("window.txt");
+    UniqueDisplayWindow window = createDisplayWindow(rd.getSubResource("Window"));
+
+    //TODO figure out a better way to do camera management
+    Camera camera;
+    camera.applySettings(rd.getSubResource("Camera"));
+
+    for (ResourceDescriptor sub : rd.getSubResources("View")) {
+        View view(sub);
+        view.setCamera(camera);
+        window->addView(view);
+    }
 
     //Menus menus;
     //UserInterfaces uis;

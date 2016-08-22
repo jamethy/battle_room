@@ -57,4 +57,12 @@ TEST(Test_getExtension, weirdExtension) {
     EXPECT_STREQ(expected.c_str(), actual.c_str());
 }
 
+TEST(Test_getFilepath, typical) {
+    string test_file = "/path/to/test_file.l3txt";
+    string expected = "/path/to/";
+    string actual = getFilePath(test_file);
+
+    EXPECT_STREQ(expected.c_str(), actual.c_str());
+}
+
 } // BattleRoom namespace

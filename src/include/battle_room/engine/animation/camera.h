@@ -1,8 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "battle_room/common/rel_pixel.h"
 #include "battle_room/common/position.h"
-#include "battle_room/common/pixel.h"
 #include "battle_room/common/resource_descriptor.h"
 
 
@@ -23,13 +23,11 @@ public:
     void rotateLeftRight(radians theta);
     void rotateClockwise(radians theta);
 
-    Pixel fromLocation(Vector3D location);
-    Vector3D zeroPlaneIntersection(Pixel pixel);
+    RelPixel fromLocation(Vector3D location);
+    Vector3D zeroPlaneIntersection(RelPixel pixel);
 
     void applySettings(ResourceDescriptor settings);
 
-    px getHeight();
-    px getWidth();
     radians getHorizontalFov();
     radians getVerticalFov();
 
@@ -43,8 +41,6 @@ private:
 
     radians m_horizontalFov = 1.308333; // 75 deg
     radians m_verticalFov = 1.308333; // based on window size
-    px m_width;
-    px m_height;
 
 }; // Camera class
 } // BattleRoom namespace

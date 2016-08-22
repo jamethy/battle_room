@@ -1,7 +1,6 @@
 #ifndef SDL_TEXTURE_MANAGER
 #define SDL_TEXTURE_MANAGER
 
-#include "battle_room/common/resource_descriptor.h"
 #include "battle_room/engine/graphics/texture_manager.h"
 
 #include "SDL.h"
@@ -36,8 +35,6 @@ private:
     SDL_Renderer* m_renderer;
 
     std::unordered_map<std::string,SDL_Texture*> m_textureMap;
-
-    ResourceDescriptor m_resourceList;
 
 }; // SdlTextureManager class
 } // BattleRoom namespace

@@ -21,6 +21,8 @@ public:
 
     const std::vector<Frame>& getFrames();
 
+    const Frame& getFrame(seconds animationState);
+
 private:
     
     std::string m_imageFile;

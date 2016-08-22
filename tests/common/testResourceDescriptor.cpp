@@ -51,11 +51,11 @@ void testFrameResource(ResourceDescriptor frame, string time, string toprow, str
 
 TEST(Test_fillFromInput, testFile) {
 
-    string test_file = string(TEST_FILES_DIR) + "/test_animation.txt";
+    string test_file = string(TEST_FILES_DIR) + "/test_animation" + DESCRIPTOR_EXTENSION;
     ResourceDescriptor rd = ResourceDescriptor::readFile(test_file);
 
     EXPECT_STREQ("test_animation", rd.getKey().c_str());
-    EXPECT_STREQ("txt", rd.getValue().c_str());
+    EXPECT_STREQ(DESCRIPTOR_EXTENSION.c_str(), ("." + rd.getValue()).c_str());
 
     vector<ResourceDescriptor> level1 = rd.getSubResources();
     ASSERT_EQ(7u,level1.size());
@@ -84,7 +84,7 @@ TEST(Test_fillFromInput, testFile) {
 
 TEST(Test_filter, testFile) {
 
-    string test_file = string(TEST_FILES_DIR) + "/test_animation.txt";
+    string test_file = string(TEST_FILES_DIR) + "/test_animation" + DESCRIPTOR_EXTENSION;
     ResourceDescriptor rd = ResourceDescriptor::readFile(test_file);
 
     vector<ResourceDescriptor> frames = rd.getSubResources("Frame");
@@ -94,7 +94,7 @@ TEST(Test_filter, testFile) {
 
 TEST(Test_getSub, testFile) {
 
-    string test_file = string(TEST_FILES_DIR) + "/test_animation.txt";
+    string test_file = string(TEST_FILES_DIR) + "/test_animation" + DESCRIPTOR_EXTENSION;
     ResourceDescriptor rd = ResourceDescriptor::readFile(test_file);
 
     ResourceDescriptor sub = rd.getSubResource("ImageFile");

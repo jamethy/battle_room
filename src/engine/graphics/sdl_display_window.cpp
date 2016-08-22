@@ -9,12 +9,11 @@
 #include "SDL.h"
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <iostream>
 #include <exception>
 
 using std::string;
-using std::map;
 using std::vector;
 
 namespace BattleRoom {
@@ -23,26 +22,24 @@ class SdlWindow : public DisplayWindow {
 
 public:
 
-    SdlWindow(string settingsFile) {
+    SdlWindow(ResourceDescriptor descriptor) {
 
+        // read in settings
         string name = "name";
-        int width = 250;
-        int height = 250;
+        int width = 500;
+        int height = 500;
 
-        // read in settings file
-        ResourceDescriptor settings = ResourceDescriptor::readFile(settingsFile);
 
-        ResourceDescriptor sub = settings.getSubResource("Name");
-        if (!sub.getKey().empty()) {
-            name = sub.getValue();
+        if (!descriptor.getValue().empty()) {
+            name = descriptor.getValue();
         }
 
-        sub = settings.getSubResource("Width");
+        ResourceDescriptor sub = descriptor.getSubResource("Width");
         if (!sub.getKey().empty()) {
             width = stoi(sub.getValue());
         }
 
-        sub = settings.getSubResource("Height");
+        sub = descriptor.getSubResource("Height");
         if (!sub.getKey().empty()) {
             height = stoi(sub.getValue());
         }
@@ -88,28 +85,133 @@ public:
     }
 
 
+    // TODO fill this function with something meaningful
+    // TODO make a SDL Inputs map class
     Inputs getInputs() override {
-        //SDL_Event event;
-        //SDL_GetTicks();
-        //while (SDL_PollEvent(&event) {
-        return Inputs();
+
+        Inputs inputs;
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+
+            if (event.type == SDL_KEYDOWN) {
+
+                switch(event.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                    case SDLK_q:
+                        inputs.m_quit = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (event.type == SDL_QUIT) {
+                inputs.m_quit = true;
+            }
+        }
+
+        return inputs;
     }
 
-    void addWorldObjects(vector<Object> objects) override {
+    void addObjectsToView(vector<Object> objects, string viewName) override {
         
-        //if (!m_textureMap.contains(object.getTexture()) {
-                //SDL_Texture* texture = IMG_LoadTexture(m_renderer, object.getTexture().c_str());
-        //}
-    }
+        if (m_views.count(viewName) > 0) {
 
-    void addUiObjects(vector<Object> objects) override {
-    }
-
-    void addMenuObjects(vector<Object> objects) override {
+            View& view = m_views.at(viewName);
+            view.addObjects(objects);
+        }
+        else {
+            // throw exception?
+        }
     }
 
     void drawScreen() override {
-        //SDL_SetRenderDrawColor();
+
+        // TODO clean this up and put it in functions/classes
+        // TODO add in error catching
+        // TODO use opengl to render so I can have skewed rectangles
+
+
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+        SDL_RenderClear(m_renderer);
+
+        // draw objects
+        for (std::pair<string,View> viewEntry : m_views) {
+
+            View& view = viewEntry.second;
+
+            Pixel topLeft = view.getTopLeft();
+            Pixel bottomRight = view.getBottomRight();
+            px viewWidth = bottomRight.getColInt() - topLeft.getColInt();
+            px viewHeight = bottomRight.getRowInt() - topLeft.getRowInt();
+            Camera& camera = view.getCamera();
+
+            for (Object& object : view.getObjects()) {
+
+                Animation& animation = object.getAnimation();
+                seconds animationState = object.getAnimationState();
+                Position& pos = object.position();
+                Vector3D& loc = pos.location();
+                Quaternion& ori = pos.orientation();
+
+
+                const Frame& frame = animation.getFrame(animationState);
+                const Pixel& frameTopLeft = frame.getTopLeft();
+                const Pixel& frameBottomRight = frame.getBottomRight();
+
+                double xScale = frame.getXScale();
+                double yScale = frame.getYScale();
+
+                meters objectWidth = xScale*(frameBottomRight.getCol() - frameTopLeft.getCol());
+                meters objectHeight = yScale*(frameBottomRight.getRow() - frameTopLeft.getRow());
+
+                Vector3D xOffset = ori.getRotated(Vector3D(objectWidth/2.0, 0, 0));
+                Vector3D yOffset = ori.getRotated(Vector3D(0, objectHeight/2.0, 0));
+
+                Vector3D topLeftV = loc.minus(xOffset).plus(yOffset);
+                Vector3D botRightV = loc.plus(xOffset).minus(yOffset);
+
+                RelPixel topLeftRel = camera.fromLocation(topLeftV);
+                RelPixel botRightRel = camera.fromLocation(botRightV);
+
+                SDL_Texture* texture = m_sdlTextureManager.getTexture(animation.getImageFile());
+                SDL_Rect srcRect;
+                srcRect.x = frameTopLeft.getColInt();
+                srcRect.y = frameTopLeft.getRowInt();
+                srcRect.w = frameBottomRight.getColInt() - srcRect.x;
+                srcRect.h = frameBottomRight.getRowInt() - srcRect.y;
+
+                SDL_Rect dstRect;
+                dstRect.x = topLeftRel.getColInt(viewWidth);
+                dstRect.y = topLeftRel.getRowInt(viewHeight);
+                dstRect.w = botRightRel.getColInt(viewWidth) - dstRect.x;
+                dstRect.h = botRightRel.getRowInt(viewHeight) - dstRect.y;
+
+                // fix to get angle until I figure out the skewing issue
+                Vector3D x(1,0,0);
+                Vector3D rotatedX = ori.getRotated(x);
+                double angle = std::acos(x.dot(rotatedX));
+
+                SDL_RenderCopyEx(m_renderer,
+                        texture, &srcRect, &dstRect, angle,
+                        NULL, SDL_FLIP_NONE);
+
+            }
+        }
+
+        SDL_RenderPresent(m_renderer);
+    }
+
+    void addView(View view) override {
+
+        string name = view.getName();
+
+        if (m_views.count(name) > 0) {
+            m_views.at(name) = view;
+        }
+        else {
+            m_views.insert(std::pair<string,View>(name,view));
+        }
     }
 
     TextureManager& getTextureManager() override {
@@ -122,16 +224,18 @@ private:
     SDL_Renderer* m_renderer;
     SDL_Window* m_window;
 
+    std::unordered_map<string,View> m_views;
+
     int m_windowCount = 0;
 
 }; // SdlWindow class
 
 
-UniqueDisplayWindow createDisplayWindow(string settingsFilename) {
+UniqueDisplayWindow createDisplayWindow(ResourceDescriptor descriptor) {
 
     try
     {
-        return UniqueDisplayWindow(new SdlWindow(settingsFilename));
+        return UniqueDisplayWindow(new SdlWindow(descriptor));
     }
     catch(std::exception& e)
     {

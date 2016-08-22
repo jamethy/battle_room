@@ -3,6 +3,8 @@
 
 #include "battle_room/common/object.h"
 #include "battle_room/common/inputs.h"
+#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/engine/animation/view.h"
 #include "battle_room/engine/graphics/texture_manager.h"
 
 #include <vector>
@@ -22,17 +24,7 @@ public:
     /*!
      * Add the game world objects that need to be rendered
      */
-    virtual void addWorldObjects(std::vector<Object> objects) = 0;
-
-    /*!
-     * Add the UI objects that need to be rendered
-     */
-    virtual void addUiObjects(std::vector<Object> objects) = 0;
-
-    /*!
-     * Add the Menu objects that need to be rendered
-     */
-    virtual void addMenuObjects(std::vector<Object> objects) = 0;
+    virtual void addObjectsToView(std::vector<Object> objects, std::string viewName) = 0;
 
     /*!
      * Draws the world, UI, and then menu objects
@@ -41,13 +33,15 @@ public:
 
     virtual TextureManager& getTextureManager() = 0;
 
+    virtual void addView(View view) = 0;
+
 }; // DisplayWindow class
 
 /*!
  * Creates a display window
  */
 typedef std::unique_ptr<DisplayWindow> UniqueDisplayWindow;
-UniqueDisplayWindow createDisplayWindow(std::string settingsFilename);
+UniqueDisplayWindow createDisplayWindow(ResourceDescriptor descriptor);
 
 } // BattleRoom namespace
 #endif // DISPLAY_WINDOW_H

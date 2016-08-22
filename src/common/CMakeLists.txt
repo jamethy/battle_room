@@ -5,6 +5,7 @@ add_library(Common
         file_utils.cpp
         resource_descriptor.cpp
         pixel.cpp
+        rel_pixel.cpp
         position.cpp
         object.cpp
         vector3d.cpp

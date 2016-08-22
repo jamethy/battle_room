@@ -15,13 +15,13 @@ public:
 
     Frame(ResourceDescriptor descriptor);
 
-    seconds getEndTime();
+    seconds getEndTime() const;
 
-    const Pixel& getTopLeft();
-    const Pixel& getBottomRight();
+    const Pixel& getTopLeft() const;
+    const Pixel& getBottomRight() const;
 
-    double getXScale();
-    double getYScale();
+    double getXScale() const;
+    double getYScale() const;
 
 
 private:

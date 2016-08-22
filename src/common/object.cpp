@@ -8,7 +8,7 @@ Object::Object() :
     m_animationState(0)
 {}
 
-Animation Object::getAnimation() {
+Animation& Object::getAnimation() const {
     return m_currentAnimation;
 }
 
@@ -16,7 +16,7 @@ void Object::setAnimation(Animation animation) {
     m_currentAnimation = animation;
 }
 
-seconds Object::getAnimationState() {
+seconds Object::getAnimationState() const {
     return m_animationState;
 }
 
@@ -28,7 +28,7 @@ Position& Object::position() {
     return m_position;
 }
 
-Position Object::getPosition() {
+Position Object::getPosition() const {
     return m_position;
 }
 

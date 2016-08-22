@@ -6,6 +6,10 @@ namespace BattleRoom {
 // TODO fill class
 class Inputs {
 
+public:
+
+    bool m_quit = false;
+
 }; // Inputs class
 } // BattleRoom namespace
 #endif // INPUTS_H
