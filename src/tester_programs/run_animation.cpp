@@ -4,6 +4,7 @@
 #include "battle_room/common/file_utils.h"
 #include "battle_room/engine/animation/animation_handler.h"
 
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <chrono>

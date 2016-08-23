@@ -8,6 +8,7 @@
 #include "SDL_ttf.h"
 #include "SDL.h"
 
+#include <cmath>
 #include <string>
 #include <unordered_map>
 #include <iostream>
