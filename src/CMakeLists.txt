@@ -9,11 +9,11 @@ add_subdirectory(tester_programs)
 add_executable(battleroom main.cpp )
 
 target_link_libraries(battleroom
-    -Wl,--start-group
+    ${START_GROUP}
     Common
     Animation
     Graphics
-    -Wl,--end-group
+    ${END_GROUP}
     ${SDL2_LIBRARY}
     ${SDL2_IMAGE_LIBRARY}
     ${SDL2_gfx_LIBRARY}
