@@ -7,30 +7,46 @@
 
 namespace BattleRoom {
 
+/**
+ * \brief Unit of measurement used for rotation
+ */
 typedef double radians;
 
+/**
+ * \brief Location and Orientation in 3D space
+ */
 class Position {
 
 public:
 
+    // Reference Accessors
     Vector3D& location();
     Quaternion& orientation();
 
+    // getters and setters
     Vector3D getLocation();
     Quaternion getOrientation();
-
     void setLocation(Vector3D location);
     void setOrientation(Quaternion orientation);
 
+    /**
+     * \brief Sets the member variables by subs in settings
+     * \param settings Descriptor containing location and orientation data
+     */
     void applySettings(ResourceDescriptor settings);
 
 private:
 
-    Vector3D m_location;
-    Quaternion m_orientation;
+    Vector3D m_location; ///< Point in space
+    Quaternion m_orientation; ///< Quaternion representing orientation
 
 }; // Position class
 
+/**
+ * \brief Utility function to parse string for radians
+ * \param str String containing radian value
+ * \return Radians that are in str
+ */
 radians toRadians(std::string str);
 
 } // BattleRoom namespace

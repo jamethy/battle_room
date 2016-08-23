@@ -6,9 +6,20 @@
 
 namespace BattleRoom {
 
+/**
+ * \brief Object that is drawabled on a view
+ */
 class Object {
 
 public:
+
+    // Constructor
+    Object();
+
+    // Reference accessor functions
+    Position& position();
+
+    // getters and setters
 
     Animation& getAnimation() const;
     seconds getAnimationState() const;
@@ -18,9 +29,6 @@ public:
     void setAnimationState(seconds animationState);
     void setPosition(Position pos);
     
-    Object();
-
-    Position& position();
 
     //TODO figure out how to get rid of this
     Object& operator=(const Object& other) {
@@ -32,9 +40,9 @@ public:
 
 private:
 
-    Animation& m_currentAnimation;
-    seconds m_animationState;
-    Position m_position;
+    Animation& m_currentAnimation; ///< Animation object is on
+    seconds m_animationState; ///< Seconds into animation
+    Position m_position; ///< Location and Orientation of object
 
 }; // Object class
 } // BattleRoom namespace

@@ -3,33 +3,38 @@
 
 namespace BattleRoom {
 
+// Constructor
+
 Object::Object() : 
     m_currentAnimation(AnimationHandler::get().getAnimation(MISSING_ANIMATION)),
     m_animationState(0)
 {}
 
+// reference accessor functions
+
+Position& Object::position() {
+    return m_position;
+}
+// getters and setters
+
 Animation& Object::getAnimation() const {
     return m_currentAnimation;
-}
-
-void Object::setAnimation(Animation animation) {
-    m_currentAnimation = animation;
 }
 
 seconds Object::getAnimationState() const {
     return m_animationState;
 }
 
-void Object::setAnimationState(seconds animationState) {
-    m_animationState = animationState;
-}
-
-Position& Object::position() {
-    return m_position;
-}
-
 Position Object::getPosition() const {
     return m_position;
+}
+
+void Object::setAnimation(Animation animation) {
+    m_currentAnimation = animation;
+}
+
+void Object::setAnimationState(seconds animationState) {
+    m_animationState = animationState;
 }
 
 void Object::setPosition(Position pos) {

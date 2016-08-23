@@ -5,27 +5,13 @@
 
 namespace BattleRoom {
 
+// constructors
+
 Pixel::Pixel() {}
 
 Pixel::Pixel(px row, px col)
     : m_row(row), m_col(col) 
 { }
-
-void Pixel::setRow(px row) {
-    m_row = row;
-}
-
-px Pixel::getRow() const {
-    return m_row;
-}
-
-void Pixel::setCol(px col) {
-    m_col = col;
-}
-
-px Pixel::getCol() const {
-    return m_col;
-}
 
 int Pixel::getRowInt() const {
     return (int)std::round(m_row);
@@ -33,6 +19,25 @@ int Pixel::getRowInt() const {
 
 int Pixel::getColInt() const {
     return (int)std::round(m_col);
+}
+
+
+// getters and setters
+
+void Pixel::setRow(px row) {
+    m_row = row;
+}
+
+void Pixel::setCol(px col) {
+    m_col = col;
+}
+
+px Pixel::getRow() const {
+    return m_row;
+}
+
+px Pixel::getCol() const {
+    return m_col;
 }
 
 px toPx(std::string s) {

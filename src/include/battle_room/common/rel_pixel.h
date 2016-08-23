@@ -5,38 +5,43 @@
 
 namespace BattleRoom {
 
+/**
+ * \brief Unit of relative location on a view/image
+ */
 typedef double relpx;
 
 /*!
- * This class is relative
- * e.g. 0 row is the top, 1 row is the bottom, 0.5 row is middle
- * e.g. 0 col is the left, 1 col is the right, 0.5 col is middle
+ * Relative pixel coordinates
+ * 0 row is the top, 1 row is the bottom, 0.5 row is middle
+ * 0 col is the left, 1 col is the right, 0.5 col is middle
  */
 class RelPixel {
 
 public:
 
+    // Constructors
     RelPixel();
     RelPixel(relpx row, relpx col);
 
-    /*!
-     * The row is the number of pixels from the TOP of the image
+    /**
+     * \brief Returns the rounded pixel location
+     * Essentially viewHeight*getRow()
+     * \return Rounded pixel location
      */
+    int getRowInt(int viewHeight) const;
+
+    /**
+     * \brief Returns the rounded pixel location
+     * Essentially viewWidth*getCol()
+     * \return Rounded pixel location
+     */
+    int getColInt(int viewWidth) const;
+
+    // getters and setters
     void setRow(relpx row);
-    relpx getRow() const;
-
-    
-    /*!
-     * The col (column) is the number of pixels from the LEFT of the image
-     */
     void setCol(relpx col);
+    relpx getRow() const;
     relpx getCol() const;
-
-    /*!
-     * These functions round and return the row/column to integers
-     */
-    int getRowInt(int viewWidth) const;
-    int getColInt(int viewHeight) const;
 
 private:
 
@@ -46,7 +51,7 @@ private:
 }; // RelPixel class
 
 /**
- * Parses a string and resturns a pixel count
+ * \brief Utility function that parses a string and resturns a pixel count
  */
 relpx toRelPx(std::string s);
 

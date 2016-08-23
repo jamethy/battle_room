@@ -4,6 +4,9 @@
 namespace BattleRoom {
 
 // TODO fill class
+/**
+ * \brief User inputs from the screen
+ */
 class Inputs {
 
 public:

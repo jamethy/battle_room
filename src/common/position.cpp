@@ -2,6 +2,7 @@
 
 namespace BattleRoom {
 
+// Reference Acessors
 
 Vector3D& Position::location() {
     return m_location;
@@ -11,6 +12,7 @@ Quaternion& Position::orientation() {
     return m_orientation;
 }
 
+// setters and getters
 
 Vector3D Position::getLocation() {
     return m_location;

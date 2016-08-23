@@ -5,38 +5,42 @@
 
 namespace BattleRoom {
 
+/**
+ * Value of pixel distance
+ */
 typedef double px;
 
 /*!
- * This class is now relative because I say it is
- * e.g. 0 row is the top, 1 row is the bottom, 0.5 row is middle
- * e.g. 0 col is the left, 1 col is the right, 0.5 col is middle
+ * \brief Pixel coordinates
+ * Note the row is the number of pixels from the TOP of the view/image
+ * Note the col is the number of pixels from the LEFT of the view/image
  */
 class Pixel {
 
 public:
-
+    
+    // Constructors
     Pixel();
     Pixel(px row, px col);
 
-    /*!
-     * The row is the number of pixels from the TOP of the image
+    /**
+     * \brief Returns the rounded column
+     * \return Column in integer form
      */
-    void setRow(px row);
-    px getRow() const;
+    int getColInt() const;
 
-    
-    /*!
-     * The col (column) is the number of pixels from the LEFT of the image
-     */
-    void setCol(px col);
-    px getCol() const;
-
-    /*!
-     * These functions round and return the row/column to integers
+    /**
+     * \brief Returns the rounded row
+     * \return Row in integer form
      */
     int getRowInt() const;
-    int getColInt() const;
+
+    // getters and setters
+
+    void setRow(px row);
+    void setCol(px col);
+    px getRow() const;
+    px getCol() const;
 
 private:
 
@@ -46,7 +50,9 @@ private:
 }; // Pixel class
 
 /**
- * Parses a string and resturns a pixel count
+ * \brief Parses a string and resturns a pixel count
+ * \param s String to parse
+ * \return px value found in s
  */
 px toPx(std::string s);
 
