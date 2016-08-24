@@ -8,6 +8,8 @@ using std::vector;
 
 namespace BattleRoom {
 
+// constructor
+
 Animation::Animation(ResourceDescriptor descriptor) {
 
     ResourceDescriptor sub = descriptor.getSubResource("ImageFile");
@@ -32,6 +34,8 @@ Animation::Animation(ResourceDescriptor descriptor) {
 
 }
 
+// getters
+
 const string& Animation::getImageFile() {
     return m_imageFile;
 }
@@ -43,6 +47,8 @@ const string& Animation::getNextAnimation() {
 const vector<Frame>& Animation::getFrames() {
     return m_frames;
 }
+
+// other functions
 
 const Frame& Animation::getFrame(seconds animationState) {
 

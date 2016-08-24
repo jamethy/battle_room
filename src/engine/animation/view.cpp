@@ -2,8 +2,11 @@
 
 namespace BattleRoom {
 
+// empty camera object to reference before one is set
+// There's probably a better way to do this
 Camera emptyCamera;
 
+// constructor
 View::View(ResourceDescriptor settings)
     : m_camera(emptyCamera)
 {
@@ -35,6 +38,19 @@ void View::applySettings(ResourceDescriptor settings) {
     }
 }
 
+// Reference Accessors
+
+std::vector<Object>& View::getObjects() {
+    return m_objects;
+}
+
+Camera& View::getCamera() {
+    return m_camera;
+}
+
+
+// getters and setters
+
 void View::setName(std::string name) {
     m_name = name;
 }
@@ -49,10 +65,6 @@ void View::setTopLeft(Pixel pixel) {
 
 void View::setBottomRight(Pixel pixel) {
     m_bottomRight = pixel;
-}
-
-void View::setCamera(Camera& camera) {
-    m_camera = camera;
 }
 
 std::string View::getName() {
@@ -71,16 +83,14 @@ Pixel View::getBottomRight() {
     return m_bottomRight;
 }
 
-Camera& View::getCamera() {
-    return m_camera;
-}
+// other functions
 
 void View::addObjects(std::vector<Object> objects) {
     m_objects = objects;
 }
 
-std::vector<Object>& View::getObjects() {
-    return m_objects;
+void View::setCamera(Camera& camera) {
+    m_camera = camera;
 }
 
 

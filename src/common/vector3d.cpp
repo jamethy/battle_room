@@ -14,6 +14,26 @@ Vector3D::Vector3D(meters x, meters y, meters z)
     : m_x(x), m_y(y), m_z(z)
 { }
 
+void Vector3D::applySettings(ResourceDescriptor settings) {
+
+    // TODO parse value for X,Y,Z?
+
+    ResourceDescriptor sub = settings.getSubResource("X");
+    if (!sub.getKey().empty()) {
+        m_x = toMeters(sub.getValue());
+    } 
+
+    sub = settings.getSubResource("Y");
+    if (!sub.getKey().empty()) {
+        m_y = toMeters(sub.getValue());
+    } 
+
+    sub = settings.getSubResource("Z");
+    if (!sub.getKey().empty()) {
+        m_z = toMeters(sub.getValue());
+    } 
+}
+
 // Access by reference
 
 meters& Vector3D::x() {
@@ -51,26 +71,6 @@ Vector3D Vector3D::minus(Vector3D b) const {
 
 Vector3D Vector3D::times(double scalar) const {
     return Vector3D(scalar*m_x, scalar*m_y, scalar*m_z);
-}
-
-void Vector3D::applySettings(ResourceDescriptor settings) {
-
-    // TODO parse value for X,Y,Z?
-
-    ResourceDescriptor sub = settings.getSubResource("X");
-    if (!sub.getKey().empty()) {
-        m_x = toMeters(sub.getValue());
-    } 
-
-    sub = settings.getSubResource("Y");
-    if (!sub.getKey().empty()) {
-        m_y = toMeters(sub.getValue());
-    } 
-
-    sub = settings.getSubResource("Z");
-    if (!sub.getKey().empty()) {
-        m_z = toMeters(sub.getValue());
-    } 
 }
 
 meters toMeters(string str) {

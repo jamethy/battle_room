@@ -6,15 +6,26 @@
 
 namespace BattleRoom {
 
+/**
+ * Unit of measurement for time
+ */
 typedef double seconds;
 
+/**
+ * \brief Frame in an animation. Each frame cuts out a portion of
+ * the image file and has an end time to mark its point in the 
+ * animation.
+ *
+ * These objects is also constant and should never change
+ */
 class Frame {
 
 public:
 
-
+    // Constructors
     Frame(ResourceDescriptor descriptor);
 
+    // getters
     seconds getEndTime() const;
 
     const Pixel& getTopLeft() const;
@@ -26,19 +37,21 @@ public:
 
 private:
     
-    seconds m_endTime;
+    seconds m_endTime; ///< Time to move to next frame
 
-    Pixel m_topLeft;
-    Pixel m_bottomRight;
+    Pixel m_topLeft; ///< Position of the top-left of the frame in the image
+    Pixel m_bottomRight; ///< Position of the bottom-rightof the frame in the image
 
-    double m_xScale; // meters per pixel
-    double m_yScale; // meters per pixel
+    double m_xScale; // meters per pixel, amount to stretch image
+    double m_yScale; // meters per pixel, amount to stretch image
     
 }; // Frame class
 
 
 /**
- * Parses the string for seconds
+ * \brief Parses the string for seconds
+ * \param str String containing seconds to parse
+ * \return Seconds value found in str
  */
 seconds toSeconds(std::string str);
 

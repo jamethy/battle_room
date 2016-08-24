@@ -5,13 +5,19 @@ using std::string;
 
 namespace BattleRoom {
 
+// constructor
+
 AnimationHandler::AnimationHandler() 
 { }
+
+// Getter for the singleton
 
 AnimationHandler& AnimationHandler::get() {
     static AnimationHandler handler;
     return handler;
 }
+
+// other functions
 
 void AnimationHandler::setResourcePath(string resourcePath) {
     m_resourcePath = resourcePath;

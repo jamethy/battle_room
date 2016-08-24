@@ -15,6 +15,12 @@ public:
     Quaternion(double w, double i, double j, double k);
 
     /**
+     * \brief Fills the member variables with the subs in settings
+     * \param settings Settings containing W,I,J,K
+     */
+    void applySettings(ResourceDescriptor settings);
+
+    /**
      * \brief Rotates a copy of vec by this
      *
      * Assumes this quaternion is a unit quaternion
@@ -40,12 +46,6 @@ public:
     double& i();
     double& j();
     double& k();
-
-    /**
-     * \brief Fills the member variables with the subs in settings
-     * \param settings Settings containing W,I,J,K
-     */
-    void applySettings(ResourceDescriptor settings);
 
 private:
 

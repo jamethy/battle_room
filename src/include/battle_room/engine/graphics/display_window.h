@@ -12,37 +12,58 @@
 
 namespace BattleRoom {
 
+/**
+ * \brief Window that displays graphics
+ * Has views that represent portions of the screen and objects within the views
+ * that are drawable
+ */
 class DisplayWindow {
 
 public:
 
+    //TODO
     //virtual void applySettings(ResourceDescriptor settings);
 
     /*!
-     * Returns the collection of user inputs that have been gathered
+     * \breif Returns the collection of user inputs that have been gathered
+     * \return Inputs class containing user input information
      */
     virtual Inputs getInputs() = 0;
     
     /*!
-     * Add the game world objects that need to be rendered
+     * \brief Add the game world objects that need to be rendered
+     * \param objects Objects that will be drawn on the view
+     * \param viewName Key to find view to draw on
      */
     virtual void addObjectsToView(std::vector<Object> objects, std::string viewName) = 0;
 
     /*!
-     * Draws the world, UI, and then menu objects
+     * \brief Draws the world, UI, and then menu objects
      */
     virtual void drawScreen() = 0;
 
+    /*!
+     * \brief Gets the texture manager
+     * This function may not be necessary, but could be used to pre load textures
+     */
     virtual TextureManager& getTextureManager() = 0;
 
+    /*!
+     * \brief Addes a view to the display window
+     * \TODO add a remove view
+     */
     virtual void addView(View view) = 0;
 
 }; // DisplayWindow class
 
-/*!
- * Creates a display window
- */
+// Window Pointer that will delete itself
 typedef std::unique_ptr<DisplayWindow> UniqueDisplayWindow;
+
+/*!
+ * \brief Creates a display window
+ * \param Resource descriptor describing the window to be created
+ * \return Unique Pointer to the window that was created
+ */
 UniqueDisplayWindow createDisplayWindow(ResourceDescriptor descriptor);
 
 } // BattleRoom namespace

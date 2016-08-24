@@ -2,6 +2,8 @@
 
 namespace BattleRoom {
 
+// constructor
+
 Frame::Frame(ResourceDescriptor descriptor) {
     
     ResourceDescriptor sub = descriptor.getSubResource("EndTime");
@@ -40,6 +42,8 @@ Frame::Frame(ResourceDescriptor descriptor) {
     }
 }
 
+// getters
+
 seconds Frame::getEndTime() const {
     return m_endTime;
 }
@@ -59,6 +63,9 @@ double Frame::getXScale() const {
 double Frame::getYScale() const {
     return m_yScale;
 }
+
+
+// other functions
 
 seconds toSeconds(std::string str) {
     return stod(str);

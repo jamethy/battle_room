@@ -21,6 +21,12 @@ public:
     Vector3D();
     Vector3D(meters x, meters y, meters z);
 
+    /**
+     * \brief Uses the resource descriptor to fill the member variables.
+     * \param settings Descriptor with subs of X,Y, and Z
+     */
+    void applySettings(ResourceDescriptor settings);
+
 
     // Access by reference (assigning to these changes the value)
     meters& x();
@@ -61,12 +67,6 @@ public:
      * \return New vector containing result of multiplication
      */
     Vector3D times(double scalar) const;
-
-    /**
-     * \brief Uses the resource descriptor to fill the member variables.
-     * \param settings Descriptor with subs of X,Y, and Z
-     */
-    void applySettings(ResourceDescriptor settings);
 
 private:
 
