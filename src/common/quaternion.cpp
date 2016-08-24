@@ -1,6 +1,6 @@
 #include "battle_room/common/quaternion.h"
 
-#include <iostream>
+#include <cmath>
 
 namespace BattleRoom {
 
@@ -35,6 +35,16 @@ void Quaternion::applySettings(ResourceDescriptor settings) {
     if (!sub.getKey().empty()) {
         m_k = stod(sub.getValue());
     } 
+}
+
+void Quaternion::rotateAboutZ(radians angle) {
+
+    *this = Quaternion(
+            std::cos(angle/2.0), 
+            0.0, 
+            0.0, 
+            std::sin(angle/2.0)
+    );
 }
 
 Vector3D Quaternion::getRotated(Vector3D v) const {

@@ -11,9 +11,35 @@
 
 namespace BattleRoom {
 
+/**
+ * SDL Implementation of TextureManager
+ * Creates and destroys SDL_Textures
+ */
 class SdlTextureManager : public TextureManager {
 
 public:
+
+    // constructors
+    SdlTextureManager();
+    ~SdlTextureManager();
+
+    /**
+     * \brief Sets the renderer to use
+     * \param renderer Renderer used to read in textures
+     */
+    void setRenderer(SDL_Renderer* renderer);
+
+    /**
+     * \brief Gets the SDL_Texture from the texture key
+     * \para textureKey Key to texture (filepath relative to resource directory)
+     * \return Pointer to the texture
+     */
+    SDL_Texture* getTexture(std::string textureKey);
+
+    /**
+     * \brief Destroys all the textures that have been loaded
+     */
+    void clear();
 
     // inherited functions
     
@@ -22,19 +48,11 @@ public:
     px getTextureWidth(std::string texture);
     px getTextureHeight(std::string texture);
 
-    void setRenderer(SDL_Renderer* renderer);
-
-    SDL_Texture* getTexture(std::string texture);
-    void clear();
-
-    SdlTextureManager();
-    ~SdlTextureManager();
-
 private:
 
-    SDL_Renderer* m_renderer;
+    SDL_Renderer* m_renderer; ///< Renderer used to read textures
 
-    std::unordered_map<std::string,SDL_Texture*> m_textureMap;
+    std::unordered_map<std::string,SDL_Texture*> m_textureMap; ///< Container of loaded textures
 
 }; // SdlTextureManager class
 } // BattleRoom namespace

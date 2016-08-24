@@ -18,6 +18,9 @@ using std::chrono::duration;
 
 int main(int argc, char** argv) {
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Check the arguments
+
     string arg = "";
 
     // check if argument was given, request if not
@@ -53,9 +56,16 @@ int main(int argc, char** argv) {
     infile.close();
 
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Load the animation
+
+
     AnimationHandler::get().setResourcePath(getFilePath(arg));
     Animation animation = AnimationHandler::get().getAnimation(getFileName(arg));
 
+    // Find the largest width and height needed to display full animation
+    // This if for camera placement
     meters largestWidth = 0;
     meters largestHeight = 0;
     px largestPxWidth = 0;
@@ -79,10 +89,12 @@ int main(int argc, char** argv) {
     }
 
 
+    // Calulate the camera properties
     double horFov = 1.308985;
     double verFov = 2*atan2(largestHeight*2.0*tan(horFov/2.0), 2.0*largestWidth);
     double camHeight = largestWidth / (2.0*tan(horFov/2.0));
 
+    // Create a mock settings file for easy application
     vector<string> settings;
     settings.push_back("Settings:");
     settings.push_back("    Window: mainWindow");
@@ -93,7 +105,7 @@ int main(int argc, char** argv) {
     settings.push_back("            Location:");
     settings.push_back("                X: 0");
     settings.push_back("                Y: 0");
-    settings.push_back("                Z: " + std::to_string(camHeight));
+    settings.push_back("                Z: " + std::to_string(3*camHeight));
     settings.push_back("        HorizontalFieldOfView: " + std::to_string(horFov));
     settings.push_back("        VerticalFieldOfView: " + std::to_string(verFov));
     settings.push_back("    View: mainView");
@@ -106,6 +118,7 @@ int main(int argc, char** argv) {
     ResourceDescriptor descriptor;
     descriptor.fillFromInput(settings, start);
 
+    // Create the camrea, view, and window
     Camera camera(descriptor.getSubResource("Camera"));
 
     View view(descriptor.getSubResource("View"));
@@ -114,28 +127,35 @@ int main(int argc, char** argv) {
     UniqueDisplayWindow window = createDisplayWindow(descriptor.getSubResource("Window"));
     window->addView(view);
 
-    seconds maxTime = animation.getFrame(99999999).getEndTime();
+    // Start the clock (resets when it hits the max time of the animation)
     steady_clock::time_point startTime = steady_clock::now();
+    seconds maxTime = animation.getFrame(99999999).getEndTime();
 
     while(window->getInputs().m_quit != true) {
 
+        // Iterate the clock
         steady_clock::time_point newtime = steady_clock::now();
         double diff = std::chrono::duration_cast<duration<double>> (newtime - startTime).count();
+        
+        // Reset if above max
         if (diff > maxTime) {
             startTime = newtime;
         }
 
+        // Add object to view
         vector<Object> objects;
         Object object;
         object.setAnimation(animation);
         object.setAnimationState(diff);
+        //object.position().orientation().rotateAboutZ(60.0*3.14156/180.0);
         objects.push_back(object);
-
         window->addObjectsToView(objects,"mainView");
+
+        // Draw the screen
         window->drawScreen();
 
     }
 
-
+    // cleanup is handled by classes
     return 0;
 }

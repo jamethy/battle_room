@@ -28,7 +28,6 @@ public:
     void setAnimation(Animation animation);
     void setAnimationState(seconds animationState);
     void setPosition(Position pos);
-    
 
     //TODO figure out how to get rid of this
     Object& operator=(const Object& other) {

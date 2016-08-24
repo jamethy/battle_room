@@ -19,9 +19,18 @@ using std::vector;
 
 namespace BattleRoom {
 
+/**
+ * \brief SDL implementation of the DisplayWindow class
+ * Initializes SDL, destroys the window, and quits SDL
+ * Also manages SDL for multiple windows
+ *
+ */
 class SdlWindow : public DisplayWindow {
 
 public:
+
+    // constructors
+
     SdlWindow(ResourceDescriptor settings)
     {
         // read in settings
@@ -130,7 +139,7 @@ public:
         // TODO add in error catching
         // TODO use opengl to render so I can have skewed rectangles
 
-
+        // Clear the screen by drawing it all black
         SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
         SDL_RenderClear(m_renderer);
 
@@ -147,50 +156,46 @@ public:
 
             for (Object& object : view.getObjects()) {
 
+                // get needed values from the inputs
                 Animation& animation = object.getAnimation();
-                seconds animationState = object.getAnimationState();
-                Position& pos = object.position();
-                Vector3D& loc = pos.location();
-                Quaternion& ori = pos.orientation();
+                Vector3D& loc = object.position().location();
+                Quaternion& ori = object.position().orientation();
 
-
-                const Frame& frame = animation.getFrame(animationState);
+                const Frame& frame = animation.getFrame(object.getAnimationState());
                 const Pixel& frameTopLeft = frame.getTopLeft();
                 const Pixel& frameBottomRight = frame.getBottomRight();
 
                 double xScale = frame.getXScale();
                 double yScale = frame.getYScale();
 
+                // calculate world dimensions and coordinates of object
                 meters objectWidth = xScale*(frameBottomRight.getCol() - frameTopLeft.getCol());
                 meters objectHeight = yScale*(frameBottomRight.getRow() - frameTopLeft.getRow());
 
-                Vector3D xOffset = ori.getRotated(Vector3D(objectWidth/2.0, 0, 0));
-                Vector3D yOffset = ori.getRotated(Vector3D(0, objectHeight/2.0, 0));
-
-                Vector3D topLeftV = loc.minus(xOffset).plus(yOffset);
-                Vector3D botRightV = loc.plus(xOffset).minus(yOffset);
-
-                RelPixel topLeftRel = camera.fromLocation(topLeftV);
-                RelPixel botRightRel = camera.fromLocation(botRightV);
-
-                SDL_Texture* texture = m_sdlTextureManager.getTexture(animation.getImageFile());
-                SDL_Rect srcRect;
-                srcRect.x = frameTopLeft.getColInt();
-                srcRect.y = frameTopLeft.getRowInt();
-                srcRect.w = frameBottomRight.getColInt() - srcRect.x;
-                srcRect.h = frameBottomRight.getRowInt() - srcRect.y;
-
-                SDL_Rect dstRect;
-                dstRect.x = topLeftRel.getColInt(viewWidth);
-                dstRect.y = topLeftRel.getRowInt(viewHeight);
-                dstRect.w = botRightRel.getColInt(viewWidth) - dstRect.x;
-                dstRect.h = botRightRel.getRowInt(viewHeight) - dstRect.y;
-
                 // fix to get angle until I figure out the skewing issue
-                Vector3D x(1,0,0);
-                Vector3D rotatedX = ori.getRotated(x);
-                double angle = std::acos(x.dot(rotatedX));
+                // aka the camera must be facing straight down
+                Vector3D rotatedX = ori.getRotated(Vector3D(1,0,0));
+                double angle = 180.0*std::acos(rotatedX.x())*3.14156;
+                Vector3D xOffset = Vector3D(objectWidth/2.0, 0, 0);
+                Vector3D yOffset = Vector3D(0, objectHeight/2.0, 0);
+                // real versions
+                //Vector3D xOffset = ori.getRotated(Vector3D(objectWidth/2.0, 0, 0));
+                //Vector3D yOffset = ori.getRotated(Vector3D(0, objectHeight/2.0, 0));
+                // end fix
 
+                RelPixel topLeftRel = camera.fromLocation(loc.minus(xOffset).plus(yOffset));
+                RelPixel botRightRel = camera.fromLocation(loc.plus(xOffset).minus(yOffset));
+
+                // get the unrotated versions?
+
+                // Get pixel coordinates of texture
+                SDL_Rect srcRect = rectFrom(frameTopLeft, frameBottomRight);
+                SDL_Rect dstRect = rectFrom(topLeftRel, botRightRel, viewWidth, viewHeight);
+
+                // get the texture
+                SDL_Texture* texture = m_sdlTextureManager.getTexture(animation.getImageFile());
+
+                // Render the texture
                 SDL_RenderCopyEx(m_renderer,
                         texture, &srcRect, &dstRect, angle,
                         NULL, SDL_FLIP_NONE);
@@ -199,6 +204,40 @@ public:
         }
 
         SDL_RenderPresent(m_renderer);
+    }
+
+    /**
+     * \brief Utility function to get SDL rect from two pixel coordinates
+     * \param topLeft Top-left corner of desired rect
+     * \param bottomRight Bottom-right corner of desired rect
+     * \return SDL_Rect made from the corners
+     */
+    SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewHeight) {
+
+        SDL_Rect rect;
+        rect.x = topLeft.getColInt(viewWidth);
+        rect.y = topLeft.getRowInt(viewHeight);
+        rect.w = bottomRight.getColInt(viewWidth) - rect.x;
+        rect.h = bottomRight.getRowInt(viewHeight) - rect.y;
+
+        return rect;
+    }
+
+    /**
+     * \brief Utility function to get SDL rect from two pixel coordinates
+     * \param topLeft Top-left corner of desired rect
+     * \param bottomRight Bottom-right corner of desired rect
+     * \return SDL_Rect made from the corners
+     */
+    SDL_Rect rectFrom(Pixel topLeft, Pixel bottomRight) {
+
+        SDL_Rect rect;
+        rect.x = topLeft.getColInt();
+        rect.y = topLeft.getRowInt();
+        rect.w = bottomRight.getColInt() - rect.x;
+        rect.h = bottomRight.getRowInt() - rect.y;
+
+        return rect;
     }
 
     void addView(View view) override {
@@ -219,13 +258,13 @@ public:
 
 private:
 
-    SdlTextureManager m_sdlTextureManager;
-    SDL_Renderer* m_renderer;
-    SDL_Window* m_window;
+    SdlTextureManager m_sdlTextureManager; ///< Manages textures using the SDL Renderer
+    SDL_Renderer* m_renderer; ///< Reads in textures and draws everything
+    SDL_Window* m_window; ///< SDL Window Pointer
 
-    std::unordered_map<string,View> m_views;
+    std::unordered_map<string,View> m_views; ///< Container for views
 
-    int m_windowCount = 0;
+    int m_windowCount = 0; ///< If this gets to zero, it quits SDL
 
 }; // SdlWindow class
 

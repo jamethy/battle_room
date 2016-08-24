@@ -8,11 +8,6 @@
 namespace BattleRoom {
 
 /**
- * \brief Unit of measurement used for rotation
- */
-typedef double radians;
-
-/**
  * \brief Location and Orientation in 3D space
  */
 class Position {

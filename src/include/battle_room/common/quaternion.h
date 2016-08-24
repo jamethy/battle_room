@@ -6,6 +6,11 @@
 
 namespace BattleRoom {
 
+/**
+ * \brief Unit of measurement used for rotation
+ */
+typedef double radians;
+
 class Quaternion {
 
 public:
@@ -19,6 +24,12 @@ public:
      * \param settings Settings containing W,I,J,K
      */
     void applySettings(ResourceDescriptor settings);
+
+    /**
+     * \brief Rotates this quaternion about the Z axis
+     * \param angle Angle in radians to rotate
+     */
+    void rotateAboutZ(radians angle);
 
     /**
      * \brief Rotates a copy of vec by this
