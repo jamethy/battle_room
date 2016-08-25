@@ -1,5 +1,6 @@
 
 #include "sdl_texture_manager.h"
+#include "battle_room/engine/graphics/get_resource_path.h"
 
 #include "battle_room/common/file_utils.h"
 
@@ -33,40 +34,12 @@ SDL_Texture* SdlTextureManager::getTexture(string texture) {
     return m_textureMap[texture];
 }
 
-bool SdlTextureManager::isTextureAvailable(string texture) {
-    return (getTexture(texture) != nullptr);
-}
-
 void SdlTextureManager::clear() {
 
     for (auto& texture : m_textureMap) {
         SDL_DestroyTexture(texture.second);
     }
     m_textureMap.clear();
-}
-
-px SdlTextureManager::getTextureWidth(string texture) {
-
-    int width = -1;
-
-    SDL_Texture* txtr = getTexture(texture);
-
-    if (txtr != nullptr) {
-        SDL_QueryTexture(txtr, NULL, NULL, &width, NULL);
-    }
-    return width;
-}
-
-px SdlTextureManager::getTextureHeight(string texture) {
-
-    int height = -1;
-
-    SDL_Texture* txtr = getTexture(texture);
-
-    if (txtr != nullptr) {
-        SDL_QueryTexture(txtr, NULL, NULL, NULL, &height);
-    }
-    return height;
 }
 
 // implementation of getResourcePath from texture_manager.h

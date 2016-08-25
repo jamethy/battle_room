@@ -286,10 +286,6 @@ public:
         }
     }
 
-    TextureManager& getTextureManager() override {
-        return m_sdlTextureManager;
-    }
-
     void setCameraMapReference(std::unordered_map<string,Camera>& cameraMap) override {
         m_cameras = cameraMap;
     }

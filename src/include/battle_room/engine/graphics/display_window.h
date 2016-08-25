@@ -6,7 +6,6 @@
 #include "battle_room/common/resource.h"
 #include "battle_room/engine/animation/view.h"
 #include "battle_room/engine/animation/camera.h"
-#include "battle_room/engine/graphics/texture_manager.h"
 
 #include <vector>
 #include <unordered_map>
@@ -40,12 +39,6 @@ public:
      * \brief Draws the world, UI, and then menu objects
      */
     virtual void drawScreen() = 0;
-
-    /*!
-     * \brief Gets the texture manager
-     * This function may not be necessary, but could be used to pre load textures
-     */
-    virtual TextureManager& getTextureManager() = 0;
 
     /*!
      * \brief Addes a view to the display window

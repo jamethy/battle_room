@@ -1,8 +1,6 @@
 #ifndef SDL_TEXTURE_MANAGER
 #define SDL_TEXTURE_MANAGER
 
-#include "battle_room/engine/graphics/texture_manager.h"
-
 #include "SDL.h"
 #include "SDL_image.h"
 
@@ -12,10 +10,9 @@
 namespace BattleRoom {
 
 /**
- * SDL Implementation of TextureManager
  * Creates and destroys SDL_Textures
  */
-class SdlTextureManager : public TextureManager {
+class SdlTextureManager {
 
 public:
 
@@ -40,13 +37,6 @@ public:
      * \brief Destroys all the textures that have been loaded
      */
     void clear();
-
-    // inherited functions
-    
-    bool isTextureAvailable(std::string texture);
-
-    px getTextureWidth(std::string texture);
-    px getTextureHeight(std::string texture);
 
 private:
 

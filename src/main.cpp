@@ -1,6 +1,7 @@
 #include "battle_room/common/resource_descriptor.h"
-#include "battle_room/engine/graphics/display_window.h"
 #include "battle_room/engine/animation/animation_handler.h"
+#include "battle_room/engine/graphics/display_window.h"
+#include "battle_room/engine/graphics/get_resource_path.h"
 
 #include <iostream>
 
