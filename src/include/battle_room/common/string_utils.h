@@ -37,7 +37,7 @@ std::string toLower(std::string str);
 bool keyMatch(std::string a, std::string b);
 
 /**
- * \brief Just a nicer looking way to check if string is not empty
+ * \brief Checks if the string is not empty and not just whitespace
  * \param String to be examined 
  * \return True if string is not empty
  */

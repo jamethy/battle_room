@@ -3,7 +3,6 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    Add check for all whitespace in isNotEmpty
     Make a camera manager
     Get rid of texture manager interface
     Move SDL implmentation of display window to another file
@@ -16,6 +15,7 @@ For full program
     Figure out inputs
     Figure out multithreading
     Find a better way to construct settings 
+    implement zeroPlaneIntersection
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load

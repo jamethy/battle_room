@@ -1,6 +1,7 @@
 
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/file_utils.h"
+#include "battle_room/common/string_utils.h"
 
 #include <fstream>
 #include <iostream>
@@ -87,19 +88,6 @@ string parseOutKey(string line) {
 }
 
 /**
- * \brief Utility function to see if a line only contains whitespace
- * \param line String containing anything
- * \return True if line only contains whitespace
- */
-bool isLineEmpty(string line) {
-
-    // \\S any non-whitespace character
-    std::regex rgx_char("\\S");
-    std::smatch sm;
-    return !std::regex_search(line, sm, rgx_char);
-}
-
-/**
  * \brief Utility function to count the number of tabs before the key
  *
  * A tab is considered 4 spaces (and 4 spaces a tab) and the result is rounded half
@@ -137,7 +125,7 @@ void ResourceDescriptor::fillFromInput(vector<string> lines, unsigned& start) {
         while (++start < lines.size()) {
             string nextLine = lines[start];
 
-            if (!isLineEmpty(nextLine)) {
+            if (isNotEmpty(nextLine)) {
 
                 // if the next line is a sub of this one
                 if (getLevel(nextLine) > getLevel(firstLine)) {

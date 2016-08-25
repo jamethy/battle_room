@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <regex>
 
 using std::string;
 using std::vector;
@@ -37,7 +38,15 @@ bool keyMatch(string a, string b) {
 }
 
 bool isNotEmpty(const string& str) {
-    return !str.empty();
+
+    if (str.empty()) {
+        return false;
+    }
+
+    // \\S any non-whitespace character
+    std::regex rgx_char("\\S");
+    std::smatch sm;
+    return std::regex_search(str, sm, rgx_char);
 }
 
 } // BattleRoom namespace
