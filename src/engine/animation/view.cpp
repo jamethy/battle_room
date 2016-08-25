@@ -2,38 +2,35 @@
 
 namespace BattleRoom {
 
-// empty camera object to reference before one is set
-// There's probably a better way to do this
-Camera emptyCamera;
-
 void View::applySettings(ResourceDescriptor settings) {
 
-    m_name = settings.getValue();
-
-    ResourceDescriptor sub = settings.getSubResource("Top");
-    if (!sub.getKey().empty()) {
-        m_topLeft.setRow(toPx(sub.getValue()));
+    if (isNotEmpty(settings.getValue())) {
+        setName(settings.getValue());
     }
 
-    sub = settings.getSubResource("Left");
-    if (!sub.getKey().empty()) {
-        m_topLeft.setCol(toPx(sub.getValue()));
+    ResourceDescriptor sub = settings.getSubResource("TopLeft");
+    if (isNotEmpty(sub.getKey())) {
+        m_topLeft.applySettings(sub);
     }
 
-    sub = settings.getSubResource("Bottom");
-    if (!sub.getKey().empty()) {
-        m_bottomRight.setRow(toPx(sub.getValue()));
+    sub = settings.getSubResource("BottomRight");
+    if (isNotEmpty(sub.getKey())) {
+        m_bottomRight.applySettings(sub);
     }
 
-    sub = settings.getSubResource("Right");
-    if (!sub.getKey().empty()) {
-        m_bottomRight.setCol(toPx(sub.getValue()));
+    sub = settings.getSubResource("Layer");
+    if (isNotEmpty(sub.getValue())) {
+        setLayer(std::stoi(sub.getValue()));
+    }
+
+    sub = settings.getSubResource("Camera");
+    if (isNotEmpty(sub.getValue())) {
+        setCamera(sub.getValue());
     }
 }
 
 // constructor
 View::View(ResourceDescriptor settings)
-    : m_camera(emptyCamera)
 {
     applySettings(settings);
 }
@@ -44,7 +41,7 @@ std::vector<Object>& View::getObjects() {
     return m_objects;
 }
 
-Camera& View::getCamera() {
+std::string View::getCamera() {
     return m_camera;
 }
 
@@ -89,7 +86,7 @@ void View::addObjects(std::vector<Object> objects) {
     m_objects = objects;
 }
 
-void View::setCamera(Camera& camera) {
+void View::setCamera(std::string camera) {
     m_camera = camera;
 }
 

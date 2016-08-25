@@ -19,6 +19,8 @@ using std::vector;
 
 namespace BattleRoom {
 
+std::unordered_map<string,Camera> emptyCameraMap; // find a better way
+
 /**
  * \brief SDL implementation of the DisplayWindow class
  * Initializes SDL, destroys the window, and quits SDL
@@ -59,6 +61,7 @@ public:
     // constructors
 
     SdlWindow(ResourceDescriptor settings)
+        : m_cameras(emptyCameraMap)
     {
 
         // TODO throw exceptions instead of cerr
@@ -162,7 +165,13 @@ public:
             Pixel bottomRight = view.getBottomRight();
             px viewWidth = bottomRight.getColInt() - topLeft.getColInt();
             px viewHeight = bottomRight.getRowInt() - topLeft.getRowInt();
-            Camera& camera = view.getCamera();
+
+            if (m_cameras.count(view.getCamera()) == 0) {
+                std::cerr << "There were no cameras of that name.\n";
+                // throw exception
+            }
+
+            Camera& camera = m_cameras.at(view.getCamera());
 
             for (Object& object : view.getObjects()) {
 
@@ -209,6 +218,21 @@ public:
                 SDL_RenderCopyEx(m_renderer,
                         texture, &srcRect, &dstRect, angle,
                         NULL, SDL_FLIP_NONE);
+
+                // for multithreading
+                // Move this entire function into addObjects
+                // Have a result class that contains the following
+                    // View
+                    // Object
+                    // ImageFile
+                    // srcRect
+                    // dstRect
+                    // angle
+                // Then sort these on menu/ui/game then view layer
+                // Then draw screen draws all of this vector
+                
+                // This way, addObjects can do the heavy lifting on another thread
+                // (SDL must render on the main thread)
 
             }
         }
@@ -266,6 +290,10 @@ public:
         return m_sdlTextureManager;
     }
 
+    void setCameraMapReference(std::unordered_map<string,Camera>& cameraMap) override {
+        m_cameras = cameraMap;
+    }
+
 private:
 
     SdlTextureManager m_sdlTextureManager; ///< Manages textures using the SDL Renderer
@@ -273,6 +301,7 @@ private:
     SDL_Window* m_window; ///< SDL Window Pointer
 
     std::unordered_map<string,View> m_views; ///< Container for views
+    std::unordered_map<string,Camera>& m_cameras; ///< Reference to camera map
 
     int m_windowCount = 0; ///< If this gets to zero, it quits SDL
 

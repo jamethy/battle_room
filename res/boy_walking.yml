@@ -4,41 +4,31 @@ NextAnimtaion: boy_walking
 
 Frame:
     EndTime: 0.2
-    TopRow: 213
-    LeftCol: 81
-    RightCol: 481
-    BottomRow: 1150
+    TopLeft: 213, 81
+    BottomRight: 1150, 481
     XScale: 1
     YScale: 1
 Frame:
     EndTime: 0.4
-    TopRow: 213
-    LeftCol: 500
-    RightCol: 900
-    BottomRow: 1150
+    TopLeft: 213, 500
+    BottomRight: 1150, 900
     XScale: 1
     YScale: 1
 Frame:
     EndTime: 0.6
-    TopRow: 213
-    LeftCol: 944
-    RightCol: 1344
-    BottomRow: 1150
+    TopLeft: 213, 944
+    BottomRight: 1150, 1344
     XScale: 1
     YScale: 1
 Frame:
     EndTime: 0.8
-    TopRow: 213
-    LeftCol: 1344
-    RightCol: 1744
-    BottomRow: 1150
+    TopLeft: 213, 1344
+    BottomRight: 1150, 1744
     XScale: 1
     YScale: 1
 Frame:
     EndTime: 1.0
-    TopRow: 213
-    LeftCol: 1780
-    RightCol: 2180
-    BottomRow: 1150
+    TopLeft: 213, 1780
+    BottomRight: 1150, 2180
     XScale: 1
     YScale: 1

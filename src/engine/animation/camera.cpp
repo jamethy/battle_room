@@ -7,25 +7,13 @@ using std::string;
 using std::vector;
 
 namespace BattleRoom {
-
-// constructors
-
-Camera::Camera() {
-
-    m_forward = Vector3D(0,0,-1);
-    m_up = Vector3D(0,1,0);
-    m_right = Vector3D(1,0,0);
-    m_position.setLocation(Vector3D(0,0,10));
-}
-
-Camera::Camera(ResourceDescriptor settings) : Camera()
-{
-    applySettings(settings);
-}
-
 // apply settings
 
 void Camera::applySettings(ResourceDescriptor settings) {
+
+    if (isNotEmpty(settings.getValue())) {
+        setName(settings.getValue());
+    }
 
     ResourceDescriptor sub = settings.getSubResource("HorizontalFieldOfView");
     if (!sub.getKey().empty()) {
@@ -43,7 +31,28 @@ void Camera::applySettings(ResourceDescriptor settings) {
     } 
 }
 
+// constructors
+
+Camera::Camera() 
+    : m_name("DEFAULT_CAMERA_NAME"),
+    m_forward(Vector3D(0,0,-1)),
+    m_up(Vector3D(0,1,0)),
+    m_right(Vector3D(1,0,0))
+{
+    m_position.setLocation(Vector3D(0,0,10));
+}
+
+Camera::Camera(ResourceDescriptor settings) : Camera()
+{
+    applySettings(settings);
+}
+
+
 //setters and getters
+
+string Camera::getName() {
+    return m_name;
+}
 
 Position Camera::getPosition() {
     return m_position;
@@ -70,6 +79,10 @@ void Camera::setHorizontalFov(radians angle) {
 
 void Camera::setVerticalFov(radians angle) {
     m_verticalFov = angle;
+}
+
+void Camera::setName(string name) {
+    m_name = name;
 }
 
 // other functions

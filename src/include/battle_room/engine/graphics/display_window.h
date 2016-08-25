@@ -5,9 +5,11 @@
 #include "battle_room/common/inputs.h"
 #include "battle_room/common/resource.h"
 #include "battle_room/engine/animation/view.h"
+#include "battle_room/engine/animation/camera.h"
 #include "battle_room/engine/graphics/texture_manager.h"
 
 #include <vector>
+#include <unordered_map>
 #include <memory>
 
 namespace BattleRoom {
@@ -50,6 +52,12 @@ public:
      * \TODO add a remove view
      */
     virtual void addView(View view) = 0;
+
+    /*!
+     * \brief Sets the reference to the camera map
+     * \param cameraMap Map of camera objects to their names
+     */
+    virtual void setCameraMapReference(std::unordered_map<std::string,Camera>& cameraMap) = 0;
 
 }; // DisplayWindow class
 

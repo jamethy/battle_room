@@ -22,13 +22,9 @@ TEST(Test_gen, typical) {
     ResourceDescriptor sub;
     sub.setKey("EndTime"); sub.setValue("0.1");
     subResources.push_back(sub);
-    sub.setKey("TopRow"); sub.setValue("0");
+    sub.setKey("TopLeft"); sub.setValue("0,0");
     subResources.push_back(sub);
-    sub.setKey("LeftCol"); sub.setValue("0");
-    subResources.push_back(sub);
-    sub.setKey("BottomRow"); sub.setValue("100");
-    subResources.push_back(sub);
-    sub.setKey("RightCol"); sub.setValue("100");
+    sub.setKey("BottomRight"); sub.setValue("100,100");
     subResources.push_back(sub);
     sub.setKey("XScale"); sub.setValue("2.1");
     subResources.push_back(sub);

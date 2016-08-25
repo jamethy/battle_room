@@ -2,6 +2,7 @@
 #define RESOURCE_H
 
 #include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/string_utils.h"
 
 namespace BattleRoom {
 

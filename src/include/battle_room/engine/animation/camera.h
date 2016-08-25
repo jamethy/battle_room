@@ -22,9 +22,11 @@ public:
 
     // getters and setters
 
+    std::string getName();
     Position getPosition();
     radians getHorizontalFov();
     radians getVerticalFov();
+    void setName(std::string name);
     void setPosition(Position pos);
     void setHorizontalFov(radians angle);
     void setVerticalFov(radians angle);
@@ -63,6 +65,8 @@ public:
     void applySettings(ResourceDescriptor settings);
 
 private:
+
+    std::string m_name; ///< Name of camera
 
     Position m_position; ///< Location and orientation of camera
 

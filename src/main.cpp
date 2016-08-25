@@ -31,13 +31,14 @@ int main() {
     UniqueDisplayWindow window = createDisplayWindow(rd.getSubResource("Window"));
 
     //TODO figure out a better way to do camera management
-    Camera camera;
-    camera.applySettings(rd.getSubResource("Camera"));
+    std::unordered_map<std::string,Camera> cameras;
+    window->setCameraMapReference(cameras);
+    for (ResourceDescriptor sub : rd.getSubResources("Camera")) {
+        cameras.emplace(sub.getValue(), sub);
+    }
 
     for (ResourceDescriptor sub : rd.getSubResources("View")) {
-        View view(sub);
-        view.setCamera(camera);
-        window->addView(view);
+        window->addView(View(sub));
     }
 
     //Menus menus;
@@ -47,21 +48,33 @@ int main() {
     // Loop until quit
     //while(state.keepGoing()) {
 
-        //Inputs inputs = window.getInputs();
+    bool tempKeepGoing = true; // temp
+    while(tempKeepGoing) { // temp
+
+        Inputs inputs = window->getInputs();
+        tempKeepGoing = inputs.m_quit != true; // temp
 
         //menus.handleInputs(inputs);
+            // menues handle any inputs on menu items
+            // or escape button for pause, etc.
+
+        // StateChange = menus.getStateChanges();
+
         //uis.hanldeInputs(inputs);
+            // UI Objects hovering in world (but only visible to user) have
+            // buttons and things
 
         //Commands cmds = uis.getCommands():
         //game.handleCommands(cmds);
         //game.update();
 
+        // std::vector<Objects> menuObjects = menus.getObjects();
+        // window->addObjectsToView(menuObjects, "Menus");
         //window.addWorldObjects(game.getObjects());
         //window.addUIObjects(uis.getObjects());
         //window.addMenuObjects(menus.getObjects());
         //window.drawScreen();
-    //}
-    // cleanup
+    }
     
     return 0;
 

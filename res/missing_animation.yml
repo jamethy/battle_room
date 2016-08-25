@@ -4,9 +4,7 @@ NextAnimtaion: missing_animation
 
 Frame:
     EndTime: 9999999999
-    TopRow: 0
-    LeftCol: 0
-    BottomRow: 255
-    RightCol: 255
+    TopLeft: 0,0
+    BottomRight: 255,255
     XScale: 0.01
     YScale: 0.01

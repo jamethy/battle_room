@@ -11,24 +11,14 @@ void Frame::applySettings(ResourceDescriptor settings) {
         m_endTime = toSeconds(sub.getValue());
     }
 
-    sub = settings.getSubResource("TopRow");
+    sub = settings.getSubResource("TopLeft");
     if (!sub.getKey().empty()) {
-        m_topLeft.setRow( toPx(sub.getValue()) );
+        m_topLeft.applySettings(sub);
     }
 
-    sub = settings.getSubResource("LeftCol");
+    sub = settings.getSubResource("BottomRight");
     if (!sub.getKey().empty()) {
-        m_topLeft.setCol( toPx(sub.getValue()) );
-    }
-
-    sub = settings.getSubResource("BottomRow");
-    if (!sub.getKey().empty()) {
-        m_bottomRight.setRow( toPx(sub.getValue()) );
-    }
-
-    sub = settings.getSubResource("RightCol");
-    if (!sub.getKey().empty()) {
-        m_bottomRight.setCol( toPx(sub.getValue()) );
+        m_bottomRight.applySettings(sub);
     }
 
     sub = settings.getSubResource("XScale");

@@ -4,7 +4,6 @@
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/object.h"
 #include "battle_room/common/resource.h"
-#include "battle_room/engine/animation/camera.h"
 
 namespace BattleRoom {
 
@@ -22,9 +21,7 @@ public:
     View(ResourceDescriptor settings);
 
     // Reference Accessors
-    Camera& getCamera();
     std::vector<Object>& getObjects();
-
 
     // getters and setters
 
@@ -32,23 +29,19 @@ public:
     void setLayer(int layer);
     void setTopLeft(Pixel pixel);
     void setBottomRight(Pixel pixel);
+    void setCamera(std::string camera);
 
     std::string getName();
     int getLayer();
     Pixel getTopLeft();
     Pixel getBottomRight();
+    std::string getCamera();
 
 
     /**
      * \brief Currently just sets the object vector
      */
     void addObjects(std::vector<Object> objects);
-
-    /**
-     * Sets the reference to the camera (does not copy)
-     * So this view will then track the given camera
-     */
-    void setCamera(Camera& camera);
 
     // inherited
     void applySettings(ResourceDescriptor settings);
@@ -70,7 +63,7 @@ private:
     Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
     Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
 
-    Camera& m_camera; ///< Reference to camera that should be tracked
+    std::string m_camera; ///< Reference to camera that should be tracked
 
     std::vector<Object> m_objects; ///< Objects to draw on view
 

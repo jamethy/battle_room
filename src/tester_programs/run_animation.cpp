@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <chrono>
+#include <unordered_map>
 
 using namespace BattleRoom;
 
@@ -100,32 +101,38 @@ int main(int argc, char** argv) {
     settings.push_back("    Window: mainWindow");
     settings.push_back("        Width: " + std::to_string(largestPxWidth));
     settings.push_back("        Height: " + std::to_string(largestPxHeight));
-    settings.push_back("    Camera:");
+    settings.push_back("    Camera: mainCamera");
     settings.push_back("        Position:");
-    settings.push_back("            Location:");
-    settings.push_back("                X: 0");
-    settings.push_back("                Y: 0");
-    settings.push_back("                Z: " + std::to_string(camHeight));
+    settings.push_back("            Location: 0,0," + std::to_string(camHeight));
     settings.push_back("        HorizontalFieldOfView: " + std::to_string(horFov));
     settings.push_back("        VerticalFieldOfView: " + std::to_string(verFov));
     settings.push_back("    View: mainView");
-    settings.push_back("        Top: 0");
-    settings.push_back("        Left: 0");
-    settings.push_back("        Bottom: " + std::to_string(largestPxHeight));
-    settings.push_back("        Right: " + std::to_string(largestPxWidth));
+    settings.push_back("        Camera: mainCamera");
+    settings.push_back("        TopLeft: 0,0");
+    settings.push_back("        BottomRight: " 
+                            + std::to_string(largestPxHeight) + "," 
+                            + std::to_string(largestPxWidth));
 
     unsigned int start = 0;
     ResourceDescriptor descriptor;
     descriptor.fillFromInput(settings, start);
 
-    // Create the camrea, view, and window
-    Camera camera(descriptor.getSubResource("Camera"));
 
-    View view(descriptor.getSubResource("View"));
-    view.setCamera(camera);
-
+    // create the window
     UniqueDisplayWindow window = createDisplayWindow(descriptor.getSubResource("Window"));
-    window->addView(view);
+
+    // Create the camrea, view, and window
+    std::unordered_map<std::string,Camera> cameras;
+    for (ResourceDescriptor sub : descriptor.getSubResources("Camera")) {
+        if (!cameras.emplace(sub.getValue(), sub).second) {
+            std::cerr << "There was a problem placing a camera.\n";
+        }
+    }
+    window->setCameraMapReference(cameras);
+
+    for (ResourceDescriptor sub : descriptor.getSubResources("View")) {
+        window->addView(View(sub));
+    }
 
     // Start the clock (resets when it hits the max time of the animation)
     steady_clock::time_point startTime = steady_clock::now();

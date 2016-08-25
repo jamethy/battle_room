@@ -36,4 +36,8 @@ bool keyMatch(string a, string b) {
     return toLower(a).compare(toLower(b)) == 0;
 }
 
+bool isNotEmpty(const string& str) {
+    return !str.empty();
+}
+
 } // BattleRoom namespace

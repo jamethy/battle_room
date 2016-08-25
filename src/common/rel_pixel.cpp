@@ -12,18 +12,18 @@ void RelPixel::applySettings(ResourceDescriptor settings) {
 
     std::vector<std::string> values = split(settings.getValue(), ',');
     if (values.size() == 2) {
-        setCol(toRelPx(values[0]));
-        setRow(toRelPx(values[1]));
+        setRow( toRelPx(values[0]) );
+        setCol( toRelPx(values[1]) );
     }
 
     ResourceDescriptor sub = settings.getSubResource("Col");
-    if (!sub.getKey().empty()) {
-        setCol(toRelPx(sub.getValue()));
+    if (isNotEmpty(sub.getValue())) {
+        setCol( toRelPx(sub.getValue()) );
     }
 
     sub = settings.getSubResource("Row");
-    if (!sub.getKey().empty()) {
-        setRow(toRelPx(sub.getValue()));
+    if (isNotEmpty(sub.getValue())) {
+        setRow( toRelPx(sub.getValue()) );
     }
 
 }
