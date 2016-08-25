@@ -3,14 +3,14 @@
 
 #include "battle_room/common/vector3d.h"
 #include "battle_room/common/quaternion.h"
-#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/resource.h"
 
 namespace BattleRoom {
 
 /**
  * \brief Location and Orientation in 3D space
  */
-class Position {
+class Position : public Resource {
 
 public:
 
@@ -28,7 +28,7 @@ public:
      * \brief Sets the member variables by subs in settings
      * \param settings Descriptor containing location and orientation data
      */
-    void applySettings(ResourceDescriptor settings);
+    void applySettings(ResourceDescriptor settings) override;
 
 private:
 

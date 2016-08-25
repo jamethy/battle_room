@@ -2,6 +2,19 @@
 
 namespace BattleRoom {
 
+void Position::applySettings(ResourceDescriptor settings) {
+
+    ResourceDescriptor sub = settings.getSubResource("Location");
+    if (!sub.getKey().empty()) {
+        m_location.applySettings(sub);
+    } 
+
+    sub = settings.getSubResource("Orientation");
+    if (!sub.getKey().empty()) {
+        m_orientation.applySettings(sub);
+    } 
+}
+
 // Reference Acessors
 
 Vector3D& Position::location() {
@@ -29,19 +42,6 @@ void Position::setLocation(Vector3D location) {
 
 void Position::setOrientation(Quaternion orientation) {
     m_orientation = orientation;
-}
-
-void Position::applySettings(ResourceDescriptor settings) {
-
-    ResourceDescriptor sub = settings.getSubResource("Location");
-    if (!sub.getKey().empty()) {
-        m_location.applySettings(sub);
-    } 
-
-    sub = settings.getSubResource("Orientation");
-    if (!sub.getKey().empty()) {
-        m_orientation.applySettings(sub);
-    } 
 }
 
 radians toRadians(std::string str) {

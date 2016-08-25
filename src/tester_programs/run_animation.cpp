@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
     settings.push_back("            Location:");
     settings.push_back("                X: 0");
     settings.push_back("                Y: 0");
-    settings.push_back("                Z: " + std::to_string(3*camHeight));
+    settings.push_back("                Z: " + std::to_string(camHeight));
     settings.push_back("        HorizontalFieldOfView: " + std::to_string(horFov));
     settings.push_back("        VerticalFieldOfView: " + std::to_string(verFov));
     settings.push_back("    View: mainView");

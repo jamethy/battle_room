@@ -6,13 +6,6 @@ namespace BattleRoom {
 // There's probably a better way to do this
 Camera emptyCamera;
 
-// constructor
-View::View(ResourceDescriptor settings)
-    : m_camera(emptyCamera)
-{
-    applySettings(settings);
-}
-
 void View::applySettings(ResourceDescriptor settings) {
 
     m_name = settings.getValue();
@@ -36,6 +29,13 @@ void View::applySettings(ResourceDescriptor settings) {
     if (!sub.getKey().empty()) {
         m_bottomRight.setCol(toPx(sub.getValue()));
     }
+}
+
+// constructor
+View::View(ResourceDescriptor settings)
+    : m_camera(emptyCamera)
+{
+    applySettings(settings);
 }
 
 // Reference Accessors

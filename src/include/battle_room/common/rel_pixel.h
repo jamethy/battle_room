@@ -1,6 +1,8 @@
 #ifndef REL_PIXEL_H
 #define REL_PIXEL_H
 
+#include "battle_room/common/resource.h"
+
 #include <string>
 
 namespace BattleRoom {
@@ -15,7 +17,7 @@ typedef double relpx;
  * 0 row is the top, 1 row is the bottom, 0.5 row is middle
  * 0 col is the left, 1 col is the right, 0.5 col is middle
  */
-class RelPixel {
+class RelPixel : public Resource {
 
 public:
 
@@ -42,6 +44,9 @@ public:
     void setCol(relpx col);
     relpx getRow() const;
     relpx getCol() const;
+
+    // inherited
+    void applySettings(ResourceDescriptor settings) override;
 
 private:
 

@@ -29,29 +29,37 @@ class SdlWindow : public DisplayWindow {
 
 public:
 
+    // apply settings
+    void applySettings(ResourceDescriptor settings) override {
+
+        string newName = settings.getValue();
+        if (!newName.empty()) {
+            SDL_SetWindowTitle(m_window, newName.c_str());
+        }
+
+        // TODO figure out what a SDL_DisplayMode is
+        int width = 0, height = 0;
+        SDL_GetWindowSize(m_window, &width, &height);
+        if (width > 0 && height > 0) {
+
+            ResourceDescriptor sub = settings.getSubResource("Width");
+            if (!sub.getKey().empty()) {
+                width = stoi(sub.getValue());
+            }
+
+            sub = settings.getSubResource("Height");
+            if (!sub.getKey().empty()) {
+                height = stoi(sub.getValue());
+            }
+
+            SDL_SetWindowSize(m_window, width, height);
+        }
+    }
+
     // constructors
 
     SdlWindow(ResourceDescriptor settings)
     {
-        // read in settings
-        string name = "name";
-        int width = 500;
-        int height = 500;
-
-        if (!settings.getValue().empty()) {
-            name = settings.getValue();
-        }
-
-        ResourceDescriptor sub = settings.getSubResource("Width");
-        if (!sub.getKey().empty()) {
-            width = stoi(sub.getValue());
-        }
-
-        sub = settings.getSubResource("Height");
-        if (!sub.getKey().empty()) {
-            height = stoi(sub.getValue());
-        }
-
 
         // TODO throw exceptions instead of cerr
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -63,7 +71,7 @@ public:
             SDL_Quit();
         }
 
-        m_window = SDL_CreateWindow(name.c_str(), 0, 0, width, height,SDL_WINDOW_SHOWN);
+        m_window = SDL_CreateWindow("new_window", 0, 0, 500, 500, SDL_WINDOW_SHOWN);
         if (m_window == nullptr){
             std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
             SDL_Quit();
@@ -79,6 +87,8 @@ public:
         ++m_windowCount;
 
         m_sdlTextureManager.setRenderer(m_renderer);
+
+        applySettings(settings);
     }
 
     ~SdlWindow() {

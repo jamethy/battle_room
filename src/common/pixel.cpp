@@ -1,9 +1,32 @@
 #include "battle_room/common/pixel.h"
+#include "battle_room/common/string_utils.h"
 
 #include <cmath>
 #include <string>
 
 namespace BattleRoom {
+
+// apply settings
+
+void Pixel::applySettings(ResourceDescriptor settings) {
+
+    std::vector<std::string> values = split(settings.getValue(), ',');
+    if (values.size() == 2) {
+        setCol(toPx(values[0]));
+        setRow(toPx(values[1]));
+    }
+
+    ResourceDescriptor sub = settings.getSubResource("Col");
+    if (!sub.getKey().empty()) {
+        setCol(toPx(sub.getValue()));
+    }
+
+    sub = settings.getSubResource("Row");
+    if (!sub.getKey().empty()) {
+        setRow(toPx(sub.getValue()));
+    }
+
+}
 
 // constructors
 

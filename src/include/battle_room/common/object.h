@@ -1,15 +1,16 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "battle_room/engine/animation/animation.h"
+#include "battle_room/common/resource.h"
 #include "battle_room/common/position.h"
+#include "battle_room/engine/animation/animation.h"
 
 namespace BattleRoom {
 
 /**
  * \brief Object that is drawabled on a view
  */
-class Object {
+class Object : public Resource {
 
 public:
 
@@ -28,6 +29,9 @@ public:
     void setAnimation(Animation animation);
     void setAnimationState(seconds animationState);
     void setPosition(Position pos);
+
+    // inherited
+    virtual void applySettings(ResourceDescriptor settings) override;
 
     //TODO figure out how to get rid of this
     Object& operator=(const Object& other) {

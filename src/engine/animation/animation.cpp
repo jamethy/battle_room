@@ -8,21 +8,21 @@ using std::vector;
 
 namespace BattleRoom {
 
-// constructor
+// apply settings
 
-Animation::Animation(ResourceDescriptor descriptor) {
+void Animation::applySettings(ResourceDescriptor settings) {
 
-    ResourceDescriptor sub = descriptor.getSubResource("ImageFile");
+    ResourceDescriptor sub = settings.getSubResource("ImageFile");
     if (!sub.getKey().empty()) {
         m_imageFile = sub.getValue();
     } 
 
-    sub = descriptor.getSubResource("NextAnimation");
+    sub = settings.getSubResource("NextAnimation");
     if (!sub.getKey().empty()) {
         m_nextAnimation = sub.getValue();
     } 
 
-    vector<ResourceDescriptor> subs = descriptor.getSubResources("Frame");
+    vector<ResourceDescriptor> subs = settings.getSubResources("Frame");
     for (ResourceDescriptor& rd : subs) {
         m_frames.push_back(Frame(rd));
     }
@@ -30,8 +30,14 @@ Animation::Animation(ResourceDescriptor descriptor) {
     std::sort(m_frames.begin(), m_frames.end(), 
             [](const Frame& a, const Frame& b) {
                 return b.getEndTime() > a.getEndTime();
-        });
+            }
+    );
+}
 
+// constructor
+
+Animation::Animation(ResourceDescriptor descriptor) {
+    applySettings(descriptor);
 }
 
 // getters

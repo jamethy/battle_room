@@ -3,7 +3,7 @@
 
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/object.h"
-#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/resource.h"
 #include "battle_room/engine/animation/camera.h"
 
 namespace BattleRoom {
@@ -14,18 +14,12 @@ namespace BattleRoom {
  * Objects to display are assigned to a view, e.g. the menu objects will be put on a menue view
  * and game objects will be put in a world view or a minimap or something
  */
-class View {
+class View : public Resource {
 
 public:
 
     // constructor
     View(ResourceDescriptor settings);
-
-    /**
-     * \brief Fills the member varibles using settings
-     * \param settings Resource descriptor containing information about the view
-     */
-    void applySettings(ResourceDescriptor settings);
 
     // Reference Accessors
     Camera& getCamera();
@@ -55,6 +49,9 @@ public:
      * So this view will then track the given camera
      */
     void setCamera(Camera& camera);
+
+    // inherited
+    void applySettings(ResourceDescriptor settings);
 
     //TODO figure out how to get rid of this
     View& operator=(const View& other) {

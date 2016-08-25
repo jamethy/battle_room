@@ -1,22 +1,20 @@
 #include "battle_room/common/vector3d.h"
+#include "battle_room/common/string_utils.h"
 
 using std::string;
 
 namespace BattleRoom {
 
-// constructors
-
-Vector3D::Vector3D() 
-    : m_x(0.0), m_y(0.0), m_z(0.0)
-{ }
-
-Vector3D::Vector3D(meters x, meters y, meters z)
-    : m_x(x), m_y(y), m_z(z)
-{ }
+// apply settings
 
 void Vector3D::applySettings(ResourceDescriptor settings) {
 
-    // TODO parse value for X,Y,Z?
+    std::vector<string> values = split(settings.getValue(), ',');
+    if (values.size() == 3) {
+        m_x = toMeters(values[0]);
+        m_y = toMeters(values[1]);
+        m_z = toMeters(values[2]);
+    }
 
     ResourceDescriptor sub = settings.getSubResource("X");
     if (!sub.getKey().empty()) {
@@ -33,6 +31,16 @@ void Vector3D::applySettings(ResourceDescriptor settings) {
         m_z = toMeters(sub.getValue());
     } 
 }
+
+// constructors
+
+Vector3D::Vector3D() 
+    : m_x(0.0), m_y(0.0), m_z(0.0)
+{ }
+
+Vector3D::Vector3D(meters x, meters y, meters z)
+    : m_x(x), m_y(y), m_z(z)
+{ }
 
 // Access by reference
 

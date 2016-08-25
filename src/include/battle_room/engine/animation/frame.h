@@ -2,7 +2,7 @@
 #define FRAME_H
 
 #include "battle_room/common/pixel.h"
-#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/resource.h"
 
 namespace BattleRoom {
 
@@ -18,7 +18,7 @@ typedef double seconds;
  *
  * These objects is also constant and should never change
  */
-class Frame {
+class Frame : public Resource {
 
 public:
 
@@ -34,6 +34,8 @@ public:
     double getXScale() const;
     double getYScale() const;
 
+    // inherited
+    void applySettings(ResourceDescriptor settings) override;
 
 private:
     

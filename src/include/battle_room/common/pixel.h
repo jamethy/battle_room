@@ -1,6 +1,7 @@
 #ifndef PIXEL_H
 #define PIXEL_H
 
+#include "battle_room/common/resource.h"
 #include <string>
 
 namespace BattleRoom {
@@ -15,7 +16,7 @@ typedef double px;
  * Note the row is the number of pixels from the TOP of the view/image
  * Note the col is the number of pixels from the LEFT of the view/image
  */
-class Pixel {
+class Pixel : public Resource {
 
 public:
     
@@ -41,6 +42,9 @@ public:
     void setCol(px col);
     px getRow() const;
     px getCol() const;
+
+    // inherited
+    void applySettings(ResourceDescriptor settings) override;
 
 private:
 

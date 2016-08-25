@@ -1,7 +1,7 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
-#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/resource.h"
 #include "battle_room/common/vector3d.h"
 
 namespace BattleRoom {
@@ -11,19 +11,13 @@ namespace BattleRoom {
  */
 typedef double radians;
 
-class Quaternion {
+class Quaternion : public Resource {
 
 public:
 
     // constructors
     Quaternion();
     Quaternion(double w, double i, double j, double k);
-
-    /**
-     * \brief Fills the member variables with the subs in settings
-     * \param settings Settings containing W,I,J,K
-     */
-    void applySettings(ResourceDescriptor settings);
 
     /**
      * \brief Rotates this quaternion about the Z axis
@@ -57,6 +51,9 @@ public:
     double& i();
     double& j();
     double& k();
+
+    // inherited
+    void applySettings(ResourceDescriptor settings) override;
 
 private:
 

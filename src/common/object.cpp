@@ -3,6 +3,26 @@
 
 namespace BattleRoom {
 
+// apply settings
+
+void Object::applySettings(ResourceDescriptor settings) {
+
+    ResourceDescriptor sub = settings.getSubResource("Animation");
+    if (!sub.getKey().empty()) {
+        setAnimation(AnimationHandler::get().getAnimation(sub.getValue()));
+    }
+
+    sub = settings.getSubResource("AnimationState");
+    if (!sub.getKey().empty()) {
+        setAnimationState(toSeconds(sub.getValue()));
+    }
+
+    sub = settings.getSubResource("Position");
+    if (!sub.getKey().empty()) {
+        position().applySettings(sub);
+    }
+}
+
 // Constructor
 
 Object::Object() : 

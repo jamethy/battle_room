@@ -3,7 +3,7 @@
 
 #include "battle_room/common/rel_pixel.h"
 #include "battle_room/common/position.h"
-#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/resource.h"
 
 
 namespace BattleRoom {
@@ -11,7 +11,7 @@ namespace BattleRoom {
 /**
  * \brief Class containing position of camera and calculations for its view
  */
-class Camera {
+class Camera : public Resource {
 
 public:
 
@@ -19,12 +19,6 @@ public:
 
     Camera();
     Camera(ResourceDescriptor settings);
-
-    /**
-     * \brief Fills the member variables from settings
-     * \param settings Contains camera settings
-     */
-    void applySettings(ResourceDescriptor settings);
 
     // getters and setters
 
@@ -64,6 +58,9 @@ public:
      * \return Position in 3D space on the z=0 plane
      */
     Vector3D zeroPlaneIntersection(RelPixel pixel);
+
+    // inherited
+    void applySettings(ResourceDescriptor settings);
 
 private:
 

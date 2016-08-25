@@ -2,44 +2,50 @@
 
 namespace BattleRoom {
 
-// constructor
+// apply settings
 
-Frame::Frame(ResourceDescriptor descriptor) {
-    
-    ResourceDescriptor sub = descriptor.getSubResource("EndTime");
+void Frame::applySettings(ResourceDescriptor settings) {
+
+    ResourceDescriptor sub = settings.getSubResource("EndTime");
     if (!sub.getKey().empty()) {
         m_endTime = toSeconds(sub.getValue());
     }
 
-    sub = descriptor.getSubResource("TopRow");
+    sub = settings.getSubResource("TopRow");
     if (!sub.getKey().empty()) {
         m_topLeft.setRow( toPx(sub.getValue()) );
     }
 
-    sub = descriptor.getSubResource("LeftCol");
+    sub = settings.getSubResource("LeftCol");
     if (!sub.getKey().empty()) {
         m_topLeft.setCol( toPx(sub.getValue()) );
     }
 
-    sub = descriptor.getSubResource("BottomRow");
+    sub = settings.getSubResource("BottomRow");
     if (!sub.getKey().empty()) {
         m_bottomRight.setRow( toPx(sub.getValue()) );
     }
 
-    sub = descriptor.getSubResource("RightCol");
+    sub = settings.getSubResource("RightCol");
     if (!sub.getKey().empty()) {
         m_bottomRight.setCol( toPx(sub.getValue()) );
     }
 
-    sub = descriptor.getSubResource("XScale");
+    sub = settings.getSubResource("XScale");
     if (!sub.getKey().empty()) {
         m_xScale = toPx(sub.getValue());
     }
 
-    sub = descriptor.getSubResource("YScale");
+    sub = settings.getSubResource("YScale");
     if (!sub.getKey().empty()) {
         m_yScale = toPx(sub.getValue());
     }
+}
+
+// constructor
+
+Frame::Frame(ResourceDescriptor descriptor) {
+    applySettings(descriptor);   
 }
 
 // getters

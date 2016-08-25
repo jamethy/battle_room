@@ -1,20 +1,22 @@
 #include "battle_room/common/quaternion.h"
+#include "battle_room/common/string_utils.h"
 
 #include <cmath>
 
 namespace BattleRoom {
 
-// constructors
-
-Quaternion::Quaternion() 
-    : m_w(1.0), m_i(0.0), m_j(0.0), m_k(0.0)
-{ }
-
-Quaternion::Quaternion(double w, double i, double j, double k) 
-    : m_w(w), m_i(i), m_j(j), m_k(k)
-{ }
+// apply settings
 
 void Quaternion::applySettings(ResourceDescriptor settings) {
+
+    std::vector<std::string> values = split(settings.getValue(), ',');
+    if (values.size() == 4) {
+        m_w = toMeters(values[0]);
+        m_i = toMeters(values[1]);
+        m_j = toMeters(values[2]);
+        m_k = toMeters(values[3]);
+    }
+
 
     ResourceDescriptor sub = settings.getSubResource("W");
     if (!sub.getKey().empty()) {
@@ -36,6 +38,16 @@ void Quaternion::applySettings(ResourceDescriptor settings) {
         m_k = stod(sub.getValue());
     } 
 }
+
+// constructors
+
+Quaternion::Quaternion() 
+    : m_w(1.0), m_i(0.0), m_j(0.0), m_k(0.0)
+{ }
+
+Quaternion::Quaternion(double w, double i, double j, double k) 
+    : m_w(w), m_i(i), m_j(j), m_k(k)
+{ }
 
 void Quaternion::rotateAboutZ(radians angle) {
 

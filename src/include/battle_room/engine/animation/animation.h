@@ -2,7 +2,7 @@
 #define ANIMATION_H
 
 #include "battle_room/engine/animation/frame.h"
-#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/resource.h"
 
 #include <string>
 #include <vector>
@@ -16,7 +16,7 @@ namespace BattleRoom {
  * The game engine will assign an object an animation and animation state,
  * then the graphics engine will use the state to get the frame from the animation
  */
-class Animation {
+class Animation : public Resource {
 
 public:
 
@@ -42,6 +42,9 @@ public:
      * \return Reference to the desired frame
      */
     const Frame& getFrame(seconds animationState);
+
+    // inherited
+    void applySettings(ResourceDescriptor settings);
 
 private:
     

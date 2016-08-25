@@ -3,7 +3,7 @@
 
 #include "battle_room/common/object.h"
 #include "battle_room/common/inputs.h"
-#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/resource.h"
 #include "battle_room/engine/animation/view.h"
 #include "battle_room/engine/graphics/texture_manager.h"
 
@@ -17,12 +17,9 @@ namespace BattleRoom {
  * Has views that represent portions of the screen and objects within the views
  * that are drawable
  */
-class DisplayWindow {
+class DisplayWindow : public Resource {
 
 public:
-
-    //TODO
-    //virtual void applySettings(ResourceDescriptor settings);
 
     /*!
      * \breif Returns the collection of user inputs that have been gathered
