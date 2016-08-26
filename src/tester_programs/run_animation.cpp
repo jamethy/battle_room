@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
 
         // Add object to view
         vector<Object> objects;
-        Object object;
+        Object object(UniqueId::generateNewLocalId());
         object.setAnimation(animation);
         object.setAnimationState(diff);
         //object.position().orientation().rotateAboutZ(60.0*3.14156/180.0);

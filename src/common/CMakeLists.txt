@@ -7,6 +7,7 @@ add_library(Common
         pixel.cpp
         rel_pixel.cpp
         position.cpp
+        unique_id.cpp
         object.cpp
         vector3d.cpp
         quaternion.cpp

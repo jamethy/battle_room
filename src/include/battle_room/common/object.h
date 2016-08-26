@@ -1,6 +1,8 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+
+#include "battle_room/common/unique_id.h"
 #include "battle_room/common/resource.h"
 #include "battle_room/common/position.h"
 #include "battle_room/engine/animation/animation.h"
@@ -15,7 +17,7 @@ class Object : public Resource {
 public:
 
     // Constructor
-    Object();
+    Object(UniqueId id);
 
     // Reference accessor functions
     Position& position();
@@ -25,10 +27,18 @@ public:
     Animation& getAnimation() const;
     seconds getAnimationState() const;
     Position getPosition() const;
+    UniqueId getUniqueId() const;
 
     void setAnimation(Animation animation);
     void setAnimationState(seconds animationState);
     void setPosition(Position pos);
+
+    /**
+     * \brief Overload of == operator to check that two instances are the same object
+     * \param other Other object to be tested against
+     * \return True if two objects are instances of the same Object (... -_-)
+     */
+    bool operator==(const Object& other) const;
 
     // inherited
     virtual void applySettings(ResourceDescriptor settings) override;
@@ -43,6 +53,7 @@ public:
 
 private:
 
+    UniqueId m_id; ///< Id that is unique to the object (not instance)
     Animation& m_currentAnimation; ///< Animation object is on
     seconds m_animationState; ///< Seconds into animation
     Position m_position; ///< Location and Orientation of object

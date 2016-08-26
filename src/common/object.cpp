@@ -25,16 +25,24 @@ void Object::applySettings(ResourceDescriptor settings) {
 
 // Constructor
 
-Object::Object() : 
+Object::Object(UniqueId id) : 
+    m_id(id),
     m_currentAnimation(AnimationHandler::get().getAnimation(MISSING_ANIMATION)),
     m_animationState(0)
 {}
+
+// other functions
+
+bool Object::operator==(const Object& other) const {
+    return m_id == other.m_id;
+}
 
 // reference accessor functions
 
 Position& Object::position() {
     return m_position;
 }
+
 // getters and setters
 
 Animation& Object::getAnimation() const {
@@ -47,6 +55,10 @@ seconds Object::getAnimationState() const {
 
 Position Object::getPosition() const {
     return m_position;
+}
+
+UniqueId Object::getUniqueId() const {
+    return m_id;
 }
 
 void Object::setAnimation(Animation animation) {
