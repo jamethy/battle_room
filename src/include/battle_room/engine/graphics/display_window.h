@@ -22,6 +22,9 @@ class DisplayWindow : public Resource {
 
 public:
 
+    // destructor
+    virtual ~DisplayWindow(){};
+
     /*!
      * \breif Returns the collection of user inputs that have been gathered
      * \return Inputs class containing user input information

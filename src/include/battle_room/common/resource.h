@@ -14,6 +14,9 @@ class Resource {
 
 public:
 
+    // destructor
+    virtual ~Resource(){};
+
     /**
      * \brief Fills the member variables from the settings
      * Searches the resource descriptor pair for certain Keys and 

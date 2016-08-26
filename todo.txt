@@ -4,7 +4,6 @@ Running ToDo List
 
 For full program
     Make a camera manager
-    Move SDL implmentation of display window to another file
     Change animation handler to get() implementation
     Create unique id handler
     Create an exception scheme
