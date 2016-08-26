@@ -4,7 +4,6 @@ Running ToDo List
 
 For full program
     Make a camera manager
-    Change animation handler to get() implementation
     Create unique id handler
     Create an exception scheme
     Create intersection handler

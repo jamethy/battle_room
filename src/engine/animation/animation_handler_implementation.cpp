@@ -1,5 +1,5 @@
 
-#include "battle_room/engine/animation/animation_handler.h"
+#include "animation_handler_implementation.h"
 
 using std::string;
 
@@ -10,21 +10,24 @@ namespace BattleRoom {
 AnimationHandler::AnimationHandler() 
 { }
 
+AnimationHandlerImplementation::AnimationHandlerImplementation() 
+{ }
+
 // Getter for the singleton
 
 AnimationHandler& AnimationHandler::get() {
-    static AnimationHandler handler;
+    static AnimationHandlerImplementation handler;
     return handler;
 }
 
 // other functions
 
-void AnimationHandler::setResourcePath(string resourcePath) {
+void AnimationHandlerImplementation::setResourcePath(string resourcePath) {
     m_resourcePath = resourcePath;
     getAnimation(MISSING_ANIMATION);
 }
 
-Animation& AnimationHandler::getAnimation(string animation) {
+Animation& AnimationHandlerImplementation::getAnimation(string animation) {
 
     if (m_animationMap.count(animation) == 0) {
         string animationFilePath = m_resourcePath + "/" + animation + DESCRIPTOR_EXTENSION;

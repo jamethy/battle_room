@@ -3,9 +3,6 @@
 
 #include "battle_room/engine/animation/animation.h"
 
-#include <string>
-#include <unordered_map>
-
 namespace BattleRoom {
 
 /**
@@ -29,7 +26,7 @@ public:
      * \param Name of the animation to return (should be the filename without extension)
      * \return Reference to the animation desired or MISSING_ANIMATION if missing
      */
-    Animation& getAnimation(std::string animationKey);
+    virtual Animation& getAnimation(std::string animationKey) = 0;
 
     /**
      * \brief Sets the directory where animations can be found
@@ -37,14 +34,11 @@ public:
      *
      * \param Either relative or absolute path to resources
      */
-    void setResourcePath(std::string resourcePath);
+    virtual void setResourcePath(std::string resourcePath) = 0;
 
 protected:
 
-    std::string m_resourcePath; ///< Path to resources
-    std::unordered_map<std::string,Animation> m_animationMap; ///< Animations mapped to keys
-
-    // private constructor
+    // protected constructor
     AnimationHandler();
 
 }; // AnimationHandler class
