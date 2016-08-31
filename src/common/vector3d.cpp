@@ -1,6 +1,8 @@
 #include "battle_room/common/vector3d.h"
 #include "battle_room/common/string_utils.h"
 
+#include <cmath>
+
 using std::string;
 
 namespace BattleRoom {

@@ -4,8 +4,15 @@ add_executable(runCommonTests
                     testFileUtils.cpp 
                     testStringUtils.cpp
                     testQuaternion.cpp
+                    testObjects.cpp
+                    testMisc.cpp
                )
 
-target_link_libraries(runCommonTests gtest gmock gtest_main Common)
+target_link_libraries(runCommonTests gtest gmock gtest_main 
+                   ${START_GROUP}
+                   Common 
+                   Animation
+                   ${END_GROUP}
+               )
 
 add_test( NAME CommonTests COMMAND runCommonTests )

@@ -33,13 +33,6 @@ public:
     void setAnimationState(seconds animationState);
     void setPosition(Position pos);
 
-    /**
-     * \brief Overload of == operator to check that two instances are the same object
-     * \param other Other object to be tested against
-     * \return True if two objects are instances of the same Object (... -_-)
-     */
-    bool operator==(const Object& other) const;
-
     // inherited
     virtual void applySettings(ResourceDescriptor settings) override;
 

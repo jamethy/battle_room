@@ -62,7 +62,6 @@ const Frame& Animation::getFrame(seconds animationState) {
         // throw exception
     }
 
-    Frame& returnFrame = m_frames[0];
     for (const Frame& frame : m_frames) {
         if (animationState < frame.getEndTime()) {
             return frame;

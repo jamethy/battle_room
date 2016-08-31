@@ -63,4 +63,6 @@ TEST(Test_rotated, ninetyAboutXY) {
     EXPECT_DOUBLE_EQ(1, xx.y());
     EXPECT_DOUBLE_EQ(0, xx.z());
 }
+
+
 } // BattleRoom namespace

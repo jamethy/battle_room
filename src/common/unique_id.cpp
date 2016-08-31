@@ -20,4 +20,8 @@ bool UniqueId::operator==(const UniqueId& other) const {
     return m_id == other.m_id;
 }
 
+bool UniqueId::operator!=(const UniqueId& other) const {
+    return !(*this == other);
+}
+
 } // BattleRoom namespace

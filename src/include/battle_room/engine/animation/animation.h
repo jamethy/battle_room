@@ -44,7 +44,7 @@ public:
     const Frame& getFrame(seconds animationState);
 
     // inherited
-    void applySettings(ResourceDescriptor settings);
+    void applySettings(ResourceDescriptor settings) override;
 
 private:
     

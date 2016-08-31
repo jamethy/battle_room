@@ -2,6 +2,7 @@
 
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/file_utils.h"
+#include "battle_room/common/input_gatherer.h"
 #include "battle_room/engine/animation/animation_handler.h"
 #include "battle_room/engine/graphics/get_resource_path.h"
 
@@ -90,7 +91,6 @@ int main(int argc, char** argv) {
         }
     }
 
-
     // Calulate the camera properties
     double horFov = 1.308985;
     double verFov = 2*atan2(largestHeight*2.0*tan(horFov/2.0), 2.0*largestWidth);
@@ -102,15 +102,14 @@ int main(int argc, char** argv) {
     settings.push_back("    Window: mainWindow");
     settings.push_back("        Width: " + std::to_string(largestPxWidth));
     settings.push_back("        Height: " + std::to_string(largestPxHeight));
-    settings.push_back("    Camera: mainCamera");
-    settings.push_back("        Position:");
-    settings.push_back("            Location: 0,0," + std::to_string(camHeight));
-    settings.push_back("        HorizontalFieldOfView: " + std::to_string(horFov));
-    settings.push_back("        VerticalFieldOfView: " + std::to_string(verFov));
-    settings.push_back("    View: mainView");
-    settings.push_back("        Camera: mainCamera");
-    settings.push_back("        TopLeft: 0,0");
-    settings.push_back("        BottomRight: " 
+    settings.push_back("        View: mainView");
+    settings.push_back("            Camera: mainCamera");
+    settings.push_back("                Position:");
+    settings.push_back("                    Location: 0,0," + std::to_string(camHeight));
+    settings.push_back("                HorizontalFieldOfView: " + std::to_string(horFov));
+    settings.push_back("                VerticalFieldOfView: " + std::to_string(verFov));
+    settings.push_back("            TopLeft: 0,0");
+    settings.push_back("            BottomRight: " 
                             + std::to_string(largestPxHeight) + "," 
                             + std::to_string(largestPxWidth));
 
@@ -122,24 +121,12 @@ int main(int argc, char** argv) {
     // create the window
     UniqueDisplayWindow window = createDisplayWindow(descriptor.getSubResource("Window"));
 
-    // Create the camrea, view, and window
-    std::unordered_map<std::string,Camera> cameras;
-    for (ResourceDescriptor sub : descriptor.getSubResources("Camera")) {
-        if (!cameras.emplace(sub.getValue(), sub).second) {
-            std::cerr << "There was a problem placing a camera.\n";
-        }
-    }
-    window->setCameraMapReference(cameras);
-
-    for (ResourceDescriptor sub : descriptor.getSubResources("View")) {
-        window->addView(View(sub));
-    }
-
     // Start the clock (resets when it hits the max time of the animation)
     steady_clock::time_point startTime = steady_clock::now();
     seconds maxTime = animation.getFrame(99999999).getEndTime();
 
-    while(window->getInputs().m_quit != true) {
+    Inputs inputs = InputGatherer::getAndClearInputs();
+    while(!inputs.containsQuitEvent()) {
 
         // Iterate the clock
         steady_clock::time_point newtime = steady_clock::now();
@@ -161,7 +148,14 @@ int main(int argc, char** argv) {
 
         // Draw the screen
         window->drawScreen();
+        window->gatherInputs();
 
+        inputs = InputGatherer::getAndClearInputs();
+        for (Input& input : inputs.getInputs()) {
+            if (input.getKey() == InputKey::Key::Q) {
+                inputs.addQuitEvent();
+            }
+        }
     }
 
     // cleanup is handled by classes

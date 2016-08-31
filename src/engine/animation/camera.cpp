@@ -1,7 +1,6 @@
 #include "battle_room/engine/animation/camera.h"
 
 #include <cmath>
-#include <iostream>
 
 using std::string;
 using std::vector;
@@ -121,7 +120,22 @@ RelPixel Camera::fromLocation(Vector3D location) {
 }
 
 Vector3D Camera::zeroPlaneIntersection(RelPixel pixel) {
-    return Vector3D();
+
+    radians horiz = m_horizontalFov*(0.5 - pixel.getCol());
+    radians verti = m_verticalFov*(0.5 - pixel.getRow());
+
+    Vector3D ray1 = Quaternion(1,0,0,0)
+        .getRotatedAbout(m_up, horiz)
+        .getRotated(m_right);
+
+    Vector3D ray2 = Quaternion(1,0,0,0)
+        .getRotatedAbout(m_right, verti)
+        .getRotated(m_up);
+    
+    Vector3D ray = ray2.cross(ray1);
+
+    Vector3D cam = m_position.getLocation();
+    return cam.plus(ray.times( -cam.z() / ray.z() ));
 }
 
 // these two functions are not allowed

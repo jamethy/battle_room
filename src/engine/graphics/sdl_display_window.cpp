@@ -1,8 +1,10 @@
 
 #include "sdl_display_window.h"
-#include "battle_room/common/resource_descriptor.h"
-
 #include "sdl_texture_manager.h"
+#include "sdl_helper_functions.h"
+
+#include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/input_gatherer.h"
 
 #include "SDL_image.h"
 #include "SDL_ttf.h"
@@ -11,15 +13,13 @@
 #include <cmath>
 #include <string>
 #include <unordered_map>
-#include <iostream>
 #include <exception>
+#include <iostream>
 
 using std::string;
 using std::vector;
 
 namespace BattleRoom {
-
-std::unordered_map<string,Camera> emptyCameraMap; // TODO find a better way
 
 // apply settings
 
@@ -47,14 +47,19 @@ void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
 
         SDL_SetWindowSize(m_window, width, height);
     }
+
+    for (ResourceDescriptor sub : settings.getSubResources("View")) {
+        addView(View(sub));
+    }
 }
 
 int SdlDisplayWindow::m_windowCount = 0;
+int SdlDisplayWindow::m_windowsDrawn = 0;
+vector<SDL_Event> SdlDisplayWindow::m_sdlEvents;
 
 // constructors
 
 SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings)
-    : m_cameras(emptyCameraMap)
 {
 
     // TODO throw exceptions instead of cerr
@@ -100,32 +105,103 @@ SdlDisplayWindow::~SdlDisplayWindow() {
 
 // other functions
 
-// TODO fill this function with something meaningful
-// TODO make a SDL Inputs map class
-Inputs SdlDisplayWindow::getInputs() {
+void SdlDisplayWindow::gatherInputs() {
 
-    Inputs inputs;
+    static Pixel mousePos(0,0);
 
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
+    for (vector<SDL_Event>::iterator it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
 
-        if (event.type == SDL_KEYDOWN) {
+        SDL_Event event = *it;
 
-            switch(event.key.keysym.sym) {
-                case SDLK_ESCAPE:
-                case SDLK_q:
-                    inputs.m_quit = true;
-                    break;
-                default:
-                    break;
+        if (event.type == SDL_QUIT) {
+            InputGatherer::addQuitEvent();
+        }
+
+
+        // check if this is the right window
+        unsigned windowID = (unsigned)-1;
+        switch (event.type) {
+            case SDL_KEYDOWN:
+            case SDL_KEYUP:
+                windowID = event.key.windowID;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONUP:
+                windowID = event.button.windowID;
+                break;
+            case SDL_MOUSEWHEEL:
+                windowID = event.wheel.windowID;
+                break;
+            case SDL_MOUSEMOTION:
+                windowID = event.motion.windowID;
+                break;
+        }
+
+        if (windowID != SDL_GetWindowID(m_window)) {
+            continue;
+        }
+
+        Input input;
+
+        // Set motion, key, and scroll amount
+        switch (event.type) {
+            case SDL_KEYDOWN:
+                input.setMotion(InputKey::Motion::PressedDown);
+                input.setKey(SdlKeyToInputKey(event.key.keysym.sym));
+                break;
+            case SDL_KEYUP:
+                input.setMotion(InputKey::Motion::Released);
+                input.setKey(SdlKeyToInputKey(event.key.keysym.sym));
+                break;
+            case SDL_MOUSEMOTION:
+                mousePos = Pixel(event.motion.y, event.motion.x);
+                input.setMotion(InputKey::Motion::None);
+                input.setKey(InputKey::Key::MouseOnly);
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                mousePos = Pixel(event.motion.y, event.motion.x);
+                input.setMotion(InputKey::Motion::PressedDown);
+                input.setKey(SdlMouseButtonToInputKey(event.button.button, event.button.clicks));
+                break;
+            case SDL_MOUSEBUTTONUP:
+                mousePos = Pixel(event.motion.y, event.motion.x);
+                input.setMotion(InputKey::Motion::Released);
+                input.setKey(SdlMouseButtonToInputKey(event.button.button, event.button.clicks));
+                break;
+            case SDL_MOUSEWHEEL:
+                input.setMotion(InputKey::Motion::Scroll);
+                input.setKey(InputKey::Key::MouseOnly);
+                input.setScrollAmount(event.wheel.y); // maybe need to involve event.direction
+                break;
+        }
+
+        // Set view intersections
+        for (std::pair<string,View> viewPair : m_views) {
+            View& view = viewPair.second;
+            Pixel topLeft = view.getTopLeft();
+            Pixel botRight = view.getBottomRight();
+            if (mousePos.isBetween(topLeft, botRight)) {
+                RelPixel relPos;
+
+                relPos.setCol( 
+                        (mousePos.getCol() - topLeft.getCol())
+                        /(botRight.getCol() - topLeft.getCol())
+                );
+
+                relPos.setRow( 
+                        (mousePos.getRow() - topLeft.getRow())
+                        /(botRight.getRow() - topLeft.getRow())
+                );
+
+                Vector3D zeroPoint = view.getCamera().zeroPlaneIntersection(relPos);
+                input.addViewIntersection(view.getName(), zeroPoint);
             }
         }
-        else if (event.type == SDL_QUIT) {
-            inputs.m_quit = true;
-        }
-    }
 
-    return inputs;
+        InputGatherer::addInput(input);
+        m_sdlEvents.erase(it);
+        --it;
+    }
 }
 
 void SdlDisplayWindow::addObjectsToView(vector<Object> objects, string viewName) {
@@ -138,40 +214,6 @@ void SdlDisplayWindow::addObjectsToView(vector<Object> objects, string viewName)
     else {
         // throw exception?
     }
-}
-
-/**
- * \brief Utility function to get SDL rect from two pixel coordinates
- * \param topLeft Top-left corner of desired rect
- * \param bottomRight Bottom-right corner of desired rect
- * \return SDL_Rect made from the corners
- */
-SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewHeight) {
-
-    SDL_Rect rect;
-    rect.x = topLeft.getColInt(viewWidth);
-    rect.y = topLeft.getRowInt(viewHeight);
-    rect.w = bottomRight.getColInt(viewWidth) - rect.x;
-    rect.h = bottomRight.getRowInt(viewHeight) - rect.y;
-
-    return rect;
-}
-
-/**
- * \brief Utility function to get SDL rect from two pixel coordinates
- * \param topLeft Top-left corner of desired rect
- * \param bottomRight Bottom-right corner of desired rect
- * \return SDL_Rect made from the corners
- */
-SDL_Rect rectFrom(Pixel topLeft, Pixel bottomRight) {
-
-    SDL_Rect rect;
-    rect.x = topLeft.getColInt();
-    rect.y = topLeft.getRowInt();
-    rect.w = bottomRight.getColInt() - rect.x;
-    rect.h = bottomRight.getRowInt() - rect.y;
-
-    return rect;
 }
 
 void SdlDisplayWindow::drawScreen() {
@@ -194,12 +236,7 @@ void SdlDisplayWindow::drawScreen() {
         px viewWidth = bottomRight.getColInt() - topLeft.getColInt();
         px viewHeight = bottomRight.getRowInt() - topLeft.getRowInt();
 
-        if (m_cameras.count(view.getCamera()) == 0) {
-            std::cerr << "There were no cameras of that name.\n";
-            // throw exception
-        }
-
-        Camera& camera = m_cameras.at(view.getCamera());
+        Camera& camera = view.getCamera();
 
         for (Object& object : view.getObjects()) {
 
@@ -266,6 +303,19 @@ void SdlDisplayWindow::drawScreen() {
     }
 
     SDL_RenderPresent(m_renderer);
+
+    if (m_windowsDrawn >= m_windowCount) {
+        m_windowsDrawn = 0;
+        m_sdlEvents.clear();
+    } 
+    ++m_windowsDrawn;
+
+    // Gather inputs
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        m_sdlEvents.push_back(event);
+    }
+
 }
 
 void SdlDisplayWindow::addView(View view) {
@@ -279,11 +329,6 @@ void SdlDisplayWindow::addView(View view) {
         m_views.insert(std::pair<string,View>(name,view));
     }
 }
-
-void SdlDisplayWindow::setCameraMapReference(std::unordered_map<string,Camera>& cameraMap) {
-    m_cameras = cameraMap;
-}
-
 
 UniqueDisplayWindow createDisplayWindow(ResourceDescriptor settings) {
 

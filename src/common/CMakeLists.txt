@@ -11,4 +11,7 @@ add_library(Common
         object.cpp
         vector3d.cpp
         quaternion.cpp
+        input.cpp
+        inputs.cpp
+        input_gatherer.cpp
     )

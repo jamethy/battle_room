@@ -3,15 +3,12 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    Make a camera manager
     Create an exception scheme
     Create intersection handler
         intersection base class
         intersectinos class implementations
-    Figure out inputs
     Figure out multithreading
     Find a better way to construct settings 
-    implement zeroPlaneIntersection
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load

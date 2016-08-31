@@ -6,6 +6,11 @@
 namespace BattleRoom {
 
 /**
+ * \brief Unit of measurement used for rotation
+ */
+typedef double radians;
+
+/**
  * Unit of measurement in the world coordinates
  */
 typedef double meters;

@@ -26,10 +26,10 @@ public:
     virtual ~DisplayWindow(){};
 
     /*!
-     * \breif Returns the collection of user inputs that have been gathered
-     * \return Inputs class containing user input information
+     * \breif Collects window inputs to the InputGatherer
+     * This should be called after every window as been drawn
      */
-    virtual Inputs getInputs() = 0;
+    virtual void gatherInputs() = 0;
     
     /*!
      * \brief Add the game world objects that need to be rendered
@@ -48,12 +48,6 @@ public:
      * \TODO add a remove view
      */
     virtual void addView(View view) = 0;
-
-    /*!
-     * \brief Sets the reference to the camera map
-     * \param cameraMap Map of camera objects to their names
-     */
-    virtual void setCameraMapReference(std::unordered_map<std::string,Camera>& cameraMap) = 0;
 
 }; // DisplayWindow class
 

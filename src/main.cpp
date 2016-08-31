@@ -9,6 +9,71 @@ using namespace BattleRoom;
 
 int main() {
 
+    // Show Main menu
+        // single player
+            // Create local server
+            // Create menu overlay
+            // get drawable objects
+            // draw
+            // get inputs
+            // deal with inputs
+            
+        // multiplayer
+            // Connect/Create network server
+            // Create menu overlay
+            // get drawable objects
+            // draw
+            // get inputs
+            // deal with inputs
+        // options
+            // Menu navigation
+        // exit
+
+
+    // set static world view objects <--------- from server
+    // in loop
+        // clear screen
+        // draw static world
+        // draw dynamic world <----- from server
+        // draw UI
+        // draw Menus
+
+    // navigation commands
+        // quit server / go to main menu
+        // Create local server
+        // Create local network server
+        // Connect to network server
+
+    // Server commands
+        // pause request
+        // all of player inputs
+        // disconnect
+
+    // player input path
+        // Presses Key
+        // Registered by SDL
+        // After drawing frame, collected by InputManager
+            // Views hit and zero plane intersection of them
+            // Inputs contains view and mouse zero plane coordinates
+        // Menus Look through Inputs and remove any used
+            // if game commands, see bottom
+            // if local commands, make changes
+        // UI look through inputs and remove any used
+            // This is mouse clicks on UI elements and commands
+            // World does not use any inputs
+            // if game commands, convert to commands and see bottom
+            // if local commands, make changes
+        // Command is sent to server
+        // Commands are collected by server
+        // Command is executed in server
+
+
+
+
+
+
+
+
     std::cout << "Hello World!\n";
     std::string resourcePath = getResourcePath();
 
@@ -24,27 +89,32 @@ int main() {
     // game client as server
     // game client as single player
     // single player game paused
+
+    // --------------------------------------------------
+    // GameState gameState;
     
     AnimationHandler::get().setResourcePath(resourcePath);
 
-    // Create main components of game
-    //ProgramState state;
-    UniqueDisplayWindow window = createDisplayWindow(rd.getSubResource("Window"));
-
-    //TODO figure out a better way to do camera management
-    std::unordered_map<std::string,Camera> cameras;
-    window->setCameraMapReference(cameras);
-    for (ResourceDescriptor sub : rd.getSubResources("Camera")) {
-        cameras.emplace(sub.getValue(), sub);
-    }
-
-    for (ResourceDescriptor sub : rd.getSubResources("View")) {
-        window->addView(View(sub));
-    }
-
     //Menus menus;
     //UserInterfaces uis;
-    //GameWorld game;
+    // server
+    //    GameWorld game;
+
+    // Create main components of game
+    //ProgramState state;
+
+
+
+    // --------------------------------------------------
+    // vector<UniqueDisplayWindow> windows;
+    // for (ResourceDescriptor window_descriptor : rd.getSubResources("Window")) {
+    //        windows.push_back(createDisplayWindow(window_descriptor));
+    //          -> window contains views,
+    //          -> view contains camera
+    // }
+
+
+    UniqueDisplayWindow window = createDisplayWindow(rd.getSubResource("Window"));
 
     // Loop until quit
     //while(state.keepGoing()) {
@@ -52,14 +122,18 @@ int main() {
     bool tempKeepGoing = true; // temp
     while(tempKeepGoing) { // temp
 
-        Inputs inputs = window->getInputs();
-        tempKeepGoing = inputs.m_quit != true; // temp
+
+
+
+
 
         //menus.handleInputs(inputs);
             // menues handle any inputs on menu items
             // or escape button for pause, etc.
 
         // StateChange = menus.getStateChanges();
+        // ----------------------------------------
+        // if level change -> window.setStaticObjects(objects);
 
         //uis.hanldeInputs(inputs);
             // UI Objects hovering in world (but only visible to user) have
@@ -69,8 +143,11 @@ int main() {
         //game.handleCommands(cmds);
         //game.update();
 
-        // std::vector<Objects> menuObjects = menus.getObjects();
-        // window->addObjectsToView(menuObjects, "Menus");
+        // ------------------------------------------
+        // for each window
+
+        //std::vector<Objects> menuObjects = menus.getObjects();
+        //window->addObjectsToView(menuObjects, "Menus");
         //window.addWorldObjects(game.getObjects());
         //window.addUIObjects(uis.getObjects());
         //window.addMenuObjects(menus.getObjects());

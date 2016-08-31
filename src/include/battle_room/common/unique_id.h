@@ -31,6 +31,7 @@ public:
      * \return True if the two are equal
      */
     bool operator==(const UniqueId& other) const;
+    bool operator!=(const UniqueId& other) const;
 
 private:
 

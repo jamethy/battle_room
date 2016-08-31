@@ -50,13 +50,19 @@ Quaternion::Quaternion(double w, double i, double j, double k)
 { }
 
 void Quaternion::rotateAboutZ(radians angle) {
+    *this = this->getRotatedAbout(Vector3D(0,0,1), angle);
+}
 
-    *this = Quaternion(
+Quaternion Quaternion::getRotatedAbout(Vector3D unit, radians angle) {
+
+    Quaternion rotation(
             std::cos(angle/2.0), 
-            0.0, 
-            0.0, 
-            std::sin(angle/2.0)
+            std::sin(angle/2.0)*unit.x(),
+            std::sin(angle/2.0)*unit.y(),
+            std::sin(angle/2.0)*unit.z()
     );
+
+    return rotation.getRotated(*this);
 }
 
 Vector3D Quaternion::getRotated(Vector3D v) const {

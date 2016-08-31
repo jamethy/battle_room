@@ -31,12 +31,6 @@ Object::Object(UniqueId id) :
     m_animationState(0)
 {}
 
-// other functions
-
-bool Object::operator==(const Object& other) const {
-    return m_id == other.m_id;
-}
-
 // reference accessor functions
 
 Position& Object::position() {

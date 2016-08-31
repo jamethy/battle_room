@@ -36,6 +36,14 @@ public:
      */
     int getRowInt() const;
 
+    /**
+     * \brief Checks if this is in the rectangle of the two pixels
+     * \param topLeft Pixel coordinates in the top left
+     * \param bottomRight Pixel coordinates in the bottom right
+     * \return True if inside pixels
+     */
+    bool isBetween(Pixel topLeft, Pixel bottomRight);
+
     // getters and setters
 
     void setRow(px row);

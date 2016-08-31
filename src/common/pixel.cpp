@@ -44,6 +44,10 @@ int Pixel::getColInt() const {
     return (int)std::round(m_col);
 }
 
+bool Pixel::isBetween(Pixel topLeft, Pixel bottomRight) {
+    return (topLeft.getCol() < getCol() && topLeft.getRow() < getRow() &&
+            bottomRight.getCol() > getCol() && bottomRight.getRow() > getRow());
+}
 
 // getters and setters
 

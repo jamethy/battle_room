@@ -6,11 +6,6 @@
 
 namespace BattleRoom {
 
-/**
- * \brief Unit of measurement used for rotation
- */
-typedef double radians;
-
 class Quaternion : public Resource {
 
 public:
@@ -24,6 +19,8 @@ public:
      * \param angle Angle in radians to rotate
      */
     void rotateAboutZ(radians angle);
+
+    Quaternion getRotatedAbout(Vector3D unit, radians angle);
 
     /**
      * \brief Rotates a copy of vec by this

@@ -25,7 +25,7 @@ void View::applySettings(ResourceDescriptor settings) {
 
     sub = settings.getSubResource("Camera");
     if (isNotEmpty(sub.getValue())) {
-        setCamera(sub.getValue());
+        setCamera(Camera(sub));
     }
 }
 
@@ -41,7 +41,7 @@ std::vector<Object>& View::getObjects() {
     return m_objects;
 }
 
-std::string View::getCamera() {
+Camera& View::getCamera() {
     return m_camera;
 }
 
@@ -86,7 +86,7 @@ void View::addObjects(std::vector<Object> objects) {
     m_objects = objects;
 }
 
-void View::setCamera(std::string camera) {
+void View::setCamera(Camera camera) {
     m_camera = camera;
 }
 
