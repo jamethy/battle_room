@@ -16,12 +16,12 @@ void Camera::applySettings(ResourceDescriptor settings) {
 
     ResourceDescriptor sub = settings.getSubResource("HorizontalFieldOfView");
     if (!sub.getKey().empty()) {
-        m_horizontalFov = toRadians(sub.getValue());
+        setHorizontalFov( toRadians(sub.getValue()) );
     } 
 
     sub = settings.getSubResource("VerticalFieldOfView");
     if (!sub.getKey().empty()) {
-        m_verticalFov = toRadians(sub.getValue());
+        setVerticalFov( toRadians(sub.getValue()) );
     } 
 
     sub = settings.getSubResource("Position");

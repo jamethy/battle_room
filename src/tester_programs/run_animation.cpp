@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
         window->gatherInputs();
 
         inputs = InputGatherer::getAndClearInputs();
-        for (Input& input : inputs.getInputs()) {
+        for (Input& input : inputs) {
             if (input.getKey() == InputKey::Key::Q) {
                 inputs.addQuitEvent();
             }

@@ -25,7 +25,7 @@ void View::applySettings(ResourceDescriptor settings) {
 
     sub = settings.getSubResource("Camera");
     if (isNotEmpty(sub.getValue())) {
-        setCamera(Camera(sub));
+        m_camera.applySettings(sub);
     }
 }
 

@@ -23,11 +23,17 @@ TEST(Test_inputGatherer, typical) {
     input.addViewIntersection("intersection4", Vector3D(2,4,0));
     InputGatherer::addInput(input);
 
-    Inputs inputs = InputGatherer::getAndClearInputs();
+    Inputs inputsClass = InputGatherer::getAndClearInputs();
 
-    ASSERT_EQ(2u, inputs.getInputs().size());
+    // just because
+    std::vector<Input> inputs;
+    for (Input& input : inputsClass) {
+        inputs.push_back(input);
+    }
 
-    Input input1 = inputs.getInputs()[0];
+    ASSERT_EQ(2u, inputs.size());
+
+    Input input1 = inputs[0];
     EXPECT_EQ(InputKey::A, input1.getKey());
     EXPECT_EQ(InputKey::PressedDown, input1.getMotion());
 
@@ -43,8 +49,7 @@ TEST(Test_inputGatherer, typical) {
     EXPECT_DOUBLE_EQ(3.0, int2.y());
     EXPECT_DOUBLE_EQ(0.0, int2.z());
 
-
-    Input input2 = inputs.getInputs()[1];
+    Input input2 = inputs[1];
     EXPECT_EQ(InputKey::MouseOnly, input2.getKey());
     EXPECT_EQ(InputKey::None, input2.getMotion());
 

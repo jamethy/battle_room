@@ -7,7 +7,7 @@ Inputs m_inputs; ///< Current stash of inputs
 Inputs InputGatherer::getAndClearInputs() {
 
     Inputs copy = m_inputs;
-    m_inputs.clear();
+    m_inputs = Inputs();
     return copy;
 }
 

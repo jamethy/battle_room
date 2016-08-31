@@ -1,4 +1,5 @@
 #include "battle_room/common/resource_descriptor.h"
+#include "battle_room/common/input_gatherer.h"
 #include "battle_room/engine/animation/animation_handler.h"
 #include "battle_room/engine/graphics/display_window.h"
 #include "battle_room/engine/graphics/get_resource_path.h"
@@ -69,6 +70,16 @@ int main() {
 
 
 
+    ///// Game States
+    // dedicated server
+    // Main menu
+    // options over main menu
+    // options over game
+    // game client connected to server
+    // game client as server
+    // game client as single player
+    // single player game paused
+
 
 
 
@@ -79,16 +90,6 @@ int main() {
 
     std::string settings_file = resourcePath + "/startup" + DESCRIPTOR_EXTENSION;
     ResourceDescriptor rd = ResourceDescriptor::readFile(settings_file);
-
-    ///// Game States
-    // dedicated server
-    // Main menu
-    // options over main menu
-    // options over game
-    // game client connected to server
-    // game client as server
-    // game client as single player
-    // single player game paused
 
     // --------------------------------------------------
     // GameState gameState;
@@ -119,21 +120,16 @@ int main() {
     // Loop until quit
     //while(state.keepGoing()) {
 
-    bool tempKeepGoing = true; // temp
-    while(tempKeepGoing) { // temp
+    Inputs inputs = InputGatherer::getAndClearInputs();
+    while(!inputs.containsQuitEvent()) { // temp
 
+        // get inputs from last frame
+        inputs = InputGatherer::getAndClearInputs();
 
-
-
-
-
+        ///// start game thread
         //menus.handleInputs(inputs);
             // menues handle any inputs on menu items
             // or escape button for pause, etc.
-
-        // StateChange = menus.getStateChanges();
-        // ----------------------------------------
-        // if level change -> window.setStaticObjects(objects);
 
         //uis.hanldeInputs(inputs);
             // UI Objects hovering in world (but only visible to user) have
@@ -143,15 +139,22 @@ int main() {
         //game.handleCommands(cmds);
         //game.update();
 
-        // ------------------------------------------
-        // for each window
-
         //std::vector<Objects> menuObjects = menus.getObjects();
         //window->addObjectsToView(menuObjects, "Menus");
         //window.addWorldObjects(game.getObjects());
         //window.addUIObjects(uis.getObjects());
         //window.addMenuObjects(menus.getObjects());
-        //window.drawScreen();
+
+        // StateChange = menus.getStateChanges();
+        // ----------------------------------------
+        // if level change -> window.setStaticObjects(objects);
+        // ------------------------------------------
+        // for each window
+        ////// End game thread
+
+        ///// Start Drawing thread
+        window->drawScreen();
+        //// End drawing thread
     }
     
     return 0;

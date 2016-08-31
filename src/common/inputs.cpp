@@ -1,5 +1,7 @@
 #include "battle_room/common/inputs.h"
 
+using std::vector;
+
 namespace BattleRoom {
 
 void Inputs::addInput(Input input) {
@@ -14,12 +16,12 @@ bool Inputs::containsQuitEvent() const {
     return m_quit;
 }
 
-std::vector<Input>& Inputs::getInputs() {
-    return m_inputs;
+vector<Input>::iterator Inputs::begin() {
+    return m_inputs.begin();
 }
 
-void Inputs::clear() {
-    m_inputs.clear();
+vector<Input>::iterator Inputs::end() {
+    return m_inputs.end();
 }
 
 } // BattleRoom namespace

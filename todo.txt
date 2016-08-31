@@ -3,7 +3,13 @@ Running ToDo List
 -----------------------------------
 
 For full program
+    Drawing order
+        sort by layer
+        sort by z value
+    Add write text to display window
+        Draw fps
     Create an exception scheme
+    do camera movement calculations
     Create intersection handler
         intersection base class
         intersectinos class implementations
@@ -17,3 +23,4 @@ Maybe for fun
 Persistent to do
     Look for // TODO in the code
     document everything
+    test cross platform
