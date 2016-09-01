@@ -6,8 +6,6 @@ For full program
     Drawing order
         sort by layer
         sort by z value
-    Add write text to display window
-        Draw fps
     Create an exception scheme
     do camera movement calculations
     Create intersection handler
