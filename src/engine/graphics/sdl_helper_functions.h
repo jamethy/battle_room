@@ -4,6 +4,7 @@
 #include "battle_room/common/input.h"
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/rel_pixel.h"
+#include "battle_room/common/color.h"
 
 #include "SDL_image.h"
 #include "SDL_ttf.h"
@@ -28,9 +29,11 @@ SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewH
 SDL_Rect rectFrom(Pixel topLeft, Pixel bottomRight);
 
 
-InputKey::Key SdlKeyToInputKey(SDL_Keycode code);
+InputKey::Key sdlKeyToInputKey(SDL_Keycode code);
 
-InputKey::Key SdlMouseButtonToInputKey(unsigned key, unsigned clicks);
+InputKey::Key sdlMouseButtonToInputKey(unsigned key, unsigned clicks);
+
+SDL_Color toSdlColor(Color color);
 
 } // BattleRoom namespace
 #endif // SDL_HELPER_FUNCTIONS_H

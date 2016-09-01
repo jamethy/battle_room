@@ -11,8 +11,7 @@ namespace BattleRoom {
 
 TEST(Test_getUniqueId, typical) {
 
-    AnimationHandler& handler = AnimationHandler::get();
-    handler.setResourcePath(string(TEST_FILES_DIR) + "/");
+    AnimationHandler::setResourcePath(string(TEST_FILES_DIR) + "/animations/");
 
     Object obj1(UniqueId::generateNewLocalId());
     Object obj2(UniqueId::generateNewLocalId());

@@ -1,6 +1,7 @@
 
 #include "sdl_display_window.h"
 #include "sdl_texture_manager.h"
+#include "sdl_font_manager.h"
 #include "sdl_helper_functions.h"
 
 #include "battle_room/common/resource_descriptor.h"
@@ -113,10 +114,15 @@ void SdlDisplayWindow::gatherInputs() {
 
         SDL_Event event = *it;
 
+        // Find special processes
         if (event.type == SDL_QUIT) {
             InputGatherer::addQuitEvent();
+            continue;
+        } else if (event.type == SDL_KEYDOWN && event.key.repeat != 0) {
+            m_sdlEvents.erase(it);
+            --it;
+            continue;
         }
-
 
         // check if this is the right window
         unsigned windowID = (unsigned)-1;
@@ -147,11 +153,11 @@ void SdlDisplayWindow::gatherInputs() {
         switch (event.type) {
             case SDL_KEYDOWN:
                 input.setMotion(InputKey::Motion::PressedDown);
-                input.setKey(SdlKeyToInputKey(event.key.keysym.sym));
+                input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
                 break;
             case SDL_KEYUP:
                 input.setMotion(InputKey::Motion::Released);
-                input.setKey(SdlKeyToInputKey(event.key.keysym.sym));
+                input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
                 break;
             case SDL_MOUSEMOTION:
                 mousePos = Pixel(event.motion.y, event.motion.x);
@@ -161,12 +167,12 @@ void SdlDisplayWindow::gatherInputs() {
             case SDL_MOUSEBUTTONDOWN:
                 mousePos = Pixel(event.motion.y, event.motion.x);
                 input.setMotion(InputKey::Motion::PressedDown);
-                input.setKey(SdlMouseButtonToInputKey(event.button.button, event.button.clicks));
+                input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
                 break;
             case SDL_MOUSEBUTTONUP:
                 mousePos = Pixel(event.motion.y, event.motion.x);
                 input.setMotion(InputKey::Motion::Released);
-                input.setKey(SdlMouseButtonToInputKey(event.button.button, event.button.clicks));
+                input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
                 break;
             case SDL_MOUSEWHEEL:
                 input.setMotion(InputKey::Motion::Scroll);
@@ -204,16 +210,29 @@ void SdlDisplayWindow::gatherInputs() {
     }
 }
 
-void SdlDisplayWindow::addObjectsToView(vector<Object> objects, string viewName) {
+void SdlDisplayWindow::setViewObjects(vector<Object> objects, string viewName) {
 
     if (m_views.count(viewName) > 0) {
 
         View& view = m_views.at(viewName);
-        view.addObjects(objects);
+        view.setObjects(objects);
     }
     else {
         // throw exception?
     }
+}
+
+void SdlDisplayWindow::setViewTexts(std::vector<DrawableText> texts, std::string viewName) {
+
+    if (m_views.count(viewName) > 0) {
+
+        View& view = m_views.at(viewName);
+        view.setDrawableText(texts);
+    }
+    else {
+        // throw exception?
+    }
+
 }
 
 void SdlDisplayWindow::drawScreen() {
@@ -300,6 +319,45 @@ void SdlDisplayWindow::drawScreen() {
             // (SDL must render on the main thread)
 
         }
+
+
+        for (DrawableText& text : view.getTexts()) {
+
+            SDL_Surface* surface = NULL;
+            SDL_Texture* texture = NULL;
+            SDL_Color color = toSdlColor(text.getColor());
+            
+            surface = TTF_RenderText_Solid(
+                    SdlFontManager::getFont(text.getFont(), text.getFontSize()),
+                    text.getText().c_str(),
+                    color
+            );
+
+            if (surface == NULL){
+                std::cerr << "input_surface TTF_RenderText error: " << SDL_GetError() << std::endl;
+            }
+            else {
+
+                texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+                if (texture == NULL){
+                    std::cerr << "input_texture SDL_CreateTextureFromSurface error: " << SDL_GetError() << std::endl;
+                    SDL_FreeSurface(surface);
+                }
+                else {
+
+                    SDL_Rect dstRect = rectFrom(
+                            text.getTopLeft(), 
+                            text.getBottomRight(),
+                            viewWidth,
+                            viewHeight
+                    );
+
+                    SDL_RenderCopy(m_renderer, texture, NULL, &dstRect);
+                    SDL_FreeSurface(surface);
+                    SDL_DestroyTexture(texture);
+                }
+            }
+        } // Draw texts
     }
 
     SDL_RenderPresent(m_renderer);

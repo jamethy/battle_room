@@ -28,34 +28,21 @@ int main(int argc, char** argv) {
 
     // check if argument was given, request if not
     if (argc < 2) {
-        std::cout << "Please enter animation name or file path: \n";
+        std::cout << "Please enter animation name:\n";
         std::cin >> arg;
     }
     else {
         arg = argv[1];
     }
 
-    // check file extension, if not there add text
-    if (arg.find(DESCRIPTOR_EXTENSION) == string::npos) {
-        arg += DESCRIPTOR_EXTENSION;
-    }
-
     std::ifstream infile;
 
     // see if file exists
-    infile.open(arg);
+    infile.open(getResourcePath() + "/animations/" + arg + DESCRIPTOR_EXTENSION);
     if (!infile.is_open()) {
-
-        std::cout << "Looking in resource path: " << getResourcePath() << std::endl;
-        arg = getResourcePath() + arg;
-
-        infile.open(arg);
-        if(!infile.is_open()) {
-            std::cerr << "Unable to find file.\n";
-            return 0;
-        }
+        std::cerr << "Unable to find file.\n";
+        return 0;
     }
-
     infile.close();
 
 
@@ -63,9 +50,8 @@ int main(int argc, char** argv) {
     ////////////////////////////////////////////////////////////////////////////
     // Load the animation
 
-
-    AnimationHandler::get().setResourcePath(getFilePath(arg));
-    Animation animation = AnimationHandler::get().getAnimation(getFileName(arg));
+    AnimationHandler::setResourcePath(getResourcePath() + "/animations/");
+    Animation animation = AnimationHandler::getAnimation(arg);
 
     // Find the largest width and height needed to display full animation
     // This if for camera placement
@@ -125,13 +111,24 @@ int main(int argc, char** argv) {
     steady_clock::time_point startTime = steady_clock::now();
     seconds maxTime = animation.getFrame(99999999).getEndTime();
 
+    DrawableText fpsText;
+    fpsText.setText("Sample Text");
+    fpsText.setColor(Color(0,0,0,255));
+    fpsText.setFont("default.ttf");
+    fpsText.setFontSize(100);
+    fpsText.setTopLeft(RelPixel(0,0));
+    fpsText.setBottomRight(RelPixel(0.05,0.5));
+    steady_clock::time_point lastTime = steady_clock::now();
+
     Inputs inputs = InputGatherer::getAndClearInputs();
+    double slowedFps = 30;
+    bool showFps = true;
     while(!inputs.containsQuitEvent()) {
 
         // Iterate the clock
         steady_clock::time_point newtime = steady_clock::now();
         double diff = std::chrono::duration_cast<duration<double>> (newtime - startTime).count();
-        
+
         // Reset if above max
         if (diff > maxTime) {
             startTime = newtime;
@@ -144,7 +141,23 @@ int main(int argc, char** argv) {
         object.setAnimationState(diff);
         //object.position().orientation().rotateAboutZ(60.0*3.14156/180.0);
         objects.push_back(object);
-        window->addObjectsToView(objects,"mainView");
+        window->setViewObjects(objects,"mainView");
+
+        
+        // FPS Display
+        double fps = 1.0/std::chrono::duration_cast<duration<double>> (newtime - lastTime).count();
+
+        slowedFps = 0.98*slowedFps + 0.02*fps;
+        lastTime = steady_clock::now();
+
+        if (showFps) {
+            fpsText.setText("FPS: " + std::to_string((int)slowedFps));
+            vector<DrawableText> texts;
+            texts.push_back(fpsText);
+            window->setViewTexts(texts,"mainView");
+        } else {
+            window->setViewTexts(std::vector<DrawableText>(), "mainView");
+        }
 
         // Draw the screen
         window->drawScreen();
@@ -152,8 +165,13 @@ int main(int argc, char** argv) {
 
         inputs = InputGatherer::getAndClearInputs();
         for (Input& input : inputs) {
-            if (input.getKey() == InputKey::Key::Q) {
-                inputs.addQuitEvent();
+            if (input.getMotion() == InputKey::Motion::PressedDown) {
+                if (input.getKey() == InputKey::Key::Q) {
+                    inputs.addQuitEvent();
+                }
+                else if (input.getKey() == InputKey::Key::F) {
+                    showFps = !showFps;
+                }
             }
         }
     }

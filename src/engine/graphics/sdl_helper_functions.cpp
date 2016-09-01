@@ -24,7 +24,7 @@ SDL_Rect rectFrom(Pixel topLeft, Pixel bottomRight) {
     return rect;
 }
 
-InputKey::Key SdlMouseButtonToInputKey(unsigned key, unsigned clicks) {
+InputKey::Key sdlMouseButtonToInputKey(unsigned key, unsigned clicks) {
     if (key == (unsigned) SDL_BUTTON_LEFT && clicks == 1) {
         return InputKey::Key::LeftClick;
     }
@@ -46,7 +46,7 @@ InputKey::Key SdlMouseButtonToInputKey(unsigned key, unsigned clicks) {
     return InputKey::Key::MouseOnly;
 }
 
-InputKey::Key SdlKeyToInputKey(SDL_Keycode code) {
+InputKey::Key sdlKeyToInputKey(SDL_Keycode code) {
 
     switch (code) {
         case SDLK_RETURN:
@@ -190,6 +190,16 @@ InputKey::Key SdlKeyToInputKey(SDL_Keycode code) {
     }
 
     return InputKey::Key::MouseOnly;
+}
+
+SDL_Color toSdlColor(Color color) {
+    SDL_Color sdlcolor = {
+        (Uint8)color.getRed(),
+        (Uint8)color.getGreen(),
+        (Uint8)color.getBlue(),
+        (Uint8)color.getAlpha()
+    };
+    return sdlcolor;
 }
 
 } // BattleRoom namespace

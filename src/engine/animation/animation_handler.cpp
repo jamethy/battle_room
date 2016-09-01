@@ -1,33 +1,23 @@
 
-#include "animation_handler_implementation.h"
+#include "battle_room/engine/animation/animation_handler.h"
+
+#include <unordered_map>
 
 using std::string;
 
 namespace BattleRoom {
 
-// constructor
-
-AnimationHandler::AnimationHandler() 
-{ }
-
-AnimationHandlerImplementation::AnimationHandlerImplementation() 
-{ }
-
-// Getter for the singleton
-
-AnimationHandler& AnimationHandler::get() {
-    static AnimationHandlerImplementation handler;
-    return handler;
-}
+std::string m_resourcePath; ///< Path to resources
+std::unordered_map<std::string,Animation> m_animationMap; ///< Animations mapped to keys
 
 // other functions
 
-void AnimationHandlerImplementation::setResourcePath(string resourcePath) {
+void AnimationHandler::setResourcePath(string resourcePath) {
     m_resourcePath = resourcePath;
     getAnimation(MISSING_ANIMATION);
 }
 
-Animation& AnimationHandlerImplementation::getAnimation(string animation) {
+Animation& AnimationHandler::getAnimation(string animation) {
 
     if (m_animationMap.count(animation) == 0) {
         string animationFilePath = m_resourcePath + "/" + animation + DESCRIPTOR_EXTENSION;

@@ -3,6 +3,7 @@
 
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/object.h"
+#include "battle_room/common/drawable_text.h"
 #include "battle_room/common/resource.h"
 #include "battle_room/engine/animation/camera.h"
 
@@ -23,6 +24,7 @@ public:
 
     // Reference Accessors
     std::vector<Object>& getObjects();
+    std::vector<DrawableText>& getTexts();
 
     // getters and setters
 
@@ -39,10 +41,12 @@ public:
     Camera& getCamera();
 
 
+    // TODO move to multithread approach and get rid of this
     /**
      * \brief Currently just sets the object vector
      */
-    void addObjects(std::vector<Object> objects);
+    void setObjects(std::vector<Object> objects);
+    void setDrawableText(std::vector<DrawableText> texts);
 
     // inherited
     void applySettings(ResourceDescriptor settings);
@@ -67,6 +71,7 @@ private:
     Camera m_camera;
 
     std::vector<Object> m_objects; ///< Objects to draw on view
+    std::vector<DrawableText> m_texts; ///< Text to draw on the view
 
 }; // View class
 } // BattleRoom namespace

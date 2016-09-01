@@ -94,7 +94,7 @@ int main() {
     // --------------------------------------------------
     // GameState gameState;
     
-    AnimationHandler::get().setResourcePath(resourcePath);
+    AnimationHandler::setResourcePath(resourcePath + "/animations/");
 
     //Menus menus;
     //UserInterfaces uis;

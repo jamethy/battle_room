@@ -41,6 +41,10 @@ std::vector<Object>& View::getObjects() {
     return m_objects;
 }
 
+std::vector<DrawableText>& View::getTexts() {
+    return m_texts;
+}
+
 Camera& View::getCamera() {
     return m_camera;
 }
@@ -82,8 +86,12 @@ Pixel View::getBottomRight() {
 
 // other functions
 
-void View::addObjects(std::vector<Object> objects) {
+void View::setObjects(std::vector<Object> objects) {
     m_objects = objects;
+}
+
+void View::setDrawableText(std::vector<DrawableText> texts) {
+    m_texts = texts;
 }
 
 void View::setCamera(Camera camera) {

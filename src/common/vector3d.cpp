@@ -19,17 +19,17 @@ void Vector3D::applySettings(ResourceDescriptor settings) {
     }
 
     ResourceDescriptor sub = settings.getSubResource("X");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getKey())) {
         m_x = toMeters(sub.getValue());
     } 
 
     sub = settings.getSubResource("Y");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getKey())) {
         m_y = toMeters(sub.getValue());
     } 
 
     sub = settings.getSubResource("Z");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getKey())) {
         m_z = toMeters(sub.getValue());
     } 
 }

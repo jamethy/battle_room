@@ -17,16 +17,12 @@ class AnimationHandler {
 
 public:
 
-    // get the singleton instance
-    // access other functions through this
-    static AnimationHandler& get();
-
     /**
      * \brief Gets the reference to the animation of the given key
      * \param Name of the animation to return (should be the filename without extension)
      * \return Reference to the animation desired or MISSING_ANIMATION if missing
      */
-    virtual Animation& getAnimation(std::string animationKey) = 0;
+    static Animation& getAnimation(std::string animationKey);
 
     /**
      * \brief Sets the directory where animations can be found
@@ -34,12 +30,7 @@ public:
      *
      * \param Either relative or absolute path to resources
      */
-    virtual void setResourcePath(std::string resourcePath) = 0;
-
-protected:
-
-    // protected constructor
-    AnimationHandler();
+    static void setResourcePath(std::string resourcePath);
 
 }; // AnimationHandler class
 } // BattleRoom namespace

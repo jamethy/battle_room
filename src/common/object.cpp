@@ -9,7 +9,7 @@ void Object::applySettings(ResourceDescriptor settings) {
 
     ResourceDescriptor sub = settings.getSubResource("Animation");
     if (!sub.getKey().empty()) {
-        setAnimation(AnimationHandler::get().getAnimation(sub.getValue()));
+        setAnimation(AnimationHandler::getAnimation(sub.getValue()));
     }
 
     sub = settings.getSubResource("AnimationState");
@@ -27,7 +27,7 @@ void Object::applySettings(ResourceDescriptor settings) {
 
 Object::Object(UniqueId id) : 
     m_id(id),
-    m_currentAnimation(AnimationHandler::get().getAnimation(MISSING_ANIMATION)),
+    m_currentAnimation(AnimationHandler::getAnimation(MISSING_ANIMATION)),
     m_animationState(0)
 {}
 

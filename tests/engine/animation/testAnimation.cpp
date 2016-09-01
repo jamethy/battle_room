@@ -71,18 +71,16 @@ TEST(Test_gen, typical) {
 
 TEST(Test_AnimationHandler, typical) {
     
-    AnimationHandler& handler = AnimationHandler::get();
-    handler.setResourcePath(string(TEST_FILES_DIR) + "/");
-    Animation animation = handler.getAnimation("test_animation");
+    AnimationHandler::setResourcePath(string(TEST_FILES_DIR) + "/animations/");
+    Animation animation = AnimationHandler::getAnimation("test_animation");
 
     EXPECT_STREQ("test_animation.jpg", animation.getImageFile().c_str());
 }
 
 TEST(Test_AnimationHandler, missing) {
     
-    AnimationHandler& handler = AnimationHandler::get();
-    handler.setResourcePath(string(TEST_FILES_DIR) + "/");
-    Animation animation = handler.getAnimation("lkjsldkfjsldkfjsd");
+    AnimationHandler::setResourcePath(string(TEST_FILES_DIR) + "/animations/");
+    Animation animation = AnimationHandler::getAnimation("lkjsldkfjsldkfjsd");
 
     EXPECT_STREQ("missing_animation.png", animation.getImageFile().c_str());
 }

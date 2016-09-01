@@ -2,6 +2,7 @@
 #define DISPLAY_WINDOW_H
 
 #include "battle_room/common/object.h"
+#include "battle_room/common/drawable_text.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/common/resource.h"
 #include "battle_room/engine/animation/view.h"
@@ -32,11 +33,18 @@ public:
     virtual void gatherInputs() = 0;
     
     /*!
-     * \brief Add the game world objects that need to be rendered
+     * \brief Sets the objects that need to be rendered
      * \param objects Objects that will be drawn on the view
      * \param viewName Key to find view to draw on
      */
-    virtual void addObjectsToView(std::vector<Object> objects, std::string viewName) = 0;
+    virtual void setViewObjects(std::vector<Object> objects, std::string viewName) = 0;
+
+    /*!
+     * \brief Sets the drawable text to the view to be rendered
+     * \param texts List of texts to be drawn on the view
+     * \param viewName Key to find view to draw on
+     */
+    virtual void setViewTexts(std::vector<DrawableText> texts, std::string viewName) = 0;
 
     /*!
      * \brief Draws the world, UI, and then menu objects

@@ -27,7 +27,7 @@ SDL_Texture* SdlTextureManager::getTexture(string texture) {
 
     //TODO Add error checking
     if (m_textureMap.count(texture) == 0) {
-        string texture_path = getResourcePath() + texture;
+        string texture_path = getResourcePath() + "/animations/" + texture;
         m_textureMap[texture] = IMG_LoadTexture(m_renderer, texture_path.c_str());
     }
 

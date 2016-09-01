@@ -14,4 +14,6 @@ add_library(Common
         input.cpp
         inputs.cpp
         input_gatherer.cpp
+        color.cpp
+        drawable_text.cpp
     )
