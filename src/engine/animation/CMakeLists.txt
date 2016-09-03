@@ -7,4 +7,5 @@ add_library ( Animation
         animation_handler.cpp
         camera.cpp
         view.cpp
+        view_interface.cpp
 )

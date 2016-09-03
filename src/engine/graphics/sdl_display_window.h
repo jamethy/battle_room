@@ -21,6 +21,7 @@ public:
     SdlDisplayWindow(ResourceDescriptor settings);
     ~SdlDisplayWindow();
 
+
     // inherited
     void applySettings(ResourceDescriptor settings) override;
     void gatherInputs() override;
@@ -28,6 +29,7 @@ public:
     void setViewTexts(std::vector<DrawableText> texts, std::string viewName) override;
     void drawScreen() override;
     void addView(View view) override;
+    Inputs handleInputs(Inputs inputs) override; 
 
 private:
 

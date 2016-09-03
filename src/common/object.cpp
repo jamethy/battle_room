@@ -17,9 +17,14 @@ void Object::applySettings(ResourceDescriptor settings) {
         setAnimationState(toSeconds(sub.getValue()));
     }
 
-    sub = settings.getSubResource("Position");
+    sub = settings.getSubResource("Location");
     if (!sub.getKey().empty()) {
-        position().applySettings(sub);
+        m_location.applySettings(sub);
+    }
+
+    sub = settings.getSubResource("Orientation");
+    if (!sub.getKey().empty()) {
+        m_orientation.applySettings(sub);
     }
 }
 
@@ -31,12 +36,6 @@ Object::Object(UniqueId id) :
     m_animationState(0)
 {}
 
-// reference accessor functions
-
-Position& Object::position() {
-    return m_position;
-}
-
 // getters and setters
 
 Animation& Object::getAnimation() const {
@@ -47,8 +46,12 @@ seconds Object::getAnimationState() const {
     return m_animationState;
 }
 
-Position Object::getPosition() const {
-    return m_position;
+Vector3D Object::getLocation() const {
+    return m_location;
+}
+
+Quaternion Object::getOrientation() const {
+    return m_orientation;
 }
 
 UniqueId Object::getUniqueId() const {
@@ -63,8 +66,12 @@ void Object::setAnimationState(seconds animationState) {
     m_animationState = animationState;
 }
 
-void Object::setPosition(Position pos) {
-    m_position = pos;
+void Object::setLocation(Vector3D location) {
+     m_location = location;
+}
+
+void Object::setOrientation(Quaternion orientation) {
+    m_orientation = orientation;
 }
 
 } // BattleRoom namespace

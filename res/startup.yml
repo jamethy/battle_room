@@ -3,13 +3,10 @@ Window: mainWindow
     Width: 500
     Height: 500
     View: mainView
-        Top: 0
-        Left: 0
-        Bottom: 500
-        Right: 500
+        TopLeft: 0,0
+        BottomRight: 500,500
         Camera: mainCamera
-            Position:
-                Location: 0,0,10
-                Orientation: 1,0,0,0
+            Location: 0,0,10
+            Orientation: 1,0,0,0
             HorizontalFieldOfView: 1.308985
             VerticalFieldOfView: 1.308985

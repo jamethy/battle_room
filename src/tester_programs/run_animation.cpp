@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
 
     Inputs inputs = InputGatherer::getAndClearInputs();
     double slowedFps = 30;
-    bool showFps = true;
+    bool showFps = false;
     while(!inputs.containsQuitEvent()) {
 
         // Iterate the clock

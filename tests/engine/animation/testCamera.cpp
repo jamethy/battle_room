@@ -12,16 +12,15 @@ TEST(Test_applySettings, typical) {
 
     vector<string> settings;
     settings.push_back("Camera:");
-    settings.push_back("    Position:");
-    settings.push_back("        Location:");
-    settings.push_back("            X: 1.11");
-    settings.push_back("            Y: 2.22");
-    settings.push_back("            Z: 3.33");
-    settings.push_back("        Orientation:");
-    settings.push_back("            W: 1");
-    settings.push_back("            I: 0");
-    settings.push_back("            J: 0");
-    settings.push_back("            K: 0");
+    settings.push_back("    Location:");
+    settings.push_back("        X: 1.11");
+    settings.push_back("        Y: 2.22");
+    settings.push_back("        Z: 3.33");
+    settings.push_back("    Orientation:");
+    settings.push_back("        W: 1");
+    settings.push_back("        I: 0");
+    settings.push_back("        J: 0");
+    settings.push_back("        K: 0");
     settings.push_back("    HorizontalFieldOfView: 1.8");
     settings.push_back("    VerticalFieldOfView: 1.3");
 
@@ -32,8 +31,8 @@ TEST(Test_applySettings, typical) {
     Camera camera;
     camera.applySettings(descriptor);
 
-    Vector3D location = camera.getPosition().getLocation();
-    Quaternion orientation = camera.getPosition().getOrientation();
+    Vector3D location = camera.getLocation();
+    Quaternion orientation = camera.getOrientation();
     
     EXPECT_DOUBLE_EQ(1.11, location.x());
     EXPECT_DOUBLE_EQ(2.22, location.y());
@@ -52,16 +51,15 @@ TEST(Test_fromLocation, straight_down) {
 
     vector<string> settings;
     settings.push_back("Camera:");
-    settings.push_back("    Position:");
-    settings.push_back("        Location:");
-    settings.push_back("            X: 0");
-    settings.push_back("            Y: 0");
-    settings.push_back("            Z: 2");
-    settings.push_back("        Orientation:");
-    settings.push_back("            W: 1");
-    settings.push_back("            I: 0");
-    settings.push_back("            J: 0");
-    settings.push_back("            K: 0");
+    settings.push_back("    Location:");
+    settings.push_back("        X: 0");
+    settings.push_back("        Y: 0");
+    settings.push_back("        Z: 2");
+    settings.push_back("    Orientation:");
+    settings.push_back("        W: 1");
+    settings.push_back("        I: 0");
+    settings.push_back("        J: 0");
+    settings.push_back("        K: 0");
     settings.push_back("    HorizontalFieldOfView: 0.785039");
     settings.push_back("    VerticalFieldOfView: 0.785039");
     settings.push_back("    Width: 250");
@@ -95,16 +93,15 @@ TEST(Test_fromLocation, yawed_straight_down) {
 
     vector<string> settings;
     settings.push_back("Camera:");
-    settings.push_back("    Position:");
-    settings.push_back("        Location:");
-    settings.push_back("            X: 0");
-    settings.push_back("            Y: 0");
-    settings.push_back("            Z: 2");
-    settings.push_back("        Orientation:");
-    settings.push_back("            W: 1");
-    settings.push_back("            I: 0");
-    settings.push_back("            J: 0");
-    settings.push_back("            K: 0");
+    settings.push_back("    Location:");
+    settings.push_back("        X: 0");
+    settings.push_back("        Y: 0");
+    settings.push_back("        Z: 2");
+    settings.push_back("    Orientation:");
+    settings.push_back("        W: 1");
+    settings.push_back("        I: 0");
+    settings.push_back("        J: 0");
+    settings.push_back("        K: 0");
     settings.push_back("    HorizontalFieldOfView: 0.785039");
     settings.push_back("    VerticalFieldOfView: 0.785039");
 

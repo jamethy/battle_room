@@ -15,7 +15,7 @@ class Resource {
 public:
 
     // destructor
-    virtual ~Resource(){};
+    virtual ~Resource(){}
 
     /**
      * \brief Fills the member variables from the settings

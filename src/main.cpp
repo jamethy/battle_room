@@ -1,8 +1,12 @@
+
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/input_gatherer.h"
+
 #include "battle_room/engine/animation/animation_handler.h"
 #include "battle_room/engine/graphics/display_window.h"
 #include "battle_room/engine/graphics/get_resource_path.h"
+
+#include "battle_room/game/interface/game_interface.h"
 
 #include <iostream>
 
@@ -13,7 +17,7 @@ int main() {
     // Show Main menu
         // single player
             // Create local server
-            // Create menu overlay
+            // Create menu overlay < gameinterface
             // get drawable objects
             // draw
             // get inputs
@@ -21,7 +25,7 @@ int main() {
             
         // multiplayer
             // Connect/Create network server
-            // Create menu overlay
+            // Create menu overlay < gameinterface
             // get drawable objects
             // draw
             // get inputs
@@ -36,7 +40,7 @@ int main() {
         // clear screen
         // draw static world
         // draw dynamic world <----- from server
-        // draw UI
+        // draw UI < gameinterface
         // draw Menus
 
     // navigation commands
@@ -59,7 +63,7 @@ int main() {
         // Menus Look through Inputs and remove any used
             // if game commands, see bottom
             // if local commands, make changes
-        // UI look through inputs and remove any used
+        // UI look through inputs and remove any used < gameinterface
             // This is mouse clicks on UI elements and commands
             // World does not use any inputs
             // if game commands, convert to commands and see bottom
@@ -87,17 +91,17 @@ int main() {
 
     std::cout << "Hello World!\n";
     std::string resourcePath = getResourcePath();
+    AnimationHandler::setResourcePath(resourcePath + "/animations/");
+
 
     std::string settings_file = resourcePath + "/startup" + DESCRIPTOR_EXTENSION;
     ResourceDescriptor rd = ResourceDescriptor::readFile(settings_file);
 
+
     // --------------------------------------------------
     // GameState gameState;
-    
-    AnimationHandler::setResourcePath(resourcePath + "/animations/");
 
     //Menus menus;
-    //UserInterfaces uis;
     // server
     //    GameWorld game;
 
@@ -105,55 +109,64 @@ int main() {
     //ProgramState state;
 
 
+    std::vector<UniqueDisplayWindow> windows;
+    for (ResourceDescriptor windowDescriptor : rd.getSubResources("Window")) {
+        windows.push_back(createDisplayWindow(windowDescriptor));
+    }
 
-    // --------------------------------------------------
-    // vector<UniqueDisplayWindow> windows;
-    // for (ResourceDescriptor window_descriptor : rd.getSubResources("Window")) {
-    //        windows.push_back(createDisplayWindow(window_descriptor));
-    //          -> window contains views,
-    //          -> view contains camera
-    // }
+    //std::vector<DisplayWindow*> windows;
+    //windows.push_back(mainwindow.get());
 
+    GameInterface gameInterface;
+        // will pass in World/Server, settings, viewName
 
-    UniqueDisplayWindow window = createDisplayWindow(rd.getSubResource("Window"));
+    std::vector<ViewInterface*> viewInterfaces;
+    viewInterfaces.push_back(&gameInterface);
 
-    // Loop until quit
-    //while(state.keepGoing()) {
-
-    Inputs inputs = InputGatherer::getAndClearInputs();
-    while(!inputs.containsQuitEvent()) { // temp
+    while(!InputGatherer::containsQuitEvent()) { // temp
 
         // get inputs from last frame
-        inputs = InputGatherer::getAndClearInputs();
+        for (UniqueDisplayWindow& window : windows) {
+            window->gatherInputs();
+        }
+        Inputs inputs = InputGatherer::getAndClearInputs();
 
         ///// start game thread
-        //menus.handleInputs(inputs);
-            // menues handle any inputs on menu items
-            // or escape button for pause, etc.
 
-        //uis.hanldeInputs(inputs);
-            // UI Objects hovering in world (but only visible to user) have
-            // buttons and things
+        for (ViewInterface* interface : viewInterfaces) {
+            inputs = interface->handleInputs(inputs);
+        }
 
-        //Commands cmds = uis.getCommands():
-        //game.handleCommands(cmds);
-        //game.update();
+        for (UniqueDisplayWindow& window : windows) {
+            inputs = window->handleInputs(inputs);
+        }
 
-        //std::vector<Objects> menuObjects = menus.getObjects();
-        //window->addObjectsToView(menuObjects, "Menus");
-        //window.addWorldObjects(game.getObjects());
-        //window.addUIObjects(uis.getObjects());
-        //window.addMenuObjects(menus.getObjects());
+        //Commands cmds = gameInterface.getCommands():
+        //server.handleCommands(cmds);
+        //server.update(); <-- on own thread elsewhere
 
-        // StateChange = menus.getStateChanges();
-        // ----------------------------------------
-        // if level change -> window.setStaticObjects(objects);
-        // ------------------------------------------
-        // for each window
+        for (ViewInterface* interface : viewInterfaces) {
+
+            for (UniqueDisplayWindow& window : windows) {
+
+                window->setViewObjects(
+                        interface->getObjects(), 
+                        interface->getAssociatedView()
+                        );
+
+                window->setViewTexts(
+                        interface->getDrawableTexts(), 
+                        interface->getAssociatedView()
+                        );
+            }
+        }
+
         ////// End game thread
 
         ///// Start Drawing thread
-        window->drawScreen();
+        for (UniqueDisplayWindow& window : windows) {
+            window->drawScreen();
+        }
         //// End drawing thread
     }
     

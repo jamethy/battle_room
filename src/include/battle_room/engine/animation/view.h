@@ -5,6 +5,7 @@
 #include "battle_room/common/object.h"
 #include "battle_room/common/drawable_text.h"
 #include "battle_room/common/resource.h"
+#include "battle_room/common/inputs.h"
 #include "battle_room/engine/animation/camera.h"
 
 namespace BattleRoom {
@@ -22,9 +23,13 @@ public:
     // constructor
     View(ResourceDescriptor settings);
 
+    void adjustBoundsFor(Vector3D point);
+    Inputs handleInputs(Inputs inputs);
+
     // Reference Accessors
-    std::vector<Object>& getObjects();
-    std::vector<DrawableText>& getTexts();
+    std::vector<Object> getObjects() const;
+    std::vector<DrawableText> getTexts() const;
+    Camera& camera();
 
     // getters and setters
 
@@ -33,12 +38,16 @@ public:
     void setTopLeft(Pixel pixel);
     void setBottomRight(Pixel pixel);
     void setCamera(Camera camera);
+    void setBoundsMin(Vector3D point);
+    void setBoundsMax(Vector3D point);
 
-    std::string getName();
-    int getLayer();
-    Pixel getTopLeft();
-    Pixel getBottomRight();
-    Camera& getCamera();
+    std::string getName() const;
+    int getLayer() const;
+    Pixel getTopLeft() const;
+    Pixel getBottomRight() const;
+    const Camera& getCamera() const;
+    Vector3D getBoundsMin() const;
+    Vector3D getBoundsMax() const;
 
 
     // TODO move to multithread approach and get rid of this
@@ -69,6 +78,9 @@ private:
     Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
 
     Camera m_camera;
+
+    Vector3D m_boundsMin; ///< View bound used in camera control
+    Vector3D m_boundsMax; ///< View bound used in camera control
 
     std::vector<Object> m_objects; ///< Objects to draw on view
     std::vector<DrawableText> m_texts; ///< Text to draw on the view

@@ -6,7 +6,6 @@ add_library(Common
         resource_descriptor.cpp
         pixel.cpp
         rel_pixel.cpp
-        position.cpp
         unique_id.cpp
         object.cpp
         vector3d.cpp

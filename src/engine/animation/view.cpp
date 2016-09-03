@@ -35,17 +35,78 @@ View::View(ResourceDescriptor settings)
     applySettings(settings);
 }
 
+void View::adjustBoundsFor(Vector3D point) {
+
+    if (point.x() < m_boundsMin.x()) {
+        m_boundsMin.x() = point.x();
+    } else if (point.x() > m_boundsMax.x()) {
+        m_boundsMax.x() = point.x();
+    }
+
+    if (point.y() < m_boundsMin.y()) {
+        m_boundsMin.y() = point.y();
+    } else if (point.y() > m_boundsMax.y()) {
+        m_boundsMax.y() = point.y();
+    }
+
+    if (point.z() < m_boundsMin.z()) {
+        m_boundsMin.z() = point.z();
+    } else if (point.z() > m_boundsMax.z()) {
+        m_boundsMax.z() = point.z();
+    }
+
+}
+
+Inputs View::handleInputs(Inputs inputs) {
+
+    static Vector3D camVelocity(0,0,0);
+
+    Inputs remainingInputs;
+
+    Vector3D cameraDelta(0,0,0);
+    for (Input input : inputs) {
+
+        if (input.containsView(getName())) {
+
+            if (input.getMotion() == InputKey::Scroll) {
+
+                if (input.getScrollAmount() < 0) {
+                    // MOVE CAMERA UP
+                    cameraDelta = cameraDelta.plus( 
+                            Vector3D(0,0,-input.getScrollAmount())
+                    );
+
+                    continue;
+                }
+                else {
+                    // MOVE CAMERA TOWRAD POS
+                    Vector3D zeroIntersection = input.getViewIntersection(getName());
+                    cameraDelta = cameraDelta.plus(
+                            zeroIntersection.minus(m_camera.getLocation()).getUnit()
+                            .times(input.getScrollAmount()));
+                    continue;
+                }
+            } 
+        }
+
+        remainingInputs.addInput(input);
+    }
+
+    m_camera.setLocation( m_camera.getLocation().plus(cameraDelta) );
+    return remainingInputs;
+}
+
 // Reference Accessors
 
-std::vector<Object>& View::getObjects() {
+std::vector<Object> View::getObjects() const {
     return m_objects;
 }
 
-std::vector<DrawableText>& View::getTexts() {
+std::vector<DrawableText> View::getTexts() const {
     return m_texts;
 }
 
-Camera& View::getCamera() {
+Camera& View::camera() {
     return m_camera;
 }
 
@@ -68,20 +129,41 @@ void View::setBottomRight(Pixel pixel) {
     m_bottomRight = pixel;
 }
 
-std::string View::getName() {
+void View::setBoundsMin(Vector3D point) {
+    m_boundsMin = point;
+}
+
+void View::setBoundsMax(Vector3D point) {
+    m_boundsMax = point;
+}
+
+
+std::string View::getName() const {
     return m_name;
 }
 
-int View::getLayer() {
+int View::getLayer() const {
     return m_layer;
 }
 
-Pixel View::getTopLeft() {
+Pixel View::getTopLeft() const {
     return m_topLeft;
 }
 
-Pixel View::getBottomRight() {
+Pixel View::getBottomRight() const {
     return m_bottomRight;
+}
+
+const Camera& View::getCamera() const {
+    return m_camera;
+}
+
+Vector3D View::getBoundsMin() const {
+    return m_boundsMin;
+}
+
+Vector3D View::getBoundsMax() const {
+    return m_boundsMax;
 }
 
 // other functions

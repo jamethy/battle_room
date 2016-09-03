@@ -34,6 +34,7 @@ public:
     
     /*!
      * \brief Sets the objects that need to be rendered
+     * If view not found, nothing is done
      * \param objects Objects that will be drawn on the view
      * \param viewName Key to find view to draw on
      */
@@ -41,6 +42,7 @@ public:
 
     /*!
      * \brief Sets the drawable text to the view to be rendered
+     * If view not found, nothing is done
      * \param texts List of texts to be drawn on the view
      * \param viewName Key to find view to draw on
      */
@@ -56,6 +58,13 @@ public:
      * \TODO add a remove view
      */
     virtual void addView(View view) = 0;
+
+    /**
+     * \brief Handles inputs - such as for cameras
+     * \param inputs Inputs to handle
+     * \return Any inputs remaining after using the param
+     */
+    virtual Inputs handleInputs(Inputs inputs) = 0;
 
 }; // DisplayWindow class
 

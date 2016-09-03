@@ -12,15 +12,19 @@
 #include "SDL.h"
 
 #include <cmath>
+#include <limits>
 #include <string>
 #include <unordered_map>
 #include <exception>
 #include <iostream>
+#include <algorithm>
 
 using std::string;
 using std::vector;
 
 namespace BattleRoom {
+
+const meters MAX_METERS = std::numeric_limits<double>::max();
 
 // apply settings
 
@@ -62,6 +66,7 @@ vector<SDL_Event> SdlDisplayWindow::m_sdlEvents;
 
 SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings)
 {
+    m_views.clear();
 
     // TODO throw exceptions instead of cerr
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -102,6 +107,31 @@ SdlDisplayWindow::~SdlDisplayWindow() {
     if (--m_windowCount <= 0) {
         SDL_Quit();
     }
+}
+
+
+// utilitiy funcitons
+
+/**
+ * \brief Sorts views by layer (ascending)
+ * As a reminder, higher layers are rendered first and then covered by lower layers
+ * \param viewMap Map of views to sort
+ * \return Names of sorted values
+ */
+vector<string> getSortedViews(const std::unordered_map<string,View>& viewMap) {
+
+    vector<string> sortedViews(viewMap.size());
+    sortedViews.clear();
+    for (const std::pair<string,View>& p : viewMap) {
+        sortedViews.push_back(p.first);
+    }
+
+    std::sort(sortedViews.begin(), sortedViews.end(), 
+            [&viewMap](string a, string b) {
+                return viewMap.at(a).getLayer() < viewMap.at(b).getLayer();
+            }
+    );
+    return sortedViews;
 }
 
 // other functions
@@ -182,10 +212,13 @@ void SdlDisplayWindow::gatherInputs() {
         }
 
         // Set view intersections
-        for (std::pair<string,View> viewPair : m_views) {
-            View& view = viewPair.second;
+        for (string& viewName : getSortedViews(m_views)) {
+            const View& view = m_views.at(viewName);
+
+
             Pixel topLeft = view.getTopLeft();
             Pixel botRight = view.getBottomRight();
+
             if (mousePos.isBetween(topLeft, botRight)) {
                 RelPixel relPos;
 
@@ -210,15 +243,22 @@ void SdlDisplayWindow::gatherInputs() {
     }
 }
 
+Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
+
+    for (string& viewName : getSortedViews(m_views)) {
+        View& view = m_views.at(viewName);
+        inputs = view.handleInputs(inputs);
+    }
+
+    return inputs;
+}
+
 void SdlDisplayWindow::setViewObjects(vector<Object> objects, string viewName) {
 
     if (m_views.count(viewName) > 0) {
 
         View& view = m_views.at(viewName);
         view.setObjects(objects);
-    }
-    else {
-        // throw exception?
     }
 }
 
@@ -229,10 +269,6 @@ void SdlDisplayWindow::setViewTexts(std::vector<DrawableText> texts, std::string
         View& view = m_views.at(viewName);
         view.setDrawableText(texts);
     }
-    else {
-        // throw exception?
-    }
-
 }
 
 void SdlDisplayWindow::drawScreen() {
@@ -246,23 +282,28 @@ void SdlDisplayWindow::drawScreen() {
     SDL_RenderClear(m_renderer);
 
     // draw objects
-    for (std::pair<string,View> viewEntry : m_views) {
+    vector<string> sortedViews = getSortedViews(m_views);
+    std::reverse(sortedViews.begin(), sortedViews.end());
 
-        View& view = viewEntry.second;
+    for (string& viewName: sortedViews) {
+
+        View& view = m_views.at(viewName);
+        view.setBoundsMin(Vector3D( MAX_METERS, MAX_METERS, MAX_METERS));
+        view.setBoundsMax(Vector3D(-MAX_METERS,-MAX_METERS,-MAX_METERS));
 
         Pixel topLeft = view.getTopLeft();
         Pixel bottomRight = view.getBottomRight();
         px viewWidth = bottomRight.getColInt() - topLeft.getColInt();
         px viewHeight = bottomRight.getRowInt() - topLeft.getRowInt();
 
-        Camera& camera = view.getCamera();
+        const Camera& camera = view.getCamera();
 
         for (Object& object : view.getObjects()) {
 
             // get needed values from the inputs
             Animation& animation = object.getAnimation();
-            Vector3D& loc = object.position().location();
-            Quaternion& ori = object.position().orientation();
+            const Vector3D loc = object.getLocation();
+            const Quaternion ori = object.getOrientation();
 
             const Frame& frame = animation.getFrame(object.getAnimationState());
             const Pixel& frameTopLeft = frame.getTopLeft();
@@ -286,8 +327,14 @@ void SdlDisplayWindow::drawScreen() {
             //Vector3D yOffset = ori.getRotated(Vector3D(0, objectHeight/2.0, 0));
             // end fix
 
-            RelPixel topLeftRel = camera.fromLocation(loc.minus(xOffset).plus(yOffset));
-            RelPixel botRightRel = camera.fromLocation(loc.plus(xOffset).minus(yOffset));
+            Vector3D topLeftPos = loc.minus(xOffset).plus(yOffset);
+            Vector3D botRightPos = loc.plus(xOffset).minus(yOffset);
+
+            view.adjustBoundsFor(topLeftPos);
+            view.adjustBoundsFor(botRightPos);
+
+            RelPixel topLeftRel = camera.fromLocation(topLeftPos);
+            RelPixel botRightRel = camera.fromLocation(botRightPos);
 
             // get the unrotated versions?
 
@@ -362,13 +409,14 @@ void SdlDisplayWindow::drawScreen() {
 
     SDL_RenderPresent(m_renderer);
 
+
+    // Gather inputs
     if (m_windowsDrawn >= m_windowCount) {
         m_windowsDrawn = 0;
         m_sdlEvents.clear();
     } 
     ++m_windowsDrawn;
 
-    // Gather inputs
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         m_sdlEvents.push_back(event);

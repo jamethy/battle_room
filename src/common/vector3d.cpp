@@ -83,7 +83,16 @@ Vector3D Vector3D::times(double scalar) const {
     return Vector3D(scalar*m_x, scalar*m_y, scalar*m_z);
 }
 
+Vector3D Vector3D::getUnit() const {
+    meters mag = this->dot(*this);
+    return this->times(1.0/mag);
+}
+
 meters toMeters(string str) {
+    return stod(str);
+}
+
+radians toRadians(string str) {
     return stod(str);
 }
 

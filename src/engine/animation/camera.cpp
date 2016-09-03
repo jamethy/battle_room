@@ -24,9 +24,14 @@ void Camera::applySettings(ResourceDescriptor settings) {
         setVerticalFov( toRadians(sub.getValue()) );
     } 
 
-    sub = settings.getSubResource("Position");
+    sub = settings.getSubResource("Location");
     if (!sub.getKey().empty()) {
-        m_position.applySettings(sub);
+        m_location.applySettings(sub);
+    } 
+
+    sub = settings.getSubResource("Orientation");
+    if (!sub.getKey().empty()) {
+        m_orientation.applySettings(sub);
     } 
 }
 
@@ -34,12 +39,11 @@ void Camera::applySettings(ResourceDescriptor settings) {
 
 Camera::Camera() 
     : m_name("DEFAULT_CAMERA_NAME"),
+    m_location(Vector3D(0,0,10)),
     m_forward(Vector3D(0,0,-1)),
     m_up(Vector3D(0,1,0)),
     m_right(Vector3D(1,0,0))
-{
-    m_position.setLocation(Vector3D(0,0,10));
-}
+{ }
 
 Camera::Camera(ResourceDescriptor settings) : Camera()
 {
@@ -49,24 +53,31 @@ Camera::Camera(ResourceDescriptor settings) : Camera()
 
 //setters and getters
 
-string Camera::getName() {
+string Camera::getName() const {
     return m_name;
 }
 
-Position Camera::getPosition() {
-    return m_position;
+Vector3D Camera::getLocation() const {
+    return m_location;
 }
 
-radians Camera::getHorizontalFov() {
+Quaternion Camera::getOrientation() const {
+    return m_orientation;
+}
+
+radians Camera::getHorizontalFov() const {
     return m_horizontalFov;
 }
-radians Camera::getVerticalFov() {
+radians Camera::getVerticalFov() const {
     return m_verticalFov;
 }
 
-void Camera::setPosition(Position pos) {
-    m_position = pos;
-    Quaternion orientation = m_position.getOrientation();
+void Camera::setLocation(Vector3D location) {
+    m_location = location;
+}
+
+void Camera::setOrientation(Quaternion orientation) {
+    m_orientation = orientation;
     m_forward = orientation.getRotated(Vector3D(0,0,-1));
     m_up = orientation.getRotated(Vector3D(0,1,0));
     m_right = orientation.getRotated(Vector3D(1,0,0));
@@ -88,8 +99,7 @@ void Camera::setName(string name) {
 
 void Camera::rotateClockwise(radians theta) {
 
-    Position pos = getPosition();
-    Quaternion old = pos.getOrientation();
+    Quaternion old = getOrientation();
 
     double w = cos(theta/2.0);
     double i = m_forward.x()*sin(theta/2.0);
@@ -98,13 +108,12 @@ void Camera::rotateClockwise(radians theta) {
 
     Quaternion rot = Quaternion(w,i,j,k);
 
-    pos.setOrientation(rot.getRotated(old));
-    setPosition(pos);
+    setOrientation(rot.getRotated(old));
 }
 
-RelPixel Camera::fromLocation(Vector3D location) {
+RelPixel Camera::fromLocation(Vector3D location) const {
 
-    Vector3D delta = location.minus(m_position.getLocation());
+    Vector3D delta = location.minus(m_location);
     meters dist = delta.dot(m_forward);
     meters width = 2*dist*tan(m_horizontalFov / 2.0);
     meters height = 2*dist*tan(m_verticalFov / 2.0);
@@ -119,7 +128,7 @@ RelPixel Camera::fromLocation(Vector3D location) {
     return RelPixel(row,col);
 }
 
-Vector3D Camera::zeroPlaneIntersection(RelPixel pixel) {
+Vector3D Camera::getPixelRay(RelPixel pixel) const {
 
     radians horiz = m_horizontalFov*(0.5 - pixel.getCol());
     radians verti = m_verticalFov*(0.5 - pixel.getRow());
@@ -132,39 +141,39 @@ Vector3D Camera::zeroPlaneIntersection(RelPixel pixel) {
         .getRotatedAbout(m_right, verti)
         .getRotated(m_up);
     
-    Vector3D ray = ray2.cross(ray1);
+    return ray2.cross(ray1);
+}
 
-    Vector3D cam = m_position.getLocation();
+Vector3D Camera::zeroPlaneIntersection(RelPixel pixel) const {
+    
+    Vector3D ray = getPixelRay(pixel);
+    Vector3D cam = getLocation();
     return cam.plus(ray.times( -cam.z() / ray.z() ));
 }
 
 // these two functions are not allowed
 /*void Camera::rotateUpDown(radians theta) {
 
-    Position pos = getPosition();
-    Quaternion old = pos.getOrientation();
+    Quaternion old = getOrientation();
     double w = cos(theta/2.0);
     double i = m_right.x()*sin(theta/2.0);
     double j = m_right.y()*sin(theta/2.0);
     double k = m_right.z()*sin(theta/2.0);
 
     Quaternion rot = Quaternion(w,i,j,k);
-    pos.setOrientation(rot.getRotated(old));
-    setPosition(pos);
+    setOrientation(rot.getRotated(old));
 }
 
 void Camera::rotateLeftRight(radians theta) {
 
-    Position pos = getPosition();
-    Quaternion old = pos.getOrientation();
+    Quaternion old = getOrientation();
     double w = cos(theta/2.0);
     double i = m_up.x()*sin(theta/2.0);
     double j = m_up.y()*sin(theta/2.0);
     double k = m_up.z()*sin(theta/2.0);
 
     Quaternion rot = Quaternion(w,i,j,k);
-    pos.setOrientation(rot.getRotated(old));
-    setPosition(pos);
+    setOrientation(rot.getRotated(old));
 }
 */
 

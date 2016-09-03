@@ -3,15 +3,16 @@ Running ToDo List
 -----------------------------------
 
 For full program
+    test object receiving
+    Figure out multithreading
+    get objects and texts out of views
     Drawing order
         sort by layer
         sort by z value
     Create an exception scheme
-    do camera movement calculations
     Create intersection handler
         intersection base class
         intersectinos class implementations
-    Figure out multithreading
     Find a better way to construct settings 
 
 Maybe for fun

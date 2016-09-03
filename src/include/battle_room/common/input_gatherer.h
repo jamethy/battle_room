@@ -31,6 +31,12 @@ public:
      */
     static void addQuitEvent();
 
+    /**
+     * \brief Returns if a quit event has occurred
+     * \return True if the program should be quit
+     */
+    static bool containsQuitEvent();
+
 }; // InputGatherer class
 } // BattleRoom namespace
 #endif // INPUT_GATHERER_H

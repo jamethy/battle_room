@@ -67,6 +67,12 @@ public:
      */
     Vector3D times(double scalar) const;
 
+    /**
+     * \brief Returns unit vector in direction of vector
+     * \return Unit vector
+     */
+    Vector3D getUnit() const;
+
     // inherited
     void applySettings(ResourceDescriptor settings) override;
 
@@ -84,6 +90,13 @@ private:
  * \return Value in meters found in the string
  */
 meters toMeters(std::string str);
+
+/**
+ * \brief Utility function to parse the string for radians
+ * \param str String to parse from
+ * \return Value in radians found in the string
+ */
+radians toRadians(std::string str);
 
 } // BattleRoom namespace
 #endif // VECTOR3D_H
