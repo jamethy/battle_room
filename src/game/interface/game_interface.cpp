@@ -2,6 +2,7 @@
 
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/engine/animation/animation_handler.h"
+#include <iostream>
 
 using std::vector;
 
@@ -10,9 +11,6 @@ namespace BattleRoom {
 vector<Object> GameInterface::getObjects() {
     vector<Object> objects;
     objects.clear();
-    Object obj(UniqueId::generateNewLocalId());
-    obj.setAnimation(AnimationHandler::getAnimation("boy_walking"));
-    objects.push_back(obj);
     return objects;
 }
 

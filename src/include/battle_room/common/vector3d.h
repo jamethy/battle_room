@@ -40,6 +40,12 @@ public:
     meters dot(Vector3D b) const;
 
     /**
+     * \brief Returns the magnitude of the vector
+     * \return Magnitude of vector
+     */
+    meters magnitude() const;
+
+    /**
      * \brief Cross product between this and b
      * \param b Vector to cross with
      * \return Vector result of cross product

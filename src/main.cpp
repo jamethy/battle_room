@@ -118,6 +118,7 @@ int main() {
     //windows.push_back(mainwindow.get());
 
     GameInterface gameInterface;
+    gameInterface.setAssociatedView("mainView");
         // will pass in World/Server, settings, viewName
 
     std::vector<ViewInterface*> viewInterfaces;

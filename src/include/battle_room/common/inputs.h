@@ -19,19 +19,6 @@ public:
      */
     void addInput(Input input);
 
-    /**
-     * \brief Add a quit event to the collection
-     * This should be called if the window is trying to close, or if
-     * something has been mapped to quit the program
-     */
-    void addQuitEvent();
-
-    /**
-     * \brief Checks if a quit event has been added
-     * \return True if the program should close
-     */
-    bool containsQuitEvent() const;
-
     // These are used for ranged forloops
     std::vector<Input>::iterator begin();
     std::vector<Input>::iterator end();
@@ -39,7 +26,6 @@ public:
 private:
 
     std::vector<Input> m_inputs; ///< Vector of inputs
-    bool m_quit = false; ///< A quit event has been triggered
 
 }; // Inputs class
 } // BattleRoom namespace

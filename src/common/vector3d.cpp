@@ -64,6 +64,10 @@ meters Vector3D::dot(Vector3D b) const {
     return m_x*b.x() + m_y*b.y() + m_z*b.z();
 }
 
+meters Vector3D::magnitude() const {
+    return std::sqrt(this->dot(*this));
+}
+
 Vector3D Vector3D::cross(Vector3D b) const {
     meters x = m_y*b.z() - m_z*b.y();
     meters y = m_z*b.x() - m_x*b.z();
@@ -84,8 +88,7 @@ Vector3D Vector3D::times(double scalar) const {
 }
 
 Vector3D Vector3D::getUnit() const {
-    meters mag = this->dot(*this);
-    return this->times(1.0/mag);
+    return this->times(1.0/magnitude());
 }
 
 meters toMeters(string str) {

@@ -205,9 +205,11 @@ void SdlDisplayWindow::gatherInputs() {
                 input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
                 break;
             case SDL_MOUSEWHEEL:
-                input.setMotion(InputKey::Motion::Scroll);
-                input.setKey(InputKey::Key::MouseOnly);
-                input.setScrollAmount(event.wheel.y); // maybe need to involve event.direction
+                if (event.wheel.y != 0) {
+                    input.setMotion(InputKey::Motion::Scroll);
+                    input.setKey(InputKey::Key::MouseOnly);
+                    input.setScrollAmount(event.wheel.y); 
+                }
                 break;
         }
 
@@ -256,7 +258,6 @@ Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
 void SdlDisplayWindow::setViewObjects(vector<Object> objects, string viewName) {
 
     if (m_views.count(viewName) > 0) {
-
         View& view = m_views.at(viewName);
         view.setObjects(objects);
     }
@@ -269,6 +270,14 @@ void SdlDisplayWindow::setViewTexts(std::vector<DrawableText> texts, std::string
         View& view = m_views.at(viewName);
         view.setDrawableText(texts);
     }
+}
+
+void printv(Vector3D v) {
+    std::cout << " " << v.x() << " " << v.y() << " " << v.z() << std::endl;
+}
+
+void printp(RelPixel p) {
+    std::cout << " " << p.getRow() << " " << p.getCol() << std::endl;
 }
 
 void SdlDisplayWindow::drawScreen() {
@@ -316,38 +325,63 @@ void SdlDisplayWindow::drawScreen() {
             meters objectWidth = xScale*(frameBottomRight.getCol() - frameTopLeft.getCol());
             meters objectHeight = yScale*(frameBottomRight.getRow() - frameTopLeft.getRow());
 
-            // fix to get angle until I figure out the skewing issue
-            // aka the camera must be facing straight down
-            Vector3D rotatedX = ori.getRotated(Vector3D(1,0,0));
-            double angle = 180.0*std::acos(rotatedX.x())*3.14156;
-            Vector3D xOffset = Vector3D(objectWidth/2.0, 0, 0);
-            Vector3D yOffset = Vector3D(0, objectHeight/2.0, 0);
-            // real versions
-            //Vector3D xOffset = ori.getRotated(Vector3D(objectWidth/2.0, 0, 0));
-            //Vector3D yOffset = ori.getRotated(Vector3D(0, objectHeight/2.0, 0));
-            // end fix
-
+            Vector3D xOffset = ori.getRotated(Vector3D(objectWidth/2.0, 0, 0));
+            Vector3D yOffset = ori.getRotated(Vector3D(0, objectHeight/2.0, 0));
             Vector3D topLeftPos = loc.minus(xOffset).plus(yOffset);
             Vector3D botRightPos = loc.plus(xOffset).minus(yOffset);
 
             view.adjustBoundsFor(topLeftPos);
             view.adjustBoundsFor(botRightPos);
-
+            
             RelPixel topLeftRel = camera.fromLocation(topLeftPos);
             RelPixel botRightRel = camera.fromLocation(botRightPos);
 
-            // get the unrotated versions?
+            // fix to get angle until I figure out the skewing issue
+            // aka the camera must be facing straight down
+            Vector3D drawn = Vector3D(
+                    botRightRel.getCol() - topLeftRel.getCol(),
+                    botRightRel.getRow() - topLeftRel.getRow(),
+                    0.0
+            );
+            Vector3D drawnUnit = drawn.getUnit();
+            Vector3D world = Vector3D(
+                    objectWidth,
+                    objectHeight,
+                    0.0
+            ).getUnit();
+
+            double angle = std::atan2(
+                    world.x()*drawnUnit.y() - world.y()*drawnUnit.x(), 
+                    world.dot(drawnUnit)
+            );
 
             // Get pixel coordinates of texture
+            RelPixel center = camera.fromLocation(loc);
+            RelPixel unrotatedDelta(
+                drawn.x()*std::sin(-angle) + drawn.y()*std::cos(-angle),
+                drawn.x()*std::cos(-angle) - drawn.y()*std::sin(-angle)
+            );
+
+            RelPixel drawTL(
+                    center.getRow() - unrotatedDelta.getRow()/2.0,
+                    center.getCol() - unrotatedDelta.getCol()/2.0
+            );
+
+            RelPixel drawBR(
+                    center.getRow() + unrotatedDelta.getRow()/2.0,
+                    center.getCol() + unrotatedDelta.getCol()/2.0
+            );
+
             SDL_Rect srcRect = rectFrom(frameTopLeft, frameBottomRight);
-            SDL_Rect dstRect = rectFrom(topLeftRel, botRightRel, viewWidth, viewHeight);
+            SDL_Rect dstRect = rectFrom(drawTL, drawBR, viewWidth, viewHeight);
+
 
             // get the texture
             SDL_Texture* texture = m_sdlTextureManager.getTexture(animation.getImageFile());
 
             // Render the texture
             SDL_RenderCopyEx(m_renderer,
-                    texture, &srcRect, &dstRect, angle,
+                    texture, &srcRect, &dstRect, angle*180.0/3.14159265359,
                     NULL, SDL_FLIP_NONE);
 
             // for multithreading

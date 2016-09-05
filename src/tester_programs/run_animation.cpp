@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
     Inputs inputs = InputGatherer::getAndClearInputs();
     double slowedFps = 30;
     bool showFps = false;
-    while(!inputs.containsQuitEvent()) {
+    while(!InputGatherer::containsQuitEvent()) {
 
         // Iterate the clock
         steady_clock::time_point newtime = steady_clock::now();
@@ -139,6 +139,9 @@ int main(int argc, char** argv) {
         Object object(UniqueId::generateNewLocalId());
         object.setAnimation(animation);
         object.setAnimationState(diff);
+        Quaternion ori;
+        ori.rotateAboutZ(3.141567/2.0);
+        object.setOrientation(ori);
         //object.position().orientation().rotateAboutZ(60.0*3.14156/180.0);
         objects.push_back(object);
         window->setViewObjects(objects,"mainView");
@@ -167,7 +170,7 @@ int main(int argc, char** argv) {
         for (Input& input : inputs) {
             if (input.getMotion() == InputKey::Motion::PressedDown) {
                 if (input.getKey() == InputKey::Key::Q) {
-                    inputs.addQuitEvent();
+                    InputGatherer::addQuitEvent();
                 }
                 else if (input.getKey() == InputKey::Key::F) {
                     showFps = !showFps;

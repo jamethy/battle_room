@@ -76,11 +76,17 @@ private:
     int m_layer = 0; //< higher numbers are rendered first (therefore then covered up)
     Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
     Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
+    double m_cameraFriction = 0.5; ///< Friction of camera motion
+    double m_zoomInMultiplier = 1.0; ///< Multiplier of zooming input
+    double m_zoomOutMultiplier = 1.0; ///< Multiplier of zooming input
+    meters m_minimumCameraZ = 10;
 
     Camera m_camera;
 
-    Vector3D m_boundsMin; ///< View bound used in camera control
-    Vector3D m_boundsMax; ///< View bound used in camera control
+    Vector3D m_boundsMin; ///< Minimum x and y of point in view
+    Vector3D m_boundsMax; ///< Maximum x and y of point in view
+    Vector3D m_cameraMin; ///< Minimum point in view in camera coordinates
+    Vector3D m_cameraMax; ///< Maximum point in view in camera coordinates
 
     std::vector<Object> m_objects; ///< Objects to draw on view
     std::vector<DrawableText> m_texts; ///< Text to draw on the view

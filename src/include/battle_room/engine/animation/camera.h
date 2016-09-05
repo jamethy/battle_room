@@ -25,6 +25,8 @@ public:
 
     std::string getName() const;
     Vector3D getLocation() const;
+    Vector3D getUpDir() const;
+    Vector3D getRightDir() const;
     Quaternion getOrientation() const;
     radians getHorizontalFov() const;
     radians getVerticalFov() const;

@@ -1,6 +1,7 @@
 #include "battle_room/engine/animation/camera.h"
 
 #include <cmath>
+#include <iostream>
 
 using std::string;
 using std::vector;
@@ -61,6 +62,14 @@ Vector3D Camera::getLocation() const {
     return m_location;
 }
 
+Vector3D Camera::getUpDir() const {
+    return m_up;
+}
+
+Vector3D Camera::getRightDir() const {
+    return m_right;
+}
+
 Quaternion Camera::getOrientation() const {
     return m_orientation;
 }
@@ -98,17 +107,8 @@ void Camera::setName(string name) {
 // other functions
 
 void Camera::rotateClockwise(radians theta) {
-
-    Quaternion old = getOrientation();
-
-    double w = cos(theta/2.0);
-    double i = m_forward.x()*sin(theta/2.0);
-    double j = m_forward.y()*sin(theta/2.0);
-    double k = m_forward.z()*sin(theta/2.0);
-
-    Quaternion rot = Quaternion(w,i,j,k);
-
-    setOrientation(rot.getRotated(old));
+    m_orientation.rotateAboutZ(theta);
+    setOrientation(m_orientation);
 }
 
 RelPixel Camera::fromLocation(Vector3D location) const {

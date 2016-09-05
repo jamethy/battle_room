@@ -1,4 +1,5 @@
 #include "battle_room/engine/animation/view.h"
+#include <iostream>
 
 namespace BattleRoom {
 
@@ -27,6 +28,26 @@ void View::applySettings(ResourceDescriptor settings) {
     if (isNotEmpty(sub.getValue())) {
         m_camera.applySettings(sub);
     }
+
+    sub = settings.getSubResource("CameraFriction");
+    if (isNotEmpty(sub.getValue())) {
+        m_cameraFriction = std::stod(sub.getValue());
+    }
+
+    sub = settings.getSubResource("ZoomInMultiplier");
+    if (isNotEmpty(sub.getValue())) {
+        m_zoomInMultiplier = std::stod(sub.getValue());
+    }
+
+    sub = settings.getSubResource("ZoomOutMultiplier");
+    if (isNotEmpty(sub.getValue())) {
+        m_zoomOutMultiplier = std::stod(sub.getValue());
+    }
+
+    sub = settings.getSubResource("MinimumCameraZ");
+    if (isNotEmpty(sub.getValue())) {
+        m_minimumCameraZ = std::stod(sub.getValue());
+    }
 }
 
 // constructor
@@ -35,31 +56,50 @@ View::View(ResourceDescriptor settings)
     applySettings(settings);
 }
 
+/**
+ * \brief Gets the max x, max y, and max z of either points
+ */
+Vector3D getMaxEnds(Vector3D a, Vector3D b) {
+
+    Vector3D c = a;
+    if (b.x() > c.x()) { c.x() = b.x(); }
+    if (b.y() > c.y()) { c.y() = b.y(); }
+    if (b.z() > c.z()) { c.z() = b.z(); }
+    return c;
+}
+
+/**
+ * \brief Gets the min x, min y, and min z of either points
+ */
+Vector3D getMinEnds(Vector3D a, Vector3D b) {
+
+    Vector3D c = a;
+    if (b.x() < c.x()) { c.x() = b.x(); }
+    if (b.y() < c.y()) { c.y() = b.y(); }
+    if (b.z() < c.z()) { c.z() = b.z(); }
+    return c;
+}
+
+void print(Vector3D p) {
+    std::cout << p.x() << " " << p.y() << " " << p.z() << std::endl;
+}
+
 void View::adjustBoundsFor(Vector3D point) {
 
-    if (point.x() < m_boundsMin.x()) {
-        m_boundsMin.x() = point.x();
-    } else if (point.x() > m_boundsMax.x()) {
-        m_boundsMax.x() = point.x();
-    }
+    m_boundsMin = getMinEnds(m_boundsMin, point);
+    m_boundsMax = getMaxEnds(m_boundsMax, point);
 
-    if (point.y() < m_boundsMin.y()) {
-        m_boundsMin.y() = point.y();
-    } else if (point.y() > m_boundsMax.y()) {
-        m_boundsMax.y() = point.y();
-    }
+    Vector3D cameraCoord( 
+            point.dot(m_camera.getRightDir()),
+            point.dot(m_camera.getUpDir()),
+            0
+    );
 
-    if (point.z() < m_boundsMin.z()) {
-        m_boundsMin.z() = point.z();
-    } else if (point.z() > m_boundsMax.z()) {
-        m_boundsMax.z() = point.z();
-    }
-
+    m_cameraMin = getMinEnds(m_cameraMin, cameraCoord);
+    m_cameraMax = getMaxEnds(m_cameraMax, cameraCoord);
 }
 
 Inputs View::handleInputs(Inputs inputs) {
-
-    static Vector3D camVelocity(0,0,0);
 
     Inputs remainingInputs;
 
@@ -72,8 +112,8 @@ Inputs View::handleInputs(Inputs inputs) {
 
                 if (input.getScrollAmount() < 0) {
                     // MOVE CAMERA UP
-                    cameraDelta = cameraDelta.plus( 
-                            Vector3D(0,0,-input.getScrollAmount())
+                    cameraDelta = cameraDelta.minus( 
+                            Vector3D(0,0,m_zoomInMultiplier*input.getScrollAmount())
                     );
 
                     continue;
@@ -83,7 +123,8 @@ Inputs View::handleInputs(Inputs inputs) {
                     Vector3D zeroIntersection = input.getViewIntersection(getName());
                     cameraDelta = cameraDelta.plus(
                             zeroIntersection.minus(m_camera.getLocation()).getUnit()
-                            .times(input.getScrollAmount()));
+                            .times(m_zoomOutMultiplier*input.getScrollAmount())
+                    );
                     continue;
                 }
             } 
@@ -92,7 +133,75 @@ Inputs View::handleInputs(Inputs inputs) {
         remainingInputs.addInput(input);
     }
 
-    m_camera.setLocation( m_camera.getLocation().plus(cameraDelta) );
+    // adjust camera position
+    static Vector3D camVelocity(0,0,0);
+    camVelocity = camVelocity.plus(cameraDelta);
+
+    if (camVelocity.magnitude() > 0) {
+        Vector3D newCamLocation = m_camera.getLocation().plus(camVelocity);
+
+        // check known bounds
+        if (newCamLocation.z() < m_minimumCameraZ) { newCamLocation.z() = m_minimumCameraZ; }
+        
+        if (newCamLocation.x() < m_boundsMin.x()) { newCamLocation.x() = m_boundsMin.x(); }
+        else if (newCamLocation.x() > m_boundsMax.x()) { newCamLocation.x() = m_boundsMax.x(); }
+
+        if (newCamLocation.y() < m_boundsMin.y()) { newCamLocation.y() = m_boundsMin.y(); }
+        else if (newCamLocation.y() > m_boundsMax.y()) { newCamLocation.y() = m_boundsMax.y(); }
+
+
+        // Check pyramid bounds
+
+        Vector3D pyramidTop = m_boundsMax.plus(m_boundsMin).times(0.5);
+
+        // calculate max z
+        pyramidTop.z() = std::max(
+                (m_cameraMax.x() - m_cameraMin.x())/(2*std::tan(m_camera.getHorizontalFov()/2.0)),
+                (m_cameraMax.y() - m_cameraMin.y())/(2*std::tan(m_camera.getVerticalFov()/2.0))
+        ) + m_minimumCameraZ;
+
+        if (newCamLocation.z() > pyramidTop.z()) {
+            newCamLocation = pyramidTop;
+        }
+        else {
+            // up dir
+            meters upBase = (m_cameraMax.y() - m_cameraMin.y()) / 2.0;
+            meters upMax = pyramidTop.y() 
+                + upBase*(pyramidTop.z() - newCamLocation.z()) 
+                / (pyramidTop.z() - m_minimumCameraZ);
+
+            if ( newCamLocation.y() - pyramidTop.y() > upMax) {
+                newCamLocation.y() = upMax + pyramidTop.y();
+            }
+            else if ( newCamLocation.y() - pyramidTop.y() < -upMax ) {
+                newCamLocation.y() = - upMax + pyramidTop.y();
+            }
+
+            // right dir
+            meters rightBase = (m_cameraMax.x() - m_cameraMin.x()) / 2.0;
+            meters rightMax = pyramidTop.x() 
+                + rightBase*(pyramidTop.z() - newCamLocation.z()) 
+                / (pyramidTop.z() - m_minimumCameraZ);
+
+            if ( newCamLocation.x() - pyramidTop.x() > rightMax) {
+                newCamLocation.x() = rightMax + pyramidTop.x();
+            }
+            else if ( newCamLocation.x() - pyramidTop.x() < -rightMax ) {
+                newCamLocation.x() = - rightMax + pyramidTop.x();
+            }
+        }
+
+        m_camera.setLocation(newCamLocation);
+
+        // adjust velocity
+        camVelocity = camVelocity.times(1 - m_cameraFriction);
+
+        if (camVelocity.magnitude() < 0.1) {
+            camVelocity = Vector3D(0,0,0);
+        }
+    }
+
+    // return remaining inputs
     return remainingInputs;
 }
 
@@ -131,10 +240,20 @@ void View::setBottomRight(Pixel pixel) {
 
 void View::setBoundsMin(Vector3D point) {
     m_boundsMin = point;
+    m_boundsMin = Vector3D( 
+            point.dot(m_camera.getRightDir()),
+            point.dot(m_camera.getUpDir()),
+            0
+    );
 }
 
 void View::setBoundsMax(Vector3D point) {
     m_boundsMax = point;
+    m_boundsMax = Vector3D( 
+            point.dot(m_camera.getRightDir()),
+            point.dot(m_camera.getUpDir()),
+            0
+    );
 }
 
 

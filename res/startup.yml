@@ -10,3 +10,7 @@ Window: mainWindow
             Orientation: 1,0,0,0
             HorizontalFieldOfView: 1.308985
             VerticalFieldOfView: 1.308985
+        CameraFriction: 0.05
+        ZoomInMultiplier: 1
+        ZoomOutMultiplier: 1
+        MinimumCameraZ: 10
