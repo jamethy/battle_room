@@ -25,12 +25,13 @@ public:
     // Constructors
     Frame(ResourceDescriptor descriptor);
 
-    // getters
     seconds getEndTime() const;
+    meters getWidth() const;
+    meters getHeight() const;
 
+    // getters
     const Pixel& getTopLeft() const;
     const Pixel& getBottomRight() const;
-
     double getXScale() const;
     double getYScale() const;
 

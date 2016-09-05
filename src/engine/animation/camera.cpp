@@ -106,7 +106,7 @@ void Camera::setName(string name) {
 
 // other functions
 
-void Camera::rotateClockwise(radians theta) {
+void Camera::rotateCounterClockwise(radians theta) {
     m_orientation.rotateAboutZ(theta);
     setOrientation(m_orientation);
 }

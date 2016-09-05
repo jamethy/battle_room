@@ -23,7 +23,8 @@ public:
     // constructor
     View(ResourceDescriptor settings);
 
-    void adjustBoundsFor(Vector3D point);
+    RelPixel fromLocation(Vector3D point);
+    void clearCameraBounds();
     Inputs handleInputs(Inputs inputs);
 
     // Reference Accessors

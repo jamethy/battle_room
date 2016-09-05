@@ -44,6 +44,14 @@ seconds Frame::getEndTime() const {
     return m_endTime;
 }
 
+double Frame::getXScale() const {
+    return m_xScale;
+}
+
+double Frame::getYScale() const {
+    return m_yScale;
+}
+
 const Pixel& Frame::getTopLeft() const {
     return m_topLeft;
 }
@@ -52,12 +60,12 @@ const Pixel& Frame::getBottomRight() const {
     return m_bottomRight;
 }
 
-double Frame::getXScale() const {
-    return m_xScale;
+meters Frame::getWidth() const {
+    return m_xScale*(m_bottomRight.getCol() - m_topLeft.getCol());
 }
 
-double Frame::getYScale() const {
-    return m_yScale;
+meters Frame::getHeight() const {
+    return m_yScale*(m_bottomRight.getRow() - m_topLeft.getRow());
 }
 
 

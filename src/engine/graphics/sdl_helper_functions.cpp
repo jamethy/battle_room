@@ -202,5 +202,120 @@ SDL_Color toSdlColor(Color color) {
     return sdlcolor;
 }
 
+/**
+ * \brief Utility function to check if the rectangle on view needs to be drawn
+ */
+bool isInRelativeFrame(RelPixel topLeft, RelPixel topRight, RelPixel botRight, RelPixel botLeft) {
+
+    // if corner in frame
+    if ( topLeft.isInFrame() || topRight.isInFrame()
+        || botRight.isInFrame() || botLeft.isInFrame() ) {
+        return true;
+    }
+
+    // if frame corner in object
+    relpx abc = topRight.getCol() - topLeft.getCol();
+    relpx abr = topRight.getRow() - topLeft.getRow();
+    relpx adc = botLeft.getCol() - topLeft.getCol();
+    relpx adr = botLeft.getRow() - topLeft.getRow();
+
+    std::vector<RelPixel> corners = {
+        RelPixel(0,0),
+        RelPixel(0,1),
+        RelPixel(1,0),
+        RelPixel(1,1)
+    };
+
+    for (RelPixel& corner : corners) {
+
+        relpx amc = corner.getCol() - topLeft.getCol();
+        relpx amr = corner.getRow() - topLeft.getRow();
+
+        relpx amab = amc*abc + amr*abr;
+        relpx abab = abc*abc + abr*abr;
+        relpx amad = amc*adc + amr*adr;
+        relpx adad = adc*adc + adr*adr;
+
+        if (amab > 0 && amab < abab && amad > 0 && amad < adad) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+SdlDrawable getSdlDrawableFrom(Object& object, View& view) {
+
+    SdlDrawable drawable;
+
+    Animation& animation = object.getAnimation();
+    const Frame& frame = animation.getFrame(object.getAnimationState());
+
+    Vector3D objCenter = object.getLocation();
+    Quaternion ornt = object.getOrientation();
+    Vector3D xOffset = ornt.getRotated(Vector3D(frame.getWidth()/2.0, 0, 0));
+    Vector3D yOffset = ornt.getRotated(Vector3D(0, frame.getHeight()/2.0, 0));
+
+    RelPixel topLeftRel = view.fromLocation(objCenter.minus(xOffset).plus(yOffset));
+    RelPixel topRightRel = view.fromLocation(objCenter.plus(xOffset).plus(yOffset));
+    RelPixel botRightRel = view.fromLocation(objCenter.plus(xOffset).minus(yOffset));
+    RelPixel botLeftRel = view.fromLocation(objCenter.minus(xOffset).minus(yOffset));
+
+    if (isInRelativeFrame(topLeftRel,topRightRel,botRightRel,botLeftRel)) {
+
+        // fix to get angle until I figure out the skewing issue
+        // aka the camera must be facing straight down
+        Vector3D drawn = Vector3D(
+                botRightRel.getCol() - topLeftRel.getCol(),
+                botRightRel.getRow() - topLeftRel.getRow(),
+                0.0
+                );
+        Vector3D drawnUnit = drawn.getUnit();
+        Vector3D world = Vector3D(
+                frame.getWidth(),
+                frame.getHeight(),
+                0.0
+                ).getUnit();
+
+        double angle = std::atan2(
+                world.x()*drawnUnit.y() - world.y()*drawnUnit.x(), 
+                world.dot(drawnUnit)
+                );
+
+        // Get pixel coordinates of texture
+        RelPixel center = view.camera().fromLocation(objCenter);
+        RelPixel unrotatedDelta(
+                drawn.x()*std::sin(-angle) + drawn.y()*std::cos(-angle),
+                drawn.x()*std::cos(-angle) - drawn.y()*std::sin(-angle)
+                );
+
+        RelPixel drawTL(
+                center.getRow() - unrotatedDelta.getRow()/2.0,
+                center.getCol() - unrotatedDelta.getCol()/2.0
+                );
+
+        RelPixel drawBR(
+                center.getRow() + unrotatedDelta.getRow()/2.0,
+                center.getCol() + unrotatedDelta.getCol()/2.0
+                );
+
+        // Fill drawable
+        drawable.isInFrame = true;
+        drawable.viewLayer = view.getLayer();
+        drawable.zPosition = objCenter.z();
+        drawable.angle = angle;
+        drawable.sourceRect = rectFrom(frame.getTopLeft(), frame.getBottomRight());
+        drawable.destinationRect = rectFrom(drawTL, drawBR, 
+                view.getBottomRight().getColInt() - view.getTopLeft().getColInt(), 
+                view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt()
+                );
+        
+        drawable.imageFile = animation.getImageFile();
+    } 
+
+    return drawable;
+
+} // end getSdlDrawableFrom
+
 } // BattleRoom namespace
 

@@ -7,6 +7,17 @@
 namespace BattleRoom {
 
 /**
+ * \brief Unit of measurement used for rotation
+ */
+typedef double radians;
+
+/**
+ * Unit of measurement in the world coordinates
+ */
+typedef double meters;
+
+
+/**
  * The start of the basis for any resource read in through a file
  * This could be an animation, map, character, etc.
  */

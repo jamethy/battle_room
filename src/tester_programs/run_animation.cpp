@@ -64,15 +64,13 @@ int main(int argc, char** argv) {
 
         px pxWidth = frame.getBottomRight().getCol() - frame.getTopLeft().getCol();
         px pxHeight = frame.getBottomRight().getRow() - frame.getTopLeft().getRow();
-        meters mWidth = pxWidth*frame.getXScale();
-        meters mHeight = pxHeight*frame.getYScale();
 
-        if (mWidth > largestWidth) {
-            largestWidth = mWidth;
+        if (frame.getWidth() > largestWidth) {
+            largestWidth = frame.getWidth();
             largestPxWidth = pxWidth;
         }
-        if (mHeight > largestHeight) {
-            largestHeight = mHeight;
+        if (frame.getHeight() > largestHeight) {
+            largestHeight = frame.getHeight();
             largestPxHeight = pxHeight;
         }
     }

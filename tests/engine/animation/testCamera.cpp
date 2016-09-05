@@ -112,7 +112,7 @@ TEST(Test_fromLocation, yawed_straight_down) {
     Camera camera;
     camera.applySettings(descriptor);
 
-    camera.rotateClockwise(45*3.14156/180.0);
+    camera.rotateCounterClockwise(45*3.14156/180.0);
 
     RelPixel p = camera.fromLocation(Vector3D(0,0,0));
     EXPECT_NEAR(0.5, p.getCol(),0.01);

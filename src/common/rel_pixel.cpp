@@ -44,6 +44,10 @@ int RelPixel::getColInt(int viewWidth) const {
     return (int)std::round(m_col*viewWidth);
 }
 
+bool RelPixel::isInFrame() const {
+    return m_row >= 0 && m_row <= 1 && m_col >= 0 && m_col <= 1;
+}
+
 // getters and setters
 
 void RelPixel::setRow(relpx row) {

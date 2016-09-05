@@ -16,31 +16,11 @@ class Camera : public Resource {
 
 public:
 
-    // constructors
-
-    Camera();
-    Camera(ResourceDescriptor settings);
-
-    // getters and setters
-
-    std::string getName() const;
-    Vector3D getLocation() const;
-    Vector3D getUpDir() const;
-    Vector3D getRightDir() const;
-    Quaternion getOrientation() const;
-    radians getHorizontalFov() const;
-    radians getVerticalFov() const;
-    void setName(std::string name);
-    void setLocation(Vector3D location);
-    void setOrientation(Quaternion orientation);
-    void setHorizontalFov(radians angle);
-    void setVerticalFov(radians angle);
-
     /**
      * \brief Rotates the camera over its forward-axis
      * \param theta Angle in theta to rotate
      */
-    void rotateClockwise(radians theta);
+    void rotateCounterClockwise(radians theta);
 
     // cannot do these functions until we switch graphics engine
     //void rotateUpDown(radians theta);
@@ -71,6 +51,26 @@ public:
      * \return Position in 3D space on the z=0 plane
      */
     Vector3D zeroPlaneIntersection(RelPixel pixel) const;
+
+    // constructors
+
+    Camera();
+    Camera(ResourceDescriptor settings);
+
+    // getters and setters
+
+    std::string getName() const;
+    Vector3D getLocation() const;
+    Vector3D getUpDir() const;
+    Vector3D getRightDir() const;
+    Quaternion getOrientation() const;
+    radians getHorizontalFov() const;
+    radians getVerticalFov() const;
+    void setName(std::string name);
+    void setLocation(Vector3D location);
+    void setOrientation(Quaternion orientation);
+    void setHorizontalFov(radians angle);
+    void setVerticalFov(radians angle);
 
     // inherited
     void applySettings(ResourceDescriptor settings);

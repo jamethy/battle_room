@@ -39,6 +39,12 @@ public:
      */
     int getColInt(int viewWidth) const;
 
+    /**
+     * \brief Checks if pixel in frame (row/col betwen 0-1)
+     * \return True if is in frame
+     */
+    bool isInFrame() const;
+
     // getters and setters
     void setRow(relpx row);
     void setCol(relpx col);

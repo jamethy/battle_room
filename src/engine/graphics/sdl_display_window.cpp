@@ -1,11 +1,11 @@
 
 #include "sdl_display_window.h"
-#include "sdl_texture_manager.h"
 #include "sdl_font_manager.h"
 #include "sdl_helper_functions.h"
 
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/input_gatherer.h"
+#include "battle_room/engine/animation/animation_handler.h"
 
 #include "SDL_image.h"
 #include "SDL_ttf.h"
@@ -23,8 +23,6 @@ using std::string;
 using std::vector;
 
 namespace BattleRoom {
-
-const meters MAX_METERS = std::numeric_limits<double>::max();
 
 // apply settings
 
@@ -67,6 +65,7 @@ vector<SDL_Event> SdlDisplayWindow::m_sdlEvents;
 SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings)
 {
     m_views.clear();
+    m_sdlEvents.clear();
 
     // TODO throw exceptions instead of cerr
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -259,7 +258,14 @@ void SdlDisplayWindow::setViewObjects(vector<Object> objects, string viewName) {
 
     if (m_views.count(viewName) > 0) {
         View& view = m_views.at(viewName);
-        view.setObjects(objects);
+
+        for (Object& object : objects) {
+            SdlDrawable drawable = getSdlDrawableFrom(object,view);
+
+            if (drawable.isInFrame == true){
+                m_drawables.push_back(drawable);
+            }
+        }
     }
 }
 
@@ -272,13 +278,7 @@ void SdlDisplayWindow::setViewTexts(std::vector<DrawableText> texts, std::string
     }
 }
 
-void printv(Vector3D v) {
-    std::cout << " " << v.x() << " " << v.y() << " " << v.z() << std::endl;
-}
 
-void printp(RelPixel p) {
-    std::cout << " " << p.getRow() << " " << p.getCol() << std::endl;
-}
 
 void SdlDisplayWindow::drawScreen() {
 
@@ -290,116 +290,55 @@ void SdlDisplayWindow::drawScreen() {
     SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
     SDL_RenderClear(m_renderer);
 
-    // draw objects
+
+    std::sort(m_drawables.begin(), m_drawables.end(), 
+            [](SdlDrawable& a, SdlDrawable& b) {
+                if (a.viewLayer == b.viewLayer) {
+                    return a.zPosition < b.zPosition;
+                }
+                else {
+                    return a.viewLayer < b.viewLayer;
+                }
+            }
+    );
+
+    for (SdlDrawable& drawable : m_drawables) {
+
+        // get the texture
+        SDL_Texture* texture = m_sdlTextureManager.getTexture(drawable.imageFile);
+
+        if (texture != NULL) {
+
+            SDL_RenderCopyEx(m_renderer,
+                    texture, &drawable.sourceRect, &drawable.destinationRect, 
+                    drawable.angle*180.0/3.14159265359,
+                    NULL, SDL_FLIP_NONE);
+        }
+        else {
+
+            Animation& missing_animation = AnimationHandler::getAnimation(MISSING_ANIMATION);
+            texture = m_sdlTextureManager.getTexture(missing_animation.getImageFile());
+            SDL_RenderCopyEx(m_renderer,
+                    texture, NULL, &drawable.destinationRect, 
+                    drawable.angle*180.0/3.14159265359,
+                    NULL, SDL_FLIP_NONE);
+        }
+
+    }
+
+    // Get views by layer in desending order
     vector<string> sortedViews = getSortedViews(m_views);
     std::reverse(sortedViews.begin(), sortedViews.end());
 
+    // Draw each view
     for (string& viewName: sortedViews) {
 
         View& view = m_views.at(viewName);
-        view.setBoundsMin(Vector3D( MAX_METERS, MAX_METERS, MAX_METERS));
-        view.setBoundsMax(Vector3D(-MAX_METERS,-MAX_METERS,-MAX_METERS));
-
-        Pixel topLeft = view.getTopLeft();
-        Pixel bottomRight = view.getBottomRight();
-        px viewWidth = bottomRight.getColInt() - topLeft.getColInt();
-        px viewHeight = bottomRight.getRowInt() - topLeft.getRowInt();
-
-        const Camera& camera = view.getCamera();
-
-        for (Object& object : view.getObjects()) {
-
-            // get needed values from the inputs
-            Animation& animation = object.getAnimation();
-            const Vector3D loc = object.getLocation();
-            const Quaternion ori = object.getOrientation();
-
-            const Frame& frame = animation.getFrame(object.getAnimationState());
-            const Pixel& frameTopLeft = frame.getTopLeft();
-            const Pixel& frameBottomRight = frame.getBottomRight();
-
-            double xScale = frame.getXScale();
-            double yScale = frame.getYScale();
-
-            // calculate world dimensions and coordinates of object
-            meters objectWidth = xScale*(frameBottomRight.getCol() - frameTopLeft.getCol());
-            meters objectHeight = yScale*(frameBottomRight.getRow() - frameTopLeft.getRow());
-
-            Vector3D xOffset = ori.getRotated(Vector3D(objectWidth/2.0, 0, 0));
-            Vector3D yOffset = ori.getRotated(Vector3D(0, objectHeight/2.0, 0));
-            Vector3D topLeftPos = loc.minus(xOffset).plus(yOffset);
-            Vector3D botRightPos = loc.plus(xOffset).minus(yOffset);
-
-            view.adjustBoundsFor(topLeftPos);
-            view.adjustBoundsFor(botRightPos);
-            
-            RelPixel topLeftRel = camera.fromLocation(topLeftPos);
-            RelPixel botRightRel = camera.fromLocation(botRightPos);
-
-            // fix to get angle until I figure out the skewing issue
-            // aka the camera must be facing straight down
-            Vector3D drawn = Vector3D(
-                    botRightRel.getCol() - topLeftRel.getCol(),
-                    botRightRel.getRow() - topLeftRel.getRow(),
-                    0.0
-            );
-            Vector3D drawnUnit = drawn.getUnit();
-            Vector3D world = Vector3D(
-                    objectWidth,
-                    objectHeight,
-                    0.0
-            ).getUnit();
-
-            double angle = std::atan2(
-                    world.x()*drawnUnit.y() - world.y()*drawnUnit.x(), 
-                    world.dot(drawnUnit)
-            );
-
-            // Get pixel coordinates of texture
-            RelPixel center = camera.fromLocation(loc);
-            RelPixel unrotatedDelta(
-                drawn.x()*std::sin(-angle) + drawn.y()*std::cos(-angle),
-                drawn.x()*std::cos(-angle) - drawn.y()*std::sin(-angle)
-            );
-
-            RelPixel drawTL(
-                    center.getRow() - unrotatedDelta.getRow()/2.0,
-                    center.getCol() - unrotatedDelta.getCol()/2.0
-            );
-
-            RelPixel drawBR(
-                    center.getRow() + unrotatedDelta.getRow()/2.0,
-                    center.getCol() + unrotatedDelta.getCol()/2.0
-            );
-
-            SDL_Rect srcRect = rectFrom(frameTopLeft, frameBottomRight);
-            SDL_Rect dstRect = rectFrom(drawTL, drawBR, viewWidth, viewHeight);
+        view.clearCameraBounds();
 
 
-            // get the texture
-            SDL_Texture* texture = m_sdlTextureManager.getTexture(animation.getImageFile());
 
-            // Render the texture
-            SDL_RenderCopyEx(m_renderer,
-                    texture, &srcRect, &dstRect, angle*180.0/3.14159265359,
-                    NULL, SDL_FLIP_NONE);
 
-            // for multithreading
-            // Move this entire function into addObjects
-            // Have a result class that contains the following
-            // View
-            // Object
-            // ImageFile
-            // srcRect
-            // dstRect
-            // angle
-            // Then sort these on menu/ui/game then view layer
-            // Then draw screen draws all of this vector
-
-            // This way, addObjects can do the heavy lifting on another thread
-            // (SDL must render on the main thread)
-
-        }
 
 
         for (DrawableText& text : view.getTexts()) {
@@ -429,8 +368,8 @@ void SdlDisplayWindow::drawScreen() {
                     SDL_Rect dstRect = rectFrom(
                             text.getTopLeft(), 
                             text.getBottomRight(),
-                            viewWidth,
-                            viewHeight
+                            view.getBottomRight().getColInt() - view.getTopLeft().getColInt(), 
+                            view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt()
                     );
 
                     SDL_RenderCopy(m_renderer, texture, NULL, &dstRect);

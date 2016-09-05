@@ -3,6 +3,7 @@
 
 #include "battle_room/engine/graphics/display_window.h"
 #include "sdl_texture_manager.h"
+#include "sdl_drawable.h"
 
 namespace BattleRoom {
 
@@ -38,6 +39,7 @@ private:
     SDL_Window* m_window; ///< SDL Window Pointer
 
     std::unordered_map<std::string,View> m_views; ///< Container for views
+    std::vector<SdlDrawable> m_drawables; ///< Container for drawables
 
     static std::vector<SDL_Event> m_sdlEvents;
     static int m_windowCount; ///< If this gets to zero, it quits SDL

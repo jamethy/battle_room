@@ -1,10 +1,14 @@
 #ifndef SDL_HELPER_FUNCTIONS_H
 #define SDL_HELPER_FUNCTIONS_H
 
+#include "sdl_drawable.h"
+
 #include "battle_room/common/input.h"
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/rel_pixel.h"
 #include "battle_room/common/color.h"
+#include "battle_room/common/object.h"
+#include "battle_room/engine/animation/view.h"
 
 #include "SDL_image.h"
 #include "SDL_ttf.h"
@@ -34,6 +38,8 @@ InputKey::Key sdlKeyToInputKey(SDL_Keycode code);
 InputKey::Key sdlMouseButtonToInputKey(unsigned key, unsigned clicks);
 
 SDL_Color toSdlColor(Color color);
+
+SdlDrawable getSdlDrawableFrom(Object& object, View& view);
 
 } // BattleRoom namespace
 #endif // SDL_HELPER_FUNCTIONS_H

@@ -6,16 +6,6 @@
 namespace BattleRoom {
 
 /**
- * \brief Unit of measurement used for rotation
- */
-typedef double radians;
-
-/**
- * Unit of measurement in the world coordinates
- */
-typedef double meters;
-
-/**
  * \brief Basic 3D vector class with x, y, and z in meters
  */
 class Vector3D : public Resource {

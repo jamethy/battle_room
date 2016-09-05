@@ -3,6 +3,8 @@
 
 namespace BattleRoom {
 
+const meters MAX_METERS = std::numeric_limits<double>::max();
+
 void View::applySettings(ResourceDescriptor settings) {
 
     if (isNotEmpty(settings.getValue())) {
@@ -80,11 +82,7 @@ Vector3D getMinEnds(Vector3D a, Vector3D b) {
     return c;
 }
 
-void print(Vector3D p) {
-    std::cout << p.x() << " " << p.y() << " " << p.z() << std::endl;
-}
-
-void View::adjustBoundsFor(Vector3D point) {
+RelPixel View::fromLocation(Vector3D point) {
 
     m_boundsMin = getMinEnds(m_boundsMin, point);
     m_boundsMax = getMaxEnds(m_boundsMax, point);
@@ -97,34 +95,62 @@ void View::adjustBoundsFor(Vector3D point) {
 
     m_cameraMin = getMinEnds(m_cameraMin, cameraCoord);
     m_cameraMax = getMaxEnds(m_cameraMax, cameraCoord);
+
+    return m_camera.fromLocation(point);
+}
+
+void View::clearCameraBounds() {
+    m_boundsMin = Vector3D( MAX_METERS, MAX_METERS, MAX_METERS);
+    m_boundsMax = Vector3D(-MAX_METERS,-MAX_METERS,-MAX_METERS);
+    m_cameraMin = Vector3D( MAX_METERS, MAX_METERS, MAX_METERS);
+    m_cameraMax = Vector3D(-MAX_METERS,-MAX_METERS,-MAX_METERS);
 }
 
 Inputs View::handleInputs(Inputs inputs) {
 
     Inputs remainingInputs;
 
-    Vector3D cameraDelta(0,0,0);
+    // adjust camera position
+    static Vector3D camVelocity(0,0,0);
+
+    static bool wdown = false, adown = false, sdown = false, ddown = false;
     for (Input input : inputs) {
 
         if (input.containsView(getName())) {
 
+            switch(input.getKey()) {
+                case InputKey::W:
+                    wdown = input.getMotion() == InputKey::PressedDown;
+                    break;
+                case InputKey::A:
+                    adown = input.getMotion() == InputKey::PressedDown;
+                    break;
+                case InputKey::S:
+                    sdown = input.getMotion() == InputKey::PressedDown;
+                    break;
+                case InputKey::D:
+                    ddown = input.getMotion() == InputKey::PressedDown;
+                    break;
+            }
+
             if (input.getMotion() == InputKey::Scroll) {
+
 
                 if (input.getScrollAmount() < 0) {
                     // MOVE CAMERA UP
-                    cameraDelta = cameraDelta.minus( 
+                    camVelocity = camVelocity.minus( 
                             Vector3D(0,0,m_zoomInMultiplier*input.getScrollAmount())
-                    );
+                            );
 
                     continue;
                 }
                 else {
                     // MOVE CAMERA TOWRAD POS
                     Vector3D zeroIntersection = input.getViewIntersection(getName());
-                    cameraDelta = cameraDelta.plus(
+                    camVelocity = camVelocity.plus(
                             zeroIntersection.minus(m_camera.getLocation()).getUnit()
                             .times(m_zoomOutMultiplier*input.getScrollAmount())
-                    );
+                            );
                     continue;
                 }
             } 
@@ -133,9 +159,18 @@ Inputs View::handleInputs(Inputs inputs) {
         remainingInputs.addInput(input);
     }
 
-    // adjust camera position
-    static Vector3D camVelocity(0,0,0);
-    camVelocity = camVelocity.plus(cameraDelta);
+    if (wdown) {
+        camVelocity = camVelocity.plus(m_camera.getUpDir().times(0.1));
+    }
+    if (adown) {
+        camVelocity = camVelocity.minus(m_camera.getRightDir().times(0.1));
+    }
+    if (sdown) {
+        camVelocity = camVelocity.minus(m_camera.getUpDir().times(0.1));
+    }
+    if (ddown) {
+        camVelocity = camVelocity.plus(m_camera.getRightDir().times(0.1));
+    }
 
     if (camVelocity.magnitude() > 0) {
         Vector3D newCamLocation = m_camera.getLocation().plus(camVelocity);
