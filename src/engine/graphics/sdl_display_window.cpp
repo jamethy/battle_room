@@ -12,7 +12,6 @@
 #include "SDL.h"
 
 #include <cmath>
-#include <limits>
 #include <string>
 #include <unordered_map>
 #include <exception>
@@ -254,12 +253,14 @@ Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
     return inputs;
 }
 
-void SdlDisplayWindow::setViewObjects(vector<Object> objects, string viewName) {
+void SdlDisplayWindow::addViewObjects(vector<Object> objects, string viewName) {
 
     if (m_views.count(viewName) > 0) {
         View& view = m_views.at(viewName);
+        view.clearCameraBounds();
 
         for (Object& object : objects) {
+
             SdlDrawable drawable = getSdlDrawableFrom(object,view);
 
             if (drawable.isInFrame == true){
@@ -290,41 +291,41 @@ void SdlDisplayWindow::drawScreen() {
     SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
     SDL_RenderClear(m_renderer);
 
-
+    // Sort the drawables on the screen by view layer and position
+    // This will ensure the right things are drawn ontop of the right tings
     std::sort(m_drawables.begin(), m_drawables.end(), 
             [](SdlDrawable& a, SdlDrawable& b) {
-                if (a.viewLayer == b.viewLayer) {
-                    return a.zPosition < b.zPosition;
-                }
-                else {
-                    return a.viewLayer < b.viewLayer;
-                }
+                if (a.viewLayer == b.viewLayer) { return a.zPosition < b.zPosition; }
+                else { return a.viewLayer < b.viewLayer; }
             }
     );
+    
 
+    // For every drawable that has been collected, get the texture and draw it on the screen
+    // If a texture is missing, use the missing animation texture
     for (SdlDrawable& drawable : m_drawables) {
 
         // get the texture
         SDL_Texture* texture = m_sdlTextureManager.getTexture(drawable.imageFile);
+        SDL_Rect* sourceRect = &drawable.sourceRect;
 
-        if (texture != NULL) {
-
-            SDL_RenderCopyEx(m_renderer,
-                    texture, &drawable.sourceRect, &drawable.destinationRect, 
-                    drawable.angle*180.0/3.14159265359,
-                    NULL, SDL_FLIP_NONE);
-        }
-        else {
-
+        if (texture == NULL) {
+            // get missing animation texture
             Animation& missing_animation = AnimationHandler::getAnimation(MISSING_ANIMATION);
             texture = m_sdlTextureManager.getTexture(missing_animation.getImageFile());
-            SDL_RenderCopyEx(m_renderer,
-                    texture, NULL, &drawable.destinationRect, 
-                    drawable.angle*180.0/3.14159265359,
-                    NULL, SDL_FLIP_NONE);
+            sourceRect = NULL;
         }
 
+
+        // Draw the image on the screen
+        SDL_RenderCopyEx(m_renderer,
+                texture, sourceRect, &drawable.destinationRect, 
+                drawable.angle*180.0/3.14159265359,
+                NULL, SDL_FLIP_NONE);
     }
+    
+    
+    // Draw all the text on the screen
 
     // Get views by layer in desending order
     vector<string> sortedViews = getSortedViews(m_views);
@@ -334,12 +335,6 @@ void SdlDisplayWindow::drawScreen() {
     for (string& viewName: sortedViews) {
 
         View& view = m_views.at(viewName);
-        view.clearCameraBounds();
-
-
-
-
-
 
         for (DrawableText& text : view.getTexts()) {
 
@@ -380,7 +375,12 @@ void SdlDisplayWindow::drawScreen() {
         } // Draw texts
     }
 
+
+    // Present the renderer
     SDL_RenderPresent(m_renderer);
+
+    // Clear all the drawables that have been drawn to prepare for next frame
+    m_drawables.clear();
 
 
     // Gather inputs

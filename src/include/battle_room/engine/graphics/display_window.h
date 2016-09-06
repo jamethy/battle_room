@@ -38,7 +38,7 @@ public:
      * \param objects Objects that will be drawn on the view
      * \param viewName Key to find view to draw on
      */
-    virtual void setViewObjects(std::vector<Object> objects, std::string viewName) = 0;
+    virtual void addViewObjects(std::vector<Object> objects, std::string viewName) = 0;
 
     /*!
      * \brief Sets the drawable text to the view to be rendered

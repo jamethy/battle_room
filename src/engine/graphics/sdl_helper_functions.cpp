@@ -1,4 +1,5 @@
 #include "sdl_helper_functions.h"
+#include <iostream>
 
 namespace BattleRoom {
 
@@ -203,44 +204,113 @@ SDL_Color toSdlColor(Color color) {
 }
 
 /**
- * \brief Utility function to check if the rectangle on view needs to be drawn
+ * \brief Utility function that uses a version of the separate axis theroem simplified for the
+ * situation to check if the polygon input overlaps with the view (0-1,0-1)
  */
 bool isInRelativeFrame(RelPixel topLeft, RelPixel topRight, RelPixel botRight, RelPixel botLeft) {
 
-    // if corner in frame
-    if ( topLeft.isInFrame() || topRight.isInFrame()
-        || botRight.isInFrame() || botLeft.isInFrame() ) {
+    // Calculate the normals of the input polygon - no need to normalize
+    RelPixel normalA(topLeft.getRow() - topRight.getRow(), topLeft.getCol() - topRight.getCol());
+    RelPixel normalB(botRight.getRow() - topRight.getRow(), botRight.getCol() - topRight.getCol());
+
+
+    // Because the SAT does not check for one polygon completely within the other, do a quick check 
+    // If the polygon is completely in the view, the top left pixel is too
+    if (topLeft.getCol() >= 0 && topLeft.getCol() <= 1 && topLeft.getRow() >= 0 && topLeft.getRow() <= 1) {
         return true;
     }
 
-    // if frame corner in object
-    relpx abc = topRight.getCol() - topLeft.getCol();
-    relpx abr = topRight.getRow() - topLeft.getRow();
-    relpx adc = botLeft.getCol() - topLeft.getCol();
-    relpx adr = botLeft.getRow() - topLeft.getRow();
-
-    std::vector<RelPixel> corners = {
-        RelPixel(0,0),
-        RelPixel(0,1),
-        RelPixel(1,0),
-        RelPixel(1,1)
-    };
-
-    for (RelPixel& corner : corners) {
-
-        relpx amc = corner.getCol() - topLeft.getCol();
-        relpx amr = corner.getRow() - topLeft.getRow();
-
-        relpx amab = amc*abc + amr*abr;
-        relpx abab = abc*abc + abr*abr;
-        relpx amad = amc*adc + amr*adr;
-        relpx adad = adc*adc + adr*adr;
-
-        if (amab > 0 && amab < abab && amad > 0 && amad < adad) {
-            return true;
-        }
+    // if the view is completely in the polygon, (0,0) is inside too // (0<AM⋅AB<AB⋅AB)∧(0<AM⋅AD<AD⋅AD
+    // AM = vector between (0,0) and topRight, AB = normalB, and AD = normalA
+    relpx AMdotAB = -topRight.getRow()*normalB.getRow() - topRight.getCol()*normalB.getCol();
+    relpx ABdotAB = normalB.getRow()*normalB.getRow() + normalB.getCol()*normalB.getCol();
+    relpx AMdotAD = -topRight.getRow()*normalA.getRow() - topRight.getCol()*normalA.getCol();
+    relpx ADdotAD = normalA.getRow()*normalA.getRow() + normalA.getCol()*normalA.getCol();
+    if ( 0 <= AMdotAB && AMdotAB <= ABdotAB && 0 <= AMdotAD && AMdotAD <= ADdotAD ) {
+        return true;
     }
-    return false;
+
+
+    // Simplified checking normals of view ((0,1) and (1,0))
+
+    relpx maxCol = -1, minCol = 2, maxRow = -1, minRow = 1;
+    for ( const RelPixel& p : {topLeft, topRight, botRight, botLeft} ) {
+        minRow = std::min(minRow,p.getRow());
+        maxRow = std::max(maxRow,p.getRow());
+        minCol = std::min(minCol,p.getCol());
+        maxCol = std::max(maxCol,p.getCol());
+    }
+
+    if (0 > maxCol || minCol > 1) {
+        return false;
+    }
+    if (0 > maxRow || minRow > 1) {
+        return false;
+    }
+
+    // Simplified checking normals of polygon (normalA and normalB)
+
+    relpx maxViewA = -99999, minViewA = 99999, maxViewB = -999999, minViewB = 99999;
+    for (const RelPixel& p : {RelPixel(0,0), RelPixel(0,1), RelPixel(1,0), RelPixel(1,1)} ) {
+        relpx pA = p.getRow()*normalA.getRow() + p.getCol()*normalA.getCol();
+        relpx pB = p.getRow()*normalB.getRow() + p.getCol()*normalB.getCol();
+        
+        minViewA = std::min(minViewA,pA);
+        maxViewA = std::max(maxViewA,pA);
+        minViewB = std::min(minViewB,pB);
+        maxViewB = std::max(maxViewB,pB);
+    }
+
+    relpx maxPolyA = -99999, minPolyA = 99999, maxPolyB = -999999, minPolyB = 99999;
+    for (const RelPixel& p : {topLeft, topRight, botRight, botLeft} ) {
+        relpx pA = p.getRow()*normalA.getRow() + p.getCol()*normalA.getCol();
+        relpx pB = p.getRow()*normalB.getRow() + p.getCol()*normalB.getCol();
+
+        minPolyA = std::min(minPolyA,pA);
+        maxPolyA = std::max(maxPolyA,pA);
+        minPolyB = std::min(minPolyB,pB);
+        maxPolyB = std::max(maxPolyB,pB);
+    }
+
+    if (minViewA > maxPolyA || minPolyA > maxPolyA) {
+        return false;
+    }
+
+    if (minViewB > maxPolyB || minPolyB > maxPolyB) {
+        return false;
+    }
+
+    maxViewA = -99999, minViewA = 99999, maxViewB = -999999, minViewB = 99999;
+    for (const RelPixel& p : {RelPixel(0,0), RelPixel(0,1), RelPixel(1,0), RelPixel(1,1)} ) {
+        relpx pA = -p.getRow()*normalA.getRow() - p.getCol()*normalA.getCol();
+        relpx pB = -p.getRow()*normalB.getRow() - p.getCol()*normalB.getCol();
+        
+        minViewA = std::min(minViewA,pA);
+        maxViewA = std::max(maxViewA,pA);
+        minViewB = std::min(minViewB,pB);
+        maxViewB = std::max(maxViewB,pB);
+    }
+
+    maxPolyA = -99999, minPolyA = 99999, maxPolyB = -999999, minPolyB = 99999;
+    for (const RelPixel& p : {topLeft, topRight, botRight, botLeft} ) {
+        relpx pA = -p.getRow()*normalA.getRow() - p.getCol()*normalA.getCol();
+        relpx pB = -p.getRow()*normalB.getRow() - p.getCol()*normalB.getCol();
+
+        minPolyA = std::min(minPolyA,pA);
+        maxPolyA = std::max(maxPolyA,pA);
+        minPolyB = std::min(minPolyB,pB);
+        maxPolyB = std::max(maxPolyB,pB);
+    }
+
+    if (minViewA > maxPolyA || minPolyA > maxPolyA) {
+        return false;
+    }
+
+    if (minViewB > maxPolyB || minPolyB > maxPolyB) {
+        return false;
+    }
+
+    return true;
 }
 
 

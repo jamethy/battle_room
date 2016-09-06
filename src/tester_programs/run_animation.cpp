@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
         object.setOrientation(ori);
         //object.position().orientation().rotateAboutZ(60.0*3.14156/180.0);
         objects.push_back(object);
-        window->setViewObjects(objects,"mainView");
+        window->addViewObjects(objects,"mainView");
 
         
         // FPS Display

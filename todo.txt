@@ -3,16 +3,15 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    test object receiving
-    Figure out multithreading
-    get objects and texts out of views
-    Drawing order
-        sort by layer
-        sort by z value
+    Clean up camera movement code
+    Create server world
+        Add time
+    Implement multithreading
+    get texts out of views
     Create an exception scheme
     Create intersection handler
         intersection base class
-        intersectinos class implementations
+        intersections class implementations
     Find a better way to construct settings 
 
 Maybe for fun

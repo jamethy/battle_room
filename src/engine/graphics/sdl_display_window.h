@@ -26,7 +26,7 @@ public:
     // inherited
     void applySettings(ResourceDescriptor settings) override;
     void gatherInputs() override;
-    void setViewObjects(std::vector<Object> objects, std::string viewName) override;
+    void addViewObjects(std::vector<Object> objects, std::string viewName) override;
     void setViewTexts(std::vector<DrawableText> texts, std::string viewName) override;
     void drawScreen() override;
     void addView(View view) override;

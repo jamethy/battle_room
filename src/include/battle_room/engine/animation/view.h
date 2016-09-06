@@ -28,7 +28,6 @@ public:
     Inputs handleInputs(Inputs inputs);
 
     // Reference Accessors
-    std::vector<Object> getObjects() const;
     std::vector<DrawableText> getTexts() const;
     Camera& camera();
 
@@ -55,7 +54,6 @@ public:
     /**
      * \brief Currently just sets the object vector
      */
-    void setObjects(std::vector<Object> objects);
     void setDrawableText(std::vector<DrawableText> texts);
 
     // inherited
@@ -67,7 +65,6 @@ public:
         m_topLeft = other.m_topLeft;
         m_bottomRight = other.m_bottomRight;
         m_camera = other.m_camera;
-        m_objects = other.m_objects;
         return *this;
     }
 
@@ -89,7 +86,6 @@ private:
     Vector3D m_cameraMin; ///< Minimum point in view in camera coordinates
     Vector3D m_cameraMax; ///< Maximum point in view in camera coordinates
 
-    std::vector<Object> m_objects; ///< Objects to draw on view
     std::vector<DrawableText> m_texts; ///< Text to draw on the view
 
 }; // View class

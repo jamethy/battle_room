@@ -1,5 +1,6 @@
 #include "battle_room/engine/animation/view.h"
-#include <iostream>
+#include <cmath>
+#include <limits>
 
 namespace BattleRoom {
 
@@ -242,10 +243,6 @@ Inputs View::handleInputs(Inputs inputs) {
 
 // Reference Accessors
 
-std::vector<Object> View::getObjects() const {
-    return m_objects;
-}
-
 std::vector<DrawableText> View::getTexts() const {
     return m_texts;
 }
@@ -321,10 +318,6 @@ Vector3D View::getBoundsMax() const {
 }
 
 // other functions
-
-void View::setObjects(std::vector<Object> objects) {
-    m_objects = objects;
-}
 
 void View::setDrawableText(std::vector<DrawableText> texts) {
     m_texts = texts;

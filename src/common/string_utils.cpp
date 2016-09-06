@@ -27,9 +27,8 @@ vector<string> split(const string& str, char delim) {
 
 string toLower(string str) {
 
-    string returnStr;
-    std::transform(str.begin(), str.end(), returnStr.begin(), ::tolower);
-    return returnStr;
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+    return str;
 }
 
 bool keyMatch(string a, string b) {

@@ -150,7 +150,7 @@ int main() {
 
             for (UniqueDisplayWindow& window : windows) {
 
-                window->setViewObjects(
+                window->addViewObjects(
                         interface->getObjects(), 
                         interface->getAssociatedView()
                         );
