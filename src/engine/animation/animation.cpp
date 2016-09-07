@@ -13,25 +13,30 @@ namespace BattleRoom {
 void Animation::applySettings(ResourceDescriptor settings) {
 
     ResourceDescriptor sub = settings.getSubResource("ImageFile");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_imageFile = sub.getValue();
     } 
 
     sub = settings.getSubResource("NextAnimation");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_nextAnimation = sub.getValue();
     } 
 
     vector<ResourceDescriptor> subs = settings.getSubResources("Frame");
-    for (ResourceDescriptor& rd : subs) {
-        m_frames.push_back(Frame(rd));
-    }
+    if (subs.size() > 0) {
 
-    std::sort(m_frames.begin(), m_frames.end(), 
-            [](const Frame& a, const Frame& b) {
-                return b.getEndTime() > a.getEndTime();
-            }
-    );
+        m_frames.clear();
+
+        for (ResourceDescriptor& rd : subs) {
+            m_frames.push_back(Frame(rd));
+        }
+
+        std::sort(m_frames.begin(), m_frames.end(), 
+                [](const Frame& a, const Frame& b) {
+                    return b.getEndTime() > a.getEndTime();
+                }
+        );
+    }
 }
 
 // constructor

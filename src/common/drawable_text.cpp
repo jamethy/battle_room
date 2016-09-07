@@ -6,6 +6,10 @@ namespace BattleRoom {
 
 void DrawableText::applySettings(ResourceDescriptor settings) {
 
+    m_color.applySettings( settings.getSubResource("Color"));
+    m_location.applySettings( settings.getSubResource("Location") );
+    m_orientation.applySettings( settings.getSubResource("Orientation") );
+
     ResourceDescriptor sub = settings.getSubResource("Text");
     if (isNotEmpty(sub.getKey())) {
         setText(sub.getValue());
@@ -14,21 +18,6 @@ void DrawableText::applySettings(ResourceDescriptor settings) {
     sub = settings.getSubResource("Font");
     if (isNotEmpty(sub.getValue())) {
         setFont(sub.getValue());
-    }
-
-    sub = settings.getSubResource("Color");
-    if (isNotEmpty(sub.getKey())) {
-        m_color.applySettings(sub);
-    }
-
-    sub = settings.getSubResource("Location");
-    if (isNotEmpty(sub.getKey())) {
-        m_location.applySettings(sub);
-    }
-
-    sub = settings.getSubResource("Orientation");
-    if (isNotEmpty(sub.getKey())) {
-        m_orientation.applySettings(sub);
     }
 
     sub = settings.getSubResource("Width");

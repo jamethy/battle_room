@@ -12,24 +12,14 @@ void View::applySettings(ResourceDescriptor settings) {
         setName(settings.getValue());
     }
 
-    ResourceDescriptor sub = settings.getSubResource("TopLeft");
-    if (isNotEmpty(sub.getKey())) {
-        m_topLeft.applySettings(sub);
-    }
+    m_topLeft.applySettings( settings.getSubResource("TopLeft") );
+    m_bottomRight.applySettings( settings.getSubResource("BottomRight") );
+    m_camera.applySettings( settings.getSubResource("Camera") );
 
-    sub = settings.getSubResource("BottomRight");
-    if (isNotEmpty(sub.getKey())) {
-        m_bottomRight.applySettings(sub);
-    }
 
-    sub = settings.getSubResource("Layer");
+    ResourceDescriptor sub = settings.getSubResource("Layer");
     if (isNotEmpty(sub.getValue())) {
         setLayer(std::stoi(sub.getValue()));
-    }
-
-    sub = settings.getSubResource("Camera");
-    if (isNotEmpty(sub.getValue())) {
-        m_camera.applySettings(sub);
     }
 
     sub = settings.getSubResource("CameraFriction");

@@ -17,24 +17,23 @@ void Quaternion::applySettings(ResourceDescriptor settings) {
         m_k = toMeters(values[3]);
     }
 
-
     ResourceDescriptor sub = settings.getSubResource("W");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_w = stod(sub.getValue());
     } 
 
     sub = settings.getSubResource("I");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_i = stod(sub.getValue());
     } 
 
     sub = settings.getSubResource("J");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_j = stod(sub.getValue());
     } 
 
     sub = settings.getSubResource("K");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_k = stod(sub.getValue());
     } 
 }

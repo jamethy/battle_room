@@ -17,22 +17,22 @@ void Color::applySettings(ResourceDescriptor settings) {
     }
 
     ResourceDescriptor sub = settings.getSubResource("Red");
-    if (isNotEmpty(sub.getKey())) {
+    if (isNotEmpty(sub.getValue())) {
         setRed(std::stoi(sub.getValue()));
     }
 
     sub = settings.getSubResource("Green");
-    if (isNotEmpty(sub.getKey())) {
+    if (isNotEmpty(sub.getValue())) {
         setGreen(std::stoi(sub.getValue()));
     }
 
     sub = settings.getSubResource("Blue");
-    if (isNotEmpty(sub.getKey())) {
+    if (isNotEmpty(sub.getValue())) {
         setBlue(std::stoi(sub.getValue()));
     }
 
     sub = settings.getSubResource("Alpha");
-    if (isNotEmpty(sub.getKey())) {
+    if (isNotEmpty(sub.getValue())) {
         setAlpha(std::stoi(sub.getValue()));
     }
 

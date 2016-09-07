@@ -15,24 +15,17 @@ void Camera::applySettings(ResourceDescriptor settings) {
         setName(settings.getValue());
     }
 
+    m_location.applySettings( settings.getSubResource("Location") );
+    m_orientation.applySettings( settings.getSubResource("Orientation") );
+
     ResourceDescriptor sub = settings.getSubResource("HorizontalFieldOfView");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         setHorizontalFov( toRadians(sub.getValue()) );
     } 
 
     sub = settings.getSubResource("VerticalFieldOfView");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         setVerticalFov( toRadians(sub.getValue()) );
-    } 
-
-    sub = settings.getSubResource("Location");
-    if (!sub.getKey().empty()) {
-        m_location.applySettings(sub);
-    } 
-
-    sub = settings.getSubResource("Orientation");
-    if (!sub.getKey().empty()) {
-        m_orientation.applySettings(sub);
     } 
 }
 

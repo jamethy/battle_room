@@ -3,7 +3,6 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    shorten applySettings to allow for empty subs
     set a organizational standard
         getters/setters/inherited/constructors/etc
     Clean up camera movement code

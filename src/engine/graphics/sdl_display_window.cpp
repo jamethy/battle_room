@@ -27,9 +27,8 @@ namespace BattleRoom {
 
 void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
 
-    string newName = settings.getValue();
-    if (!newName.empty()) {
-        SDL_SetWindowTitle(m_window, newName.c_str());
+    if (isNotEmpty(settings.getValue())) {
+        SDL_SetWindowTitle(m_window, settings.getValue().c_str());
     }
 
     // TODO figure out what a SDL_DisplayMode is
@@ -38,12 +37,12 @@ void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
     if (width > 0 && height > 0) {
 
         ResourceDescriptor sub = settings.getSubResource("Width");
-        if (!sub.getKey().empty()) {
+        if (isNotEmpty(sub.getValue())) {
             width = stoi(sub.getValue());
         }
 
         sub = settings.getSubResource("Height");
-        if (!sub.getKey().empty()) {
+        if (isNotEmpty(sub.getValue())) {
             height = stoi(sub.getValue());
         }
 

@@ -7,24 +7,17 @@ namespace BattleRoom {
 
 void Object::applySettings(ResourceDescriptor settings) {
 
+    m_location.applySettings( settings.getSubResource("Location") );
+    m_orientation.applySettings( settings.getSubResource("Orientation") );
+
     ResourceDescriptor sub = settings.getSubResource("Animation");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         setAnimation(AnimationHandler::getAnimation(sub.getValue()));
     }
 
     sub = settings.getSubResource("AnimationState");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         setAnimationState(toSeconds(sub.getValue()));
-    }
-
-    sub = settings.getSubResource("Location");
-    if (!sub.getKey().empty()) {
-        m_location.applySettings(sub);
-    }
-
-    sub = settings.getSubResource("Orientation");
-    if (!sub.getKey().empty()) {
-        m_orientation.applySettings(sub);
     }
 }
 

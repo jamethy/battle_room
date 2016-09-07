@@ -6,28 +6,21 @@ namespace BattleRoom {
 
 void Frame::applySettings(ResourceDescriptor settings) {
 
+    m_topLeft.applySettings( settings.getSubResource("TopLeft") );
+    m_bottomRight.applySettings( settings.getSubResource("BottomRight") );
+
     ResourceDescriptor sub = settings.getSubResource("EndTime");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_endTime = toSeconds(sub.getValue());
     }
 
-    sub = settings.getSubResource("TopLeft");
-    if (!sub.getKey().empty()) {
-        m_topLeft.applySettings(sub);
-    }
-
-    sub = settings.getSubResource("BottomRight");
-    if (!sub.getKey().empty()) {
-        m_bottomRight.applySettings(sub);
-    }
-
     sub = settings.getSubResource("XScale");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_xScale = toPx(sub.getValue());
     }
 
     sub = settings.getSubResource("YScale");
-    if (!sub.getKey().empty()) {
+    if (isNotEmpty(sub.getValue())) {
         m_yScale = toPx(sub.getValue());
     }
 }
