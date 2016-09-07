@@ -155,7 +155,7 @@ int main() {
                         interface->getAssociatedView()
                         );
 
-                window->setViewTexts(
+                window->addViewTexts(
                         interface->getDrawableTexts(), 
                         interface->getAssociatedView()
                         );

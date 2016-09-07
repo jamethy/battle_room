@@ -3,11 +3,13 @@ Running ToDo List
 -----------------------------------
 
 For full program
+    shorten applySettings to allow for empty subs
+    set a organizational standard
+        getters/setters/inherited/constructors/etc
     Clean up camera movement code
     Create server world
         Add time
     Implement multithreading
-    get texts out of views
     Create an exception scheme
     Create intersection handler
         intersection base class
@@ -22,3 +24,4 @@ Persistent to do
     Look for // TODO in the code
     document everything
     test cross platform
+    Remove unecessary headers

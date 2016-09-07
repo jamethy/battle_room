@@ -112,7 +112,7 @@ Inputs View::handleInputs(Inputs inputs) {
     Inputs remainingInputs;
 
     // adjust camera position
-    static Vector3D camVelocity(0,0,0);
+    static Vector3D camVelocity(0,0,40);
 
     static bool wdown = false, adown = false, sdown = false, ddown = false;
     for (Input input : inputs) {
@@ -241,16 +241,6 @@ Inputs View::handleInputs(Inputs inputs) {
     return remainingInputs;
 }
 
-// Reference Accessors
-
-std::vector<DrawableText> View::getTexts() const {
-    return m_texts;
-}
-
-Camera& View::camera() {
-    return m_camera;
-}
-
 
 // getters and setters
 
@@ -315,12 +305,6 @@ Vector3D View::getBoundsMin() const {
 
 Vector3D View::getBoundsMax() const {
     return m_boundsMax;
-}
-
-// other functions
-
-void View::setDrawableText(std::vector<DrawableText> texts) {
-    m_texts = texts;
 }
 
 void View::setCamera(Camera camera) {

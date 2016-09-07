@@ -27,7 +27,7 @@ public:
     void applySettings(ResourceDescriptor settings) override;
     void gatherInputs() override;
     void addViewObjects(std::vector<Object> objects, std::string viewName) override;
-    void setViewTexts(std::vector<DrawableText> texts, std::string viewName) override;
+    void addViewTexts(std::vector<DrawableText> texts, std::string viewName) override;
     void drawScreen() override;
     void addView(View view) override;
     Inputs handleInputs(Inputs inputs) override; 
@@ -39,7 +39,7 @@ private:
     SDL_Window* m_window; ///< SDL Window Pointer
 
     std::unordered_map<std::string,View> m_views; ///< Container for views
-    std::vector<SdlDrawable> m_drawables; ///< Container for drawables
+    std::vector<UniqueDrawable> m_drawables; ///< Container for drawables
 
     static std::vector<SDL_Event> m_sdlEvents;
     static int m_windowCount; ///< If this gets to zero, it quits SDL

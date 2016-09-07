@@ -12,12 +12,7 @@ void DrawableText::applySettings(ResourceDescriptor settings) {
     }
 
     sub = settings.getSubResource("Font");
-    if (isNotEmpty(sub.getKey())) {
-        setFont(sub.getValue());
-    }
-
-    sub = settings.getSubResource("FontSize");
-    if (isNotEmpty(sub.getKey())) {
+    if (isNotEmpty(sub.getValue())) {
         setFont(sub.getValue());
     }
 
@@ -26,14 +21,24 @@ void DrawableText::applySettings(ResourceDescriptor settings) {
         m_color.applySettings(sub);
     }
 
-    sub = settings.getSubResource("TopLeft");
+    sub = settings.getSubResource("Location");
     if (isNotEmpty(sub.getKey())) {
-        m_topLeft.applySettings(sub);
+        m_location.applySettings(sub);
     }
 
-    sub = settings.getSubResource("BottomRight");
+    sub = settings.getSubResource("Orientation");
     if (isNotEmpty(sub.getKey())) {
-        m_bottomRight.applySettings(sub);
+        m_orientation.applySettings(sub);
+    }
+
+    sub = settings.getSubResource("Width");
+    if (isNotEmpty(sub.getValue())) {
+        m_width = toMeters(sub.getValue());
+    }
+
+    sub = settings.getSubResource("Height");
+    if (isNotEmpty(sub.getValue())) {
+        m_height = toMeters(sub.getValue());
     }
 
 }
@@ -48,21 +53,26 @@ void DrawableText::setFont(std::string font) {
     m_font = font;
 }
 
-void DrawableText::setFontSize(int fontSize) {
-    m_fontSize = fontSize;
-}
-
 void DrawableText::setColor(Color color) {
     m_color = color;
 }
 
-void DrawableText::setTopLeft(RelPixel topLeft) {
-    m_topLeft = topLeft;
+void DrawableText::setLocation(Vector3D location) {
+    m_location = location;
 }
 
-void DrawableText::setBottomRight(RelPixel bottomRight) {
-    m_bottomRight = bottomRight;
+void DrawableText::setOrientation(Quaternion orientation) {
+    m_orientation = orientation;
 }
+
+void DrawableText::setWidth(meters width) {
+    m_width = width;
+}
+
+void DrawableText::setHeight(meters height) {
+    m_height = height;
+}
+
 
 std::string DrawableText::getText() const {
     return m_text;
@@ -72,20 +82,24 @@ std::string DrawableText::getFont() const {
     return m_font;
 }
 
-int DrawableText::getFontSize() const {
-    return m_fontSize;
-}
-
 Color DrawableText::getColor() const {
     return m_color;
 }
 
-RelPixel DrawableText::getTopLeft() const {
-    return m_topLeft;
+Vector3D DrawableText::getLocation() const {
+     return m_location;
 }
 
-RelPixel DrawableText::getBottomRight() const {
-    return m_bottomRight;
+Quaternion DrawableText::getOrientation() const {
+     return m_orientation;
+}
+
+meters DrawableText::getWidth() const {
+    return m_width;
+}
+
+meters DrawableText::getHeight() const {
+     return m_height;
 }
 
 } // BattleRoom namespace

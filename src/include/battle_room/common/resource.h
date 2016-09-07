@@ -11,6 +11,10 @@ namespace BattleRoom {
  */
 typedef double radians;
 
+inline double toDegrees(radians angle) {
+    return angle*180.0/3.14159265359;
+}
+
 /**
  * Unit of measurement in the world coordinates
  */

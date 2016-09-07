@@ -21,12 +21,6 @@ public:
     ~SdlTextureManager();
 
     /**
-     * \brief Sets the renderer to use
-     * \param renderer Renderer used to read in textures
-     */
-    void setRenderer(SDL_Renderer* renderer);
-
-    /**
      * \brief Gets the SDL_Texture from the texture key
      * \para textureKey Key to texture (filepath relative to resource directory)
      * \return Pointer to the texture
@@ -37,6 +31,12 @@ public:
      * \brief Destroys all the textures that have been loaded
      */
     void clear();
+
+    // setters and getters 
+
+    void setRenderer(SDL_Renderer* renderer);
+    SDL_Renderer* getRenderer();
+
 
 private:
 

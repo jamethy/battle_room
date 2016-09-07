@@ -1,5 +1,6 @@
 #include "sdl_helper_functions.h"
-#include <iostream>
+#include "sdl_drawable_text.h"
+#include "sdl_drawable_image.h"
 
 namespace BattleRoom {
 
@@ -23,6 +24,28 @@ SDL_Rect rectFrom(Pixel topLeft, Pixel bottomRight) {
     rect.h = bottomRight.getRowInt() - rect.y;
 
     return rect;
+}
+
+unsigned getWindowIdFrom(SDL_Event& event) {
+
+    unsigned windowID = (unsigned)-1;
+    switch (event.type) {
+        case SDL_KEYDOWN:
+        case SDL_KEYUP:
+            windowID = event.key.windowID;
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
+            windowID = event.button.windowID;
+            break;
+        case SDL_MOUSEWHEEL:
+            windowID = event.wheel.windowID;
+            break;
+        case SDL_MOUSEMOTION:
+            windowID = event.motion.windowID;
+            break;
+    }
+    return windowID;
 }
 
 InputKey::Key sdlMouseButtonToInputKey(unsigned key, unsigned clicks) {
@@ -313,18 +336,19 @@ bool isInRelativeFrame(RelPixel topLeft, RelPixel topRight, RelPixel botRight, R
     return true;
 }
 
+/**
+ * \brief Fills the fields of SdlDrawable common to all drawables
+ * \param out drawable NonNull pointer reference of drawable to fill
+ * \param objCenter Location of object in 3D space
+ * \param orientation Orientation vector of object
+ * \param objWidth Width of object in space
+ * \param objHeight Height of object in space:w
+ */
+void fillBaseDrawable( SdlDrawable* drawable, View& view, 
+        Vector3D objCenter, Quaternion orientation, meters objWidth, meters objHeight) {
 
-SdlDrawable getSdlDrawableFrom(Object& object, View& view) {
-
-    SdlDrawable drawable;
-
-    Animation& animation = object.getAnimation();
-    const Frame& frame = animation.getFrame(object.getAnimationState());
-
-    Vector3D objCenter = object.getLocation();
-    Quaternion ornt = object.getOrientation();
-    Vector3D xOffset = ornt.getRotated(Vector3D(frame.getWidth()/2.0, 0, 0));
-    Vector3D yOffset = ornt.getRotated(Vector3D(0, frame.getHeight()/2.0, 0));
+    Vector3D xOffset = orientation.getRotated(Vector3D(objWidth/2.0, 0, 0));
+    Vector3D yOffset = orientation.getRotated(Vector3D(0, objHeight/2.0, 0));
 
     RelPixel topLeftRel = view.fromLocation(objCenter.minus(xOffset).plus(yOffset));
     RelPixel topRightRel = view.fromLocation(objCenter.plus(xOffset).plus(yOffset));
@@ -335,17 +359,19 @@ SdlDrawable getSdlDrawableFrom(Object& object, View& view) {
 
         // fix to get angle until I figure out the skewing issue
         // aka the camera must be facing straight down
+
+        px viewHeight = view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt();
+        px viewWidth = view.getBottomRight().getColInt() - view.getTopLeft().getColInt();
+        Pixel topLeft(topLeftRel.getRow()*viewHeight, topLeftRel.getCol()*viewWidth);
+        Pixel botRight(botRightRel.getRow()*viewHeight, botRightRel.getCol()*viewWidth);
+
         Vector3D drawn = Vector3D(
-                botRightRel.getCol() - topLeftRel.getCol(),
-                botRightRel.getRow() - topLeftRel.getRow(),
+                botRight.getCol() - topLeft.getCol(),
+                botRight.getRow() - topLeft.getRow(),
                 0.0
                 );
         Vector3D drawnUnit = drawn.getUnit();
-        Vector3D world = Vector3D(
-                frame.getWidth(),
-                frame.getHeight(),
-                0.0
-                ).getUnit();
+        Vector3D world = Vector3D( objWidth, objHeight, 0.0).getUnit();
 
         double angle = std::atan2(
                 world.x()*drawnUnit.y() - world.y()*drawnUnit.x(), 
@@ -353,37 +379,70 @@ SdlDrawable getSdlDrawableFrom(Object& object, View& view) {
                 );
 
         // Get pixel coordinates of texture
-        RelPixel center = view.camera().fromLocation(objCenter);
-        RelPixel unrotatedDelta(
+        RelPixel centerRel = view.fromLocation(objCenter);
+        Pixel center(centerRel.getRow()*viewHeight, centerRel.getCol()*viewWidth);
+        Pixel unrotatedDelta(
                 drawn.x()*std::sin(-angle) + drawn.y()*std::cos(-angle),
                 drawn.x()*std::cos(-angle) - drawn.y()*std::sin(-angle)
                 );
 
-        RelPixel drawTL(
+        Pixel drawTL(
                 center.getRow() - unrotatedDelta.getRow()/2.0,
                 center.getCol() - unrotatedDelta.getCol()/2.0
                 );
 
-        RelPixel drawBR(
+        Pixel drawBR(
                 center.getRow() + unrotatedDelta.getRow()/2.0,
                 center.getCol() + unrotatedDelta.getCol()/2.0
                 );
 
-        // Fill drawable
-        drawable.isInFrame = true;
-        drawable.viewLayer = view.getLayer();
-        drawable.zPosition = objCenter.z();
-        drawable.angle = angle;
-        drawable.sourceRect = rectFrom(frame.getTopLeft(), frame.getBottomRight());
-        drawable.destinationRect = rectFrom(drawTL, drawBR, 
-                view.getBottomRight().getColInt() - view.getTopLeft().getColInt(), 
-                view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt()
-                );
-        
-        drawable.imageFile = animation.getImageFile();
-    } 
 
-    return drawable;
+        // Fill SdlDrawable
+        drawable->setIsInFrame(true);
+        drawable->setViewLayer(view.getLayer());
+        drawable->setZPosition(objCenter.z());
+        drawable->setAngle(angle);
+        drawable->setDestinationRect(rectFrom(drawTL, drawBR));
+    }
+}
+
+UniqueDrawable getSdlDrawableFrom(DrawableText& text, View& view) {
+
+    SdlDrawableText* drawable = new SdlDrawableText();
+
+    // Fill base SdlDrawable
+    fillBaseDrawable( drawable, view, text.getLocation(), text.getOrientation(), 
+            text.getWidth(), text.getHeight()
+    );
+
+    // Fill SdlDrawableImage
+    drawable->setColor(toSdlColor(text.getColor()));
+    drawable->setFont(text.getFont());
+    drawable->setFontSize( 150 ); // TODO calculate font size
+    drawable->setText(text.getText());
+
+    return UniqueDrawable(drawable);
+}
+
+
+
+UniqueDrawable getSdlDrawableFrom(Object& object, View& view) {
+
+    SdlDrawableImage* drawable = new SdlDrawableImage();
+
+    Animation& animation = object.getAnimation();
+    const Frame& frame = animation.getFrame(object.getAnimationState());
+
+    // Fill base SdlDrawable
+    fillBaseDrawable( drawable, view, object.getLocation(), object.getOrientation(),
+            frame.getWidth(), frame.getHeight()
+    );
+
+    // Fill SdlDrawableImage
+    drawable->setSourceRect(rectFrom(frame.getTopLeft(), frame.getBottomRight()));
+    drawable->setImageFile(animation.getImageFile());
+
+    return UniqueDrawable(drawable);
 
 } // end getSdlDrawableFrom
 

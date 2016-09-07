@@ -15,7 +15,7 @@ vector<Object> GameInterface::getObjects() {
     Object obj(UniqueId::generateNewLocalId());
     obj.setAnimation(AnimationHandler::getAnimation("boy_walking"));
     Quaternion q;
-    q.rotateAboutZ(30.0*3.14159/180.0);
+    //q.rotateAboutZ(30.0*3.14159/180.0);
     obj.setOrientation(q);
 
     objects.push_back(obj);

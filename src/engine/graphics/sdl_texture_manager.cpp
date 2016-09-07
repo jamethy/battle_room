@@ -19,10 +19,6 @@ SdlTextureManager::~SdlTextureManager() {
     clear(); // attempt to clear but should already be clear
 }
 
-void SdlTextureManager::setRenderer(SDL_Renderer* renderer) {
-    m_renderer = renderer;
-}
-
 SDL_Texture* SdlTextureManager::getTexture(string texture) {
 
     //TODO Add error checking
@@ -40,6 +36,16 @@ void SdlTextureManager::clear() {
         SDL_DestroyTexture(texture.second);
     }
     m_textureMap.clear();
+}
+
+// getters and setters
+
+void SdlTextureManager::setRenderer(SDL_Renderer* renderer) {
+    m_renderer = renderer;
+}
+
+SDL_Renderer* SdlTextureManager::getRenderer() {
+    return m_renderer;
 }
 
 // implementation of getResourcePath from texture_manager.h

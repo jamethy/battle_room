@@ -4,6 +4,8 @@
 #include "battle_room/common/resource.h"
 #include "battle_room/common/color.h"
 #include "battle_room/common/rel_pixel.h"
+#include "battle_room/common/vector3d.h"
+#include "battle_room/common/quaternion.h"
 
 namespace BattleRoom {
 
@@ -18,17 +20,20 @@ public:
 
     void setText(std::string text);
     void setFont(std::string font);
-    void setFontSize(int fontSize);
     void setColor(Color color);
-    void setTopLeft(RelPixel topLeft);
-    void setBottomRight(RelPixel bottomRight);
+    void setLocation(Vector3D location);
+    void setOrientation(Quaternion orientation);
+    void setWidth(meters width);
+    void setHeight(meters height);
 
     std::string getText() const;
     std::string getFont() const;
-    int getFontSize() const;
     Color getColor() const;
-    RelPixel getTopLeft() const;
-    RelPixel getBottomRight() const;
+    Vector3D getLocation() const;
+    Quaternion getOrientation() const;
+    meters getWidth() const;
+    meters getHeight() const;
+
 
     // inherited
     void applySettings(ResourceDescriptor settings);
@@ -37,10 +42,11 @@ private:
 
     std::string m_text; ///< Text to be drawn
     std::string m_font; ///< Path relative to resources
-    int m_fontSize; ///< Fontsize
     Color m_color; ///< Color to draw the text
-    RelPixel m_topLeft; ///< Top left position of text
-    RelPixel m_bottomRight; ///< Bottom right position of text
+    Vector3D m_location; ///< Location of the text in 3D space
+    Quaternion m_orientation; ///< Orientation of the text in 3D space
+    meters m_width; ///< Width of text in space
+    meters m_height; ///< Height of text in space
 
 }; // DrawableText
 } // BattleRoom namespace

@@ -27,10 +27,6 @@ public:
     void clearCameraBounds();
     Inputs handleInputs(Inputs inputs);
 
-    // Reference Accessors
-    std::vector<DrawableText> getTexts() const;
-    Camera& camera();
-
     // getters and setters
 
     void setName(std::string name);
@@ -48,13 +44,6 @@ public:
     const Camera& getCamera() const;
     Vector3D getBoundsMin() const;
     Vector3D getBoundsMax() const;
-
-
-    // TODO move to multithread approach and get rid of this
-    /**
-     * \brief Currently just sets the object vector
-     */
-    void setDrawableText(std::vector<DrawableText> texts);
 
     // inherited
     void applySettings(ResourceDescriptor settings);
@@ -85,8 +74,6 @@ private:
     Vector3D m_boundsMax; ///< Maximum x and y of point in view
     Vector3D m_cameraMin; ///< Minimum point in view in camera coordinates
     Vector3D m_cameraMax; ///< Maximum point in view in camera coordinates
-
-    std::vector<DrawableText> m_texts; ///< Text to draw on the view
 
 }; // View class
 } // BattleRoom namespace

@@ -1,7 +1,6 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-
 #include "battle_room/common/unique_id.h"
 #include "battle_room/common/resource.h"
 #include "battle_room/common/vector3d.h"

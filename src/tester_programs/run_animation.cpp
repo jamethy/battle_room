@@ -88,10 +88,13 @@ int main(int argc, char** argv) {
     settings.push_back("        Height: " + std::to_string(largestPxHeight));
     settings.push_back("        View: mainView");
     settings.push_back("            Camera: mainCamera");
-    settings.push_back("                Position:");
-    settings.push_back("                    Location: 0,0," + std::to_string(camHeight));
+    settings.push_back("                Location: 0,0," + std::to_string(camHeight));
+    settings.push_back("                Orientation: 1,0,0,0");
     settings.push_back("                HorizontalFieldOfView: " + std::to_string(horFov));
     settings.push_back("                VerticalFieldOfView: " + std::to_string(verFov));
+    settings.push_back("            CameraFriction: 0.05");
+    settings.push_back("            ZoomInMultiplier: 1");
+    settings.push_back("            ZoomOutMultiplier: 1");
     settings.push_back("            TopLeft: 0,0");
     settings.push_back("            BottomRight: " 
                             + std::to_string(largestPxHeight) + "," 
@@ -113,9 +116,13 @@ int main(int argc, char** argv) {
     fpsText.setText("Sample Text");
     fpsText.setColor(Color(0,0,0,255));
     fpsText.setFont("default.ttf");
-    fpsText.setFontSize(100);
-    fpsText.setTopLeft(RelPixel(0,0));
-    fpsText.setBottomRight(RelPixel(0.05,0.5));
+    fpsText.setWidth(largestWidth/2.0);
+    fpsText.setHeight(fpsText.getWidth()/5.0);
+    fpsText.setLocation(Vector3D(
+                -fpsText.getWidth(),
+                largestHeight/2.0 - fpsText.getHeight()/2.0, 
+                0.001
+    ));
     steady_clock::time_point lastTime = steady_clock::now();
 
     Inputs inputs = InputGatherer::getAndClearInputs();
@@ -123,47 +130,7 @@ int main(int argc, char** argv) {
     bool showFps = false;
     while(!InputGatherer::containsQuitEvent()) {
 
-        // Iterate the clock
-        steady_clock::time_point newtime = steady_clock::now();
-        double diff = std::chrono::duration_cast<duration<double>> (newtime - startTime).count();
-
-        // Reset if above max
-        if (diff > maxTime) {
-            startTime = newtime;
-        }
-
-        // Add object to view
-        vector<Object> objects;
-        Object object(UniqueId::generateNewLocalId());
-        object.setAnimation(animation);
-        object.setAnimationState(diff);
-        Quaternion ori;
-        ori.rotateAboutZ(3.141567/2.0);
-        object.setOrientation(ori);
-        //object.position().orientation().rotateAboutZ(60.0*3.14156/180.0);
-        objects.push_back(object);
-        window->addViewObjects(objects,"mainView");
-
-        
-        // FPS Display
-        double fps = 1.0/std::chrono::duration_cast<duration<double>> (newtime - lastTime).count();
-
-        slowedFps = 0.98*slowedFps + 0.02*fps;
-        lastTime = steady_clock::now();
-
-        if (showFps) {
-            fpsText.setText("FPS: " + std::to_string((int)slowedFps));
-            vector<DrawableText> texts;
-            texts.push_back(fpsText);
-            window->setViewTexts(texts,"mainView");
-        } else {
-            window->setViewTexts(std::vector<DrawableText>(), "mainView");
-        }
-
-        // Draw the screen
-        window->drawScreen();
         window->gatherInputs();
-
         inputs = InputGatherer::getAndClearInputs();
         for (Input& input : inputs) {
             if (input.getMotion() == InputKey::Motion::PressedDown) {
@@ -175,6 +142,43 @@ int main(int argc, char** argv) {
                 }
             }
         }
+
+        window->handleInputs(inputs);
+
+        // Iterate the clock
+        steady_clock::time_point newtime = steady_clock::now();
+        double diff = std::chrono::duration_cast<duration<double>> (newtime - startTime).count();
+
+        // Reset if above max
+        if (diff > maxTime) {
+            startTime = newtime;
+        }
+
+        // Add object to view
+        Object object(UniqueId::generateNewLocalId());
+        object.setAnimation(animation);
+        object.setAnimationState(diff);
+        //Quaternion ori(1,0,0,0);
+        //ori.rotateAboutZ(3.141567/2.0);
+        //object.setOrientation(ori);
+        window->addViewObjects({object},"mainView");
+
+        
+        // FPS Display
+        double fps = 1.0/std::chrono::duration_cast<duration<double>> (newtime - lastTime).count();
+
+        slowedFps = 0.98*slowedFps + 0.02*fps;
+        lastTime = steady_clock::now();
+
+        if (showFps) {
+            fpsText.setText("FPS: " + std::to_string((int)slowedFps));
+            window->addViewTexts({fpsText},"mainView");
+        } else {
+            window->addViewTexts(std::vector<DrawableText>(), "mainView");
+        }
+
+        // Draw the screen
+        window->drawScreen();
     }
 
     // cleanup is handled by classes

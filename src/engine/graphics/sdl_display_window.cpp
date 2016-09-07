@@ -136,44 +136,34 @@ vector<string> getSortedViews(const std::unordered_map<string,View>& viewMap) {
 
 void SdlDisplayWindow::gatherInputs() {
 
+    // Track the mouse position by updating when available
     static Pixel mousePos(0,0);
 
+    // For each SDL_Event that pertains to this window, create an Input
     for (vector<SDL_Event>::iterator it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
 
         SDL_Event event = *it;
 
-        // Find special processes
+        // Find special processes - anything non-window specific
+        // If Ctrl-C is used, or the window is closed
         if (event.type == SDL_QUIT) {
             InputGatherer::addQuitEvent();
             continue;
+
+        // if the OS is repeating a held down key, ignore it
         } else if (event.type == SDL_KEYDOWN && event.key.repeat != 0) {
-            m_sdlEvents.erase(it);
-            --it;
+            // Remove the SDL_Event from the events vector because
+            // it has been dealt with (and adjust iterator)
+            m_sdlEvents.erase(it); --it;
             continue;
         }
+
 
         // check if this is the right window
-        unsigned windowID = (unsigned)-1;
-        switch (event.type) {
-            case SDL_KEYDOWN:
-            case SDL_KEYUP:
-                windowID = event.key.windowID;
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-            case SDL_MOUSEBUTTONUP:
-                windowID = event.button.windowID;
-                break;
-            case SDL_MOUSEWHEEL:
-                windowID = event.wheel.windowID;
-                break;
-            case SDL_MOUSEMOTION:
-                windowID = event.motion.windowID;
-                break;
-        }
-
-        if (windowID != SDL_GetWindowID(m_window)) {
+        if (getWindowIdFrom(event) != SDL_GetWindowID(m_window)) {
             continue;
         }
+
 
         Input input;
 
@@ -203,7 +193,7 @@ void SdlDisplayWindow::gatherInputs() {
                 input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
                 break;
             case SDL_MOUSEWHEEL:
-                if (event.wheel.y != 0) {
+                if (event.wheel.y != 0) { // maybe later use horizontal scrolling
                     input.setMotion(InputKey::Motion::Scroll);
                     input.setKey(InputKey::Key::MouseOnly);
                     input.setScrollAmount(event.wheel.y); 
@@ -215,10 +205,10 @@ void SdlDisplayWindow::gatherInputs() {
         for (string& viewName : getSortedViews(m_views)) {
             const View& view = m_views.at(viewName);
 
-
             Pixel topLeft = view.getTopLeft();
             Pixel botRight = view.getBottomRight();
 
+            // If it intersects the view, calculate the zero-plane intersection
             if (mousePos.isBetween(topLeft, botRight)) {
                 RelPixel relPos;
 
@@ -233,21 +223,33 @@ void SdlDisplayWindow::gatherInputs() {
                 );
 
                 Vector3D zeroPoint = view.getCamera().zeroPlaneIntersection(relPos);
+
+                // Add intersection to input's view list
                 input.addViewIntersection(view.getName(), zeroPoint);
             }
         }
 
+        // Add input to the input gatherer 
+        // Attain later with InputGatherer::getAndClearInputs
         InputGatherer::addInput(input);
-        m_sdlEvents.erase(it);
-        --it;
+
+        // Remove the SDL_Event from the events vector because
+        // it has been dealt with (and adjust iterator)
+        m_sdlEvents.erase(it); --it;
     }
 }
 
 Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
 
+    // Send inputs to each view to handle
     for (string& viewName : getSortedViews(m_views)) {
         View& view = m_views.at(viewName);
         inputs = view.handleInputs(inputs);
+
+        // Not the greatest place for this, but sneak in clearing view camera
+        // bounds here because it is called once per frame and not between
+        // adding objects
+        view.clearCameraBounds(); 
     }
 
     return inputs;
@@ -255,27 +257,26 @@ Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
 
 void SdlDisplayWindow::addViewObjects(vector<Object> objects, string viewName) {
 
+    // Check if view is in this window
     if (m_views.count(viewName) > 0) {
+
         View& view = m_views.at(viewName);
-        view.clearCameraBounds();
 
         for (Object& object : objects) {
-
-            SdlDrawable drawable = getSdlDrawableFrom(object,view);
-
-            if (drawable.isInFrame == true){
-                m_drawables.push_back(drawable);
-            }
+            m_drawables.push_back(getSdlDrawableFrom(object,view));
         }
     }
 }
 
-void SdlDisplayWindow::setViewTexts(std::vector<DrawableText> texts, std::string viewName) {
+void SdlDisplayWindow::addViewTexts(std::vector<DrawableText> texts, std::string viewName) {
 
     if (m_views.count(viewName) > 0) {
 
         View& view = m_views.at(viewName);
-        view.setDrawableText(texts);
+
+        for (DrawableText& text : texts) {
+            m_drawables.push_back(getSdlDrawableFrom(text,view));
+        }
     }
 }
 
@@ -294,85 +295,21 @@ void SdlDisplayWindow::drawScreen() {
     // Sort the drawables on the screen by view layer and position
     // This will ensure the right things are drawn ontop of the right tings
     std::sort(m_drawables.begin(), m_drawables.end(), 
-            [](SdlDrawable& a, SdlDrawable& b) {
-                if (a.viewLayer == b.viewLayer) { return a.zPosition < b.zPosition; }
-                else { return a.viewLayer < b.viewLayer; }
+            [](UniqueDrawable& a, UniqueDrawable& b) {
+                if (a->getViewLayer() == b->getViewLayer()) { 
+                    return a->getZPosition() < b->getZPosition();
+                }
+                else { 
+                    return a->getViewLayer() < b->getViewLayer();
+                }
             }
     );
     
 
     // For every drawable that has been collected, get the texture and draw it on the screen
     // If a texture is missing, use the missing animation texture
-    for (SdlDrawable& drawable : m_drawables) {
-
-        // get the texture
-        SDL_Texture* texture = m_sdlTextureManager.getTexture(drawable.imageFile);
-        SDL_Rect* sourceRect = &drawable.sourceRect;
-
-        if (texture == NULL) {
-            // get missing animation texture
-            Animation& missing_animation = AnimationHandler::getAnimation(MISSING_ANIMATION);
-            texture = m_sdlTextureManager.getTexture(missing_animation.getImageFile());
-            sourceRect = NULL;
-        }
-
-
-        // Draw the image on the screen
-        SDL_RenderCopyEx(m_renderer,
-                texture, sourceRect, &drawable.destinationRect, 
-                drawable.angle*180.0/3.14159265359,
-                NULL, SDL_FLIP_NONE);
-    }
-    
-    
-    // Draw all the text on the screen
-
-    // Get views by layer in desending order
-    vector<string> sortedViews = getSortedViews(m_views);
-    std::reverse(sortedViews.begin(), sortedViews.end());
-
-    // Draw each view
-    for (string& viewName: sortedViews) {
-
-        View& view = m_views.at(viewName);
-
-        for (DrawableText& text : view.getTexts()) {
-
-            SDL_Surface* surface = NULL;
-            SDL_Texture* texture = NULL;
-            SDL_Color color = toSdlColor(text.getColor());
-            
-            surface = TTF_RenderText_Solid(
-                    SdlFontManager::getFont(text.getFont(), text.getFontSize()),
-                    text.getText().c_str(),
-                    color
-            );
-
-            if (surface == NULL){
-                std::cerr << "input_surface TTF_RenderText error: " << SDL_GetError() << std::endl;
-            }
-            else {
-
-                texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-                if (texture == NULL){
-                    std::cerr << "input_texture SDL_CreateTextureFromSurface error: " << SDL_GetError() << std::endl;
-                    SDL_FreeSurface(surface);
-                }
-                else {
-
-                    SDL_Rect dstRect = rectFrom(
-                            text.getTopLeft(), 
-                            text.getBottomRight(),
-                            view.getBottomRight().getColInt() - view.getTopLeft().getColInt(), 
-                            view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt()
-                    );
-
-                    SDL_RenderCopy(m_renderer, texture, NULL, &dstRect);
-                    SDL_FreeSurface(surface);
-                    SDL_DestroyTexture(texture);
-                }
-            }
-        } // Draw texts
+    for (UniqueDrawable& drawable : m_drawables) {
+        drawable->draw(m_sdlTextureManager);
     }
 
 
