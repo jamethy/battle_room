@@ -3,7 +3,8 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    Clean up camera movement code
+    Move cameraMovement to an abstract class and create implementations
+    test missing animation
     Create server world
         Add time
     Implement multithreading

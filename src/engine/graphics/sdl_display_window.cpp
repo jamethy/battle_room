@@ -204,24 +204,11 @@ void SdlDisplayWindow::gatherInputs() {
         for (string& viewName : getSortedViews(m_views)) {
             const View& view = m_views.at(viewName);
 
-            Pixel topLeft = view.getTopLeft();
-            Pixel botRight = view.getBottomRight();
-
             // If it intersects the view, calculate the zero-plane intersection
-            if (mousePos.isBetween(topLeft, botRight)) {
-                RelPixel relPos;
+            if (mousePos.isBetween(view.getTopLeft(), view.getBottomRight())) {
 
-                relPos.setCol( 
-                        (mousePos.getCol() - topLeft.getCol())
-                        /(botRight.getCol() - topLeft.getCol())
-                );
-
-                relPos.setRow( 
-                        (mousePos.getRow() - topLeft.getRow())
-                        /(botRight.getRow() - topLeft.getRow())
-                );
-
-                Vector3D zeroPoint = view.getCamera().zeroPlaneIntersection(relPos);
+                // Calculate the intersection point
+                Vector3D zeroPoint = view.zeroPlaneIntersection(mousePos);
 
                 // Add intersection to input's view list
                 input.addViewIntersection(view.getName(), zeroPoint);
@@ -244,11 +231,6 @@ Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
     for (string& viewName : getSortedViews(m_views)) {
         View& view = m_views.at(viewName);
         inputs = view.handleInputs(inputs);
-
-        // Not the greatest place for this, but sneak in clearing view camera
-        // bounds here because it is called once per frame and not between
-        // adding objects
-        view.clearCameraBounds(); 
     }
 
     return inputs;

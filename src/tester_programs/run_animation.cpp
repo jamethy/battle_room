@@ -77,8 +77,8 @@ int main(int argc, char** argv) {
 
     // Calulate the camera properties
     double horFov = 1.308985;
-    double verFov = 2*atan2(largestHeight*2.0*tan(horFov/2.0), 2.0*largestWidth);
-    double camHeight = largestWidth / (2.0*tan(horFov/2.0));
+    double verFov = 2*std::atan2(largestHeight*2.0*std::tan(horFov/2.0), 2.0*largestWidth);
+    double camHeight = largestWidth / (2.0*std::tan(horFov/2.0));
 
     // Create a mock settings file for easy application
     vector<string> settings;
@@ -92,9 +92,6 @@ int main(int argc, char** argv) {
     settings.push_back("                Orientation: 1,0,0,0");
     settings.push_back("                HorizontalFieldOfView: " + std::to_string(horFov));
     settings.push_back("                VerticalFieldOfView: " + std::to_string(verFov));
-    settings.push_back("            CameraFriction: 0.05");
-    settings.push_back("            ZoomInMultiplier: 1");
-    settings.push_back("            ZoomOutMultiplier: 1");
     settings.push_back("            TopLeft: 0,0");
     settings.push_back("            BottomRight: " 
                             + std::to_string(largestPxHeight) + "," 
@@ -125,13 +122,26 @@ int main(int argc, char** argv) {
     ));
     steady_clock::time_point lastTime = steady_clock::now();
 
-    Inputs inputs = InputGatherer::getAndClearInputs();
     double slowedFps = 30;
     bool showFps = false;
     while(!InputGatherer::containsQuitEvent()) {
 
+        // Iterate the clock
+        steady_clock::time_point newtime = steady_clock::now();
+        double diff = std::chrono::duration_cast<duration<double>> (newtime - startTime).count();
+        // Reset if above max
+        if (diff > maxTime) { startTime = newtime; }
+
         window->gatherInputs();
-        inputs = InputGatherer::getAndClearInputs();
+        Inputs inputs = InputGatherer::getAndClearInputs();
+
+        // Add object to view
+        Object object(UniqueId::generateNewLocalId());
+        object.setAnimation(animation);
+        object.setAnimationState(diff);
+        window->addViewObjects({object},"mainView");
+
+
         for (Input& input : inputs) {
             if (input.getMotion() == InputKey::Motion::PressedDown) {
                 if (input.getKey() == InputKey::Key::Q) {
@@ -145,37 +155,15 @@ int main(int argc, char** argv) {
 
         window->handleInputs(inputs);
 
-        // Iterate the clock
-        steady_clock::time_point newtime = steady_clock::now();
-        double diff = std::chrono::duration_cast<duration<double>> (newtime - startTime).count();
-
-        // Reset if above max
-        if (diff > maxTime) {
-            startTime = newtime;
-        }
-
-        // Add object to view
-        Object object(UniqueId::generateNewLocalId());
-        object.setAnimation(animation);
-        object.setAnimationState(diff);
-        //Quaternion ori(1,0,0,0);
-        //ori.rotateAboutZ(3.141567/2.0);
-        //object.setOrientation(ori);
-        window->addViewObjects({object},"mainView");
-
-        
         // FPS Display
         double fps = 1.0/std::chrono::duration_cast<duration<double>> (newtime - lastTime).count();
-
         slowedFps = 0.98*slowedFps + 0.02*fps;
         lastTime = steady_clock::now();
 
         if (showFps) {
             fpsText.setText("FPS: " + std::to_string((int)slowedFps));
             window->addViewTexts({fpsText},"mainView");
-        } else {
-            window->addViewTexts(std::vector<DrawableText>(), "mainView");
-        }
+        } 
 
         // Draw the screen
         window->drawScreen();
