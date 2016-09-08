@@ -4,7 +4,6 @@
 #include "battle_room/common/string_utils.h"
 
 #include <fstream>
-#include <iostream>
 #include <algorithm>
 #include <regex>
 

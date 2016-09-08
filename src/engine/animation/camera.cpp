@@ -1,7 +1,6 @@
 #include "battle_room/engine/animation/camera.h"
 
 #include <cmath>
-#include <iostream>
 
 using std::string;
 using std::vector;

@@ -4,7 +4,6 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include <iostream>
 
 using std::string;
 using std::vector;

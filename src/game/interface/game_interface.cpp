@@ -2,7 +2,6 @@
 
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/engine/animation/animation_handler.h"
-#include <iostream>
 
 using std::vector;
 

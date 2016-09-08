@@ -1,6 +1,5 @@
 #include "battle_room/engine/animation/animation.h"
 
-#include <iostream>
 #include <algorithm>
 
 using std::string;
