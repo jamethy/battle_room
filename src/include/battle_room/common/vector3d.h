@@ -16,12 +16,6 @@ public:
     Vector3D();
     Vector3D(meters x, meters y, meters z);
 
-
-    // Access by reference (assigning to these changes the value)
-    meters& x();
-    meters& y();
-    meters& z();
-
     /**
      * \brief Dot product between this and b
      * \param b Vector to dot with
@@ -68,6 +62,11 @@ public:
      * \return Unit vector
      */
     Vector3D getUnit() const;
+
+    // Access by reference (assigning to these changes the value)
+    meters& x();
+    meters& y();
+    meters& z();
 
     // inherited
     void applySettings(ResourceDescriptor settings) override;

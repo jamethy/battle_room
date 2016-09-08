@@ -19,6 +19,9 @@ class ResourceDescriptor {
 
 public:
 
+    // Constructor
+    ResourceDescriptor();
+
     /**
      * \brief Returns the filtered subresources whose Key matches fileter (ignoring case)
      *
@@ -63,18 +66,14 @@ public:
      */
     void fillFromInput(std::vector<std::string> lines, unsigned& start);
 
-    // Setters and Getters
+    // Getters and Setters
 
-    void setKey(std::string key);
     std::string getKey();
-
-    void setValue(std::string value);
     std::string getValue();
 
+    void setKey(std::string key);
+    void setValue(std::string value);
     void setSubResources(std::vector<ResourceDescriptor> subResources);
-
-    // Constructor
-    ResourceDescriptor();
 
 private:
 

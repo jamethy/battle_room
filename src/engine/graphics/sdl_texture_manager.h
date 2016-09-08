@@ -37,11 +37,9 @@ public:
     void setRenderer(SDL_Renderer* renderer);
     SDL_Renderer* getRenderer();
 
-
 private:
 
     SDL_Renderer* m_renderer; ///< Renderer used to read textures
-
     std::unordered_map<std::string,SDL_Texture*> m_textureMap; ///< Container of loaded textures
 
 }; // SdlTextureManager class

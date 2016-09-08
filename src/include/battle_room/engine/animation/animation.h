@@ -23,15 +23,6 @@ public:
     // constructor
     Animation(ResourceDescriptor descriptor);
 
-    // getters 
-
-    const std::string& getImageFile();
-
-    const std::string& getNextAnimation();
-
-    const std::vector<Frame>& getFrames();
-
-
     /**
      * \brief Gets the frame for the time given
      *
@@ -42,6 +33,12 @@ public:
      * \return Reference to the desired frame
      */
     const Frame& getFrame(seconds animationState);
+
+    // getters 
+
+    const std::string& getImageFile();
+    const std::string& getNextAnimation();
+    const std::vector<Frame>& getFrames();
 
     // inherited
     void applySettings(ResourceDescriptor settings) override;

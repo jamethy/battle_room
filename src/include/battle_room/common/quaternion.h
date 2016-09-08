@@ -20,6 +20,12 @@ public:
      */
     void rotateAboutZ(radians angle);
 
+    /**
+     * \brief Rotates this quaternion about an axis by the given angle
+     * \param unit Axis to rotated about
+     * \angle Angle to rotate this about
+     * \return New Quaternion that is rotated
+     */
     Quaternion getRotatedAbout(Vector3D unit, radians angle);
 
     /**

@@ -24,12 +24,22 @@ public:
 
     // Constructors
     Frame(ResourceDescriptor descriptor);
-
-    seconds getEndTime() const;
+    
+    /**
+     * \brief Calculates and returns the width from topLeft/botRight
+     * \return Width of object in space
+     */
     meters getWidth() const;
+
+    /**
+     * \brief Calculates and returns the height from topLeft/botRight
+     * \return Height of object in space
+     */
     meters getHeight() const;
 
     // getters
+
+    seconds getEndTime() const;
     const Pixel& getTopLeft() const;
     const Pixel& getBottomRight() const;
     double getXScale() const;

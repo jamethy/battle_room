@@ -23,19 +23,28 @@ public:
     // constructor
     View(ResourceDescriptor settings);
 
+    /**
+     * \brief Calculates the point on the view from the point in space
+     * Additionally adjusts the camera's bounds using the point
+     * \param point Position in space to calculate
+     * \return Location on the view of the point
+     */
     RelPixel fromLocation(Vector3D point);
+
+    /**
+     * \brief Clears the bounds of the camera set by calculating locations
+     */
     void clearCameraBounds();
+
+    /**
+     * \brief Handles any inputs for the view and returns remaining
+     * Mainly used for camera controls
+     * \param inptus Collection of inputs to look through
+     * \return Remaining inputs that weren't used
+     */
     Inputs handleInputs(Inputs inputs);
 
     // getters and setters
-
-    void setName(std::string name);
-    void setLayer(int layer);
-    void setTopLeft(Pixel pixel);
-    void setBottomRight(Pixel pixel);
-    void setCamera(Camera camera);
-    void setBoundsMin(Vector3D point);
-    void setBoundsMax(Vector3D point);
 
     std::string getName() const;
     int getLayer() const;
@@ -44,6 +53,14 @@ public:
     const Camera& getCamera() const;
     Vector3D getBoundsMin() const;
     Vector3D getBoundsMax() const;
+
+    void setName(std::string name);
+    void setLayer(int layer);
+    void setTopLeft(Pixel pixel);
+    void setBottomRight(Pixel pixel);
+    void setCamera(Camera camera);
+    void setBoundsMin(Vector3D point);
+    void setBoundsMax(Vector3D point);
 
     // inherited
     void applySettings(ResourceDescriptor settings);

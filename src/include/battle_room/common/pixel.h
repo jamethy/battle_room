@@ -46,10 +46,11 @@ public:
 
     // getters and setters
 
-    void setRow(px row);
-    void setCol(px col);
     px getRow() const;
     px getCol() const;
+
+    void setRow(px row);
+    void setCol(px col);
 
     // inherited
     void applySettings(ResourceDescriptor settings) override;

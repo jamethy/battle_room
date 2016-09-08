@@ -18,6 +18,7 @@ class ViewInterface : public Resource {
 
 public:
 
+    // destructor
     virtual ~ViewInterface() {}
 
     /**
@@ -40,6 +41,7 @@ public:
     virtual std::vector<DrawableText> getDrawableTexts() = 0;
 
     // getters and setters
+
     std::string getAssociatedView() const;
     void setAssociatedView(std::string viewName);
 

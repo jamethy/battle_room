@@ -16,15 +16,7 @@ class DrawableText : public Resource {
 
 public:
 
-    // setters and getters
-
-    void setText(std::string text);
-    void setFont(std::string font);
-    void setColor(Color color);
-    void setLocation(Vector3D location);
-    void setOrientation(Quaternion orientation);
-    void setWidth(meters width);
-    void setHeight(meters height);
+    // getters and setters
 
     std::string getText() const;
     std::string getFont() const;
@@ -33,6 +25,14 @@ public:
     Quaternion getOrientation() const;
     meters getWidth() const;
     meters getHeight() const;
+
+    void setText(std::string text);
+    void setFont(std::string font);
+    void setColor(Color color);
+    void setLocation(Vector3D location);
+    void setOrientation(Quaternion orientation);
+    void setWidth(meters width);
+    void setHeight(meters height);
 
 
     // inherited

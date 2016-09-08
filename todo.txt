@@ -3,8 +3,6 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    set a organizational standard
-        getters/setters/inherited/constructors/etc
     Clean up camera movement code
     Create server world
         Add time

@@ -16,6 +16,11 @@ class Camera : public Resource {
 
 public:
 
+    // constructors
+
+    Camera();
+    Camera(ResourceDescriptor settings);
+
     /**
      * \brief Rotates the camera over its forward-axis
      * \param theta Angle in theta to rotate
@@ -52,11 +57,6 @@ public:
      */
     Vector3D zeroPlaneIntersection(RelPixel pixel) const;
 
-    // constructors
-
-    Camera();
-    Camera(ResourceDescriptor settings);
-
     // getters and setters
 
     std::string getName() const;
@@ -66,6 +66,7 @@ public:
     Quaternion getOrientation() const;
     radians getHorizontalFov() const;
     radians getVerticalFov() const;
+
     void setName(std::string name);
     void setLocation(Vector3D location);
     void setOrientation(Quaternion orientation);

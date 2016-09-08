@@ -39,15 +39,15 @@ public:
      */
     Vector3D getViewIntersection(std::string viewName);
 
-    // setters and getters
-
-    void setKey(InputKey::Key key);
-    void setMotion(InputKey::Motion motion);
-    void setScrollAmount(int amount);
+    // getters and setters
 
     InputKey::Key getKey();
     InputKey::Motion getMotion();
     int getScrollAmount();
+
+    void setKey(InputKey::Key key);
+    void setMotion(InputKey::Motion motion);
+    void setScrollAmount(int amount);
 
 private:
 
