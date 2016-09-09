@@ -10,12 +10,7 @@ namespace BattleRoom {
 
 TEST(Test_applySettingsFromValue, typical) {
 
-    std::vector<std::string> settingLines;
-    settingLines.push_back("Quat: 1.1,2,3.3,4.4");
-
-    unsigned start = 0;
-    ResourceDescriptor settings;
-    settings.fillFromInput(settingLines, start);
+    ResourceDescriptor settings({"Quat: 1.1,2,3.3,4.4"});
 
     Quaternion q;
     q.applySettings(settings);

@@ -19,8 +19,9 @@ class ResourceDescriptor {
 
 public:
 
-    // Constructor
+    // Constructors
     ResourceDescriptor();
+    ResourceDescriptor(std::vector<std::string> lines);
 
     /**
      * \brief Returns the filtered subresources whose Key matches fileter (ignoring case)
@@ -55,17 +56,6 @@ public:
      */
     static ResourceDescriptor readFile(std::string filePath);
 
-    /*!
-     * \brief Reads in an input file or string and fills resource descriptor.
-     *
-     * Mainly used in readFile or manually creating a resource descriptor
-     * Assumes first line describes the top level descriptor (and is not empty)
-     *
-     * \param lines Vector of lines in the file
-     * \param start Current position in lines
-     */
-    void fillFromInput(std::vector<std::string> lines, unsigned& start);
-
     // Getters and Setters
 
     std::string getKey();
@@ -76,6 +66,17 @@ public:
     void setSubResources(std::vector<ResourceDescriptor> subResources);
 
 private:
+
+    /*!
+     * \brief Reads in an input file or string and fills resource descriptor.
+     *
+     * Mainly used in readFile or manually creating a resource descriptor
+     * Assumes first line describes the top level descriptor (and is not empty)
+     *
+     * \param lines Vector of lines in the file
+     * \param start Current position in lines
+     */
+    void fillFromInput(std::vector<std::string> lines, unsigned& start);
 
     std::string m_key; ///< What the descriptor is describing
     std::string m_value; ///< The value of what the descriptor is describing

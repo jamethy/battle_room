@@ -81,25 +81,22 @@ int main(int argc, char** argv) {
     double camHeight = largestWidth / (2.0*std::tan(horFov/2.0));
 
     // Create a mock settings file for easy application
-    vector<string> settings;
-    settings.push_back("Settings:");
-    settings.push_back("    Window: mainWindow");
-    settings.push_back("        Width: " + std::to_string(largestPxWidth));
-    settings.push_back("        Height: " + std::to_string(largestPxHeight));
-    settings.push_back("        View: mainView");
-    settings.push_back("            Camera: mainCamera");
-    settings.push_back("                Location: 0,0," + std::to_string(camHeight));
-    settings.push_back("                Orientation: 1,0,0,0");
-    settings.push_back("                HorizontalFieldOfView: " + std::to_string(horFov));
-    settings.push_back("                VerticalFieldOfView: " + std::to_string(verFov));
-    settings.push_back("            TopLeft: 0,0");
-    settings.push_back("            BottomRight: " 
-                            + std::to_string(largestPxHeight) + "," 
-                            + std::to_string(largestPxWidth));
 
-    unsigned int start = 0;
-    ResourceDescriptor descriptor;
-    descriptor.fillFromInput(settings, start);
+    ResourceDescriptor descriptor({
+                "Settings:",
+                "    Window: mainWindow",
+                "        Width: " + std::to_string(largestPxWidth),
+                "        Height: " + std::to_string(largestPxHeight),
+                "        View: mainView",
+                "            Camera: mainCamera",
+                "                Location: 0,0," + std::to_string(camHeight),
+                "                Orientation: 1,0,0,0",
+                "                HorizontalFieldOfView: " + std::to_string(horFov),
+                "                VerticalFieldOfView: " + std::to_string(verFov),
+                "            TopLeft: 0,0",
+                "            BottomRight: " 
+                + std::to_string(largestPxHeight) + "," + std::to_string(largestPxWidth)
+    });
 
 
     // create the window

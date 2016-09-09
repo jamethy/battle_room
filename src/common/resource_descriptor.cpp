@@ -16,6 +16,13 @@ ResourceDescriptor::ResourceDescriptor()
     : m_key(""), m_value("")
 { }
 
+ResourceDescriptor::ResourceDescriptor(vector<string> lines) 
+    : m_key(""), m_value("")
+{
+    unsigned start = 0;
+    fillFromInput(lines, start);
+}
+
 vector<ResourceDescriptor> ResourceDescriptor::getSubResources(string filter) {
 
     if (filter.empty()) {

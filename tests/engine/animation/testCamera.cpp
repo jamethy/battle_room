@@ -10,23 +10,20 @@ namespace BattleRoom {
 
 TEST(Test_applySettings, typical) {
 
-    vector<string> settings;
-    settings.push_back("Camera:");
-    settings.push_back("    Location:");
-    settings.push_back("        X: 1.11");
-    settings.push_back("        Y: 2.22");
-    settings.push_back("        Z: 3.33");
-    settings.push_back("    Orientation:");
-    settings.push_back("        W: 1");
-    settings.push_back("        I: 0");
-    settings.push_back("        J: 0");
-    settings.push_back("        K: 0");
-    settings.push_back("    HorizontalFieldOfView: 1.8");
-    settings.push_back("    VerticalFieldOfView: 1.3");
-
-    unsigned int start = 0;
-    ResourceDescriptor descriptor;
-    descriptor.fillFromInput(settings, start);
+    ResourceDescriptor descriptor({
+                "Camera:",
+                "    Location:",
+                "        X: 1.11",
+                "        Y: 2.22",
+                "        Z: 3.33",
+                "    Orientation:",
+                "        W: 1",
+                "        I: 0",
+                "        J: 0",
+                "        K: 0",
+                "    HorizontalFieldOfView: 1.8",
+                "    VerticalFieldOfView: 1.3"
+    });
 
     Camera camera;
     camera.applySettings(descriptor);
@@ -49,25 +46,22 @@ TEST(Test_applySettings, typical) {
 
 TEST(Test_fromLocation, straight_down) {
 
-    vector<string> settings;
-    settings.push_back("Camera:");
-    settings.push_back("    Location:");
-    settings.push_back("        X: 0");
-    settings.push_back("        Y: 0");
-    settings.push_back("        Z: 2");
-    settings.push_back("    Orientation:");
-    settings.push_back("        W: 1");
-    settings.push_back("        I: 0");
-    settings.push_back("        J: 0");
-    settings.push_back("        K: 0");
-    settings.push_back("    HorizontalFieldOfView: 0.785039");
-    settings.push_back("    VerticalFieldOfView: 0.785039");
-    settings.push_back("    Width: 250");
-    settings.push_back("    Height: 150");
-
-    unsigned int start = 0;
-    ResourceDescriptor descriptor;
-    descriptor.fillFromInput(settings, start);
+    ResourceDescriptor descriptor({
+                "Camera:",
+                "    Location:",
+                "        X: 0",
+                "        Y: 0",
+                "        Z: 2",
+                "    Orientation:",
+                "        W: 1",
+                "        I: 0",
+                "        J: 0",
+                "        K: 0",
+                "    HorizontalFieldOfView: 0.785039",
+                "    VerticalFieldOfView: 0.785039",
+                "    Width: 250",
+                "    Height: 150"
+    });
 
     Camera camera;
     camera.applySettings(descriptor);
@@ -91,23 +85,20 @@ TEST(Test_fromLocation, straight_down) {
 
 TEST(Test_fromLocation, yawed_straight_down) {
 
-    vector<string> settings;
-    settings.push_back("Camera:");
-    settings.push_back("    Location:");
-    settings.push_back("        X: 0");
-    settings.push_back("        Y: 0");
-    settings.push_back("        Z: 2");
-    settings.push_back("    Orientation:");
-    settings.push_back("        W: 1");
-    settings.push_back("        I: 0");
-    settings.push_back("        J: 0");
-    settings.push_back("        K: 0");
-    settings.push_back("    HorizontalFieldOfView: 0.785039");
-    settings.push_back("    VerticalFieldOfView: 0.785039");
-
-    unsigned int start = 0;
-    ResourceDescriptor descriptor;
-    descriptor.fillFromInput(settings, start);
+    ResourceDescriptor descriptor({
+                "Camera:",
+                "    Location:",
+                "        X: 0",
+                "        Y: 0",
+                "        Z: 2",
+                "    Orientation:",
+                "        W: 1",
+                "        I: 0",
+                "        J: 0",
+                "        K: 0",
+                "    HorizontalFieldOfView: 0.785039",
+                "    VerticalFieldOfView: 0.785039"
+    });
 
     Camera camera;
     camera.applySettings(descriptor);
