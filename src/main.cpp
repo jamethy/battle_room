@@ -17,7 +17,7 @@ int main() {
 
     // Show Main menu
         // single player
-            // Create local server
+            // Create local server < LocalWorld
             // Create menu overlay < gameinterface
             // get drawable objects
             // draw
@@ -25,7 +25,7 @@ int main() {
             // deal with inputs
             
         // multiplayer
-            // Connect/Create network server
+            // Connect/Create network server < ClientWorld/ServerWorld
             // Create menu overlay < gameinterface
             // get drawable objects
             // draw

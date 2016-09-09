@@ -10,29 +10,14 @@ namespace BattleRoom {
 
 void Camera::applySettings(ResourceDescriptor settings) {
 
-    if (isNotEmpty(settings.getValue())) {
-        setName(settings.getValue());
-    }
-
     m_location.applySettings( settings.getSubResource("Location") );
     m_orientation.applySettings( settings.getSubResource("Orientation") );
-
-    ResourceDescriptor sub = settings.getSubResource("HorizontalFieldOfView");
-    if (isNotEmpty(sub.getValue())) {
-        setHorizontalFov( toRadians(sub.getValue()) );
-    } 
-
-    sub = settings.getSubResource("VerticalFieldOfView");
-    if (isNotEmpty(sub.getValue())) {
-        setVerticalFov( toRadians(sub.getValue()) );
-    } 
 }
 
 // constructors
 
 Camera::Camera() 
-    : m_name("DEFAULT_CAMERA_NAME"),
-    m_location(Vector3D(0,0,10)),
+ :  m_location(Vector3D(0,0,10)),
     m_forward(Vector3D(0,0,-1)),
     m_up(Vector3D(0,1,0)),
     m_right(Vector3D(1,0,0))
@@ -45,10 +30,6 @@ Camera::Camera(ResourceDescriptor settings) : Camera()
 
 
 //setters and getters
-
-string Camera::getName() const {
-    return m_name;
-}
 
 Vector3D Camera::getLocation() const {
     return m_location;
@@ -90,10 +71,6 @@ void Camera::setHorizontalFov(radians angle) {
 
 void Camera::setVerticalFov(radians angle) {
     m_verticalFov = angle;
-}
-
-void Camera::setName(string name) {
-    m_name = name;
 }
 
 // other functions

@@ -46,7 +46,7 @@ public:
 
 private:
 
-    double m_cameraFriction = 0.5; ///< Friction of camera motion
+    double m_cameraFriction = 0.05; ///< Friction of camera motion
     double m_zoomInMultiplier = 1.0; ///< Multiplier of zooming input
     double m_zoomOutMultiplier = 1.0; ///< Multiplier of zooming input
     meters m_minimumCameraZ = 10;

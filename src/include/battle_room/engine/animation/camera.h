@@ -59,7 +59,6 @@ public:
 
     // getters and setters
 
-    std::string getName() const;
     Vector3D getLocation() const;
     Vector3D getUpDir() const;
     Vector3D getRightDir() const;
@@ -67,7 +66,6 @@ public:
     radians getHorizontalFov() const;
     radians getVerticalFov() const;
 
-    void setName(std::string name);
     void setLocation(Vector3D location);
     void setOrientation(Quaternion orientation);
     void setHorizontalFov(radians angle);
@@ -77,8 +75,6 @@ public:
     void applySettings(ResourceDescriptor settings);
 
 private:
-
-    std::string m_name; ///< Name of camera
 
     Vector3D m_location; ///< Location of camera in 3D space
     Quaternion m_orientation; ///< Orientation vector in 3D space

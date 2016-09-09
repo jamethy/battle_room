@@ -1,5 +1,7 @@
 #include "battle_room/engine/animation/view.h"
 
+#include <cmath>
+
 namespace BattleRoom {
 
 void View::applySettings(ResourceDescriptor settings) {
@@ -17,6 +19,13 @@ void View::applySettings(ResourceDescriptor settings) {
     if (isNotEmpty(sub.getValue())) {
         setLayer(std::stoi(sub.getValue()));
     }
+
+    sub = settings.getSubResource("FieldOfView");
+    if (isNotEmpty(sub.getValue())) {
+        m_camera.setHorizontalFov(toRadians(sub.getValue()));
+    }
+
+    recalculateVerticalFov();
 }
 
 // constructor
@@ -92,10 +101,12 @@ void View::setLayer(int layer) {
 
 void View::setTopLeft(Pixel pixel) {
     m_topLeft = pixel;
+    recalculateVerticalFov();
 }
 
 void View::setBottomRight(Pixel pixel) {
     m_bottomRight = pixel;
+    recalculateVerticalFov();
 }
 
 std::string View::getName() const {
@@ -112,6 +123,14 @@ Pixel View::getTopLeft() const {
 
 Pixel View::getBottomRight() const {
     return m_bottomRight;
+}
+
+void View::recalculateVerticalFov() {
+
+    radians horFov = m_camera.getHorizontalFov();
+    px width = m_bottomRight.getCol() - m_topLeft.getCol();
+    px height = m_bottomRight.getRow() - m_topLeft.getRow();
+    m_camera.setVerticalFov( 2*std::atan2(height*2.0*std::tan(horFov/2.0), 2.0*width) );
 }
 
 

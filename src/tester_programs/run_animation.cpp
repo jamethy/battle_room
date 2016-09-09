@@ -75,11 +75,6 @@ int main(int argc, char** argv) {
         }
     }
 
-    // Calulate the camera properties
-    double horFov = 1.308985;
-    double verFov = 2*std::atan2(largestHeight*2.0*std::tan(horFov/2.0), 2.0*largestWidth);
-    double camHeight = largestWidth / (2.0*std::tan(horFov/2.0));
-
     // Create a mock settings file for easy application
 
     ResourceDescriptor descriptor({
@@ -88,14 +83,8 @@ int main(int argc, char** argv) {
                 "        Width: " + std::to_string(largestPxWidth),
                 "        Height: " + std::to_string(largestPxHeight),
                 "        View: mainView",
-                "            Camera: mainCamera",
-                "                Location: 0,0," + std::to_string(camHeight),
-                "                Orientation: 1,0,0,0",
-                "                HorizontalFieldOfView: " + std::to_string(horFov),
-                "                VerticalFieldOfView: " + std::to_string(verFov),
-                "            TopLeft: 0,0",
-                "            BottomRight: " 
-                + std::to_string(largestPxHeight) + "," + std::to_string(largestPxWidth)
+                "            CameraMovement:",
+                "                MinimumCameraZ: 0.1"
     });
 
 

@@ -74,6 +74,11 @@ public:
 
 private:
 
+    /**
+     * \brief Utility function used to recalculate camera FOV
+     */
+    void recalculateVerticalFov();
+
     std::string m_name; ///< Name and key of view
     int m_layer = 0; //< higher numbers are rendered first (therefore then covered up)
     Pixel m_topLeft; ///< Coordinate of top left of the view on the display window

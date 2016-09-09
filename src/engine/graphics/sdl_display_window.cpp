@@ -50,7 +50,23 @@ void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
     }
 
     for (ResourceDescriptor sub : settings.getSubResources("View")) {
-        addView(View(sub));
+
+        // If view exists, apply settings
+        if (m_views.count(sub.getValue()) > 0) {
+            View& view = m_views.at(sub.getValue());
+            view.applySettings(sub);
+        }
+        // Else, create a new view
+        else {
+            View newView = View(sub);
+            // Check if bottom right was set, if not use window dimensions
+            Pixel botRight = newView.getBottomRight();
+            if(botRight.getColInt() == 0 && botRight.getRowInt() == 0) {
+                newView.setBottomRight(Pixel(height,width));
+            }
+            // Add it to the view
+            addView(newView);
+        }
     }
 }
 
