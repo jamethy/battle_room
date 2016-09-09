@@ -64,6 +64,8 @@ SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings)
 {
     m_views.clear();
     m_sdlEvents.clear();
+    m_drawablesA.clear();
+    m_drawablesB.clear();
 
     // TODO throw exceptions instead of cerr
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -223,6 +225,9 @@ void SdlDisplayWindow::gatherInputs() {
         // it has been dealt with (and adjust iterator)
         m_sdlEvents.erase(it); --it;
     }
+
+    // This is not good practice but doing it anyway...
+    m_drawingA = !m_drawingA;
 }
 
 Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
@@ -242,9 +247,10 @@ void SdlDisplayWindow::addViewObjects(vector<Object> objects, string viewName) {
     if (m_views.count(viewName) > 0) {
 
         View& view = m_views.at(viewName);
+        vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
         for (Object& object : objects) {
-            m_drawables.push_back(getSdlDrawableFrom(object,view));
+            drawables.push_back(getSdlDrawableFrom(object,view));
         }
     }
 }
@@ -254,9 +260,10 @@ void SdlDisplayWindow::addViewTexts(std::vector<DrawableText> texts, std::string
     if (m_views.count(viewName) > 0) {
 
         View& view = m_views.at(viewName);
+        vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
         for (DrawableText& text : texts) {
-            m_drawables.push_back(getSdlDrawableFrom(text,view));
+            drawables.push_back(getSdlDrawableFrom(text,view));
         }
     }
 }
@@ -273,9 +280,11 @@ void SdlDisplayWindow::drawScreen() {
     SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
     SDL_RenderClear(m_renderer);
 
+    vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesA : m_drawablesB;
+
     // Sort the drawables on the screen by view layer and position
     // This will ensure the right things are drawn ontop of the right tings
-    std::sort(m_drawables.begin(), m_drawables.end(), 
+    std::sort(drawables.begin(), drawables.end(), 
             [](UniqueDrawable& a, UniqueDrawable& b) {
                 if (a->getViewLayer() == b->getViewLayer()) { 
                     return a->getZPosition() < b->getZPosition();
@@ -289,7 +298,7 @@ void SdlDisplayWindow::drawScreen() {
 
     // For every drawable that has been collected, get the texture and draw it on the screen
     // If a texture is missing, use the missing animation texture
-    for (UniqueDrawable& drawable : m_drawables) {
+    for (UniqueDrawable& drawable : drawables) {
         drawable->draw(m_sdlTextureManager);
     }
 
@@ -298,8 +307,7 @@ void SdlDisplayWindow::drawScreen() {
     SDL_RenderPresent(m_renderer);
 
     // Clear all the drawables that have been drawn to prepare for next frame
-    m_drawables.clear();
-
+    drawables.clear();
 
     // Gather inputs
     if (m_windowsDrawn >= m_windowCount) {

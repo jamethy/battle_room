@@ -39,7 +39,10 @@ private:
     SDL_Window* m_window; ///< SDL Window Pointer
 
     std::unordered_map<std::string,View> m_views; ///< Container for views
-    std::vector<UniqueDrawable> m_drawables; ///< Container for drawables
+
+    bool m_drawingA = true; ///< Switches between drawables for multithreading
+    std::vector<UniqueDrawable> m_drawablesA; ///< Container for drawables
+    std::vector<UniqueDrawable> m_drawablesB; ///< Container for drawables
 
     static std::vector<SDL_Event> m_sdlEvents;
     static int m_windowCount; ///< If this gets to zero, it quits SDL

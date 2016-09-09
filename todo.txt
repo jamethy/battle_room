@@ -3,11 +3,12 @@ Running ToDo List
 -----------------------------------
 
 For full program
+    Create a performance monitoring system
+        Records times globally
     Move cameraMovement to an abstract class and create implementations
     test missing animation
     Create server world
         Add time
-    Implement multithreading
     Create an exception scheme
     Create intersection handler
         intersection base class

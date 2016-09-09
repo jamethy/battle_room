@@ -9,6 +9,7 @@
 #include "battle_room/game/interface/game_interface.h"
 
 #include <iostream>
+#include <thread>
 
 using namespace BattleRoom;
 
@@ -133,42 +134,48 @@ int main() {
         Inputs inputs = InputGatherer::getAndClearInputs();
 
         ///// start game thread
+        std::thread gameThread( 
 
-        for (ViewInterface* interface : viewInterfaces) {
-            inputs = interface->handleInputs(inputs);
-        }
+            [&viewInterfaces, &windows, &inputs] () {
 
-        for (UniqueDisplayWindow& window : windows) {
-            inputs = window->handleInputs(inputs);
-        }
+                for (ViewInterface* interface : viewInterfaces) {
+                    inputs = interface->handleInputs(inputs);
+                }
 
-        //Commands cmds = gameInterface.getCommands():
-        //server.handleCommands(cmds);
-        //server.update(); <-- on own thread elsewhere
+                for (UniqueDisplayWindow& window : windows) {
+                    inputs = window->handleInputs(inputs);
+                }
 
-        for (ViewInterface* interface : viewInterfaces) {
+                //Commands cmds = gameInterface.getCommands():
+                //server.handleCommands(cmds);
+                //server.update(); <-- on own thread elsewhere
 
-            for (UniqueDisplayWindow& window : windows) {
+                for (ViewInterface* interface : viewInterfaces) {
 
-                window->addViewObjects(
-                        interface->getObjects(), 
-                        interface->getAssociatedView()
+                    for (UniqueDisplayWindow& window : windows) {
+
+                        window->addViewObjects(
+                                interface->getObjects(), 
+                                interface->getAssociatedView()
                         );
 
-                window->addViewTexts(
-                        interface->getDrawableTexts(), 
-                        interface->getAssociatedView()
+                        window->addViewTexts(
+                                interface->getDrawableTexts(), 
+                                interface->getAssociatedView()
                         );
+                    }
+                }
             }
-        }
-
+        );
         ////// End game thread
 
-        ///// Start Drawing thread
+        ///// Start Drawing "thread"
         for (UniqueDisplayWindow& window : windows) {
             window->drawScreen();
         }
-        //// End drawing thread
+        //// End drawing "thread"
+
+        gameThread.join();
     }
     
     return 0;
