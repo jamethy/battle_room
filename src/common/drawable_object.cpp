@@ -1,5 +1,5 @@
 #include "battle_room/common/drawable_object.h"
-#include "battle_room/engine/animation/animation_handler.h"
+#include "battle_room/common/animation_handler.h"
 
 namespace BattleRoom {
 

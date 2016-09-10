@@ -4,12 +4,12 @@
 #include "battle_room/common/resource.h"
 #include "battle_room/common/vector3d.h"
 #include "battle_room/common/quaternion.h"
-#include "battle_room/engine/animation/animation.h"
+#include "battle_room/common/animation.h"
 
 namespace BattleRoom {
 
 /**
- * \brief Object that is drawabled on a view
+ * \brief Object that is drawable on a view
  */
 class DrawableObject : public Resource {
 
@@ -32,15 +32,6 @@ public:
 
     // inherited
     virtual void applySettings(ResourceDescriptor settings) override;
-
-    //TODO figure out how to get rid of this
-    DrawableObject& operator=(const DrawableObject& other) {
-        m_currentAnimation = other.m_currentAnimation;
-        m_animationState = other.m_animationState;
-        m_location = other.m_location;
-        m_orientation = other.m_orientation;
-        return *this;
-    }
 
 private:
 
