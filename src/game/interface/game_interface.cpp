@@ -7,11 +7,29 @@ using std::vector;
 
 namespace BattleRoom {
 
-vector<Object> GameInterface::getObjects() {
-    vector<Object> objects;
+// apply settings
+
+void GameInterface::applySettings(ResourceDescriptor settings) {
+
+    ViewInterface::applySettings(settings);
+
+}
+
+// constructors
+
+GameInterface::GameInterface(GameWorld& gameWorld, ResourceDescriptor settings) 
+    : m_gameWorld(gameWorld)
+{ 
+    applySettings(settings);
+}
+
+// other functions
+
+vector<DrawableObject> GameInterface::getDrawableObjects() {
+    vector<DrawableObject> objects;
     objects.clear();
 
-    Object obj(UniqueId::generateNewLocalId());
+    DrawableObject obj;
     obj.setAnimation(AnimationHandler::getAnimation("boy_walking"));
     Quaternion q;
     //q.rotateAboutZ(30.0*3.14159/180.0);
@@ -41,10 +59,6 @@ Inputs GameInterface::handleInputs(Inputs inputs) {
 
 
     return remainingInputs;
-}
-
-void GameInterface::applySettings(ResourceDescriptor settings) {
-
 }
 
 } // BattleRoom namespace

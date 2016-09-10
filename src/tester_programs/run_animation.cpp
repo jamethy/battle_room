@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
     fpsText.setWidth(largestWidth/2.0);
     fpsText.setHeight(fpsText.getWidth()/5.0);
     fpsText.setLocation(Vector3D(
-                -fpsText.getWidth(),
+                -fpsText.getWidth()/2.0,
                 largestHeight/2.0 - fpsText.getHeight()/2.0, 
                 0.001
     ));
@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
         Inputs inputs = InputGatherer::getAndClearInputs();
 
         // Add object to view
-        Object object(UniqueId::generateNewLocalId());
+        DrawableObject object;
         object.setAnimation(animation);
         object.setAnimationState(diff);
         window->addViewObjects({object},"mainView");

@@ -15,6 +15,7 @@ target_link_libraries(battleroom
     Animation
     Graphics
     GameInterface
+    GameWorld
     ${END_GROUP}
     ${SDL2_LIBRARY}
     ${SDL2_IMAGE_LIBRARY}

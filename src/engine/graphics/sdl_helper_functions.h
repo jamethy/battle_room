@@ -7,7 +7,7 @@
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/rel_pixel.h"
 #include "battle_room/common/color.h"
-#include "battle_room/common/object.h"
+#include "battle_room/common/drawable_object.h"
 #include "battle_room/common/drawable_text.h"
 #include "battle_room/engine/animation/view.h"
 
@@ -68,7 +68,7 @@ SDL_Color toSdlColor(Color color);
  * \param view View that the object will be drawn on
  * \return Unique Pointer of SdlDrawable base class
  */
-UniqueDrawable getSdlDrawableFrom(Object& object, View& view);
+UniqueDrawable getSdlDrawableFrom(DrawableObject& object, View& view);
 
 /**
  * \brief Creates an instance drawable in SDL

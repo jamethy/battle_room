@@ -2,6 +2,14 @@
 
 namespace BattleRoom {
 
+void ViewInterface::applySettings(ResourceDescriptor settings) {
+
+    if (isNotEmpty(settings.getValue())) {
+        setAssociatedView(settings.getValue());
+    }
+
+}
+
 std::string ViewInterface::getAssociatedView() const {
     return m_associatedView;
 }

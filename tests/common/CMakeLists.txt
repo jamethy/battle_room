@@ -4,7 +4,6 @@ add_executable(runCommonTests
                     testFileUtils.cpp 
                     testStringUtils.cpp
                     testQuaternion.cpp
-                    testObjects.cpp
                     testMisc.cpp
                )
 

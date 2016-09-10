@@ -3,8 +3,6 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    Create a performance monitoring system
-        Records times globally
     Move cameraMovement to an abstract class and create implementations
     fix missing animation
     Create server world
@@ -16,7 +14,10 @@ For full program
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load
-    or just a hardcoded preloader
+        or just a hardcoded preloader
+    Create a performance monitoring system
+        Records times globally
+        Track FPS and rate of other functions
 
 Persistent to do
     Look for // TODO in the code

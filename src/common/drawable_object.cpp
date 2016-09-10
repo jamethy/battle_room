@@ -1,11 +1,11 @@
-#include "battle_room/common/object.h"
+#include "battle_room/common/drawable_object.h"
 #include "battle_room/engine/animation/animation_handler.h"
 
 namespace BattleRoom {
 
 // apply settings
 
-void Object::applySettings(ResourceDescriptor settings) {
+void DrawableObject::applySettings(ResourceDescriptor settings) {
 
     m_location.applySettings( settings.getSubResource("Location") );
     m_orientation.applySettings( settings.getSubResource("Orientation") );
@@ -23,47 +23,42 @@ void Object::applySettings(ResourceDescriptor settings) {
 
 // Constructor
 
-Object::Object(UniqueId id) : 
-    m_id(id),
+DrawableObject::DrawableObject() : 
     m_currentAnimation(AnimationHandler::getAnimation(MISSING_ANIMATION)),
     m_animationState(0)
 {}
 
 // getters and setters
 
-Animation& Object::getAnimation() const {
+Animation& DrawableObject::getAnimation() const {
     return m_currentAnimation;
 }
 
-seconds Object::getAnimationState() const {
+seconds DrawableObject::getAnimationState() const {
     return m_animationState;
 }
 
-Vector3D Object::getLocation() const {
+Vector3D DrawableObject::getLocation() const {
     return m_location;
 }
 
-Quaternion Object::getOrientation() const {
+Quaternion DrawableObject::getOrientation() const {
     return m_orientation;
 }
 
-UniqueId Object::getUniqueId() const {
-    return m_id;
-}
-
-void Object::setAnimation(Animation animation) {
+void DrawableObject::setAnimation(Animation animation) {
     m_currentAnimation = animation;
 }
 
-void Object::setAnimationState(seconds animationState) {
+void DrawableObject::setAnimationState(seconds animationState) {
     m_animationState = animationState;
 }
 
-void Object::setLocation(Vector3D location) {
+void DrawableObject::setLocation(Vector3D location) {
      m_location = location;
 }
 
-void Object::setOrientation(Quaternion orientation) {
+void DrawableObject::setOrientation(Quaternion orientation) {
     m_orientation = orientation;
 }
 

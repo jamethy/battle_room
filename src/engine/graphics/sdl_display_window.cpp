@@ -257,7 +257,7 @@ Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
     return inputs;
 }
 
-void SdlDisplayWindow::addViewObjects(vector<Object> objects, string viewName) {
+void SdlDisplayWindow::addViewObjects(vector<DrawableObject> objects, string viewName) {
 
     // Check if view is in this window
     if (m_views.count(viewName) > 0) {
@@ -265,7 +265,7 @@ void SdlDisplayWindow::addViewObjects(vector<Object> objects, string viewName) {
         View& view = m_views.at(viewName);
         vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
-        for (Object& object : objects) {
+        for (DrawableObject& object : objects) {
             drawables.push_back(getSdlDrawableFrom(object,view));
         }
     }

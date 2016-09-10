@@ -3,3 +3,8 @@ Window: mainWindow
     Width: 500
     Height: 500
     View: mainView
+
+GameWorld:
+
+GameInterface: mainView
+

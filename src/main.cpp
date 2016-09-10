@@ -36,14 +36,6 @@ int main() {
         // exit
 
 
-    // set static world view objects <--------- from server
-    // in loop
-        // clear screen
-        // draw static world
-        // draw dynamic world <----- from server
-        // draw UI < gameinterface
-        // draw Menus
-
     // navigation commands
         // quit server / go to main menu
         // Create local server
@@ -109,21 +101,21 @@ int main() {
     // Create main components of game
     //ProgramState state;
 
+    GameWorld gameWorld(rd.getSubResource("GameWorld"));
+
 
     std::vector<UniqueDisplayWindow> windows;
     for (ResourceDescriptor windowDescriptor : rd.getSubResources("Window")) {
         windows.push_back(createDisplayWindow(windowDescriptor));
     }
 
-    //std::vector<DisplayWindow*> windows;
-    //windows.push_back(mainwindow.get());
+    std::vector<ViewInterface*> viewInterfaces; viewInterfaces.clear();
+    std::vector<GameInterface> gameInterfaces; gameInterfaces.clear();
 
-    GameInterface gameInterface;
-    gameInterface.setAssociatedView("mainView");
-        // will pass in World/Server, settings, viewName
-
-    std::vector<ViewInterface*> viewInterfaces;
-    viewInterfaces.push_back(&gameInterface);
+    for (ResourceDescriptor sub : rd.getSubResources("GameInterface")) {
+        gameInterfaces.push_back(GameInterface(gameWorld, sub));
+        viewInterfaces.push_back(&gameInterfaces.back());
+    }
 
     while(!InputGatherer::containsQuitEvent()) { // temp
 
@@ -138,27 +130,23 @@ int main() {
 
             [&viewInterfaces, &windows, &inputs] () {
 
+                // Handle inputs view interfaces, then in windows
                 for (ViewInterface* interface : viewInterfaces) {
                     inputs = interface->handleInputs(inputs);
                 }
-
                 for (UniqueDisplayWindow& window : windows) {
                     inputs = window->handleInputs(inputs);
                 }
 
-                //Commands cmds = gameInterface.getCommands():
-                //server.handleCommands(cmds);
-                //server.update(); <-- on own thread elsewhere
-
+                // Prepare objects for display
                 for (ViewInterface* interface : viewInterfaces) {
 
                     for (UniqueDisplayWindow& window : windows) {
 
                         window->addViewObjects(
-                                interface->getObjects(), 
+                                interface->getDrawableObjects(), 
                                 interface->getAssociatedView()
                         );
-
                         window->addViewTexts(
                                 interface->getDrawableTexts(), 
                                 interface->getAssociatedView()

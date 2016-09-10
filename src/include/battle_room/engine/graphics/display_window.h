@@ -1,7 +1,7 @@
 #ifndef DISPLAY_WINDOW_H
 #define DISPLAY_WINDOW_H
 
-#include "battle_room/common/object.h"
+#include "battle_room/common/drawable_object.h"
 #include "battle_room/common/drawable_text.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/common/resource.h"
@@ -38,7 +38,7 @@ public:
      * \param objects Objects that will be drawn on the view
      * \param viewName Key to find view to draw on
      */
-    virtual void addViewObjects(std::vector<Object> objects, std::string viewName) = 0;
+    virtual void addViewObjects(std::vector<DrawableObject> objects, std::string viewName) = 0;
 
     /*!
      * \brief Sets the drawable text to the view to be rendered

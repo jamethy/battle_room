@@ -426,7 +426,7 @@ UniqueDrawable getSdlDrawableFrom(DrawableText& text, View& view) {
 
 
 
-UniqueDrawable getSdlDrawableFrom(Object& object, View& view) {
+UniqueDrawable getSdlDrawableFrom(DrawableObject& object, View& view) {
 
     SdlDrawableImage* drawable = new SdlDrawableImage();
 

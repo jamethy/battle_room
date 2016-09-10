@@ -7,12 +7,12 @@ add_library(Common
         pixel.cpp
         rel_pixel.cpp
         unique_id.cpp
-        object.cpp
         vector3d.cpp
         quaternion.cpp
         input.cpp
         inputs.cpp
         input_gatherer.cpp
         color.cpp
+        drawable_object.cpp
         drawable_text.cpp
     )

@@ -2,8 +2,6 @@
 #define VIEW_H
 
 #include "battle_room/common/pixel.h"
-#include "battle_room/common/object.h"
-#include "battle_room/common/drawable_text.h"
 #include "battle_room/common/resource.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/engine/animation/camera.h"

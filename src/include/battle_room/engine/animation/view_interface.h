@@ -3,7 +3,7 @@
 
 #include "battle_room/common/resource.h"
 #include "battle_room/common/inputs.h"
-#include "battle_room/common/object.h"
+#include "battle_room/common/drawable_object.h"
 #include "battle_room/common/drawable_text.h"
 
 #include <vector>
@@ -32,7 +32,7 @@ public:
      * \brief Gets a list of objects that are drawable (probably on associated view)
      * \return List of objects
      */
-    virtual std::vector<Object> getObjects() = 0;
+    virtual std::vector<DrawableObject> getDrawableObjects() = 0;
 
     /**
      * \brief Gets a list of drawable texts (probably on associated view)
@@ -44,6 +44,9 @@ public:
 
     std::string getAssociatedView() const;
     void setAssociatedView(std::string viewName);
+
+    // inherited
+    virtual void applySettings(ResourceDescriptor settings) override;
 
 private:
 
