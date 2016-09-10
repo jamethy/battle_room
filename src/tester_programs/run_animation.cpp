@@ -106,10 +106,12 @@ int main(int argc, char** argv) {
                 largestHeight/2.0 - fpsText.getHeight()/2.0, 
                 0.001
     ));
-    steady_clock::time_point lastTime = steady_clock::now();
+    steady_clock::time_point lastTime = startTime;
 
-    double slowedFps = 30;
+    double slowedFps = -1;
     bool showFps = false;
+    unsigned long frame_count = 0;
+
     while(!InputGatherer::containsQuitEvent()) {
 
         // Iterate the clock
@@ -142,14 +144,18 @@ int main(int argc, char** argv) {
         window->handleInputs(inputs);
 
         // FPS Display
-        double fps = 1.0/std::chrono::duration_cast<duration<double>> (newtime - lastTime).count();
-        slowedFps = 0.98*slowedFps + 0.02*fps;
-        lastTime = steady_clock::now();
+        if (std::chrono::duration_cast<duration<double>> (newtime - lastTime).count() > 1) {
+            slowedFps = frame_count;
+            lastTime = newtime;
+            frame_count = 0;
+        }
 
         if (showFps) {
             fpsText.setText("FPS: " + std::to_string((int)slowedFps));
             window->addViewTexts({fpsText},"mainView");
         } 
+
+        ++frame_count;
 
         // Draw the screen
         window->drawScreen();
