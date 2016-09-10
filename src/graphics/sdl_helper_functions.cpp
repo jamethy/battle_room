@@ -2,6 +2,8 @@
 #include "sdl_drawable_text.h"
 #include "sdl_drawable_image.h"
 
+#include <cmath>
+
 namespace BattleRoom {
 
 SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewHeight) {

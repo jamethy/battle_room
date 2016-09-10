@@ -5,8 +5,10 @@ include_directories(include)
 add_executable(run_animation run_animation.cpp )
 
 target_link_libraries(run_animation
+    ${START_GROUP}
     Common
     Graphics
+    ${END_GROUP}
     ${SDL2_LIBRARY}
     ${SDL2_IMAGE_LIBRARY}
     ${SDL2_gfx_LIBRARY}
