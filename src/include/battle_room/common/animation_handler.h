@@ -24,14 +24,6 @@ public:
      */
     static Animation& getAnimation(std::string animationKey);
 
-    /**
-     * \brief Sets the directory where animations can be found
-     * This should be called before any animations are gotten
-     *
-     * \param Either relative or absolute path to resources
-     */
-    static void setResourcePath(std::string resourcePath);
-
 }; // AnimationHandler class
 } // BattleRoom namespace
 #endif // ANIMATION_HANDLER_H

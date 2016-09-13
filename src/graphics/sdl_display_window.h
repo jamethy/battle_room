@@ -2,8 +2,11 @@
 #define SDL_DISPLAY_WINDOW
 
 #include "battle_room/graphics/display_window.h"
+#include "battle_room/graphics/view.h"
 #include "sdl_texture_manager.h"
 #include "sdl_drawable.h"
+
+#include <unordered_map>
 
 namespace BattleRoom {
 
@@ -29,7 +32,7 @@ public:
     void addViewObjects(std::vector<DrawableObject> objects, std::string viewName) override;
     void addViewTexts(std::vector<DrawableText> texts, std::string viewName) override;
     void drawScreen() override;
-    void addView(View view) override;
+    void switchBuffers() override;
     Inputs handleInputs(Inputs inputs) override; 
 
 private:

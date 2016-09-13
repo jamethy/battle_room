@@ -1,7 +1,7 @@
 #ifndef SERVER_CLIENT_FACTORY_H
 #define SERVER_CLIENT_FACTORY_H
 
-#include "battle_room/game/server_client.h"
+#include "battle_room/networking/server_client.h"
 
 namespace BattleRoom {
 

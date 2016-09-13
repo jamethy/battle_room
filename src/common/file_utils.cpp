@@ -9,6 +9,12 @@ using std::vector;
 
 namespace BattleRoom {
 
+/**
+ * Static variable of the resource path
+ * See setResourcePathFromExe and getResourcePath
+ */
+std::string m_resourcePath = "../res/";
+
 string getFilePath(string fullFilePath) {
 
     string filepath = "./";
@@ -81,5 +87,14 @@ vector<string> readEntireResourceFile(string fullFilePath) {
     return lines;
 }
 
+void setResourcePathFromExe(std::string exeFilePath) {
+
+    std::string exePath = getFilePath(exeFilePath);
+    m_resourcePath = exePath + "../res/";
+}
+
+std::string getResourcePath() {
+    return m_resourcePath;
+}
 
 } // BattleRoom namesace

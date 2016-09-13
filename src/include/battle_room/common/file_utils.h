@@ -50,5 +50,17 @@ std::string getFileExtension(std::string filename);
  */
 std::vector<std::string> readEntireResourceFile(std::string fullFilePath);
 
+/*!
+ * \brief Sets the resource path from the path of the executable
+ * \param Relative path to the executable
+ */
+void setResourcePathFromExe(std::string exePath);
+
+/*!
+ * \brief Gets the resource path
+ * \param Resource path relative to exe
+ */
+std::string getResourcePath();
+
 } // BattleRoom namespace
 #endif // FILE_UTILS_H

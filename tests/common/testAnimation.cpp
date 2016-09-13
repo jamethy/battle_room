@@ -2,6 +2,7 @@
 #include "battle_room/common/frame.h"
 #include "battle_room/common/animation.h"
 #include "battle_room/common/animation_handler.h"
+#include "battle_room/common/file_utils.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
@@ -70,8 +71,10 @@ TEST(Test_gen, typical) {
 }
 
 TEST(Test_AnimationHandler, typical) {
-    
-    AnimationHandler::setResourcePath(string(TEST_FILES_DIR) + "/animations/");
+
+    std::string path = TEST_FILES_DIR;
+    setResourcePathFromExe(path + "/");
+
     Animation animation = AnimationHandler::getAnimation("test_animation");
 
     EXPECT_STREQ("test_animation.jpg", animation.getImageFile().c_str());
@@ -79,7 +82,9 @@ TEST(Test_AnimationHandler, typical) {
 
 TEST(Test_AnimationHandler, missing) {
     
-    AnimationHandler::setResourcePath(string(TEST_FILES_DIR) + "/animations/");
+    std::string path = TEST_FILES_DIR;
+    setResourcePathFromExe(path + "/");
+
     Animation animation = AnimationHandler::getAnimation("lkjsldkfjsldkfjsd");
 
     EXPECT_STREQ("missing_animation.png", animation.getImageFile().c_str());

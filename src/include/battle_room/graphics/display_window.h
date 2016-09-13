@@ -5,11 +5,8 @@
 #include "battle_room/common/drawable_text.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/common/resource.h"
-#include "battle_room/graphics/view.h"
-#include "battle_room/graphics/camera.h"
 
 #include <vector>
-#include <unordered_map>
 #include <memory>
 
 namespace BattleRoom {
@@ -54,10 +51,11 @@ public:
     virtual void drawScreen() = 0;
 
     /*!
-     * \brief Addes a view to the display window
-     * \TODO add a remove view
+     * \brief Switches the screen drawing buffers
+     * This needs to be called in multithreaded applications - the addView* functions will
+     * operate on one buffer while drawScreen operates on another.
      */
-    virtual void addView(View view) = 0;
+    virtual void switchBuffers() = 0;
 
     /**
      * \brief Handles inputs - such as for cameras

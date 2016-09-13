@@ -65,7 +65,9 @@ void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
                 newView.setBottomRight(Pixel(height,width));
             }
             // Add it to the view
-            addView(newView);
+            string name = newView.getName();
+            if (m_views.count(name) > 0) { m_views.at(name) = newView; }
+            else { m_views.insert(std::pair<string,View>(name,newView)); }
         }
     }
 }
@@ -241,9 +243,6 @@ void SdlDisplayWindow::gatherInputs() {
         // it has been dealt with (and adjust iterator)
         m_sdlEvents.erase(it); --it;
     }
-
-    // This is not good practice but doing it anyway...
-    m_drawingA = !m_drawingA;
 }
 
 Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
@@ -339,16 +338,8 @@ void SdlDisplayWindow::drawScreen() {
 
 }
 
-void SdlDisplayWindow::addView(View view) {
-
-    string name = view.getName();
-
-    if (m_views.count(name) > 0) {
-        m_views.at(name) = view;
-    }
-    else {
-        m_views.insert(std::pair<string,View>(name,view));
-    }
+void SdlDisplayWindow::switchBuffers() {
+    m_drawingA = !m_drawingA;
 }
 
 UniqueDisplayWindow createDisplayWindow(ResourceDescriptor settings) {

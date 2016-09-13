@@ -1,7 +1,7 @@
-#include "battle_room/game/game_interface.h"
+#include "battle_room/user_interface/game_interface.h"
 
 #include "battle_room/common/input_gatherer.h"
-#include "battle_room/common/animation_handler.h"
+#include "battle_room/networking/server_client_factory.h"
 
 using std::vector;
 
@@ -13,29 +13,34 @@ void GameInterface::applySettings(ResourceDescriptor settings) {
 
     ViewInterface::applySettings(settings);
 
+    ResourceDescriptor sub = settings.getSubResource("ServerClient");
+    if (isNotEmpty(sub.getValue())) {
+        m_serverClient = ServerClientFactory::createServerClient(sub);
+    }
 }
 
 // constructors
 
-GameInterface::GameInterface(GameWorld& gameWorld, ResourceDescriptor settings) 
-    : m_gameWorld(gameWorld)
+GameInterface::GameInterface(ResourceDescriptor settings) 
+    : m_serverClient(ServerClientFactory::createEmptyServerClient())
 { 
     applySettings(settings);
 }
 
 // other functions
 
+void GameInterface::updateBuffer() {
+    m_serverClient->updateBuffer();
+}
+
 vector<DrawableObject> GameInterface::getDrawableObjects() {
+
     vector<DrawableObject> objects;
     objects.clear();
 
-    DrawableObject obj;
-    obj.setAnimation(AnimationHandler::getAnimation("boy_walking"));
-    Quaternion q;
-    //q.rotateAboutZ(30.0*3.14159/180.0);
-    obj.setOrientation(q);
-
-    objects.push_back(obj);
+    for (GameObject& obj : m_serverClient->getAllGameObjects()) {
+        objects.push_back(obj);
+    }
     return objects;
 }
 

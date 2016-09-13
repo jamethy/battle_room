@@ -1,6 +1,5 @@
 
 #include "sdl_texture_manager.h"
-#include "battle_room/graphics/get_resource_path.h"
 
 #include "battle_room/common/file_utils.h"
 
@@ -47,26 +46,5 @@ void SdlTextureManager::setRenderer(SDL_Renderer* renderer) {
 SDL_Renderer* SdlTextureManager::getRenderer() {
     return m_renderer;
 }
-
-// implementation of getResourcePath from texture_manager.h
-string getResourcePath() {
-    static string resourcePath;
-    if (resourcePath.empty()) {
-        char *path = SDL_GetBasePath();
-        if (path) {
-            resourcePath = path;
-            SDL_free(path);
-        }
-        else {
-            std::cerr << "Error getting resource path: " << SDL_GetError() << std::endl;
-            return "";
-        }
-        
-		size_t pos = resourcePath.rfind("bin");
-		resourcePath = resourcePath.substr(0, pos) + "res/";
-	}
-    return resourcePath;
-}
-
 
 } // BattleRoom namespace

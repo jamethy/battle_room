@@ -3,6 +3,7 @@ Running ToDo List
 -----------------------------------
 
 For full program
+    Add networking code to networking...
     Move cameraMovement to an abstract class and create implementations
     fix missing animation
     Create server world

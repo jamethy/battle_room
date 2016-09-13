@@ -2,7 +2,7 @@
 #define GAME_INTERFACE_H
 
 #include "battle_room/common/view_interface.h"
-#include "battle_room/game/game_world.h"
+#include "battle_room/networking/server_client.h"
 
 namespace BattleRoom {
 
@@ -10,7 +10,9 @@ class GameInterface : public ViewInterface {
 
 public:
 
-    GameInterface(GameWorld& gameWorld, ResourceDescriptor settings);
+    GameInterface(ResourceDescriptor settings);
+
+    void updateBuffer();
 
     // inherited
     std::vector<DrawableObject> getDrawableObjects() override; 
@@ -20,7 +22,7 @@ public:
 
 private:
 
-    GameWorld& m_gameWorld;
+    UniqueServerClient m_serverClient;
 
 }; // GameInterface class
 } // BattleRoom namespace

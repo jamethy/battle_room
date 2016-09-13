@@ -1,5 +1,5 @@
 #include "sdl_font_manager.h"
-#include "battle_room/graphics/get_resource_path.h"
+#include "battle_room/common/file_utils.h"
 
 #include <unordered_map>
 #include <iostream>

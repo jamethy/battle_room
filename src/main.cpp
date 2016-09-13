@@ -2,18 +2,20 @@
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/common/animation_handler.h"
+#include "battle_room/common/file_utils.h"
 
 #include "battle_room/graphics/display_window.h"
-#include "battle_room/graphics/get_resource_path.h"
 
-#include "battle_room/game/game_interface.h"
+#include "battle_room/user_interface/game_interface.h"
 
 #include <iostream>
 #include <thread>
 
 using namespace BattleRoom;
 
-int main() {
+int main(int argc, char** argv) {
+
+    setResourcePathFromExe(argv[0]);
 
     // Show Main menu
         // single player
@@ -78,16 +80,9 @@ int main() {
     // single player game paused
 
 
-
-
-
-
     std::cout << "Hello World!\n";
-    std::string resourcePath = getResourcePath();
-    AnimationHandler::setResourcePath(resourcePath + "/animations/");
 
-
-    std::string settings_file = resourcePath + "/startup" + DESCRIPTOR_EXTENSION;
+    std::string settings_file = getResourcePath() + "/startup" + DESCRIPTOR_EXTENSION;
     ResourceDescriptor rd = ResourceDescriptor::readFile(settings_file);
 
 
@@ -101,9 +96,6 @@ int main() {
     // Create main components of game
     //ProgramState state;
 
-    GameWorld gameWorld(rd.getSubResource("GameWorld"));
-
-
     std::vector<UniqueDisplayWindow> windows;
     for (ResourceDescriptor windowDescriptor : rd.getSubResources("Window")) {
         windows.push_back(createDisplayWindow(windowDescriptor));
@@ -113,7 +105,7 @@ int main() {
     std::vector<GameInterface> gameInterfaces; gameInterfaces.clear();
 
     for (ResourceDescriptor sub : rd.getSubResources("GameInterface")) {
-        gameInterfaces.push_back(GameInterface(gameWorld, sub));
+        gameInterfaces.push_back(GameInterface(sub));
         viewInterfaces.push_back(&gameInterfaces.back());
     }
 
@@ -126,35 +118,34 @@ int main() {
         Inputs inputs = InputGatherer::getAndClearInputs();
 
         ///// start game thread
-        std::thread gameThread( 
+        std::thread gameThread( [&viewInterfaces, &windows, &inputs] () {
 
-            [&viewInterfaces, &windows, &inputs] () {
+            // Handle inputs view interfaces, then in windows
+            for (ViewInterface* interface : viewInterfaces) {
+                inputs = interface->handleInputs(inputs);
+            }
+            for (UniqueDisplayWindow& window : windows) {
+                inputs = window->handleInputs(inputs);
+            }
 
-                // Handle inputs view interfaces, then in windows
-                for (ViewInterface* interface : viewInterfaces) {
-                    inputs = interface->handleInputs(inputs);
-                }
+            // Update buffer here
+
+            // Prepare objects for display
+            for (ViewInterface* interface : viewInterfaces) {
+
                 for (UniqueDisplayWindow& window : windows) {
-                    inputs = window->handleInputs(inputs);
-                }
 
-                // Prepare objects for display
-                for (ViewInterface* interface : viewInterfaces) {
-
-                    for (UniqueDisplayWindow& window : windows) {
-
-                        window->addViewObjects(
-                                interface->getDrawableObjects(), 
-                                interface->getAssociatedView()
-                        );
-                        window->addViewTexts(
-                                interface->getDrawableTexts(), 
-                                interface->getAssociatedView()
-                        );
-                    }
+                    window->addViewObjects(
+                            interface->getDrawableObjects(), 
+                            interface->getAssociatedView()
+                    );
+                    window->addViewTexts(
+                            interface->getDrawableTexts(), 
+                            interface->getAssociatedView()
+                    );
                 }
             }
-        );
+        });
         ////// End game thread
 
         ///// Start Drawing "thread"
@@ -164,6 +155,12 @@ int main() {
         //// End drawing "thread"
 
         gameThread.join();
+
+        // switch bufferes
+        for (UniqueDisplayWindow& window : windows) {
+            window->switchBuffers();
+        }
+
     }
     
     return 0;

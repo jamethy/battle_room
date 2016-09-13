@@ -4,7 +4,6 @@
 #include "battle_room/common/file_utils.h"
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/common/animation_handler.h"
-#include "battle_room/graphics/get_resource_path.h"
 
 #include <cmath>
 #include <fstream>
@@ -20,6 +19,8 @@ using std::chrono::steady_clock;
 using std::chrono::duration;
 
 int main(int argc, char** argv) {
+
+    setResourcePathFromExe(argv[0]);
 
     ////////////////////////////////////////////////////////////////////////////
     // Check the arguments
@@ -50,7 +51,6 @@ int main(int argc, char** argv) {
     ////////////////////////////////////////////////////////////////////////////
     // Load the animation
 
-    AnimationHandler::setResourcePath(getResourcePath() + "/animations/");
     Animation animation = AnimationHandler::getAnimation(arg);
 
     // Find the largest width and height needed to display full animation
@@ -159,6 +159,7 @@ int main(int argc, char** argv) {
 
         // Draw the screen
         window->drawScreen();
+        window->switchBuffers();
     }
 
     // cleanup is handled by classes

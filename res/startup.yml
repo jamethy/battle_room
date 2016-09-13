@@ -4,7 +4,8 @@ Window: mainWindow
     Height: 500
     View: mainView
 
-GameWorld:
-
 GameInterface: mainView
+    ServerClient: Local
+        World:
+
 
