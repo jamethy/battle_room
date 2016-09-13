@@ -24,14 +24,14 @@ void DrawableObject::applySettings(ResourceDescriptor settings) {
 // Constructor
 
 DrawableObject::DrawableObject() : 
-    m_currentAnimation(AnimationHandler::getAnimation(MISSING_ANIMATION)),
+    m_currentAnimation(&AnimationHandler::getAnimation(MISSING_ANIMATION)),
     m_animationState(0)
 {}
 
 // getters and setters
 
 Animation& DrawableObject::getAnimation() const {
-    return m_currentAnimation;
+    return *m_currentAnimation;
 }
 
 seconds DrawableObject::getAnimationState() const {
@@ -46,8 +46,8 @@ Quaternion DrawableObject::getOrientation() const {
     return m_orientation;
 }
 
-void DrawableObject::setAnimation(Animation animation) {
-    m_currentAnimation = animation;
+void DrawableObject::setAnimation(Animation& animation) {
+    m_currentAnimation = &animation;
 }
 
 void DrawableObject::setAnimationState(seconds animationState) {

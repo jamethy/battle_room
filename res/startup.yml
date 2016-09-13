@@ -7,5 +7,7 @@ Window: mainWindow
 GameInterface: mainView
     ServerClient: Local
         World:
+            Object:
+                Animation: boy_walking
 
 

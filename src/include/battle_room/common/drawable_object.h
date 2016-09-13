@@ -25,7 +25,7 @@ public:
     Vector3D getLocation() const;
     Quaternion getOrientation() const;
 
-    void setAnimation(Animation animation);
+    void setAnimation(Animation& animation);
     void setAnimationState(seconds animationState);
     void setLocation(Vector3D location);
     void setOrientation(Quaternion orientation);
@@ -35,7 +35,7 @@ public:
 
 private:
 
-    Animation& m_currentAnimation; ///< Animation object is on
+    Animation* m_currentAnimation; ///< Animation object is on
     seconds m_animationState; ///< Seconds into animation
     Vector3D m_location; ///< Location of the object in 3D space
     Quaternion m_orientation; ///< Orientationof the object in 3D space

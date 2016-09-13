@@ -11,19 +11,16 @@ namespace BattleRoom {
 
 void World::applySettings(ResourceDescriptor settings) {
 
+    for (ResourceDescriptor& objDesc : settings.getSubResources("Object")) {
+        GameObject obj(UniqueId::generateNewNetworkId());
+        obj.applySettings(objDesc);
+        m_gameObjects.push_back(obj);
+    }
 }
 
 // constructors
 World::World() {
     m_gameObjects.clear();
-
-    GameObject obj(UniqueId::generateNewNetworkId());
-    obj.setAnimation(AnimationHandler::getAnimation("boy_walking"));
-    //Quaternion q;
-    //q.rotateAboutZ(30.0*3.14159/180.0);
-    //obj.setOrientation(q);
-
-    m_gameObjects.push_back(obj);
 }
 
 World::World(ResourceDescriptor settings) 

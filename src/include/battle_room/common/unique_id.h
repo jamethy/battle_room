@@ -38,7 +38,7 @@ private:
     // private constructor
     UniqueId(long long id);
 
-    const long long m_id; ///< Id impl
+    long long m_id; ///< Id impl
 
 }; // UniqueId class
 } // BattleRoom namespace
