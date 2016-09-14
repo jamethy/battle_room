@@ -12,9 +12,10 @@ namespace BattleRoom {
 // Empty Server Client
 class EmptyServerClient : public ServerClient {
 public:
-    void updateBuffer() {
+    EmptyServerClient() {
         m_updateWorldThread = std::thread([](){});
     }
+    void updateBuffer() { }
     vector<GameObject> getAllGameObjects() override { return vector<GameObject>(); }
     void applySettings(ResourceDescriptor settings) override { }
 }; // EmptyServerClient class

@@ -3,7 +3,8 @@
 namespace BattleRoom {
 
 // constructor
-ServerClient::ServerClient() {} 
+ServerClient::ServerClient() {
+} 
 
 ServerClient::~ServerClient() {
     m_keepThreadGoing = false;
