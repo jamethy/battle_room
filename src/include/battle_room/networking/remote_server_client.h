@@ -3,29 +3,19 @@
 
 #include "battle_room/networking/server_client.h"
 
-#include <memory>
-#include <vector>
-
 namespace BattleRoom {
 
 class RemoteServerClient : public ServerClient {
 
 public:
 
-    // destructor
+    // constructors
     RemoteServerClient(ResourceDescriptor settings);
-    ~RemoteServerClient() override;
+    virtual ~RemoteServerClient() override;
 
     // inherited
-    void updateBuffer() override;
-    std::vector<GameObject> getAllGameObjects() override;
-    void applySettings(ResourceDescriptor settings) override;
-
-private:
-
-    World m_queryWorld; ///< Game world used for interface query
-    World m_gameWorld; ///< Game world
-
+    virtual void updateBuffer() override;
+    virtual void applySettings(ResourceDescriptor settings) override;
 
 }; // RemoteServerClient class
 } // BattleRoom namespace

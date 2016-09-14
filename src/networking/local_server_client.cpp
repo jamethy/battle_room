@@ -14,19 +14,21 @@ void LocalServerClient::applySettings(ResourceDescriptor settings) {
     updateBuffer();
 }
 
-void threadFunction(World& &world, std::mutex& worldLock, bool& keepGoing) {
 
-        while (keepGoing) {
-            worldLock.lock();
-            // update world
-            worldLock.unlock();
-        }
+// local threading function
+void localThreadFunction(World& world, std::mutex& worldLock, bool& keepGoing) {
+
+    while (keepGoing) {
+        worldLock.lock();
+        // update world
+        worldLock.unlock();
+    }
 }
 
 // constructor
 LocalServerClient::LocalServerClient(ResourceDescriptor settings) 
 {
-    m_updateWorldThread = std::thread(threadFunction, 
+    m_updateWorldThread = std::thread(localThreadFunction, 
             std::ref(m_gameWorld), 
             std::ref(m_updateWorldLock), 
             std::ref(m_keepThreadGoing));
@@ -35,23 +37,11 @@ LocalServerClient::LocalServerClient(ResourceDescriptor settings)
 }
 
 LocalServerClient::~LocalServerClient() {
-    m_keepThreadGoing = false;
-    m_updateWorldThread.join();
 }
 
 // other functions
 
 void LocalServerClient::updateBuffer() {
-
-    m_updateWorldLock.lock();
-    m_queryWorld = m_gameWorld;
-    m_updateWorldLock.unlock();
-
+    ServerClient::updateBuffer();
 }
-
-
-std::vector<GameObject> LocalServerClient::getAllGameObjects() { 
-    return m_queryWorld.getAllGameObjects();
-}
-
 } // BattleRoom namespace

@@ -3,9 +3,6 @@
 
 #include "battle_room/networking/server_client.h"
 
-#include <memory>
-#include <vector>
-
 namespace BattleRoom {
 
 class HostServerClient : public ServerClient {
@@ -18,14 +15,11 @@ public:
 
     // inherited
     void updateBuffer() override;
-    std::vector<GameObject> getAllGameObjects() override;
     void applySettings(ResourceDescriptor settings) override;
 
 private:
 
-    World m_queryWorld; ///< Game world used for interface query
-    World m_gameWorld; ///< Game world
-
+    // server object
 
 }; // HostServerClient class
 } // BattleRoom namespace

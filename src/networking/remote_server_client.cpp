@@ -12,29 +12,40 @@ void RemoteServerClient::applySettings(ResourceDescriptor settings) {
     updateBuffer();
 }
 
+// remote threading function
+void remoteThreadFunction(World& world, std::mutex& worldLock, bool& keepGoing) {
+
+    while (keepGoing) {
+
+        // get updated info from server
+
+        worldLock.lock();
+        // set updated info in game world
+        worldLock.unlock();
+    }
+}
+
 // constructor
 RemoteServerClient::RemoteServerClient(ResourceDescriptor settings) 
 {
+    m_updateWorldThread = std::thread(remoteThreadFunction, 
+            std::ref(m_gameWorld), 
+            std::ref(m_updateWorldLock), 
+            std::ref(m_keepThreadGoing));
+
     applySettings(settings);
 }
 
-RemoteServerClient::~RemoteServerClient() {}
+RemoteServerClient::~RemoteServerClient() {
+}
 
 // other functions
 
 void RemoteServerClient::updateBuffer() {
 
-    // request game world mutex lock
+    // send queued commands
 
-    // copy game world to query world
-
-    // release game world mutex lock
-
-}
-
-
-std::vector<GameObject> RemoteServerClient::getAllGameObjects() { 
-    return m_queryWorld.getAllGameObjects();
+    ServerClient::updateBuffer();
 }
 
 } // BattleRoom namespace

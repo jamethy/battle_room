@@ -7,6 +7,8 @@
 
 #include <memory>
 #include <vector>
+#include <thread>
+#include <mutex>
 
 namespace BattleRoom {
 
@@ -15,14 +17,21 @@ class ServerClient : public Resource {
 public:
 
     // destructor
-    virtual ~ServerClient() {}
+    virtual ~ServerClient();
 
-    virtual void updateBuffer() = 0;
+    virtual void updateBuffer();
 
-    virtual std::vector<GameObject> getAllGameObjects() = 0;
+    virtual std::vector<GameObject> getAllGameObjects();
 
-private:
+protected:
 
+    ServerClient();
+
+    World m_gameWorld; ///< World to constantly update
+    World m_queryWorld; ///< World to get info from
+    std::mutex m_updateWorldLock; ///< Lock for m_gameWorld reading/writing
+    std::thread m_updateWorldThread; ///< thread for updating m_gameWorld
+    bool m_keepThreadGoing = true; ///< Set to false when to stop updating m_gameWorld
 
 }; // ServerClient class
 
