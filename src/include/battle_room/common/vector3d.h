@@ -78,20 +78,5 @@ private:
     meters m_z; ///< Magnitude in the k direction
 
 }; // Vector3D class
-
-/**
- * \brief Utility function to parse the string for meters
- * \param str String to parse from
- * \return Value in meters found in the string
- */
-meters toMeters(std::string str);
-
-/**
- * \brief Utility function to parse the string for radians
- * \param str String to parse from
- * \return Value in radians found in the string
- */
-radians toRadians(std::string str);
-
 } // BattleRoom namespace
 #endif // VECTOR3D_H

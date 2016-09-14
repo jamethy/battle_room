@@ -3,23 +3,9 @@
 
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/string_utils.h"
+#include "battle_room/common/units.h"
 
 namespace BattleRoom {
-
-/**
- * \brief Unit of measurement used for rotation
- */
-typedef double radians;
-
-inline double toDegrees(radians angle) {
-    return angle*180.0/3.14159265359;
-}
-
-/**
- * Unit of measurement in the world coordinates
- */
-typedef double meters;
-
 
 /**
  * The start of the basis for any resource read in through a file

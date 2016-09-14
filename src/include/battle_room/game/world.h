@@ -3,6 +3,7 @@
 
 #include "battle_room/common/resource.h"
 #include "battle_room/game/game_object.h"
+#include "battle_room/game/game_time.h"
 
 #include <vector>
 
@@ -16,6 +17,8 @@ public:
     World();
     World(ResourceDescriptor settings);
 
+    void update();
+
     std::vector<GameObject> getAllGameObjects(); // TEMP
 
     // inherited
@@ -24,6 +27,7 @@ public:
 private:
 
     std::vector<GameObject> m_gameObjects; // TEMP
+    GameTime m_gameTime;
 
 }; // World class
 } // BattleRoom namespace

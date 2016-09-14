@@ -61,11 +61,4 @@ meters Frame::getHeight() const {
     return m_yScale*(m_bottomRight.getRow() - m_topLeft.getRow());
 }
 
-
-// other functions
-
-seconds toSeconds(std::string str) {
-    return stod(str);
-}
-
 } // BattleRoom namespace

@@ -7,11 +7,6 @@
 namespace BattleRoom {
 
 /**
- * Unit of measurement for time
- */
-typedef double seconds;
-
-/**
  * \brief Frame in an animation. Each frame cuts out a portion of
  * the image file and has an end time to mark its point in the 
  * animation.
@@ -59,15 +54,5 @@ private:
     double m_yScale; // meters per pixel, amount to stretch image
     
 }; // Frame class
-
-
-/**
- * \brief Parses the string for seconds
- * \param str String containing seconds to parse
- * \return Seconds value found in str
- */
-seconds toSeconds(std::string str);
-
-
 } // BattleRoom namespace
 #endif // FRAME_H

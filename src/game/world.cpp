@@ -16,6 +16,11 @@ void World::applySettings(ResourceDescriptor settings) {
         obj.applySettings(objDesc);
         m_gameObjects.push_back(obj);
     }
+
+    ResourceDescriptor sub = settings.getSubResource("Time");
+    if (isNotEmpty(sub.getValue())) {
+        m_gameTime.set(toSeconds(sub.getValue()));
+    }
 }
 
 // constructors
@@ -31,6 +36,13 @@ World::World(ResourceDescriptor settings)
 
 
 // other functions
+
+void World::update() {
+
+    m_gameTime.update();
+}
+
+
 
 vector<GameObject> World::getAllGameObjects() {
     return m_gameObjects;

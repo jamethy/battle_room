@@ -5,8 +5,7 @@ Running ToDo List
 For full program
     make sure all new stuff is documented
     Add read another file from resource file
-    add time to world
-    add update function to world
+    implement update function to world
     Add networking code to networking...
     Move cameraMovement to an abstract class and create implementations
     fix missing animation

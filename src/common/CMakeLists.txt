@@ -20,4 +20,5 @@ add_library ( Common
         unique_id.cpp
         vector3d.cpp
         view_interface.cpp
+        units.cpp
 )

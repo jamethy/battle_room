@@ -91,12 +91,4 @@ Vector3D Vector3D::getUnit() const {
     return this->times(1.0/magnitude());
 }
 
-meters toMeters(string str) {
-    return stod(str);
-}
-
-radians toRadians(string str) {
-    return stod(str);
-}
-
 } // BattleRoom namespace
