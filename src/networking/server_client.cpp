@@ -2,21 +2,23 @@
 
 namespace BattleRoom {
 
-// constructor
+// constructors
 ServerClient::ServerClient() {
 } 
 
 ServerClient::~ServerClient() {
     m_keepThreadGoing = false;
-    m_updateWorldThread.join();
+    if (m_updateWorldThread.joinable()) {
+        m_updateWorldThread.join();
+    }
 }
 
 // other functions
 
 void ServerClient::updateBuffer() {
-    m_updateWorldLock.lock();
-    m_queryWorld = m_gameWorld;
-    m_updateWorldLock.unlock();
+    m_middleWorldLock.lock();
+    m_queryWorld = m_middleWorld;
+    m_middleWorldLock.unlock();
 }
 
 

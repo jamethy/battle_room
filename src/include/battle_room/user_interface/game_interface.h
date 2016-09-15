@@ -12,6 +12,9 @@ public:
 
     GameInterface(ResourceDescriptor settings);
 
+    /**
+     * \brief Updates the server client buffer
+     */
     void updateBuffer();
 
     // inherited

@@ -148,6 +148,20 @@ void ResourceDescriptor::fillFromInput(vector<string> lines, unsigned& start) {
         }
 
         setSubResources(subs);
+
+        // check for Resource sub
+        for (ResourceDescriptor subResource : getSubResources("Resource")) {
+
+            if (isNotEmpty(subResource.getValue())) {
+
+                string file = getResourcePath() + "/" 
+                    + subResource.getValue() + DESCRIPTOR_EXTENSION;
+
+                vector<ResourceDescriptor> newSubs = readFile(file).getSubResources();
+                m_subResources.insert(m_subResources.end(), newSubs.begin(), newSubs.end());
+            }
+        }
+        
     }
 }
 

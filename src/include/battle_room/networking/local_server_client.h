@@ -5,6 +5,11 @@
 
 namespace BattleRoom {
 
+/**
+ * An implementation of ServerClient that has a 'server' within it without 
+ * all the networking stuff involved. It basically just updates the world on
+ * another thread.
+ */
 class LocalServerClient : public ServerClient {
 
 public:

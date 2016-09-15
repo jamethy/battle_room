@@ -15,8 +15,16 @@ radians toRadians(std::string str) {
     return stod(str);
 }
 
-double toDegrees(radians angle) {
+degrees toDegrees(std::string str) {
+    return stod(str);
+}
+
+degrees toDegrees(radians angle) {
     return angle*180.0/3.14159265359;
+}
+
+radians toRadians(degrees angle) {
+    return angle*3.14159265359/180.0;
 }
 
 

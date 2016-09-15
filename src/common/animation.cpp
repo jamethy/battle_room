@@ -1,6 +1,7 @@
 #include "battle_room/common/animation.h"
 
 #include <algorithm>
+#include <iostream>
 
 using std::string;
 using std::vector;
@@ -36,6 +37,12 @@ void Animation::applySettings(ResourceDescriptor settings) {
                 }
         );
     }
+
+    if (m_frames.size() == 0) {
+        // throw exception
+        std::cerr << "There are no frames in animation with image file " << m_imageFile <<
+            ". This will crash the game.\n";
+    }
 }
 
 // constructor
@@ -60,11 +67,11 @@ const vector<Frame>& Animation::getFrames() {
 
 // other functions
 
-const Frame& Animation::getFrame(seconds animationState) {
+seconds Animation::getLength() {
+    return m_frames.back().getEndTime();
+}
 
-    if (m_frames.size() == 0) {
-        // throw exception
-    }
+const Frame& Animation::getFrame(seconds animationState) {
 
     for (const Frame& frame : m_frames) {
         if (animationState < frame.getEndTime()) {

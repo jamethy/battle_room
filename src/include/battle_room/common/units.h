@@ -21,6 +21,11 @@ typedef double meters;
 typedef double radians;
 
 /**
+ * \brief Degrees rotation
+ */
+typedef double degrees;
+
+/**
  * \brief Parses the string for seconds
  * \param str String containing seconds to parse
  * \return Seconds value found in str
@@ -42,9 +47,21 @@ meters toMeters(std::string str);
 radians toRadians(std::string str);
 
 /**
+ * \brief Utility function to parse the string for degrees
+ * \param str Strong to parse from
+ * \return Value in degrees found in the string
+ */
+degrees toDegrees(std::string str);
+
+/**
  * \brief Converts radians to degrees
  */
-double toDegrees(radians angle);
+degrees toDegrees(radians angle);
+
+/**
+ * \brief Converts degrees to radians 
+ */
+radians toRadians(degrees angle);
 
 } // BattleRoom namespace
 #endif // UNITS_H

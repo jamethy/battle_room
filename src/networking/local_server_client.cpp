@@ -6,21 +6,20 @@ namespace BattleRoom {
 
 void LocalServerClient::applySettings(ResourceDescriptor settings) {
 
-
-    m_updateWorldLock.lock();
     m_gameWorld.applySettings(settings.getSubResource("World"));
-    m_updateWorldLock.unlock();
+    m_middleWorld = m_gameWorld;
 
     updateBuffer();
 }
 
 
 // local threading function
-void localThreadFunction(World& world, std::mutex& worldLock, bool& keepGoing) {
+void localThreadFunction(World& game, World& middle, std::mutex& worldLock, bool& keepGoing) {
 
     while (keepGoing) {
+        game.update();
         worldLock.lock();
-        // update world
+        middle = game;
         worldLock.unlock();
     }
 }
@@ -30,7 +29,8 @@ LocalServerClient::LocalServerClient(ResourceDescriptor settings)
 {
     m_updateWorldThread = std::thread(localThreadFunction, 
             std::ref(m_gameWorld), 
-            std::ref(m_updateWorldLock), 
+            std::ref(m_middleWorld),
+            std::ref(m_middleWorldLock), 
             std::ref(m_keepThreadGoing));
 
     applySettings(settings);

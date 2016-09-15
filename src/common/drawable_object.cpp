@@ -19,6 +19,19 @@ void DrawableObject::applySettings(ResourceDescriptor settings) {
     if (isNotEmpty(sub.getValue())) {
         setAnimationState(toSeconds(sub.getValue()));
     }
+
+    sub = settings.getSubResource("Rotation");
+    if (isNotEmpty(sub.getValue())) {
+        m_orientation = Quaternion();
+        m_orientation.rotateAboutZ(toRadians(sub.getValue()));
+    }
+
+    sub = settings.getSubResource("DegRotation");
+    if (isNotEmpty(sub.getValue())) {
+        radians angle = toRadians(toDegrees(sub.getValue()));
+        m_orientation = Quaternion();
+        m_orientation.rotateAboutZ(angle);
+    }
 }
 
 // Constructor

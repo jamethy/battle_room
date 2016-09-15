@@ -3,8 +3,9 @@ Running ToDo List
 -----------------------------------
 
 For full program
+    Need to handle inputs in order of view layer
+    Need to have a true local server so it can be shared across game interfaces
     make sure all new stuff is documented
-    Add read another file from resource file
     implement update function to world
     Add networking code to networking...
     Move cameraMovement to an abstract class and create implementations
@@ -26,3 +27,7 @@ Persistent to do
     document everything
     test cross platform
     Remove unecessary headers
+
+Ways to crash the game
+    Create an animation with no frames
+    Create a recursive resource file

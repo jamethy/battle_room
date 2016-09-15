@@ -5,6 +5,11 @@
 
 namespace BattleRoom {
 
+/**
+ * Implementation of ServerClient for a typically player joining a networked game.
+ * It queries the server for info on another thread, updating the gameWorld and then
+ * makes those changes available during updateBuffer
+ */
 class RemoteServerClient : public ServerClient {
 
 public:

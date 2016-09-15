@@ -12,9 +12,11 @@ namespace BattleRoom {
 void Vector3D::applySettings(ResourceDescriptor settings) {
 
     std::vector<string> values = split(settings.getValue(), ',');
-    if (values.size() == 3) {
+    if (values.size() == 3 || values.size() == 2) {
         m_x = toMeters(values[0]);
         m_y = toMeters(values[1]);
+    }
+    if (values.size() == 3) {
         m_z = toMeters(values[2]);
     }
 

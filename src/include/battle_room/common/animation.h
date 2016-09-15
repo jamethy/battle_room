@@ -34,6 +34,8 @@ public:
      */
     const Frame& getFrame(seconds animationState);
 
+    seconds getLength();
+
     // getters 
 
     const std::string& getImageFile();

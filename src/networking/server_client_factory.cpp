@@ -10,17 +10,21 @@ namespace BattleRoom {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Empty Server Client
+
+/**
+ * ServerClient implmentation that returns nothing and updates nothing.
+ */
 class EmptyServerClient : public ServerClient {
 public:
-    EmptyServerClient() {
-        m_updateWorldThread = std::thread([](){});
-    }
+    EmptyServerClient() { }
     void updateBuffer() { }
     vector<GameObject> getAllGameObjects() override { return vector<GameObject>(); }
     void applySettings(ResourceDescriptor settings) override { }
 }; // EmptyServerClient class
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Server Client Factory
 UniqueServerClient ServerClientFactory::createServerClient(ResourceDescriptor settings) {
     
     if ( keyMatch("Local", settings.getValue()) ) {

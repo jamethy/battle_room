@@ -12,6 +12,12 @@
 
 namespace BattleRoom {
 
+/**
+ * ServerClient is the client's side of the link between the server and the client. 
+ * Each server has two copies of the world: one it uses for updating on another thread (inside the class)
+ * and the other is used for querying from outside the class. The various implementations of ServerClient
+ * update the game world in different ways and send requests to the actual server in different ways.
+ */
 class ServerClient : public Resource {
 
 public:
@@ -19,23 +25,34 @@ public:
     // destructor
     virtual ~ServerClient();
 
+    /**
+     * \brief Updates the query world buffer from the game world buffer
+     * May also send any commands etc.
+     */
     virtual void updateBuffer();
 
+    /**
+     * Likely a temp function that returns all the game objects in the world
+     */
     virtual std::vector<GameObject> getAllGameObjects();
 
 protected:
 
-    ServerClient();
+    ServerClient(); ///< Protected constructor, should create from ServerClientFactory
 
     World m_gameWorld; ///< World to constantly update
+    World m_middleWorld; ///< World to copy between
     World m_queryWorld; ///< World to get info from
-    std::mutex m_updateWorldLock; ///< Lock for m_gameWorld reading/writing
+    std::mutex m_middleWorldLock; ///< Lock for m_gameWorld reading/writing
     std::thread m_updateWorldThread; ///< thread for updating m_gameWorld
     bool m_keepThreadGoing = true; ///< Set to false when to stop updating m_gameWorld
 
 }; // ServerClient class
 
-
+/**
+ * Unique pointer of a ServerClient. This should be created
+ * using the ServerClientFactory.
+ */
 typedef std::unique_ptr<ServerClient> UniqueServerClient;
 
 } // BattleRoom namespace

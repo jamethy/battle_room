@@ -118,17 +118,17 @@ int main(int argc, char** argv) {
         Inputs inputs = InputGatherer::getAndClearInputs();
 
         ///// start game thread
-        std::thread gameThread( [&viewInterfaces, &windows, &inputs] () {
+        std::thread gameThread( [&viewInterfaces, &windows, &inputs, &gameInterfaces] () {
 
-            // Handle inputs view interfaces, then in windows
+            // Handle inputs view interfaces
             for (ViewInterface* interface : viewInterfaces) {
                 inputs = interface->handleInputs(inputs);
             }
-            for (UniqueDisplayWindow& window : windows) {
-                inputs = window->handleInputs(inputs);
-            }
 
-            // Update buffer here
+            // Update world for client
+            for (GameInterface& gameInterface : gameInterfaces) {
+                gameInterface.updateBuffer();
+            }
 
             // Prepare objects for display
             for (ViewInterface* interface : viewInterfaces) {
@@ -145,6 +145,12 @@ int main(int argc, char** argv) {
                     );
                 }
             }
+
+            // Handle inputs for windows
+            for (UniqueDisplayWindow& window : windows) {
+                inputs = window->handleInputs(inputs);
+            }
+
         });
         ////// End game thread
 

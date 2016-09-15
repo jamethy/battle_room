@@ -13,14 +13,15 @@ void RemoteServerClient::applySettings(ResourceDescriptor settings) {
 }
 
 // remote threading function
-void remoteThreadFunction(World& world, std::mutex& worldLock, bool& keepGoing) {
+void remoteThreadFunction(World& game, World& middle, std::mutex& worldLock, bool& keepGoing) {
 
     while (keepGoing) {
 
         // get updated info from server
+        // set updated info in game world
 
         worldLock.lock();
-        // set updated info in game world
+        middle = game;
         worldLock.unlock();
     }
 }
@@ -30,7 +31,8 @@ RemoteServerClient::RemoteServerClient(ResourceDescriptor settings)
 {
     m_updateWorldThread = std::thread(remoteThreadFunction, 
             std::ref(m_gameWorld), 
-            std::ref(m_updateWorldLock), 
+            std::ref(m_middleWorld), 
+            std::ref(m_middleWorldLock), 
             std::ref(m_keepThreadGoing));
 
     applySettings(settings);

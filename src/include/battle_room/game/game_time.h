@@ -7,6 +7,9 @@
 
 namespace BattleRoom {
 
+/**
+ * Object containing time instance and alteration logic.
+ */
 class GameTime {
 
 public:

@@ -5,6 +5,11 @@
 
 namespace BattleRoom {
 
+/**
+ * HostServerClient is for hosting locally but playing with others. This will
+ * most likely somehow join with remote and also contain a server... once I make 
+ * a server class...
+ */
 class HostServerClient : public ServerClient {
 
 public:

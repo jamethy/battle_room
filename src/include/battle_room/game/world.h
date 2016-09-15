@@ -9,6 +9,9 @@
 
 namespace BattleRoom {
 
+/**
+ * Game world - includes all the objects, the time, and meta data
+ */
 class World : public Resource {
 
 public:
@@ -17,9 +20,16 @@ public:
     World();
     World(ResourceDescriptor settings);
 
+    /**
+     * Update everything in the world. This will iterate the time
+     * and updating everything else accordingly.
+     */
     void update();
 
     std::vector<GameObject> getAllGameObjects(); // TEMP
+
+    // access by reference
+    GameTime& gameTime();
 
     // inherited
     void applySettings(ResourceDescriptor settings) override;
@@ -27,7 +37,7 @@ public:
 private:
 
     std::vector<GameObject> m_gameObjects; // TEMP
-    GameTime m_gameTime;
+    GameTime m_gameTime; // Game time object
 
 }; // World class
 } // BattleRoom namespace

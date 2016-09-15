@@ -1,6 +1,6 @@
 
 ImageFile: boy_walking.jpg
-NextAnimtaion: boy_walking
+NextAnimation: boy_walking
 
 Frame:
     EndTime: 0.2
