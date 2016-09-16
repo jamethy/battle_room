@@ -28,19 +28,16 @@ Camera::Camera(ResourceDescriptor settings) : Camera()
     applySettings(settings);
 }
 
+Camera::~Camera() {}
+
+Camera* Camera::clone() {
+    return new Camera(*this);
+}
 
 //setters and getters
 
 Vector3D Camera::getLocation() const {
     return m_location;
-}
-
-Vector3D Camera::getUpDir() const {
-    return m_up;
-}
-
-Vector3D Camera::getRightDir() const {
-    return m_right;
 }
 
 Quaternion Camera::getOrientation() const {
@@ -80,7 +77,7 @@ void Camera::rotateCounterClockwise(radians theta) {
     setOrientation(m_orientation);
 }
 
-RelPixel Camera::fromLocation(Vector3D location) const {
+RelPixel Camera::fromLocation(Vector3D location) {
 
     Vector3D delta = location.minus(m_location);
     meters dist = delta.dot(m_forward);
@@ -118,6 +115,11 @@ Vector3D Camera::zeroPlaneIntersection(RelPixel pixel) const {
     Vector3D ray = getPixelRay(pixel);
     Vector3D cam = getLocation();
     return cam.plus(ray.times( -cam.z() / ray.z() ));
+}
+
+Inputs Camera::handleInputs(Inputs inputs, const std::string viewName) {
+    (void)viewName; // unused
+    return inputs;
 }
 
 // these two functions are not allowed

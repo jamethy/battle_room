@@ -14,6 +14,7 @@
 using namespace BattleRoom;
 
 int main(int argc, char** argv) {
+    (void)argc; // unused
 
     setResourcePathFromExe(argv[0]);
 

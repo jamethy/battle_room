@@ -5,7 +5,6 @@
 #include "battle_room/common/resource.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/graphics/camera.h"
-#include "battle_room/graphics/camera_movement.h"
 
 namespace BattleRoom {
 
@@ -21,6 +20,8 @@ public:
 
     // constructor
     View(ResourceDescriptor settings);
+    View(const View& original);
+    View& operator=(const View& original);
 
     /**
      * \brief Calculates the point on the view from the point in space
@@ -73,8 +74,7 @@ private:
     Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
     Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
 
-    Camera m_camera;
-    CameraMovement m_cameraMovement;
+    UniqueCamera m_camera;
 
 }; // View class
 } // BattleRoom namespace

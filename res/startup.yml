@@ -3,6 +3,7 @@ Window: mainWindow
     Width: 500
     Height: 500
     View: mainView
+        Camera: Pyramid
 
 GameInterface: mainView
     ServerClient: Local

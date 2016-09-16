@@ -5,7 +5,9 @@
 #include "battle_room/common/vector3d.h"
 #include "battle_room/common/quaternion.h"
 #include "battle_room/common/resource.h"
+#include "battle_room/common/inputs.h"
 
+#include <memory>
 
 namespace BattleRoom {
 
@@ -20,12 +22,14 @@ public:
 
     Camera();
     Camera(ResourceDescriptor settings);
+    virtual ~Camera();
+    virtual Camera* clone();
 
     /**
      * \brief Rotates the camera over its forward-axis
      * \param theta Angle in theta to rotate
      */
-    void rotateCounterClockwise(radians theta);
+    virtual void rotateCounterClockwise(radians theta);
 
     // cannot do these functions until we switch graphics engine
     //void rotateUpDown(radians theta);
@@ -37,7 +41,7 @@ public:
      * \param location Position in space to find on the screen
      * \return Position on the view in relative coordinates (0-1 will be on view)
      */
-    RelPixel fromLocation(Vector3D location) const;
+    virtual RelPixel fromLocation(Vector3D location);
 
     /**
      * \brief From the relative position on view, calculates the direction of the 
@@ -57,24 +61,30 @@ public:
      */
     Vector3D zeroPlaneIntersection(RelPixel pixel) const;
 
+    /**
+     * \brief Applys the inputs for the given view to alter the camera
+     * \param inputs Input list to look through
+     * \param viewName View to filter input list by
+     * \return Remaining inputs that weren't used
+     */
+    virtual Inputs handleInputs(Inputs inputs, const std::string viewName);
+
     // getters and setters
 
     Vector3D getLocation() const;
-    Vector3D getUpDir() const;
-    Vector3D getRightDir() const;
     Quaternion getOrientation() const;
     radians getHorizontalFov() const;
     radians getVerticalFov() const;
 
-    void setLocation(Vector3D location);
-    void setOrientation(Quaternion orientation);
-    void setHorizontalFov(radians angle);
-    void setVerticalFov(radians angle);
+    virtual void setLocation(Vector3D location);
+    virtual void setOrientation(Quaternion orientation);
+    virtual void setHorizontalFov(radians angle);
+    virtual void setVerticalFov(radians angle);
 
     // inherited
-    void applySettings(ResourceDescriptor settings);
+    virtual void applySettings(ResourceDescriptor settings);
 
-private:
+protected:
 
     Vector3D m_location; ///< Location of camera in 3D space
     Quaternion m_orientation; ///< Orientation vector in 3D space
@@ -87,5 +97,11 @@ private:
     radians m_verticalFov = 1.308333; ///< Vertical field of view - should be calculated from above
 
 }; // Camera class
+
+/**
+ * Unique pointer to camera instance
+ */
+typedef std::unique_ptr<Camera> UniqueCamera;
+
 } // BattleRoom namespace
 #endif // CAMERA_H

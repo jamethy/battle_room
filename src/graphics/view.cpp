@@ -1,4 +1,5 @@
 #include "battle_room/graphics/view.h"
+#include "battle_room/graphics/camera_factory.h"
 
 #include <cmath>
 
@@ -12,64 +13,61 @@ void View::applySettings(ResourceDescriptor settings) {
 
     m_topLeft.applySettings( settings.getSubResource("TopLeft") );
     m_bottomRight.applySettings( settings.getSubResource("BottomRight") );
-    m_camera.applySettings( settings.getSubResource("Camera") );
-    m_cameraMovement.applySettings( settings.getSubResource("CameraMovement") );
 
     ResourceDescriptor sub = settings.getSubResource("Layer");
     if (isNotEmpty(sub.getValue())) {
         setLayer(std::stoi(sub.getValue()));
     }
 
+    sub = settings.getSubResource("Camera");
+    if (isNotEmpty(sub.getValue())) {
+        m_camera = CameraFactory::createCamera(sub);
+    }
+
     sub = settings.getSubResource("FieldOfView");
     if (isNotEmpty(sub.getValue())) {
-        m_camera.setHorizontalFov(toRadians(sub.getValue()));
+        m_camera->setHorizontalFov(toRadians(sub.getValue()));
     }
 
     recalculateVerticalFov();
 }
 
-// constructor
+// constructors
 View::View(ResourceDescriptor settings)
+    : m_camera(CameraFactory::createMotionlessCamera())
 {
     applySettings(settings);
 }
 
-RelPixel View::fromLocation(Vector3D point) {
+View::View(const View& original) 
+    : m_name(original.m_name),
+    m_layer(original.m_layer),
+    m_topLeft(original.m_topLeft),
+    m_bottomRight(original.m_bottomRight),
+    m_camera(UniqueCamera(original.m_camera->clone()))
+{ }
 
-    m_cameraMovement.adjustForNewPoint(m_camera, point);
-    
-    return m_camera.fromLocation(point);
+
+View& View::operator=(const View& original) 
+{ 
+    m_name = original.m_name;
+    m_layer = original.m_layer;
+    m_topLeft = original.m_topLeft;
+    m_bottomRight = original.m_bottomRight;
+    m_camera = UniqueCamera(original.m_camera->clone());
+    return *this;
+}
+
+
+// other functions
+
+RelPixel View::fromLocation(Vector3D point) {
+    return m_camera->fromLocation(point);
 }
 
 Inputs View::handleInputs(Inputs inputs) {
-
-    Inputs remainingInputs;
-
-    // adjust camera position
-    Vector3D camVelocityDelta(0,0,0);
-
-    for (Input input : inputs) {
-
-        if (input.containsView(getName())) {
-
-            if (input.getMotion() == InputKey::Scroll) {
-
-                camVelocityDelta = m_cameraMovement.deltaVFromScroll(m_camera,
-                            input.getScrollAmount(),
-                            input.getViewIntersection(getName())
-                ).plus(camVelocityDelta);
-                continue;
-            } 
-        }
-
-        remainingInputs.addInput(input);
-    }
-
-    // Move camera based on input
-    m_cameraMovement.moveCamera(m_camera, camVelocityDelta);
-
-    // return remaining inputs
-    return remainingInputs;
+    // current just passed to camera
+    return m_camera->handleInputs(inputs, getName());
 }
 
 Vector3D View::zeroPlaneIntersection(Pixel point) const {
@@ -86,7 +84,7 @@ Vector3D View::zeroPlaneIntersection(Pixel point) const {
             /(m_bottomRight.getRow() - m_topLeft.getRow())
             );
 
-    return m_camera.zeroPlaneIntersection(relPos);
+    return m_camera->zeroPlaneIntersection(relPos);
 }
 
 // getters and setters
@@ -127,11 +125,10 @@ Pixel View::getBottomRight() const {
 
 void View::recalculateVerticalFov() {
 
-    radians horFov = m_camera.getHorizontalFov();
+    radians horFov = m_camera->getHorizontalFov();
     px width = m_bottomRight.getCol() - m_topLeft.getCol();
     px height = m_bottomRight.getRow() - m_topLeft.getRow();
-    m_camera.setVerticalFov( 2*std::atan2(height*2.0*std::tan(horFov/2.0), 2.0*width) );
+    m_camera->setVerticalFov( 2*std::atan2(height*2.0*std::tan(horFov/2.0), 2.0*width) );
 }
-
 
 } // BattleRoom namespace

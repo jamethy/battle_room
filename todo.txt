@@ -3,17 +3,17 @@ Running ToDo List
 -----------------------------------
 
 For full program
+    Create copy constructors for game interface
     Need to handle inputs in order of view layer
     Need to have a true local server so it can be shared across game interfaces
-    make sure all new stuff is documented
     implement update function to world
     Add networking code to networking...
-    Move cameraMovement to an abstract class and create implementations
     fix missing animation
     Create an exception scheme
     Create intersection handler
         intersection base class
         intersections class implementations
+    create menus
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load
