@@ -13,6 +13,13 @@ ServerClient::~ServerClient() {
     }
 }
 
+ServerClient::ServerClient(const ServerClient& original) 
+    : m_gameWorld(original.m_gameWorld),
+    m_middleWorld(original.m_middleWorld),
+    m_queryWorld(original.m_queryWorld)
+{ 
+}
+
 // other functions
 
 void ServerClient::updateBuffer() {

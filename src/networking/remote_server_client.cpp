@@ -38,7 +38,21 @@ RemoteServerClient::RemoteServerClient(ResourceDescriptor settings)
     applySettings(settings);
 }
 
+RemoteServerClient::RemoteServerClient(const RemoteServerClient& original) 
+    : ServerClient(original)
+{ 
+    m_updateWorldThread = std::thread(remoteThreadFunction, 
+            std::ref(m_gameWorld), 
+            std::ref(m_middleWorld),
+            std::ref(m_middleWorldLock), 
+            std::ref(m_keepThreadGoing));
+}
+
 RemoteServerClient::~RemoteServerClient() {
+}
+
+ServerClient* RemoteServerClient::clone() {
+    return new RemoteServerClient(*this);
 }
 
 // other functions

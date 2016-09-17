@@ -36,7 +36,22 @@ HostServerClient::HostServerClient(ResourceDescriptor settings)
     applySettings(settings);
 }
 
+HostServerClient::HostServerClient(const HostServerClient& original) 
+    : ServerClient(original)
+{ 
+    m_updateWorldThread = std::thread(hostThreadFunction, 
+            std::ref(m_gameWorld), 
+            std::ref(m_middleWorld),
+            std::ref(m_middleWorldLock), 
+            std::ref(m_keepThreadGoing));
+}
+
+
 HostServerClient::~HostServerClient() {
+}
+
+ServerClient* HostServerClient::clone() {
+    return new HostServerClient(*this);
 }
 
 // other functions

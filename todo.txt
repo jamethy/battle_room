@@ -3,7 +3,6 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    Create copy constructors for game interface
     Need to handle inputs in order of view layer
     Need to have a true local server so it can be shared across game interfaces
     implement update function to world

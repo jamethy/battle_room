@@ -17,9 +17,10 @@ namespace BattleRoom {
 class EmptyServerClient : public ServerClient {
 public:
     EmptyServerClient() { }
+    ServerClient* clone() { return new EmptyServerClient(*this); }
     void updateBuffer() { }
     vector<GameObject> getAllGameObjects() override { return vector<GameObject>(); }
-    void applySettings(ResourceDescriptor settings) override { }
+    void applySettings(ResourceDescriptor settings) override { (void)settings; /*unused*/ }
 }; // EmptyServerClient class
 
 

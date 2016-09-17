@@ -11,8 +11,8 @@ class GameInterface : public ViewInterface {
 public:
 
     GameInterface(ResourceDescriptor settings);
-    //GameInterface(const GameInterface& original); // TODO
-    //GameInterface& operator=(const GameInterface& original);
+    GameInterface(const GameInterface& original);
+    GameInterface& operator=(const GameInterface& original);
 
     /**
      * \brief Updates the server client buffer

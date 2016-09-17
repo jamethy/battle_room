@@ -27,6 +27,17 @@ GameInterface::GameInterface(ResourceDescriptor settings)
     applySettings(settings);
 }
 
+GameInterface::GameInterface(const GameInterface& original) 
+    : ViewInterface(original),
+      m_serverClient(UniqueServerClient(original.m_serverClient->clone()))
+{ 
+}
+
+GameInterface& GameInterface::operator=(const GameInterface& original) {
+    m_serverClient = UniqueServerClient(original.m_serverClient->clone());
+    return *this;
+}
+
 // other functions
 
 void GameInterface::updateBuffer() {

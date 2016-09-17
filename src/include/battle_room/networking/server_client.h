@@ -14,16 +14,18 @@ namespace BattleRoom {
 
 /**
  * ServerClient is the client's side of the link between the server and the client. 
- * Each server has two copies of the world: one it uses for updating on another thread (inside the class)
- * and the other is used for querying from outside the class. The various implementations of ServerClient
- * update the game world in different ways and send requests to the actual server in different ways.
+ * Each server has two copies of the world: one it uses for updating on another thread 
+ * (inside the class) and the other is used for querying from outside the class. The 
+ * various implementations of ServerClient * update the game world in different ways 
+ * and send requests to the actual server in different ways.
  */
 class ServerClient : public Resource {
 
 public:
 
-    // destructor
+    // constructors
     virtual ~ServerClient();
+    virtual ServerClient* clone() = 0;
 
     /**
      * \brief Updates the query world buffer from the game world buffer
@@ -39,6 +41,7 @@ public:
 protected:
 
     ServerClient(); ///< Protected constructor, should create from ServerClientFactory
+    ServerClient(const ServerClient& original);
 
     World m_gameWorld; ///< World to constantly update
     World m_middleWorld; ///< World to copy between

@@ -16,7 +16,9 @@ public:
 
     // destructor
     HostServerClient(ResourceDescriptor settings);
+    HostServerClient(const HostServerClient& original);
     ~HostServerClient() override;
+    virtual ServerClient* clone() override;
 
     // inherited
     void updateBuffer() override;

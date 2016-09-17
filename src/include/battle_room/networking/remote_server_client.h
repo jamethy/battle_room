@@ -16,7 +16,9 @@ public:
 
     // constructors
     RemoteServerClient(ResourceDescriptor settings);
+    RemoteServerClient(const RemoteServerClient& original);
     virtual ~RemoteServerClient() override;
+    virtual ServerClient* clone() override;
 
     // inherited
     virtual void updateBuffer() override;

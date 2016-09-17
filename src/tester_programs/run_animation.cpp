@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
                 "        Width: " + std::to_string(largestPxWidth),
                 "        Height: " + std::to_string(largestPxHeight),
                 "        View: mainView",
-                "            CameraMovement:",
+                "            Camera: Pyramid",
                 "                MinimumCameraZ: 0.1"
     });
 

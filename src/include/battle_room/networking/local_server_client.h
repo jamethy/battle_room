@@ -16,7 +16,9 @@ public:
 
     // constructor
     LocalServerClient(ResourceDescriptor settings);
+    LocalServerClient(const LocalServerClient& original);
     ~LocalServerClient() override;
+    virtual ServerClient* clone() override;
 
     // inherited
     void updateBuffer() override;

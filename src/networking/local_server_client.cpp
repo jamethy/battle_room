@@ -36,7 +36,22 @@ LocalServerClient::LocalServerClient(ResourceDescriptor settings)
     applySettings(settings);
 }
 
+LocalServerClient::LocalServerClient(const LocalServerClient& original) 
+    : ServerClient(original)
+{ 
+
+    m_updateWorldThread = std::thread(localThreadFunction, 
+            std::ref(m_gameWorld), 
+            std::ref(m_middleWorld),
+            std::ref(m_middleWorldLock), 
+            std::ref(m_keepThreadGoing));
+}
+
 LocalServerClient::~LocalServerClient() {
+}
+
+ServerClient* LocalServerClient::clone() {
+    return new LocalServerClient(*this);
 }
 
 // other functions
