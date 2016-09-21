@@ -2,7 +2,6 @@
 #define GAME_INTERFACE_H
 
 #include "battle_room/common/view_interface.h"
-#include "battle_room/networking/server_client.h"
 
 namespace BattleRoom {
 
@@ -11,8 +10,6 @@ class GameInterface : public ViewInterface {
 public:
 
     GameInterface(ResourceDescriptor settings);
-    GameInterface(const GameInterface& original);
-    GameInterface& operator=(const GameInterface& original);
 
     /**
      * \brief Updates the server client buffer
@@ -26,8 +23,6 @@ public:
     void applySettings(ResourceDescriptor settings) override;
 
 private:
-
-    UniqueServerClient m_serverClient;
 
 }; // GameInterface class
 } // BattleRoom namespace

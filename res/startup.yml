@@ -6,5 +6,6 @@ Window: mainWindow
         Camera: Pyramid
 
 GameInterface: mainView
-    ServerClient: Local
-        Resource: worlds/test_world
+
+WorldUpdater: Local
+    Resource: worlds/test_world

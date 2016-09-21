@@ -3,7 +3,6 @@
 
 #include "battle_room/common/resource.h"
 #include "battle_room/game/game_object.h"
-#include "battle_room/game/game_time.h"
 
 #include <vector>
 
@@ -20,24 +19,18 @@ public:
     World();
     World(ResourceDescriptor settings);
 
-    /**
-     * Update everything in the world. This will iterate the time
-     * and updating everything else accordingly.
-     */
-    void update();
-
     std::vector<GameObject> getAllGameObjects(); // TEMP
 
-    // access by reference
-    GameTime& gameTime();
+    // getters
+    seconds getGameTime();
 
     // inherited
-    void applySettings(ResourceDescriptor settings) override;
+    virtual void applySettings(ResourceDescriptor settings) override;
 
-private:
+protected:
 
     std::vector<GameObject> m_gameObjects; // TEMP
-    GameTime m_gameTime; // Game time object
+    seconds m_gameTime; // Time in game
 
 }; // World class
 } // BattleRoom namespace

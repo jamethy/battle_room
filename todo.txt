@@ -4,15 +4,19 @@ Running ToDo List
 
 For full program
     Need to handle inputs in order of view layer
-    Need to have a true local server so it can be shared across game interfaces
     implement update function to world
     Add networking code to networking...
     fix missing animation
+    create network world updater
+    create world updater factory
+    create network command stack
+    create commands
     Create an exception scheme
     Create intersection handler
         intersection base class
         intersections class implementations
     create menus
+    Figure out sending camera commands from game interface
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load
@@ -20,6 +24,7 @@ Maybe for fun
     Create a performance monitoring system
         Records times globally
         Track FPS and rate of other functions
+    Create camera that tracks a player
 
 Persistent to do
     Look for // TODO in the code

@@ -5,4 +5,8 @@ add_library ( Game
         game_object.cpp
         game_time.cpp
         world.cpp
+        query_world.cpp
+        command_receiver.cpp
+        local_updating_world.cpp
+        local_world_updater.cpp
 )

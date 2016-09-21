@@ -4,6 +4,9 @@
 #include "battle_room/common/animation_handler.h"
 #include "battle_room/common/file_utils.h"
 
+#include "battle_room/game/query_world.h"
+#include "battle_room/game/local_world_updater.h"
+
 #include "battle_room/graphics/display_window.h"
 
 #include "battle_room/user_interface/game_interface.h"
@@ -97,6 +100,10 @@ int main(int argc, char** argv) {
     // Create main components of game
     //ProgramState state;
 
+    UniqueWorldUpdater worldUpdater = UniqueWorldUpdater(
+            new LocalWorldUpdater(rd.getSubResource("WorldUpdater"))
+    );
+
     std::vector<UniqueDisplayWindow> windows;
     for (ResourceDescriptor windowDescriptor : rd.getSubResources("Window")) {
         windows.push_back(createDisplayWindow(windowDescriptor));
@@ -127,9 +134,7 @@ int main(int argc, char** argv) {
             }
 
             // Update world for client
-            for (GameInterface& gameInterface : gameInterfaces) {
-                gameInterface.updateBuffer();
-            }
+            QueryWorld::updateBuffer();
 
             // Prepare objects for display
             for (ViewInterface* interface : viewInterfaces) {
