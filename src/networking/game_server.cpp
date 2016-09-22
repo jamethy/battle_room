@@ -17,7 +17,13 @@ void serverFunction(bool& keepGoing) {
 
     while (keepGoing) {
 
-        // check for receiving message
+        // check for receiving network traffic
+            // char[MAX_MESSAGE_LENGTH] messagebuffer
+            // SDLNet_ receiver or something into buffer
+            // MessageType type = from first byte (messagebuffer)
+            // Message message = MessageFactory.fromBuffer(messageBuffer, type)
+                // inside uses SpecificMessageType message.
+                //             message.copyFrom(messageBuffer)
 
             // if command message
                 //CommandReceiver::addCommands(...);
