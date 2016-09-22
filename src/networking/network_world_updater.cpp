@@ -1,5 +1,6 @@
 #include "battle_room/networking/network_world_updater.h"
 #include "battle_room/game/query_world.h"
+#include "battle_room/game/command_receiver.h"
 
 #include <chrono>
 
@@ -16,6 +17,9 @@ void NetworkWorldUpdater::applySettings(ResourceDescriptor settings) {
 void worldUpdaterFunction(World& world, bool& keepUpdating) {
 
     while(keepUpdating) {
+
+        std::vector<Command> commands = CommandReceiver::getAndClearCommands();
+        // send commands to server
 
         // request world updates?
         // receive udp messages?

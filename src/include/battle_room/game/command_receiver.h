@@ -11,7 +11,7 @@ class CommandReceiver {
 
 public:
 
-    static void addCommand(const Command& command);
+    static void addCommands(const std::vector<Command>& commands);
 
     static std::vector<Command> getAndClearCommands();
 

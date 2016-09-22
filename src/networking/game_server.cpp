@@ -1,6 +1,7 @@
 #include "battle_room/networking/game_server.h"
 
 #include "battle_room/game/query_world.h"
+#include "battle_room/game/command_receiver.h"
 
 #include <chrono>
 
@@ -16,10 +17,15 @@ void serverFunction(bool& keepGoing) {
 
     while (keepGoing) {
 
-        // look for server requests
-        // respond to them with game stuff
-            // QueryWorld::getAllGameObjects();
-            // etc
+        // check for receiving message
+
+            // if command message
+                //CommandReceiver::addCommands(...);
+
+            // look for server requests
+                // respond to them with game stuff
+                    // QueryWorld::getAllGameObjects();
+                    // etc
 
         // fake load
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

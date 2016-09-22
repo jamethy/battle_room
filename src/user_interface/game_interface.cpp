@@ -60,7 +60,7 @@ Inputs GameInterface::handleInputs(Inputs inputs) {
         remainingInputs.addInput(input);
     }
 
-    // CommandReceiver::
+    // CommandReceiver::addCommands
 
     return remainingInputs;
 }

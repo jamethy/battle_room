@@ -7,7 +7,6 @@ For full program
     implement update function to world
     Add networking code to networking...
     fix missing animation
-    create network command stack
     create commands
     Create an exception scheme
     Create intersection handler
