@@ -8,11 +8,13 @@ For full program
     Add networking code to networking...
     fix missing animation
     create commands
+    create messages
     Create an exception scheme
     Create intersection handler
         intersection base class
         intersections class implementations
     create menus
+    Use arguments to specify startup script
     Figure out sending camera commands from game interface
     Try getting two windows to run
     Fix pyramid calculation.. something is not quite right...

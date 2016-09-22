@@ -5,17 +5,11 @@ World:
         Location: -400,0
     Object:
         Animation: boy_walking
-        AnimationState: 0.2
-        Location: 0,0
-    Object:
-        Animation: boy_walking
-        AnimationState: 0.4
-        Location: 400,0
-    Object:
-        Animation: boy_walking
         AnimationState: 0.6
-        Location: 800,0
+        Location: 800,800
+        DegRotation: 45
     Object:
         Animation: boy_walking
         AnimationState: 0.8
         Location: 1200,0
+        DegRotation: 120

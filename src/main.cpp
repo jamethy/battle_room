@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
         viewInterfaces.push_back(&gameInterfaces.back());
     }
 
-    while(!InputGatherer::containsQuitEvent()) { // temp
+    while(!InputGatherer::containsQuitEvent()) { 
 
         // get inputs from last frame
         for (UniqueDisplayWindow& window : windows) {
@@ -126,8 +126,8 @@ int main(int argc, char** argv) {
         }
         Inputs inputs = InputGatherer::getAndClearInputs();
 
-        ///// start game thread
-        std::thread gameThread( [&viewInterfaces, &windows, &inputs, &gameInterfaces] () {
+        ///// start game interface thread
+        std::thread interfaceThread( [&viewInterfaces, &windows, &inputs, &gameInterfaces] () {
 
             // Handle inputs view interfaces
             for (ViewInterface* interface : viewInterfaces) {
@@ -159,15 +159,15 @@ int main(int argc, char** argv) {
             }
 
         });
-        ////// End game thread
+        ////// End game interface thread
 
-        ///// Start Drawing "thread"
+        ///// Start Drawing "thread" - must be on main thread
         for (UniqueDisplayWindow& window : windows) {
             window->drawScreen();
         }
         //// End drawing "thread"
 
-        gameThread.join();
+        interfaceThread.join();
 
         // switch bufferes
         for (UniqueDisplayWindow& window : windows) {
