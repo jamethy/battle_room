@@ -7,8 +7,6 @@ For full program
     implement update function to world
     Add networking code to networking...
     fix missing animation
-    create network world updater
-    create world updater factory
     create network command stack
     create commands
     Create an exception scheme
@@ -17,6 +15,8 @@ For full program
         intersections class implementations
     create menus
     Figure out sending camera commands from game interface
+    Try getting two windows to run
+    Fix pyramid calculation.. something is not quite right...
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load

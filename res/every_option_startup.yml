@@ -7,11 +7,24 @@ Window: mainWindow
         BottomRight: 500,500
         Layer: 1
         FieldOfView: 1.308985
-        Camera: mainCamera
+        Camera: Pyramid
             Location: 0,0,10
             Orientation: 1,0,0,0
-        CameraMovement:
             CameraFriction: 0.05
             ZoomInMultiplier: 1
             ZoomOutMultiplier: 1
             MinimumCameraZ: 10
+
+GameInterface: mainView
+
+WorldUpdater: Local
+    #Resource: worlds/test_world
+    World:
+        Object:
+            Location: 1,2,3
+            Orientation: 1,0,0,0
+            #Rotation: 3.14159
+            #DegRotation: 180.0
+            Animation: boy_walking
+            AnimationState: 0.2
+        Time: 1.2

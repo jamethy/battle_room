@@ -5,7 +5,8 @@
 #include "battle_room/common/file_utils.h"
 
 #include "battle_room/game/query_world.h"
-#include "battle_room/game/local_world_updater.h"
+
+#include "battle_room/networking/world_updater_factory.h"
 
 #include "battle_room/graphics/display_window.h"
 
@@ -100,8 +101,8 @@ int main(int argc, char** argv) {
     // Create main components of game
     //ProgramState state;
 
-    UniqueWorldUpdater worldUpdater = UniqueWorldUpdater(
-            new LocalWorldUpdater(rd.getSubResource("WorldUpdater"))
+    UniqueWorldUpdater worldUpdater = WorldUpdaterFactory::createWorldUpdater(
+            rd.getSubResource("WorldUpdater")
     );
 
     std::vector<UniqueDisplayWindow> windows;

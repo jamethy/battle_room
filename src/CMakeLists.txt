@@ -6,7 +6,7 @@ add_subdirectory(common)
 add_subdirectory(graphics)
 add_subdirectory(game)
 add_subdirectory(user_interface)
-#add_subdirectory(networking)
+add_subdirectory(networking)
 add_subdirectory(tester_programs)
 
 # MAIN PROGRAM CLIENT
@@ -17,7 +17,7 @@ target_link_libraries(battleroom
     Graphics
     Game
     UserInterface
-    #    Networking
+    Networking
     ${END_GROUP}
     ${SDL2_LIBRARY}
     ${SDL2_IMAGE_LIBRARY}
@@ -31,6 +31,6 @@ target_link_libraries(dedicated_battleroom
     ${START_GROUP}
     Common
     Game
-    #Networking
+    Networking
     ${END_GROUP}
 )

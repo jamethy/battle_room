@@ -8,10 +8,16 @@
 
 namespace BattleRoom {
 
+/**
+ * Implmentation of queryWorldUpdater for locally run or hosted games
+ * Updates a LocalUpdatingWorld on a thread and copies that to the QueryWorld
+ * Gets commands directly from CommandReciever
+ */
 class LocalWorldUpdater : public QueryWorldUpdater {
 
 public:
 
+    // constructors
     LocalWorldUpdater(ResourceDescriptor settings);
     ~LocalWorldUpdater();
 
@@ -20,9 +26,9 @@ public:
 
 private:
 
-    LocalUpdatingWorld m_world;
-    std::thread m_worldThread;
-    bool m_keepUpdating;
+    LocalUpdatingWorld m_world; ///< World that updates itself
+    std::thread m_worldThread; ///< Thread to update world on
+    bool m_keepUpdating; ///< Set to false when ready to destroy
 
 }; // LocalWorldUpdater
 } // BattleRoom namespace
