@@ -25,7 +25,8 @@ void ZMaxCamera::move(Vector3D deltaVelocity) {
     (void)deltaVelocity; // unused
 
     // calculate the x,y portion of pyramid center/top
-    Vector3D pyramidTop = m_boundsMax.plus(m_boundsMin).times(0.5);
+    Vector3D pyramidTop = m_right.times( (m_cameraMax.x() + m_cameraMin.x())/2.0 )
+        .plus( m_up.times( (m_cameraMax.y() + m_cameraMin.y())/2.0 ));
 
     // calculate max z
     pyramidTop.z() = std::max(

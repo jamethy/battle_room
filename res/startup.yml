@@ -4,6 +4,7 @@ Window: mainWindow
     Height: 500
     View: mainView
         Camera: Pyramid
+            DegRotation: 60
 
 GameInterface: mainView
 

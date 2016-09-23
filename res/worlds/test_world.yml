@@ -1,15 +1,17 @@
 World:
+    #937 tall
+    #400 wide
     Object:
         Animation: boy_walking
         AnimationState: 0.0
-        Location: -400,0
+        Location: 200,0
     Object:
         Animation: boy_walking
         AnimationState: 0.6
-        Location: 800,800
-        DegRotation: 45
+        Location: 600,937
+        DegRotation: 0
     Object:
         Animation: boy_walking
         AnimationState: 0.8
-        Location: 1200,0
-        DegRotation: 120
+        Location: 1000,0
+        DegRotation: 0

@@ -17,7 +17,7 @@ For full program
     Use arguments to specify startup script
     Figure out sending camera commands from game interface
     Try getting two windows to run
-    Fix pyramid calculation.. something is not quite right...
+    Removed commented strings from resource files
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load

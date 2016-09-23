@@ -12,6 +12,21 @@ void Camera::applySettings(ResourceDescriptor settings) {
 
     m_location.applySettings( settings.getSubResource("Location") );
     m_orientation.applySettings( settings.getSubResource("Orientation") );
+
+    ResourceDescriptor sub = settings.getSubResource("Rotation");
+    if (isNotEmpty(sub.getValue())) {
+        Quaternion orientation; 
+        orientation.rotateAboutZ(toRadians(sub.getValue()));
+        setOrientation(orientation);
+    }
+
+    sub = settings.getSubResource("DegRotation");
+    if (isNotEmpty(sub.getValue())) {
+        radians angle = toRadians(toDegrees(sub.getValue()));
+        Quaternion orientation;
+        orientation.rotateAboutZ(angle);
+        setOrientation(orientation);
+    }
 }
 
 // constructors
@@ -83,6 +98,7 @@ RelPixel Camera::fromLocation(Vector3D location) {
     meters dist = delta.dot(m_forward);
     meters width = 2*dist*tan(m_horizontalFov / 2.0);
     meters height = 2*dist*tan(m_verticalFov / 2.0);
+
     Vector3D q = delta.minus( m_forward.times( dist ) );
 
     meters qx = q.dot(m_right);

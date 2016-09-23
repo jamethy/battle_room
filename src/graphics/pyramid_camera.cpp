@@ -4,7 +4,6 @@
 
 namespace BattleRoom {
 
-
 // constructors
 PyramidCamera::PyramidCamera() 
 { }
@@ -43,7 +42,8 @@ void PyramidCamera::move(Vector3D deltaVelocity) {
         // Check pyramid bounds
 
         // calculate the x,y portion of pyramid center/top
-        Vector3D pyramidTop = m_boundsMax.plus(m_boundsMin).times(0.5);
+        Vector3D pyramidTop = m_right.times( (m_cameraMax.x() + m_cameraMin.x())/2.0 )
+            .plus( m_up.times( (m_cameraMax.y() + m_cameraMin.y())/2.0 ));
 
         // calculate max z
         pyramidTop.z() = std::max(
@@ -55,31 +55,33 @@ void PyramidCamera::move(Vector3D deltaVelocity) {
             newCamLocation = pyramidTop;
         }
         else {
-            // up dir
-            meters upBase = (m_cameraMax.y() - m_cameraMin.y()) / 2.0;
-            meters upMax = pyramidTop.y() 
-                + upBase*(pyramidTop.z() - newCamLocation.z()) 
-                / (pyramidTop.z() - m_minimumCameraZ);
 
-            if ( newCamLocation.y() - pyramidTop.y() > upMax) {
-                newCamLocation.y() = upMax + pyramidTop.y();
+            // get vector from pyramid to camera
+            Vector3D topToCam = newCamLocation.minus(pyramidTop);
+
+            // calculate bound in camera's coordinates for camera's height
+            meters upBound = -topToCam.z()*std::tan(m_verticalFov/2.0);
+            meters rightBound = -topToCam.z()*std::tan(m_horizontalFov/2.0);
+
+            // calculate where the camera is in camera coordinates relative to pyramid top
+            meters upCamOffset = m_up.dot( topToCam );
+            meters rightCamOffset = m_right.dot( topToCam );
+
+            if ( upCamOffset > upBound ) {
+                newCamLocation = newCamLocation.minus(m_up.times( upCamOffset - upBound ));
             }
-            else if ( newCamLocation.y() - pyramidTop.y() < -upMax ) {
-                newCamLocation.y() = - upMax + pyramidTop.y();
+            else if ( upCamOffset < -upBound ) {
+                newCamLocation = newCamLocation.minus(m_up.times( upCamOffset + upBound ));
             }
 
-            // right dir
-            meters rightBase = (m_cameraMax.x() - m_cameraMin.x()) / 2.0;
-            meters rightMax = pyramidTop.x() 
-                + rightBase*(pyramidTop.z() - newCamLocation.z()) 
-                / (pyramidTop.z() - m_minimumCameraZ);
 
-            if ( newCamLocation.x() - pyramidTop.x() > rightMax) {
-                newCamLocation.x() = rightMax + pyramidTop.x();
+            if ( rightCamOffset > rightBound ) {
+                newCamLocation = newCamLocation.minus(m_right.times(rightCamOffset - rightBound));
             }
-            else if ( newCamLocation.x() - pyramidTop.x() < -rightMax ) {
-                newCamLocation.x() = - rightMax + pyramidTop.x();
+            else if ( rightCamOffset < -rightBound ) {
+                newCamLocation = newCamLocation.minus(m_right.times(rightCamOffset + rightBound));
             }
+
         }
 
         m_location = newCamLocation;
