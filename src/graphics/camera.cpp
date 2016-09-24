@@ -32,7 +32,7 @@ void Camera::applySettings(ResourceDescriptor settings) {
 // constructors
 
 Camera::Camera() 
- :  m_location(Vector3D(0,0,10)),
+ :  m_location(Vector3D(0,0,99e99)),
     m_forward(Vector3D(0,0,-1)),
     m_up(Vector3D(0,1,0)),
     m_right(Vector3D(1,0,0))

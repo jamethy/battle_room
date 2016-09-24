@@ -22,6 +22,9 @@ void View::applySettings(ResourceDescriptor settings) {
     sub = settings.getSubResource("Camera");
     if (isNotEmpty(sub.getValue())) {
         m_camera = CameraFactory::createCamera(sub);
+    } 
+    else if (isNotEmpty(sub.getKey())) {
+        m_camera->applySettings(sub);
     }
 
     sub = settings.getSubResource("FieldOfView");

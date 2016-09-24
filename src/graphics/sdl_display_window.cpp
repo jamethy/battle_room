@@ -27,28 +27,30 @@ namespace BattleRoom {
 
 void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
 
-    if (isNotEmpty(settings.getValue())) {
-        SDL_SetWindowTitle(m_window, settings.getValue().c_str());
-    }
-
-    // TODO figure out what a SDL_DisplayMode is
     int width = 0, height = 0;
     SDL_GetWindowSize(m_window, &width, &height);
-    if (width > 0 && height > 0) {
 
-        ResourceDescriptor sub = settings.getSubResource("Width");
-        if (isNotEmpty(sub.getValue())) {
-            width = stoi(sub.getValue());
+    // if window name matches, settings are for this window
+    if (m_windowName.compare(settings.getValue()) == 0) {
+
+        // TODO figure out what a SDL_DisplayMode is
+        if (width > 0 && height > 0) {
+
+            ResourceDescriptor sub = settings.getSubResource("Width");
+            if (isNotEmpty(sub.getValue())) {
+                width = stoi(sub.getValue());
+            }
+
+            sub = settings.getSubResource("Height");
+            if (isNotEmpty(sub.getValue())) {
+                height = stoi(sub.getValue());
+            }
+
+            SDL_SetWindowSize(m_window, width, height);
         }
-
-        sub = settings.getSubResource("Height");
-        if (isNotEmpty(sub.getValue())) {
-            height = stoi(sub.getValue());
-        }
-
-        SDL_SetWindowSize(m_window, width, height);
     }
 
+    // regardless of window name, compare against views
     for (ResourceDescriptor sub : settings.getSubResources("View")) {
 
         // If view exists, apply settings
@@ -66,8 +68,7 @@ void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
             }
             // Add it to the view
             string name = newView.getName();
-            if (m_views.count(name) > 0) { m_views.at(name) = newView; }
-            else { m_views.insert(std::pair<string,View>(name,newView)); }
+            m_views.insert(std::pair<string,View>(name,newView));
         }
     }
 }
@@ -85,6 +86,14 @@ SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings)
     m_drawablesA.clear();
     m_drawablesB.clear();
 
+    if (isNotEmpty(settings.getValue())) {
+        m_windowName = settings.getValue();
+    }
+    else {
+        m_windowName = "PROVIDE WINDOW DURING CONSTRUCTION.\n";
+        std::cerr << "Must give a name during window construction.\n";
+    }
+
     // TODO throw exceptions instead of cerr
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
         std::cerr << "SDL_Init error: " << SDL_GetError() << std::endl;
@@ -95,7 +104,7 @@ SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings)
         SDL_Quit();
     }
 
-    m_window = SDL_CreateWindow("new_window", 0, 0, 500, 500, SDL_WINDOW_SHOWN);
+    m_window = SDL_CreateWindow(m_windowName.c_str(), 0, 0, 500, 500, SDL_WINDOW_SHOWN);
     if (m_window == nullptr){
         std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -256,7 +265,7 @@ Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
     return inputs;
 }
 
-void SdlDisplayWindow::addViewObjects(vector<DrawableObject> objects, string viewName) {
+void SdlDisplayWindow::addViewObjects(const vector<DrawableObject>& objects, string viewName) {
 
     // Check if view is in this window
     if (m_views.count(viewName) > 0) {
@@ -264,20 +273,20 @@ void SdlDisplayWindow::addViewObjects(vector<DrawableObject> objects, string vie
         View& view = m_views.at(viewName);
         vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
-        for (DrawableObject& object : objects) {
+        for (const DrawableObject& object : objects) {
             drawables.push_back(getSdlDrawableFrom(object,view));
         }
     }
 }
 
-void SdlDisplayWindow::addViewTexts(std::vector<DrawableText> texts, std::string viewName) {
+void SdlDisplayWindow::addViewTexts(const std::vector<DrawableText>& texts, std::string viewName) {
 
     if (m_views.count(viewName) > 0) {
 
         View& view = m_views.at(viewName);
         vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
-        for (DrawableText& text : texts) {
+        for (const DrawableText& text : texts) {
             drawables.push_back(getSdlDrawableFrom(text,view));
         }
     }

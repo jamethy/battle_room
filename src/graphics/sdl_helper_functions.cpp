@@ -408,7 +408,7 @@ void fillBaseDrawable( SdlDrawable* drawable, View& view,
     }
 }
 
-UniqueDrawable getSdlDrawableFrom(DrawableText& text, View& view) {
+UniqueDrawable getSdlDrawableFrom(const DrawableText& text, View& view) {
 
     SdlDrawableText* drawable = new SdlDrawableText();
 
@@ -428,7 +428,7 @@ UniqueDrawable getSdlDrawableFrom(DrawableText& text, View& view) {
 
 
 
-UniqueDrawable getSdlDrawableFrom(DrawableObject& object, View& view) {
+UniqueDrawable getSdlDrawableFrom(const DrawableObject& object, View& view) {
 
     SdlDrawableImage* drawable = new SdlDrawableImage();
 

@@ -68,7 +68,7 @@ SDL_Color toSdlColor(Color color);
  * \param view View that the object will be drawn on
  * \return Unique Pointer of SdlDrawable base class
  */
-UniqueDrawable getSdlDrawableFrom(DrawableObject& object, View& view);
+UniqueDrawable getSdlDrawableFrom(const DrawableObject& object, View& view);
 
 /**
  * \brief Creates an instance drawable in SDL
@@ -76,7 +76,7 @@ UniqueDrawable getSdlDrawableFrom(DrawableObject& object, View& view);
  * \param view View that the text will be drawn on
  * \return Unique Pointer of SdlDrawable base class
  */
-UniqueDrawable getSdlDrawableFrom(DrawableText& text, View& view);
+UniqueDrawable getSdlDrawableFrom(const DrawableText& text, View& view);
 
 } // BattleRoom namespace
 #endif // SDL_HELPER_FUNCTIONS_H

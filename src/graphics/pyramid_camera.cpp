@@ -21,7 +21,7 @@ Camera* PyramidCamera::clone() {
 
 void PyramidCamera::move(Vector3D deltaVelocity) {
 
-    static Vector3D camVelocity(0,0,40);
+    static Vector3D camVelocity(0,0,0.1);
 
     camVelocity = camVelocity.plus(deltaVelocity);
 

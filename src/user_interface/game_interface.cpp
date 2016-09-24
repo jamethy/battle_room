@@ -45,6 +45,7 @@ Inputs GameInterface::handleInputs(Inputs inputs) {
 
     Inputs remainingInputs;
 
+
     for (Input input : inputs) {
 
         if (input.containsView(getAssociatedView())) {

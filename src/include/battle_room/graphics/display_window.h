@@ -35,7 +35,7 @@ public:
      * \param objects Objects that will be drawn on the view
      * \param viewName Key to find view to draw on
      */
-    virtual void addViewObjects(std::vector<DrawableObject> objects, std::string viewName) = 0;
+    virtual void addViewObjects(const std::vector<DrawableObject>& objects, std::string viewName) = 0;
 
     /*!
      * \brief Sets the drawable text to the view to be rendered
@@ -43,7 +43,7 @@ public:
      * \param texts List of texts to be drawn on the view
      * \param viewName Key to find view to draw on
      */
-    virtual void addViewTexts(std::vector<DrawableText> texts, std::string viewName) = 0;
+    virtual void addViewTexts(const std::vector<DrawableText>& texts, std::string viewName) = 0;
 
     /*!
      * \brief Draws the world, UI, and then menu objects

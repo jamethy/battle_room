@@ -29,8 +29,8 @@ public:
     // inherited
     void applySettings(ResourceDescriptor settings) override;
     void gatherInputs() override;
-    void addViewObjects(std::vector<DrawableObject> objects, std::string viewName) override;
-    void addViewTexts(std::vector<DrawableText> texts, std::string viewName) override;
+    void addViewObjects(const std::vector<DrawableObject>& objects, std::string viewName) override;
+    void addViewTexts(const std::vector<DrawableText>& texts, std::string viewName) override;
     void drawScreen() override;
     void switchBuffers() override;
     Inputs handleInputs(Inputs inputs) override; 
@@ -40,6 +40,7 @@ private:
     SdlTextureManager m_sdlTextureManager; ///< Manages textures using the SDL Renderer
     SDL_Renderer* m_renderer; ///< Reads in textures and draws everything
     SDL_Window* m_window; ///< SDL Window Pointer
+    std::string m_windowName; ///< Name and title of window
 
     std::unordered_map<std::string,View> m_views; ///< Container for views
 
