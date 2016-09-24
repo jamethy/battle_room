@@ -7,7 +7,7 @@ project(project_deathblade)
 
 # Use our modified FindSDL2* modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${project_deathblade_SOURCE_DIR}/cmake")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${project_deathblade_SOURCE_DIR}/lib")
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${project_deathblade_SOURCE_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${project_deathblade_SOURCE_DIR}/bin")
 set(BIN_DIR ${project_deathblade_SOURCE_DIR}/bin)
 
