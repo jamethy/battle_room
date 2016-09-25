@@ -10,7 +10,9 @@ PyramidCamera::PyramidCamera()
 
 PyramidCamera::PyramidCamera(ResourceDescriptor settings)
     : MovingCamera(settings)
-{ }
+{ 
+    m_camVelocity = Vector3D(0,0,0.1);
+}
 
 PyramidCamera::~PyramidCamera()
 { }
@@ -21,13 +23,11 @@ Camera* PyramidCamera::clone() {
 
 void PyramidCamera::move(Vector3D deltaVelocity) {
 
-    static Vector3D camVelocity(0,0,0.1);
+    m_camVelocity = m_camVelocity.plus(deltaVelocity);
 
-    camVelocity = camVelocity.plus(deltaVelocity);
+    if (m_camVelocity.magnitude() > 0) {
 
-    if (camVelocity.magnitude() > 0) {
-
-        Vector3D newCamLocation = m_location.plus(camVelocity);
+        Vector3D newCamLocation = m_location.plus(m_camVelocity);
 
         // check known bounds
         if (newCamLocation.z() < m_minimumCameraZ) { newCamLocation.z() = m_minimumCameraZ; }
@@ -87,10 +87,10 @@ void PyramidCamera::move(Vector3D deltaVelocity) {
         m_location = newCamLocation;
 
         // adjust velocity
-        camVelocity = camVelocity.times(1 - m_cameraFriction);
+        m_camVelocity = m_camVelocity.times(1 - m_cameraFriction);
 
-        if (camVelocity.magnitude() < 0.1) {
-            camVelocity = Vector3D(0,0,0);
+        if (m_camVelocity.magnitude() < 0.1) {
+            m_camVelocity = Vector3D(0,0,0);
         }
     }
 }

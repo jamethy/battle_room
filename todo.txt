@@ -15,7 +15,6 @@ For full program
         intersections class implementations
     create menus
     Use arguments to specify startup script
-    Truly separate window events between windows...
     Remove commented strings from resource files
     Add saving configs
 

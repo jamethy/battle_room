@@ -23,6 +23,8 @@ using std::vector;
 
 namespace BattleRoom {
 
+unsigned SdlDisplayWindow::m_windowWithFocus = 1;
+
 // apply settings
 
 void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
@@ -36,17 +38,22 @@ void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
         // TODO figure out what a SDL_DisplayMode is
         if (width > 0 && height > 0) {
 
+            bool changed = false;
             ResourceDescriptor sub = settings.getSubResource("Width");
             if (isNotEmpty(sub.getValue())) {
                 width = stoi(sub.getValue());
+                changed = true;
             }
 
             sub = settings.getSubResource("Height");
             if (isNotEmpty(sub.getValue())) {
                 height = stoi(sub.getValue());
+                changed = true;
             }
 
-            SDL_SetWindowSize(m_window, width, height);
+            if (changed) {
+                resizeWindow(width,height);
+            }
         }
     }
 
@@ -164,9 +171,6 @@ vector<string> getSortedViews(const std::unordered_map<string,View>& viewMap) {
 
 void SdlDisplayWindow::gatherInputs() {
 
-    // Track the mouse position by updating when available
-    static Pixel mousePos(0,0);
-
     // For each SDL_Event that pertains to this window, create an Input
     for (vector<SDL_Event>::iterator it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
 
@@ -186,12 +190,23 @@ void SdlDisplayWindow::gatherInputs() {
             continue;
         }
 
-
-        // check if this is the right window
-        if (getWindowIdFrom(event) != SDL_GetWindowID(m_window)) {
-            continue;
+        unsigned windowId = SDL_GetWindowID(m_window);
+        if (event.type == SDL_WINDOWEVENT) {
+            switch (event.window.event) {
+                case SDL_WINDOWEVENT_ENTER:
+                case SDL_WINDOWEVENT_FOCUS_GAINED:
+                    m_windowWithFocus = event.window.windowID;
+                    if (windowId != m_windowWithFocus) {
+                        m_mousePos = Pixel(-1,-1);
+                    }
+                    break;
+            }
         }
 
+        // check if this is the right window
+        if (m_windowWithFocus != windowId || getWindowIdFrom(event) != windowId) {
+            continue;
+        }
 
         Input input;
 
@@ -206,17 +221,17 @@ void SdlDisplayWindow::gatherInputs() {
                 input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
                 break;
             case SDL_MOUSEMOTION:
-                mousePos = Pixel(event.motion.y, event.motion.x);
+                m_mousePos = Pixel(event.motion.y, event.motion.x);
                 input.setMotion(InputKey::Motion::None);
                 input.setKey(InputKey::Key::MouseOnly);
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                mousePos = Pixel(event.motion.y, event.motion.x);
+                m_mousePos = Pixel(event.motion.y, event.motion.x);
                 input.setMotion(InputKey::Motion::PressedDown);
                 input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
                 break;
             case SDL_MOUSEBUTTONUP:
-                mousePos = Pixel(event.motion.y, event.motion.x);
+                m_mousePos = Pixel(event.motion.y, event.motion.x);
                 input.setMotion(InputKey::Motion::Released);
                 input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
                 break;
@@ -227,6 +242,11 @@ void SdlDisplayWindow::gatherInputs() {
                     input.setScrollAmount(event.wheel.y); 
                 }
                 break;
+            case SDL_WINDOWEVENT:
+                if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+                    resizeWindow(event.window.data1, event.window.data2);
+                }
+                break;
         }
 
         // Set view intersections
@@ -234,10 +254,10 @@ void SdlDisplayWindow::gatherInputs() {
             const View& view = m_views.at(viewName);
 
             // If it intersects the view, calculate the zero-plane intersection
-            if (mousePos.isBetween(view.getTopLeft(), view.getBottomRight())) {
+            if (m_mousePos.isBetween(view.getTopLeft(), view.getBottomRight())) {
 
                 // Calculate the intersection point
-                Vector3D zeroPoint = view.zeroPlaneIntersection(mousePos);
+                Vector3D zeroPoint = view.zeroPlaneIntersection(m_mousePos);
 
                 // Add intersection to input's view list
                 input.addViewIntersection(view.getName(), zeroPoint);
@@ -361,6 +381,32 @@ UniqueDisplayWindow createDisplayWindow(ResourceDescriptor settings) {
     {
         std::cerr << e.what() << std::endl;
         return nullptr;
+    }
+}
+
+void SdlDisplayWindow::resizeWindow(int width, int height) {
+
+    int oldWidth = 0, oldHeight = 0;
+    SDL_GetWindowSize(m_window, &oldWidth, &oldHeight);
+
+    if (width <= 0 || height <= 0 || oldWidth <= 0 || oldHeight <= 0) {
+        return;
+    }
+
+    SDL_SetWindowSize(m_window, width, height);
+
+    for (string& viewName : getSortedViews(m_views)) {
+        View& view = m_views.at(viewName);
+
+        view.setTopLeft( Pixel(
+                height*view.getTopLeft().getRow()/oldHeight,
+                width*view.getTopLeft().getCol()/oldWidth
+        ));
+
+        view.setBottomRight( Pixel(
+                height*view.getBottomRight().getRow()/oldHeight,
+                width*view.getBottomRight().getCol()/oldWidth
+        ));
     }
 }
 

@@ -3,6 +3,7 @@
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/game/query_world.h"
 #include "battle_room/game/command_receiver.h"
+#include <iostream>
 
 using std::vector;
 

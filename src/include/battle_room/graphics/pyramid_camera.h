@@ -25,6 +25,10 @@ public:
     // inherited
     void move(Vector3D deltaVelocity);
 
+private:
+
+    Vector3D m_camVelocity; ///< Current velocity of camera
+
 }; // PyramidCamera class
 } // BattleRoom namespace
 #endif // PYRAMID_CAMERA_H

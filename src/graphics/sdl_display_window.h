@@ -37,6 +37,13 @@ public:
 
 private:
 
+    /**
+     * \brief Resizes the window and tries to smartly resize the views
+     * \param width New width of window
+     * \param height New height of window
+     */
+    void resizeWindow(int width, int height);
+
     SdlTextureManager m_sdlTextureManager; ///< Manages textures using the SDL Renderer
     SDL_Renderer* m_renderer; ///< Reads in textures and draws everything
     SDL_Window* m_window; ///< SDL Window Pointer
@@ -48,9 +55,13 @@ private:
     std::vector<UniqueDrawable> m_drawablesA; ///< Container for drawables
     std::vector<UniqueDrawable> m_drawablesB; ///< Container for drawables
 
+    // Track the mouse position by updating when available
+    Pixel m_mousePos;
+
     static std::vector<SDL_Event> m_sdlEvents;
     static int m_windowCount; ///< If this gets to zero, it quits SDL
     static int m_windowsDrawn; // TODO figure out a better way
+    static unsigned m_windowWithFocus;
 
 }; // SdlWindow class
 } // BattleRoom namespace
