@@ -15,9 +15,9 @@ For full program
         intersections class implementations
     create menus
     Use arguments to specify startup script
-    Figure out sending camera commands from game interface
     Truly separate window events between windows...
     Remove commented strings from resource files
+    Add saving configs
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load

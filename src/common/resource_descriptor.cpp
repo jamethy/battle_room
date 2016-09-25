@@ -16,6 +16,10 @@ ResourceDescriptor::ResourceDescriptor()
     : m_key(""), m_value("")
 { }
 
+ResourceDescriptor::ResourceDescriptor(string key, string value) 
+    : m_key(key), m_value(value)
+{ }
+
 ResourceDescriptor::ResourceDescriptor(vector<string> lines) 
     : m_key(""), m_value("")
 {
@@ -199,6 +203,10 @@ void ResourceDescriptor::setValue(string value) {
 
 void ResourceDescriptor::setSubResources(vector<ResourceDescriptor> subResources) {
     m_subResources = subResources;
+}
+
+void ResourceDescriptor::addSubResources(std::vector<ResourceDescriptor> subResources) {
+    m_subResources.insert(m_subResources.end(),subResources.begin(),subResources.end());
 }
 
 } // BattleRoom namespace

@@ -36,6 +36,10 @@ void Vector3D::applySettings(ResourceDescriptor settings) {
     } 
 }
 
+ResourceDescriptor Vector3D::writeToSetting(string key) {
+    return ResourceDescriptor( key, toString() );
+}
+
 // constructors
 
 Vector3D::Vector3D() 
@@ -91,6 +95,14 @@ Vector3D Vector3D::times(double scalar) const {
 
 Vector3D Vector3D::getUnit() const {
     return this->times(1.0/magnitude());
+}
+
+// others
+
+std::string Vector3D::toString() const {
+    return std::to_string(m_x) + ", " +
+           std::to_string(m_y) + ", " +
+           std::to_string(m_z);
 }
 
 } // BattleRoom namespace

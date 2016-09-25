@@ -15,6 +15,10 @@ public:
      */
     static void updateBuffer();
 
+    /*
+     * \brief Copies the parameter into the query world
+     * \param world World to copy into the query world
+     */
     static void updateCopyWorld(const World& world);
 
     /**

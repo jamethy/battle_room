@@ -36,16 +36,17 @@ int main(int argc, char** argv) {
         windows.push_back(createDisplayWindow(windowDescriptor));
     }
 
-    std::vector<ViewInterface*> viewInterfaces; viewInterfaces.clear();
     std::vector<GameInterface> gameInterfaces; gameInterfaces.clear();
 
     for (ResourceDescriptor sub : rd.getSubResources("GameInterface")) {
         gameInterfaces.push_back(GameInterface(sub));
     }
 
+    std::vector<ViewInterface*> viewInterfaces; viewInterfaces.clear();
     for (GameInterface& interface : gameInterfaces) {
         viewInterfaces.push_back(&interface);
     }
+    // TODO add menus to vew interfaces
 
     while(!InputGatherer::containsQuitEvent()) { 
 
@@ -66,6 +67,15 @@ int main(int argc, char** argv) {
 
             // Update world for client
             QueryWorld::updateBuffer();
+
+            // get any settings that need to be applied to windows
+            ResourceDescriptor settings;
+            for (ViewInterface* interface : viewInterfaces) {
+                settings.addSubResources(interface->getNewSettings());
+            }
+            for (UniqueDisplayWindow& window : windows) {
+                window->applySettings(settings);
+            }
 
             // Prepare objects for display
             for (ViewInterface* interface : viewInterfaces) {

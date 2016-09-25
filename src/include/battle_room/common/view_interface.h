@@ -40,6 +40,12 @@ public:
      */
     virtual std::vector<DrawableText> getDrawableTexts() = 0;
 
+    /**
+     * \brief Gets any new settings for other objects as inputted by the user
+     * \return List of settings for other objects
+     */
+    virtual std::vector<ResourceDescriptor> getNewSettings() = 0;
+
     // getters and setters
 
     std::string getAssociatedView() const;

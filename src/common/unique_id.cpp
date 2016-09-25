@@ -16,6 +16,14 @@ UniqueId UniqueId::generateNewLocalId() {
     return UniqueId(--current_id);
 }
 
+UniqueId UniqueId::generateInvalidId() {
+    return UniqueId(0);
+}
+
+bool UniqueId::isValid() {
+    return m_id != 0;
+}
+
 bool UniqueId::operator==(const UniqueId& other) const {
     return m_id == other.m_id;
 }

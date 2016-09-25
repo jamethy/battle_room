@@ -19,6 +19,7 @@ void GameInterface::applySettings(ResourceDescriptor settings) {
 // constructors
 
 GameInterface::GameInterface(ResourceDescriptor settings)
+    : m_idToTrack(UniqueId::generateInvalidId())
 { 
     applySettings(settings);
 }
@@ -64,6 +65,28 @@ Inputs GameInterface::handleInputs(Inputs inputs) {
     // CommandReceiver::addCommands
 
     return remainingInputs;
+}
+
+vector<ResourceDescriptor> GameInterface::getNewSettings() {
+    vector<ResourceDescriptor> settings;
+
+    if (m_idToTrack.isValid()) {
+        for (GameObject& object : QueryWorld::getAllGameObjects()) {
+            if (object.getUniqueId() == m_idToTrack) {
+                Vector3D loc = object.getLocation();
+                ResourceDescriptor descriptor({
+                        "View: " + getAssociatedView(),
+                        "    Camera:",
+                        "        Location: " 
+                        + std::to_string(loc.x()) + "," 
+                        + std::to_string(loc.y())
+                });
+                settings.push_back(descriptor);
+                break;
+            }
+        }
+    }
+    return settings;
 }
 
 } // BattleRoom namespace

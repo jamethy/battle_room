@@ -26,6 +26,18 @@ public:
     static UniqueId generateNewLocalId();
 
     /**
+     * \brief Generates an ID that is not valid
+     * \return New id that is not valid
+     */
+    static UniqueId generateInvalidId();
+
+    /**
+     * Checks if the given unique id is valid
+     * \return True if is valid unique id
+     */
+    bool isValid();
+
+    /**
      * \brief Overload of == operator that tests for equivelance
      * \param other UniqueId to be compared against
      * \return True if the two are equal

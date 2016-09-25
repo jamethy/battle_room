@@ -21,6 +21,7 @@ public:
 
     // Constructors
     ResourceDescriptor();
+    ResourceDescriptor(std::string key, std::string value);
     ResourceDescriptor(std::vector<std::string> lines);
 
     /**
@@ -64,6 +65,7 @@ public:
     void setKey(std::string key);
     void setValue(std::string value);
     void setSubResources(std::vector<ResourceDescriptor> subResources);
+    void addSubResources(std::vector<ResourceDescriptor> subResources);
 
 private:
 

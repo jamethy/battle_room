@@ -63,6 +63,12 @@ public:
      */
     Vector3D getUnit() const;
 
+    /**
+     * \brief Writes the vector to the string
+     * \return String of vector
+     */
+    std::string toString() const;
+
     // Access by reference (assigning to these changes the value)
     meters& x();
     meters& y();
@@ -70,6 +76,7 @@ public:
 
     // inherited
     void applySettings(ResourceDescriptor settings) override;
+    ResourceDescriptor writeToSetting(std::string key);
 
 private:
 

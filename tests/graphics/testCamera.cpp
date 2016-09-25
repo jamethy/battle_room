@@ -69,10 +69,10 @@ TEST(Test_fromLocation, straight_down) {
 
 TEST(Test_fromLocation, yawed_straight_down) {
 
-    ResourceDescriptor descriptor({
+    ResourceDescriptor descriptor(std::vector<std::string>({
                 "Camera:",
                 "    Location: 0,0,2"
-    });
+    }));
 
     Camera camera;
     camera.applySettings(descriptor);
