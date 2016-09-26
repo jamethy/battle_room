@@ -21,7 +21,7 @@ public:
     virtual Camera* clone() override;
 
     // inherited
-    void move(Vector3D deltaVelocity);
+    void move(Vector3D deltaVelocity) override;
 
 }; // ZMaxCamera class
 } // BattleRoom namespace
