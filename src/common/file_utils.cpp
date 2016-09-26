@@ -33,7 +33,7 @@ string getFilePath(string fullFilePath) {
 
 string getFileName(string fullFilePath) {
 
-    string filename = fullFilePath;
+    string filename = "";
 
     // .*\\/ file path and the last forward slash
     // (.*) the filename (group 1)
@@ -50,7 +50,7 @@ string getFileName(string fullFilePath) {
 
 string getFileExtension(string filename) {
 
-    string ext = filename;
+    string ext = "";
 
     // .*\\. file name and path including the dot before the extension
     // ([\\w]+) at least one word character designating the extension (group 1)
@@ -91,6 +91,12 @@ void setResourcePathFromExe(std::string exeFilePath) {
 
     std::string exePath = getFilePath(exeFilePath);
     m_resourcePath = exePath + "../res/";
+}
+
+void setResourcePathFromStartupScript(std::string startupFilePath) {
+
+    std::string startupPath = getFilePath(startupFilePath);
+    m_resourcePath = startupPath;
 }
 
 std::string getResourcePath() {

@@ -19,7 +19,7 @@ std::string getFilePath(std::string fullFilePath);
 /*!
  * \brief Parses a file path and returns the filename without extension
  *
- * Returns the input string if filename not found in argument
+ * Returns an empty string if filename not found in argument
  *
  * \param fullFilePath String containing path and a filename at the end
  * \return New string of just the filename (without the . or extension at end)
@@ -29,7 +29,7 @@ std::string getFileName(std::string fullFilePath);
 /*!
  * \breif Parses a file name or path and returns the extension (without the .)
  *
- * Returns the input string if extension not found
+ * Returns an empty string if extension not found
  *
  * \param filename Filename or full file path that has a . and extension at the end
  * \return New string of just the extension
@@ -55,6 +55,12 @@ std::vector<std::string> readEntireResourceFile(std::string fullFilePath);
  * \param Relative path to the executable
  */
 void setResourcePathFromExe(std::string exePath);
+
+/*!
+ * \brief Sets the resource path from the path of the startup script
+ * \param Relative path to the startup script
+ */
+void setResourcePathFromStartupScript(std::string startupPath);
 
 /*!
  * \brief Gets the resource path

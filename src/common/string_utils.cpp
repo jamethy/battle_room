@@ -48,4 +48,8 @@ bool isNotEmpty(const string& str) {
     return std::regex_search(str, sm, rgx_char);
 }
 
+bool isEmpty(const std::string& str) {
+    return !isNotEmpty(str);
+}
+
 } // BattleRoom namespace

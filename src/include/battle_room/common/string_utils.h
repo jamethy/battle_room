@@ -43,5 +43,12 @@ bool keyMatch(std::string a, std::string b);
  */
 bool isNotEmpty(const std::string& str);
 
+/**
+ * \brief Checks if the string is empty or is just white space
+ * \param String to be examined
+ * \return True if string is empty
+ */
+bool isEmpty(const std::string& str);
+
 } // BattleRoom namespace
 #endif // STRING_UTILS_H

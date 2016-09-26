@@ -28,7 +28,7 @@ Animation& AnimationHandler::getAnimation(string animation) {
         Animation anim = loadAnimation(animation);
 
         // If animation was unsuccessful in loading, place missing
-        if (anim.getImageFile().empty()) {
+        if (isEmpty(anim.getImageFile())) {
 
             // if missing animation hasn't been loaded yet, load it
             if (m_animationMap.count(MISSING_ANIMATION) == 0) {
