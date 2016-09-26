@@ -22,6 +22,7 @@ Maybe for fun
         Records times globally
         Track FPS and rate of other functions
     Create camera that tracks a player
+    Add a cleanup file paths function in file utils.
 
 Persistent to do
     Look for // TODO in the code

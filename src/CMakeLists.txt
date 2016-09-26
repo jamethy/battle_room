@@ -10,7 +10,8 @@ add_subdirectory(networking)
 add_subdirectory(tester_programs)
 
 # MAIN PROGRAM CLIENT
-add_executable(battleroom main.cpp )
+add_executable(battleroom 
+    battleroom.cpp )
 target_link_libraries(battleroom
     ${START_GROUP}
     Common
@@ -26,8 +27,9 @@ target_link_libraries(battleroom
 )
 
 # DEDICATED SERVER
-add_executable(dedicated_battleroom dedicated_server.cpp )
-target_link_libraries(dedicated_battleroom
+add_executable(battleroom_dedicated_server 
+    battleroom_dedicated_server.cpp )
+target_link_libraries(battleroom_dedicated_server
     ${START_GROUP}
     Common
     Game
