@@ -50,5 +50,13 @@ bool isNotEmpty(const std::string& str);
  */
 bool isEmpty(const std::string& str);
 
+/**
+ * \brief Returns a copy of str with all the comments removed 
+ * Comments are started with # in yml files
+ * \param str String to remove comments from
+ * \return Copy of str without comments
+ */
+std::string removeYmlComments(std::string str);
+
 } // BattleRoom namespace
 #endif // STRING_UTILS_H

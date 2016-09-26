@@ -13,7 +13,6 @@ For full program
         intersection base class
         intersections class implementations
     create menus
-    Remove commented strings from resource files
     Add saving configs
 
 Maybe for fun

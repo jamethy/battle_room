@@ -134,6 +134,7 @@ void ResourceDescriptor::fillFromInput(vector<string> lines, unsigned& start) {
 
         while (++start < lines.size()) {
             string nextLine = lines[start];
+            nextLine = removeYmlComments(nextLine);
 
             if (isNotEmpty(nextLine)) {
 

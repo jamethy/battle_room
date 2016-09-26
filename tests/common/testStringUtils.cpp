@@ -37,5 +37,26 @@ TEST(Test_split, typical) {
     EXPECT_STREQ(" commas", as[3].c_str());
 }
 
+TEST(Test_removeComments, typical) {
+
+    string a = "1234#5678";
+    string b = removeYmlComments(a);
+    EXPECT_STREQ("1234",b.c_str());
+}
+
+TEST(Test_removeComments, none) {
+
+    string a = "12345678";
+    string b = removeYmlComments(a);
+    EXPECT_STREQ("12345678",b.c_str());
+}
+
+TEST(Test_removeComments, beginning) {
+
+    string a = "#12345678";
+    string b = removeYmlComments(a);
+    EXPECT_STREQ("",b.c_str());
+}
+
 } // BattleRoom namespace
 

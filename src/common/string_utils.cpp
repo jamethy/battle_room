@@ -52,4 +52,15 @@ bool isEmpty(const std::string& str) {
     return !isNotEmpty(str);
 }
 
+std::string removeYmlComments(std::string str) {
+
+    std::size_t commentPos = str.find('#');
+    if (commentPos != std::string::npos) {
+        return str.substr(0,commentPos);
+    }
+    else {
+        return str;
+    }
+}
+
 } // BattleRoom namespace
