@@ -15,10 +15,17 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <algorithm>
 
 using namespace BattleRoom;
 
+
 std::string getStartupScriptFromArgs(int argc, char** argv);
+
+//TODO find a better way to sort these....
+void sortByViewLayer(std::vector<ViewInterface*>& interfaces, ResourceDescriptor settings); 
+
+
 
 int main(int argc, char** argv) {
 
@@ -64,7 +71,11 @@ int main(int argc, char** argv) {
     for (GameInterface& interface : gameInterfaces) {
         viewInterfaces.push_back(&interface);
     }
+    sortByViewLayer(viewInterfaces, rd);
 
+    for (ViewInterface* v : viewInterfaces) {
+        std::cout << "view: " << v->getAssociatedView() << std::endl;
+    }
 
     // Until something adds a quit event to the input gatherer, repeat the loop:
     while(!InputGatherer::containsQuitEvent()) { 
@@ -185,3 +196,33 @@ std::string getStartupScriptFromArgs(int argc, char** argv) {
     return startupScript;
 }
 
+void sortByViewLayer(std::vector<ViewInterface*>& interfaces, ResourceDescriptor settings) {
+
+    // create a map of view names to view layers
+    std::unordered_map<std::string,int> viewLayerMap;
+    for (ResourceDescriptor window : settings.getSubResources("Window")) {
+        for (ResourceDescriptor view : window.getSubResources("View")) {
+            int viewLayer = 0;
+            if (isNotEmpty(view.getSubResource("Layer").getValue())) {
+                viewLayer = std::stoi(view.getSubResource("Layer").getValue());
+            }
+
+            viewLayerMap.insert(std::make_pair( view.getValue(), viewLayer ));
+        }
+    }
+
+    // sort by created map
+    std::sort(interfaces.begin(), interfaces.end(), 
+            [&viewLayerMap](ViewInterface* a, ViewInterface* b) {
+                
+                int aLayer = 0, bLayer = 0;
+                if (viewLayerMap.count(a->getAssociatedView()) > 0) {
+                    aLayer = viewLayerMap.at(a->getAssociatedView());
+                }
+                if (viewLayerMap.count(b->getAssociatedView()) > 0) {
+                    bLayer = viewLayerMap.at(b->getAssociatedView());
+                }
+                return aLayer < bLayer;
+            }
+    );
+}

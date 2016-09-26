@@ -17,6 +17,7 @@
 #include <exception>
 #include <iostream>
 #include <algorithm>
+#include <utility>
 
 using std::string;
 using std::vector;
@@ -75,7 +76,7 @@ void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
             }
             // Add it to the view
             string name = newView.getName();
-            m_views.insert(std::pair<string,View>(name,newView));
+            m_views.insert(std::make_pair(name,newView));
         }
     }
 }
@@ -155,7 +156,7 @@ vector<string> getSortedViews(const std::unordered_map<string,View>& viewMap) {
 
     vector<string> sortedViews(viewMap.size());
     sortedViews.clear();
-    for (const std::pair<string,View>& p : viewMap) {
+    for (const auto& p : viewMap) {
         sortedViews.push_back(p.first);
     }
 
