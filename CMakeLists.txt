@@ -27,6 +27,7 @@ endif()
 if (UNIX AND NOT APPLE)
     set(START_GROUP "-Wl,--start-group")
     set(END_GROUP "-Wl,--end-group")
+    set(LINUX_LIBS "pthread")
 endif()
 
 find_package(SDL2 REQUIRED)

@@ -35,4 +35,5 @@ target_link_libraries(battleroom_dedicated_server
     Game
     Networking
     ${END_GROUP}
+    ${LINUX_LIBS}
 )
