@@ -73,9 +73,6 @@ int main(int argc, char** argv) {
     }
     sortByViewLayer(viewInterfaces, rd);
 
-    for (ViewInterface* v : viewInterfaces) {
-        std::cout << "view: " << v->getAssociatedView() << std::endl;
-    }
 
     // Until something adds a quit event to the input gatherer, repeat the loop:
     while(!InputGatherer::containsQuitEvent()) { 

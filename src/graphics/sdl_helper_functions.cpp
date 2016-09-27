@@ -46,6 +46,15 @@ unsigned getWindowIdFrom(SDL_Event& event) {
         case SDL_MOUSEMOTION:
             windowID = event.motion.windowID;
             break;
+        case SDL_WINDOWEVENT:
+            if (event.window.event == SDL_WINDOWEVENT_ENTER
+                    || event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED
+                    || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+            {
+                windowID = event.window.windowID;
+            }
+            break;
+
     }
     return windowID;
 }

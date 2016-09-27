@@ -38,11 +38,11 @@ public:
 private:
 
     /**
-     * \brief Resizes the window and tries to smartly resize the views
-     * \param width New width of window
-     * \param height New height of window
+     * \brief Tries to smartly resize the views
+     * \param oldWidth New width of window
+     * \param oldHeight New height of window
      */
-    void resizeWindow(int width, int height);
+    void resizeViews(int oldWidth, int oldHeight);
 
     SdlTextureManager m_sdlTextureManager; ///< Manages textures using the SDL Renderer
     SDL_Renderer* m_renderer; ///< Reads in textures and draws everything
@@ -57,6 +57,8 @@ private:
 
     // Track the mouse position by updating when available
     Pixel m_mousePos;
+    int m_windowWidth = 1500;
+    int m_windowHeight = 1000;
 
     static std::vector<SDL_Event> m_sdlEvents;
     static int m_windowCount; ///< If this gets to zero, it quits SDL

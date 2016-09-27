@@ -3,7 +3,6 @@ Running ToDo List
 -----------------------------------
 
 For full program
-    Need to handle inputs in order of view layer
     Add networking code to networking...
     fix missing animation
     create commands

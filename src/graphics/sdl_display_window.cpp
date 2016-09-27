@@ -30,31 +30,31 @@ unsigned SdlDisplayWindow::m_windowWithFocus = 1;
 
 void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
 
-    int width = 0, height = 0;
-    SDL_GetWindowSize(m_window, &width, &height);
+    SDL_GetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
 
     // if window name matches, settings are for this window
     if (m_windowName.compare(settings.getValue()) == 0) {
 
         // TODO figure out what a SDL_DisplayMode is
-        if (width > 0 && height > 0) {
 
-            bool changed = false;
-            ResourceDescriptor sub = settings.getSubResource("Width");
-            if (isNotEmpty(sub.getValue())) {
-                width = stoi(sub.getValue());
-                changed = true;
-            }
+        bool changed = false;
+        ResourceDescriptor sub = settings.getSubResource("Width");
+        if (isNotEmpty(sub.getValue())) {
+            m_windowWidth = stoi(sub.getValue());
+            changed = true;
+        }
 
-            sub = settings.getSubResource("Height");
-            if (isNotEmpty(sub.getValue())) {
-                height = stoi(sub.getValue());
-                changed = true;
-            }
+        sub = settings.getSubResource("Height");
+        if (isNotEmpty(sub.getValue())) {
+            m_windowHeight = stoi(sub.getValue());
+            changed = true;
+        }
 
-            if (changed) {
-                resizeWindow(width,height);
-            }
+        if (changed && m_windowWidth > 0 && m_windowHeight > 0) {
+            int oldWidth = 0, oldHeight = 0;
+            SDL_GetWindowSize(m_window, &oldWidth, &oldHeight);
+            SDL_SetWindowSize(m_window, m_windowWidth, m_windowHeight);
+            resizeViews(oldWidth,oldHeight);
         }
     }
 
@@ -72,7 +72,7 @@ void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
             // Check if bottom right was set, if not use window dimensions
             Pixel botRight = newView.getBottomRight();
             if(botRight.getColInt() == 0 && botRight.getRowInt() == 0) {
-                newView.setBottomRight(Pixel(height,width));
+                newView.setBottomRight(Pixel(m_windowHeight,m_windowWidth));
             }
             // Add it to the view
             string name = newView.getName();
@@ -112,7 +112,9 @@ SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings)
         SDL_Quit();
     }
 
-    m_window = SDL_CreateWindow(m_windowName.c_str(), 0, 0, 500, 500, SDL_WINDOW_SHOWN);
+    m_window = SDL_CreateWindow(m_windowName.c_str(), 0, 0, 500, 500, 
+            SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
     if (m_window == nullptr){
         std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -196,11 +198,11 @@ void SdlDisplayWindow::gatherInputs() {
             switch (event.window.event) {
                 case SDL_WINDOWEVENT_ENTER:
                 case SDL_WINDOWEVENT_FOCUS_GAINED:
+                case SDL_WINDOWEVENT_SIZE_CHANGED:
                     m_windowWithFocus = event.window.windowID;
                     if (windowId != m_windowWithFocus) {
                         m_mousePos = Pixel(-1,-1);
                     }
-                    break;
             }
         }
 
@@ -245,7 +247,7 @@ void SdlDisplayWindow::gatherInputs() {
                 break;
             case SDL_WINDOWEVENT:
                 if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                    resizeWindow(event.window.data1, event.window.data2);
+                    resizeViews(m_windowWidth, m_windowHeight);
                 }
                 break;
         }
@@ -385,16 +387,16 @@ UniqueDisplayWindow createDisplayWindow(ResourceDescriptor settings) {
     }
 }
 
-void SdlDisplayWindow::resizeWindow(int width, int height) {
+void SdlDisplayWindow::resizeViews(int oldWidth, int oldHeight) {
 
-    int oldWidth = 0, oldHeight = 0;
-    SDL_GetWindowSize(m_window, &oldWidth, &oldHeight);
+    int width = 0, height = 0;
+    SDL_GetWindowSize(m_window, &width, &height);
 
     if (width <= 0 || height <= 0 || oldWidth <= 0 || oldHeight <= 0) {
         return;
     }
-
-    SDL_SetWindowSize(m_window, width, height);
+    m_windowWidth = width;
+    m_windowHeight = height;
 
     for (string& viewName : getSortedViews(m_views)) {
         View& view = m_views.at(viewName);
