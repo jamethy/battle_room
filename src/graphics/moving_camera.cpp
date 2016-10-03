@@ -1,11 +1,8 @@
 #include "battle_room/graphics/moving_camera.h"
 
 #include <cmath>
-#include <limits>
 
 namespace BattleRoom {
-
-const meters MAX_METERS = std::numeric_limits<double>::max();
 
 // apply settings
 

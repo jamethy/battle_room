@@ -18,7 +18,13 @@ add_library ( Common
         resource_descriptor.cpp
         string_utils.cpp
         unique_id.cpp
+        vector2d.cpp
         vector3d.cpp
         view_interface.cpp
         units.cpp
+        projection1d.cpp
+        boundary.cpp
+        boundary_factory.cpp
+        circle_boundary.cpp
+        box_boundary.cpp
 )

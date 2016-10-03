@@ -94,7 +94,13 @@ Vector3D Vector3D::times(double scalar) const {
 }
 
 Vector3D Vector3D::getUnit() const {
-    return this->times(1.0/magnitude());
+    meters mag = magnitude();
+    if (mag < EPS_METERS) {
+        return Vector3D(1,0,0);
+    }
+    else {
+        return this->times(1.0/mag);
+    }
 }
 
 // others

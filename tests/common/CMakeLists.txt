@@ -13,3 +13,16 @@ target_link_libraries(runCommonTests gtest gmock gtest_main
                )
 
 add_test( NAME CommonTests COMMAND runCommonTests )
+
+
+# just for boundaries
+add_executable(runBoundaryTests
+                    testBoundaryIntersection.cpp 
+                    testBoundaryContains.cpp 
+               )
+
+target_link_libraries(runBoundaryTests gtest gmock gtest_main 
+                   Common 
+               )
+
+add_test( NAME BoundaryTests COMMAND runBoundaryTests )

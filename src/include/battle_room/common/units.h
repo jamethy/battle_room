@@ -2,6 +2,7 @@
 #define UNITS_H
 
 #include <string>
+#include <limits>
 
 namespace BattleRoom {
 
@@ -62,6 +63,9 @@ degrees toDegrees(radians angle);
  * \brief Converts degrees to radians 
  */
 radians toRadians(degrees angle);
+
+const meters MAX_METERS = 99e99;
+const meters EPS_METERS = std::numeric_limits<double>::epsilon();
 
 } // BattleRoom namespace
 #endif // UNITS_H

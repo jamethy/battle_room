@@ -8,9 +8,6 @@ For full program
     create commands
     create messages
     Create an exception scheme
-    Create intersection handler
-        intersection base class
-        intersections class implementations
     create menus
     Add saving configs
 
@@ -22,6 +19,7 @@ Maybe for fun
         Track FPS and rate of other functions
     Create camera that tracks a player
     Add a cleanup file paths function in file utils.
+    Split up common somehow
 
 Persistent to do
     Look for // TODO in the code
