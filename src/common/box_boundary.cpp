@@ -62,9 +62,13 @@ BoxBoundary::BoxBoundary(ResourceDescriptor settings)
     applySettings(settings);
 }
 
+Boundary* BoxBoundary::clone() const {
+    return new BoxBoundary(*this);
+}
+
 // other functions
 
-bool BoxBoundary::contains(Vector2D delta) {
+bool BoxBoundary::contains(Vector2D delta) const {
     Vector2D top = m_corners[1].minus( m_corners[0] );
     Vector2D left = m_corners[3].minus( m_corners[0] );
     Vector2D point = delta.minus( m_corners[0] );
@@ -75,7 +79,7 @@ bool BoxBoundary::contains(Vector2D delta) {
     return underTop && besideLeft;
 }
 
-Projection1D BoxBoundary::projectOnto(Vector2D axis) {
+Projection1D BoxBoundary::projectOnto(Vector2D axis) const {
     
     Projection1D projection;
     for (Vector2D corner : m_corners) {
@@ -84,7 +88,7 @@ Projection1D BoxBoundary::projectOnto(Vector2D axis) {
     return projection;
 }
 
-std::vector<Vector2D> BoxBoundary::getSideNormals() {
+std::vector<Vector2D> BoxBoundary::getSideNormals() const {
     return m_sideNormals;
 }
 

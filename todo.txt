@@ -17,7 +17,6 @@ Maybe for fun
     Create a performance monitoring system
         Records times globally
         Track FPS and rate of other functions
-    Create camera that tracks a player
     Add a cleanup file paths function in file utils.
     Split up common somehow
 

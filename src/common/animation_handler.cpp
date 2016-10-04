@@ -33,9 +33,7 @@ Animation& AnimationHandler::getAnimation(string animation) {
             // if missing animation hasn't been loaded yet, load it
             if (m_animationMap.count(MISSING_ANIMATION) == 0) {
                 Animation missingAnim = loadAnimation(MISSING_ANIMATION);
-                m_animationMap.insert(
-                    std::pair<string,Animation>(MISSING_ANIMATION,missingAnim)
-                );
+                m_animationMap.insert(std::make_pair(MISSING_ANIMATION,missingAnim));
             }
 
             // Insert missing in place

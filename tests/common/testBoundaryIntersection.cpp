@@ -1,4 +1,4 @@
-#include "battle_room/common/boundary_factory.h"
+#include "battle_room/common/boundary_set.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
@@ -19,8 +19,8 @@ TEST(Test_circle_circle, typical) {
             ""
     });
 
-    UniqueBoundary boundary1 = BoundaryFactory::createBoundary(settings1);
-    UniqueBoundary boundary2 = BoundaryFactory::createBoundary(settings2);
+    UniqueBoundary boundary1 = BoundarySet::createBoundary(settings1);
+    UniqueBoundary boundary2 = BoundarySet::createBoundary(settings2);
 
     // general intersecting point, from both boundaries
     EXPECT_TRUE( boundary1->intersects(boundary2.get(), Vector2D(0,0), 0) );
@@ -50,8 +50,8 @@ TEST(Test_circle_empty, typical) {
 
     ResourceDescriptor settings2;
 
-    UniqueBoundary boundary1 = BoundaryFactory::createBoundary(settings1);
-    UniqueBoundary boundary2 = BoundaryFactory::createBoundary(settings2);
+    UniqueBoundary boundary1 = BoundarySet::createBoundary(settings1);
+    UniqueBoundary boundary2 = BoundarySet::createBoundary(settings2);
 
     EXPECT_FALSE( boundary1->intersects(boundary2.get(), Vector2D(0,0), 0) );
     EXPECT_FALSE( boundary2->intersects(boundary1.get(), Vector2D(0,0), 0) );
@@ -80,8 +80,8 @@ TEST(Test_box_empty, typical) {
 
     ResourceDescriptor settings2;
 
-    UniqueBoundary boundary1 = BoundaryFactory::createBoundary(settings1);
-    UniqueBoundary boundary2 = BoundaryFactory::createBoundary(settings2);
+    UniqueBoundary boundary1 = BoundarySet::createBoundary(settings1);
+    UniqueBoundary boundary2 = BoundarySet::createBoundary(settings2);
 
     EXPECT_FALSE( boundary1->intersects(boundary2.get(), Vector2D( 0, 0), 0) );
     EXPECT_FALSE( boundary2->intersects(boundary1.get(), Vector2D( 0, 0), 0) );
@@ -124,8 +124,8 @@ TEST(Test_box_box, unrotated) {
             "    Height: 7"
     });
 
-    UniqueBoundary boundary1 = BoundaryFactory::createBoundary(settings1);
-    UniqueBoundary boundary2 = BoundaryFactory::createBoundary(settings2);
+    UniqueBoundary boundary1 = BoundarySet::createBoundary(settings1);
+    UniqueBoundary boundary2 = BoundarySet::createBoundary(settings2);
 
     EXPECT_TRUE( boundary1->intersects(boundary2.get(), Vector2D( 0, 0), 0) );
     EXPECT_TRUE( boundary2->intersects(boundary1.get(), Vector2D( 0, 0), 0) );
@@ -176,8 +176,8 @@ TEST(Test_box_box, rotated) {
 
     double angle = toRadians(30.0);
 
-    UniqueBoundary boundary1 = BoundaryFactory::createBoundary(settings1);
-    UniqueBoundary boundary2 = BoundaryFactory::createBoundary(settings2);
+    UniqueBoundary boundary1 = BoundarySet::createBoundary(settings1);
+    UniqueBoundary boundary2 = BoundarySet::createBoundary(settings2);
 
     EXPECT_TRUE( boundary1->intersects(boundary2.get(), Vector2D( 0, 0), angle) );
     EXPECT_TRUE( boundary2->intersects(boundary1.get(), Vector2D( 0, 0),-angle) );
@@ -207,8 +207,8 @@ TEST(Test_box_circle, unrotated) {
             ""
     });
 
-    UniqueBoundary boundary1 = BoundaryFactory::createBoundary(settings1);
-    UniqueBoundary boundary2 = BoundaryFactory::createBoundary(settings2);
+    UniqueBoundary boundary1 = BoundarySet::createBoundary(settings1);
+    UniqueBoundary boundary2 = BoundarySet::createBoundary(settings2);
 
     EXPECT_TRUE( boundary1->intersects(boundary2.get(), Vector2D( 0, 0),0) );
     EXPECT_TRUE( boundary2->intersects(boundary1.get(), Vector2D( 0, 0),0) );
@@ -251,8 +251,8 @@ TEST(Test_box_circle, rotated) {
 
     double angle = toRadians(30.0);
 
-    UniqueBoundary boundary1 = BoundaryFactory::createBoundary(settings1);
-    UniqueBoundary boundary2 = BoundaryFactory::createBoundary(settings2);
+    UniqueBoundary boundary1 = BoundarySet::createBoundary(settings1);
+    UniqueBoundary boundary2 = BoundarySet::createBoundary(settings2);
 
     EXPECT_TRUE( boundary1->intersects(boundary2.get(), Vector2D( 0, 0),angle) );
     EXPECT_TRUE( boundary2->intersects(boundary1.get(), Vector2D( 0, 0),-angle) );

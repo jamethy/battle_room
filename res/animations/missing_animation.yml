@@ -6,5 +6,4 @@ Frame:
     EndTime: 9999999999
     TopLeft: 0,0
     BottomRight: 255,255
-    XScale: 0.01
-    YScale: 0.01
+    Scale: 0.01

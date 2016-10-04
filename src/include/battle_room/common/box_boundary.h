@@ -12,13 +12,14 @@ public:
     BoxBoundary(ResourceDescriptor settings);
 
     // inherited
-    bool contains(Vector2D delta);
+    bool contains(Vector2D delta) const;
     void applySettings(ResourceDescriptor settings);
+    Boundary* clone() const;
 
 protected:
 
-    Projection1D projectOnto(Vector2D axis) override;
-    std::vector<Vector2D> getSideNormals() override;
+    Projection1D projectOnto(Vector2D axis) const override;
+    std::vector<Vector2D> getSideNormals() const override;
 
 private:
 

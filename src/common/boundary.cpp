@@ -3,7 +3,7 @@
 namespace BattleRoom {
 
 
-bool Boundary::intersects(Boundary* other, Vector2D delta, radians angle) {
+bool Boundary::intersects(Boundary* other, Vector2D delta, radians angle) const {
 
     if (other == nullptr) { return false; }
 

@@ -47,7 +47,8 @@ void Animation::applySettings(ResourceDescriptor settings) {
 
 // constructor
 
-Animation::Animation(ResourceDescriptor descriptor) {
+Animation::Animation(ResourceDescriptor descriptor) 
+{
     applySettings(descriptor);
 }
 

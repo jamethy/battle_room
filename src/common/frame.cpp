@@ -14,20 +14,18 @@ void Frame::applySettings(ResourceDescriptor settings) {
         m_endTime = toSeconds(sub.getValue());
     }
 
-    sub = settings.getSubResource("XScale");
+    sub = settings.getSubResource("Scale");
     if (isNotEmpty(sub.getValue())) {
-        m_xScale = toPx(sub.getValue());
+        m_scale = toPx(sub.getValue());
     }
 
-    sub = settings.getSubResource("YScale");
-    if (isNotEmpty(sub.getValue())) {
-        m_yScale = toPx(sub.getValue());
-    }
+    m_boundarySet = BoundarySet(settings.getSubResources("Boundary"));
 }
 
 // constructor
 
-Frame::Frame(ResourceDescriptor descriptor) {
+Frame::Frame(ResourceDescriptor descriptor) 
+{
     applySettings(descriptor);   
 }
 
@@ -37,12 +35,8 @@ seconds Frame::getEndTime() const {
     return m_endTime;
 }
 
-double Frame::getXScale() const {
-    return m_xScale;
-}
-
-double Frame::getYScale() const {
-    return m_yScale;
+double Frame::getScale() const {
+    return m_scale;
 }
 
 const Pixel& Frame::getTopLeft() const {
@@ -54,11 +48,11 @@ const Pixel& Frame::getBottomRight() const {
 }
 
 meters Frame::getWidth() const {
-    return m_xScale*(m_bottomRight.getCol() - m_topLeft.getCol());
+    return m_scale*(m_bottomRight.getCol() - m_topLeft.getCol());
 }
 
 meters Frame::getHeight() const {
-    return m_yScale*(m_bottomRight.getRow() - m_topLeft.getRow());
+    return m_scale*(m_bottomRight.getRow() - m_topLeft.getRow());
 }
 
 } // BattleRoom namespace

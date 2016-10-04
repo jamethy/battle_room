@@ -24,7 +24,7 @@ add_library ( Common
         units.cpp
         projection1d.cpp
         boundary.cpp
-        boundary_factory.cpp
+        boundary_set.cpp
         circle_boundary.cpp
         box_boundary.cpp
 )

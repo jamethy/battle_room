@@ -27,9 +27,7 @@ TEST(Test_gen, typical) {
     subResources.push_back(sub);
     sub.setKey("BottomRight"); sub.setValue("100,100");
     subResources.push_back(sub);
-    sub.setKey("XScale"); sub.setValue("2.1");
-    subResources.push_back(sub);
-    sub.setKey("YScale"); sub.setValue("2.3");
+    sub.setKey("Scale"); sub.setValue("2.1");
     subResources.push_back(sub);
     frameResource.setSubResources(subResources);
 
@@ -57,8 +55,7 @@ TEST(Test_gen, typical) {
     EXPECT_EQ(0, frame.getTopLeft().getCol());
     EXPECT_EQ(100, frame.getBottomRight().getRow());
     EXPECT_EQ(100, frame.getBottomRight().getCol());
-    EXPECT_EQ(2.1, frame.getXScale());
-    EXPECT_EQ(2.3, frame.getYScale());
+    EXPECT_EQ(2.1, frame.getScale());
 
     frame = animation.getFrames()[1];
     EXPECT_EQ(0.1, frame.getEndTime());
@@ -66,8 +63,7 @@ TEST(Test_gen, typical) {
     EXPECT_EQ(0, frame.getTopLeft().getCol());
     EXPECT_EQ(100, frame.getBottomRight().getRow());
     EXPECT_EQ(100, frame.getBottomRight().getCol());
-    EXPECT_EQ(2.1, frame.getXScale());
-    EXPECT_EQ(2.3, frame.getYScale());
+    EXPECT_EQ(2.1, frame.getScale());
 }
 
 TEST(Test_AnimationHandler, typical) {

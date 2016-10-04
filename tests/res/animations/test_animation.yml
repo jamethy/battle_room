@@ -8,37 +8,32 @@ Frame:
     LeftCol: 81
     BottomRow: 1150
     RightCol: 500
-    XScale: 1
-    YScale: 1
+    Scale: 1
 Frame:
     EndTime: 0.3
     TopRow: 213
     LeftCol: 500
     BottomRow: 1150
     RightCol: 944
-    XScale: 1
-    YScale: 1
+    Scale: 1
 Frame:
     EndTime: 0.4
     TopRow: 213
     LeftCol: 944
     BottomRow: 1150
     RightCol: 1344
-    XScale: 1
-    YScale: 1
+    Scale: 1
 Frame:
     EndTime: 0.5
     TopRow: 213
     LeftCol: 1344
     BottomRow: 1150
     RightCol: 1780
-    XScale: 1
-    YScale: 1
+    Scale: 1
 Frame:
     EndTime: 0.6
     TopRow: 213
     LeftCol: 1780
     BottomRow: 1150
     RightCol: 2260
-    XScale: 1
-    YScale: 1
+    Scale: 1

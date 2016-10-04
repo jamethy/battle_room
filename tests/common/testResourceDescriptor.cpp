@@ -16,7 +16,7 @@ void testFrameResource(ResourceDescriptor frame, string time, string toprow, str
     EXPECT_STREQ("Frame", frame.getKey().c_str());
     EXPECT_STREQ("", frame.getValue().c_str());
     vector<ResourceDescriptor> subs = frame.getSubResources();
-    ASSERT_EQ(7u, subs.size());
+    ASSERT_EQ(6u, subs.size());
 
     EXPECT_STREQ("EndTime", subs[0].getKey().c_str());
     EXPECT_STREQ(time.c_str(), subs[0].getValue().c_str());
@@ -39,13 +39,9 @@ void testFrameResource(ResourceDescriptor frame, string time, string toprow, str
     EXPECT_STREQ(rightcol.c_str(), subs[4].getValue().c_str());
     EXPECT_EQ(0u, subs[4].getSubResources().size());
 
-    EXPECT_STREQ("XScale", subs[5].getKey().c_str());
+    EXPECT_STREQ("Scale", subs[5].getKey().c_str());
     EXPECT_STREQ("1", subs[5].getValue().c_str());
     EXPECT_EQ(0u, subs[5].getSubResources().size());
-
-    EXPECT_STREQ("YScale", subs[6].getKey().c_str());
-    EXPECT_STREQ("1", subs[6].getValue().c_str());
-    EXPECT_EQ(0u, subs[6].getSubResources().size());
 }
 
 TEST(Test_fillFromInput, testFile) {

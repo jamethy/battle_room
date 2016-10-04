@@ -23,19 +23,23 @@ CircleBoundary::CircleBoundary(ResourceDescriptor settings)
     applySettings(settings);
 }
 
+Boundary* CircleBoundary::clone() const {
+    return new CircleBoundary(*this);
+}
+
 
 // other functions
 
-bool CircleBoundary::contains(Vector2D delta) {
+bool CircleBoundary::contains(Vector2D delta) const {
     return m_radius >= delta.minus(m_center).magnitude();
 }
 
-Projection1D CircleBoundary::projectOnto(Vector2D axis) {
+Projection1D CircleBoundary::projectOnto(Vector2D axis) const {
     (void)axis; // unused
     return Projection1D(-m_radius,m_radius);
 }
 
-std::vector<Vector2D> CircleBoundary::getSideNormals() {
+std::vector<Vector2D> CircleBoundary::getSideNormals() const {
     std::vector<Vector2D> returnvec;
     returnvec.clear();
     return returnvec;

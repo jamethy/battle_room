@@ -71,6 +71,9 @@ void LocalUpdatingWorld::update() {
         updateGameObject(object, m_timeController.getDelta());
     }
 
+    // check for intersections
+    // account for intersections
+
     // fake load
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }

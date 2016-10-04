@@ -1,8 +1,9 @@
 #ifndef FRAME_H
 #define FRAME_H
 
-#include "battle_room/common/pixel.h"
 #include "battle_room/common/resource.h"
+#include "battle_room/common/pixel.h"
+#include "battle_room/common/boundary_set.h"
 
 namespace BattleRoom {
 
@@ -37,8 +38,7 @@ public:
     seconds getEndTime() const;
     const Pixel& getTopLeft() const;
     const Pixel& getBottomRight() const;
-    double getXScale() const;
-    double getYScale() const;
+    double getScale() const;
 
     // inherited
     void applySettings(ResourceDescriptor settings) override;
@@ -50,8 +50,9 @@ private:
     Pixel m_topLeft; ///< Position of the top-left of the frame in the image
     Pixel m_bottomRight; ///< Position of the bottom-rightof the frame in the image
 
-    double m_xScale; // meters per pixel, amount to stretch image
-    double m_yScale; // meters per pixel, amount to stretch image
+    double m_scale; // meters per pixel, amount to stretch image
+
+    BoundarySet m_boundarySet;
     
 }; // Frame class
 } // BattleRoom namespace

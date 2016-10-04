@@ -1,4 +1,4 @@
-#include "battle_room/common/boundary_factory.h"
+#include "battle_room/common/boundary_set.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
@@ -8,7 +8,7 @@ namespace BattleRoom {
 TEST(Test_empty, typical) {
 
     ResourceDescriptor settings;
-    UniqueBoundary boundary = BoundaryFactory::createBoundary(settings);
+    UniqueBoundary boundary = BoundarySet::createBoundary(settings);
 
     // center
     EXPECT_FALSE( boundary->contains( Vector2D(0,0) ) );
@@ -36,7 +36,7 @@ TEST(Test_circle, typical) {
             ""
     });
 
-    UniqueBoundary boundary = BoundaryFactory::createBoundary(settings);
+    UniqueBoundary boundary = BoundarySet::createBoundary(settings);
 
     // center of circle
     EXPECT_TRUE( boundary->contains( Vector2D(0,0) ) );
@@ -66,7 +66,7 @@ TEST(Test_box, typical) {
             "    Height: 10"
     });
 
-    UniqueBoundary boundary = BoundaryFactory::createBoundary(settings);
+    UniqueBoundary boundary = BoundarySet::createBoundary(settings);
 
     // center
     EXPECT_TRUE( boundary->contains( Vector2D(0,0) ) );
@@ -99,7 +99,7 @@ TEST(Test_box, ninety) {
             "    DegRotation: 90"
     });
 
-    UniqueBoundary boundary = BoundaryFactory::createBoundary(settings);
+    UniqueBoundary boundary = BoundarySet::createBoundary(settings);
 
     // center
     EXPECT_TRUE( boundary->contains( Vector2D(0,0) ) );
@@ -132,7 +132,7 @@ TEST(Test_box, oneEighty) {
             "    DegRotation: 180"
     });
 
-    UniqueBoundary boundary = BoundaryFactory::createBoundary(settings);
+    UniqueBoundary boundary = BoundarySet::createBoundary(settings);
 
     // center
     EXPECT_TRUE( boundary->contains( Vector2D(0,0) ) );
@@ -165,7 +165,7 @@ TEST(Test_box, rotated) {
             "    DegRotation: 30"
     });
 
-    UniqueBoundary boundary = BoundaryFactory::createBoundary(settings);
+    UniqueBoundary boundary = BoundarySet::createBoundary(settings);
 
     // somewhere on x/y
     EXPECT_TRUE( boundary->contains( Vector2D(3.4,0) ) );
@@ -195,7 +195,7 @@ TEST(Test_box, rotatedAndOffset) {
             "    Center: 1,2"
     });
 
-    UniqueBoundary boundary = BoundaryFactory::createBoundary(settings);
+    UniqueBoundary boundary = BoundarySet::createBoundary(settings);
 
     // somewhere on x/y
     EXPECT_TRUE( boundary->contains( Vector2D(4.4,2) ) );
