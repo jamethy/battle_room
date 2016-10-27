@@ -23,3 +23,9 @@ make test
 ```
 
 This will make and run all the tests
+
+# Building in Linux
+The packages required in Ubuntu include:
+```
+cmake libsdl2-dev libsdl2-image-dev libsdl2-tff-dev libsdl2-gfx-dev
+```
