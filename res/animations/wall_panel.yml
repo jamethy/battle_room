@@ -1,0 +1,9 @@
+
+ImageFile: wall_panel.png
+NextAnimation: wall_panel
+
+Frame:
+    EndTime: 99999999
+    TopLeft: 0, 0
+    BottomRight: 10, 100
+    Scale: 0.01
