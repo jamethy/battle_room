@@ -17,6 +17,8 @@ public:
     // getters and setters
 
     const UniqueId getUniqueId() const;
+    Vector3D getVelocity();
+    bool isStatic() const;
 
 
     // inherited 
@@ -25,7 +27,9 @@ public:
 
 private:
 
-    UniqueId m_uniqueId; ///< Objects uniqueId
+    UniqueId m_uniqueId; ///< Object's uniqueId
+    Vector3D m_velocity; ///< Object's velocity
+    bool m_isStatic; ///< If object is static, it does not move or intersect other static objects
 
 }; // GameObject class
 } // BattleRoom namespace

@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-// temp
+// temp for fake load
 #include <thread>
 #include <chrono>
 
@@ -37,7 +37,7 @@ LocalUpdatingWorld::LocalUpdatingWorld(ResourceDescriptor settings)
     applySettings(settings);
 }
 
-void updateGameObject(GameObject& object, seconds timestep) {
+void updateObjectAnimation(GameObject& object, seconds timestep) {
 
     Animation& animation = object.getAnimation();
     seconds newState = object.getAnimationState() + timestep;
@@ -58,6 +58,13 @@ void updateGameObject(GameObject& object, seconds timestep) {
 
 }
 
+void moveObject(GameObject& object, seconds timestep) {
+    object.setLocation( 
+            object.getLocation()
+            .plus(object.getVelocity().times(timestep) 
+    ));
+}
+
 // other functions
 
 void LocalUpdatingWorld::update() {
@@ -66,13 +73,21 @@ void LocalUpdatingWorld::update() {
 
     m_timeController.update();
     m_gameTime = m_timeController.get();
+    seconds delta = m_timeController.getDelta();
 
+    // move all objects
     for (GameObject& object : m_gameObjects) {
-        updateGameObject(object, m_timeController.getDelta());
+        moveObject(object, delta);
     }
 
     // check for intersections
     // account for intersections
+
+    // update animations
+    for (GameObject& object : m_gameObjects) {
+        updateObjectAnimation(object, delta);
+    }
+
 
     // fake load
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
