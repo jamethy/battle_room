@@ -19,8 +19,8 @@ public:
 
     static UniqueBoundary createBoundary(ResourceDescriptor settings);
 
-    std::vector<Boundary*>::iterator begin();
-    std::vector<Boundary*>::iterator end();
+    std::vector<Boundary*>::const_iterator begin() const;
+    std::vector<Boundary*>::const_iterator end() const;
 
 private:
 

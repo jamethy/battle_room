@@ -7,3 +7,6 @@ Frame:
     TopLeft: 0, 0
     BottomRight: 100, 100
     Scale: 0.01
+    Boundary: Circle
+        Radius: 0.5
+

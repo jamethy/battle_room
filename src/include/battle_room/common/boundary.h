@@ -17,7 +17,7 @@ public:
     /**
      * Checks if the boundary intersects the other
      * \param other Other boundary to compare against
-     * \param delta Vector difference between two objects
+     * \param delta other's parent location relative to this parent object
      * \param angle Angle difference between two objects
      * \return True if intersecting
      */

@@ -92,11 +92,11 @@ BoundarySet::~BoundarySet() {
     }
 }
 
-std::vector<Boundary*>::iterator BoundarySet::begin() {
+std::vector<Boundary*>::const_iterator BoundarySet::begin() const {
     return m_boundaries.begin();
 }
 
-std::vector<Boundary*>::iterator BoundarySet::end() {
+std::vector<Boundary*>::const_iterator BoundarySet::end() const {
     return m_boundaries.end();
 }
 

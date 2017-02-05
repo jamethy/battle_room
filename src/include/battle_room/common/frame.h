@@ -39,6 +39,7 @@ public:
     const Pixel& getTopLeft() const;
     const Pixel& getBottomRight() const;
     double getScale() const;
+    const BoundarySet& getBoundarySet() const;
 
     // inherited
     void applySettings(ResourceDescriptor settings) override;

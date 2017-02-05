@@ -4,23 +4,28 @@ World:
         AnimationState: 0.0
         Location: -1.5, 0
         DegRotation: 0
+        Static: true
     Object:
         Animation: wall_panel
         AnimationState: 0.0
         Location: -0.5, 0
         DegRotation: 0
+        Static: true
     Object:
         Animation: wall_panel
         AnimationState: 0.0
         Location: 0.5, 0
         DegRotation: 0
+        Static: true
     Object:
         Animation: wall_panel
         AnimationState: 0.0
         Location: 1.5, 0
         DegRotation: 0
+        Static: true
     Object:
         Animation: ball
         AnimationState: 0.0
         Location: 0, 5
         DegRotation: 0
+        Velocity: 0, -1, 0

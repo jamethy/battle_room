@@ -7,6 +7,7 @@ make simple wall
 make game with ball thrown at wall
 
 For full program
+    Add speed to animations
     Add networking code to networking...
     fix missing animation
     create commands

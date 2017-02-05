@@ -81,6 +81,39 @@ void LocalUpdatingWorld::update() {
     }
 
     // check for intersections
+    for (GameObject& objectA : m_gameObjects) {
+        for (GameObject& objectB : m_gameObjects) {
+
+
+            if (objectA.getUniqueId() == objectB.getUniqueId()) {
+                continue;
+            }
+
+            if (objectA.isStatic() && objectB.isStatic()) {
+                continue;
+            }
+
+            const BoundarySet& boundarySetA = objectA.getAnimation().getFrame(objectA.getAnimationState()).getBoundarySet();
+            const BoundarySet& boundarySetB = objectA.getAnimation().getFrame(objectB.getAnimationState()).getBoundarySet();
+
+            Vector2D dist = Vector2D( 
+                    objectA.getLocation().x() - objectB.getLocation().x(), 
+                    objectA.getLocation().y() - objectB.getLocation().y() 
+            );
+
+            for (Boundary* boundaryA : boundarySetA) {
+                for (Boundary* boundaryB : boundarySetB) {
+
+                    if (boundaryA->intersects(boundaryB, dist, 0)) {
+                        // do something...
+                        // Add to list of intersecting pairs?
+                    }
+                }
+            }
+
+        }
+    }
+
     // account for intersections
 
     // update animations

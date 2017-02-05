@@ -55,4 +55,8 @@ meters Frame::getHeight() const {
     return m_scale*(m_bottomRight.getRow() - m_topLeft.getRow());
 }
 
+const BoundarySet& Frame::getBoundarySet() const {
+    return m_boundarySet;
+}
+
 } // BattleRoom namespace
