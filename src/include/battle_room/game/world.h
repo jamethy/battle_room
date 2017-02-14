@@ -29,7 +29,7 @@ public:
 
 protected:
 
-    std::vector<GameObject> m_gameObjects; // TEMP
+    std::vector<GameObject> m_gameObjects; // walls, stars, etc
     seconds m_gameTime; // Time in game
 
 }; // World class

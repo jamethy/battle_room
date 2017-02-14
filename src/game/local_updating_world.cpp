@@ -11,8 +11,25 @@
 #include <chrono>
 
 using std::vector;
+using std::pair;
 
 namespace BattleRoom {
+
+typedef struct ObjectIntersection {
+
+    ObjectIntersection(GameObject* objA, GameObject* objB, SatIntersection sat)
+        : a(objA), b(objB),
+          minTranslationUnit(sat.getMinTranslationUnitVector()),
+          minTranslationMagnetidue(sat.getMinTranslationMagnitude())
+    {}
+
+
+    GameObject* a;
+    GameObject* b;
+    Vector2D minTranslationUnit;
+    meters minTranslationMagnetidue;
+
+} ObjectIntersection;
 
 // apply settings
 
@@ -81,9 +98,13 @@ void LocalUpdatingWorld::update() {
     }
 
     // check for intersections
-    for (GameObject& objectA : m_gameObjects) {
-        for (GameObject& objectB : m_gameObjects) {
+//    vector<pair<GameObject*,GameObject*>> intersections;
+    vector<ObjectIntersection> intersections;
 
+    for (int i = 0; i < m_gameObjects.size(); ++i) {
+        for (int j = i+1; j < m_gameObjects.size(); ++j) {
+            GameObject& objectA = m_gameObjects.at(i);
+            GameObject& objectB = m_gameObjects.at(j);
 
             if (objectA.getUniqueId() == objectB.getUniqueId()) {
                 continue;
@@ -101,26 +122,43 @@ void LocalUpdatingWorld::update() {
                     objectA.getLocation().y() - objectB.getLocation().y() 
             );
 
+            bool intersects = false;
             for (Boundary* boundaryA : boundarySetA) {
                 for (Boundary* boundaryB : boundarySetB) {
 
-                    if (boundaryA->intersects(boundaryB, dist, 0)) {
-                        // do something...
-                        // Add to list of intersecting pairs?
+                    SatIntersection intersection = boundaryA->intersects(boundaryB, dist, 0);
+
+                    if (intersection.doesIntersect()) {
+                        intersects = true;
+                        ObjectIntersection m(&objectA, &objectB, intersection);
+                        intersections.push_back(m);
+                        break;
                     }
                 }
+                if (intersects) {
+                    break;
+                }
             }
-
         }
     }
 
     // account for intersections
+    if (intersections.size() > 0) {
+        std::cout << "there were " << intersections.size() << " intersections.\n";
+
+        // check for multiway intersections
+            // back up until only single intersections
+
+        // move each one back
+        
+        // change velocities
+        // change animations
+    }
 
     // update animations
     for (GameObject& object : m_gameObjects) {
         updateObjectAnimation(object, delta);
     }
-
 
     // fake load
     std::this_thread::sleep_for(std::chrono::milliseconds(10));

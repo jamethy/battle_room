@@ -21,18 +21,32 @@ void Projection1D::adjustForPoint(meters point) {
     }
 }
 
-bool Projection1D::doesNotOverlap(Projection1D other) {
+bool Projection1D::doesNotOverlap(const Projection1D& other) const {
 
     return getMin() >= other.getMax() || other.getMin() >= getMax();
 }
 
+meters Projection1D::getOverlap(const Projection1D& other) const {
+
+    if (getMax() > other.getMax()) {
+        return other.getMax() - getMin();
+    }
+    else {
+        return getMax() - other.getMin();
+    }
+}
+
 // getters and setters
 
-meters Projection1D::getMin() {
+meters Projection1D::getMid() const {
+    return (getMax() + getMin()) / 2.0;
+}
+
+meters Projection1D::getMin() const {
     return m_min;
 }
 
-meters Projection1D::getMax() {
+meters Projection1D::getMax() const {
     return m_max;
 }
 

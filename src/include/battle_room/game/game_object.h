@@ -20,6 +20,7 @@ public:
     Vector3D getVelocity();
     bool isStatic() const;
 
+    void setIsStatic(bool isStatic);
 
     // inherited 
 

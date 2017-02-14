@@ -38,4 +38,8 @@ bool GameObject::isStatic() const {
     return m_isStatic;
 }
 
+void GameObject::setIsStatic(bool isStatic) {
+    m_isStatic = isStatic;
+}
+
 } // BattleRoom namespace

@@ -12,9 +12,10 @@ class EmptyBoundary : public Boundary {
         return new EmptyBoundary(*this);
     }
 
-    bool intersects(Boundary* other, Vector2D delta, radians angle) const override {
+    SatIntersection intersects(Boundary* other, Vector2D delta, radians angle) const override {
         (void)other; (void) delta; (void) angle; // unused
-        return false;
+        SatIntersection intersection;
+        return intersection;
     }
 
     bool contains(Vector2D delta) const override {

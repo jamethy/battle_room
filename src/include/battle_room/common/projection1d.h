@@ -24,11 +24,20 @@ public:
      * \param other Other proejction to compare against
      * \return False if they overlap, true otherwise
      */ 
-    bool doesNotOverlap(Projection1D other);
+    bool doesNotOverlap(const Projection1D& other) const;
+
+    /**
+     * @brief Calculates the amount of overlap between projections
+     * Not valid if doesNotOverlap returns true
+     * @param other Overlapping projection
+     * @return Amount of overlap
+     */
+    meters getOverlap(const Projection1D& other) const;
 
     // getters and setters
-    meters getMin();
-    meters getMax();
+    meters getMin() const;
+    meters getMax() const;
+    meters getMid() const;
     void setMin(meters min);
     void setMax(meters max);
 

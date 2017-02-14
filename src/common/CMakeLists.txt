@@ -27,4 +27,5 @@ add_library ( Common
         boundary_set.cpp
         circle_boundary.cpp
         box_boundary.cpp
+        sat_intersection.cpp
 )

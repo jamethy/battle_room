@@ -4,6 +4,7 @@
 #include "battle_room/common/resource.h"
 #include "battle_room/common/vector2d.h"
 #include "battle_room/common/projection1d.h"
+#include "battle_room/common/sat_intersection.h"
 
 #include <vector>
 #include <memory>
@@ -21,7 +22,7 @@ public:
      * \param angle Angle difference between two objects
      * \return True if intersecting
      */
-    virtual bool intersects(Boundary* other, Vector2D delta, radians angle) const;
+    virtual SatIntersection intersects(Boundary* other, Vector2D delta, radians angle) const;
 
     /**
      * Checks if the point is within the boundary
