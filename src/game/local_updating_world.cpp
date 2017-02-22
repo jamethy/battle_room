@@ -220,62 +220,68 @@ void moveSetOfObjects(std::vector<GameObject*> gameObjects, seconds timestep, in
         // change animations
         for(ObjectIntersection& intersection : intersections) {
 
-            GameObject* a = intersection.a;
-            GameObject* b = intersection.b;
+            GameObject* objectA = intersection.a;
+            GameObject* objectB = intersection.b;
 
-            // A is the slower/static one
-            Vector3D mtv_unit = a->getOrientation().getRotated(Vector3D(intersection.minTranslationUnit.x(), intersection.minTranslationUnit.y(), 0));
-            Vector3D bOffset = mtv_unit.times(intersection.minTranslationMagnetidue);
-            // TODO rotate bOffset and minTranslation unit by a's orientation
+            // rotate the MTV back into world coordinates
+            Vector3D minTransUnit = objectA->getOrientation().getRotated(Vector3D(intersection.minTranslationUnit.x(), intersection.minTranslationUnit.y(), 0));
+            Vector3D minTransVector = minTransUnit.times(intersection.minTranslationMagnetidue);
 
-            if (movedObjects.count(a) == 0 && movedObjects.count(b) == 0) {
+            // only intersect if object has not already been affected
+            if (movedObjects.count(objectA) == 0 && movedObjects.count(objectB) == 0) {
 
-                Vector3D location = b->getLocation();
-                location.x() = bOffset.x() + location.x();
-                location.y() = bOffset.y() + location.y();
-                b->setLocation(location);
-                double elasticity = 0.9;
+                double elasticity = 0.95;
 
-                if (a->isStatic()) {
+                if (objectA->isStatic()) {
 
-                    double dx = b->getVelocity().x();
-                    double dy = b->getVelocity().y();
-                    double dz = b->getVelocity().z();
-                    double vdotmtv = dx * mtv_unit.x() + dy * mtv_unit.y();
+                    meters speedNormal = objectB->getVelocity().dot(minTransUnit);
 
-                    dx = dx - (1+elasticity) * vdotmtv * mtv_unit.x();
-                    dy = dy - (1+elasticity) * vdotmtv * mtv_unit.y();
+                    Vector3D velocity = objectB->getVelocity().minus( minTransUnit.times((1 + elasticity) * speedNormal));
 
-                    b->setVelocity(Vector3D(dx, dy, dz));
-                    movedObjects.insert(b);
+                    // check if energy is conserved
+                    double energyIn = 0.5 * objectB->getMass() * objectB->getVelocity().magnitude() * objectB->getVelocity().magnitude();
+                    double energyOut = 0.5 * objectB->getMass() * velocity.magnitude() * velocity.magnitude();
+                    if (energyOut < energyIn) {
+                        objectB->setLocation(objectB->getLocation().plus(minTransVector));
+                        objectB->setVelocity(velocity);
+                        movedObjects.insert(objectB);
+                    }
                 }
                 else {
 
-                    double adx = a->getVelocity().x();
-                    double ady = a->getVelocity().y();
-                    double adz = a->getVelocity().z();
-                    double bdx = b->getVelocity().x();
-                    double bdy = b->getVelocity().y();
-                    double bdz = b->getVelocity().z();
-                    Vector2D mtv_unit = intersection.minTranslationUnit;
-                    double vdotmtv = (adx-bdx)*mtv_unit.x() + (ady-bdy)*mtv_unit.y();
+                    meters speedNormal = minTransUnit.dot(objectA->getVelocity().minus(objectB->getVelocity()));
 
-                    kilograms amass = a->getMass();
-                    kilograms bmass = b->getMass();
-                    meters newBx = (amass/(amass+bmass))*bOffset.x()/2.0;
-                    meters newBy = (amass/(amass+bmass))*bOffset.y()/2.0;
-                    meters newAx = -(bmass/(amass+bmass))*bOffset.x()/2.0;
-                    meters newAy = -(bmass/(amass+bmass))*bOffset.y()/2.0;
-                    double adxn = (bmass/(amass+bmass))*(1+elasticity)*vdotmtv*mtv_unit.x();
-                    double adyn = (bmass/(amass+bmass))*(1+elasticity)*vdotmtv*mtv_unit.y();
-                    a->setLocation(a->getLocation().minus(Vector3D(newAx,newAy,0)));
-                    a->setVelocity(a->getVelocity().minus(Vector3D(adxn,adyn,adz)));
-                    double bdxn = (amass/(amass+bmass))*(1+elasticity)*vdotmtv*mtv_unit.x();
-                    double bdyn = (amass/(amass+bmass))*(1+elasticity)*vdotmtv*mtv_unit.y();
-                    b->setLocation(b->getLocation().plus(Vector3D(newBx,newBy,0)));
-                    b->setVelocity(b->getVelocity().plus(Vector3D(bdxn,bdyn,bdz)));
-                    movedObjects.insert(a);
-                    movedObjects.insert(b);
+                    double aRatio = 0.5;
+                    double bRatio = 0.5;
+
+                    if (objectA->getMass() > 0 && objectB->getMass() > 0) {
+                        aRatio = (objectB->getMass() / (objectA->getMass() + objectB->getMass()));
+                        bRatio = (objectA->getMass() / (objectA->getMass() + objectB->getMass()));
+                    }
+
+                    Vector3D velocityA = objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal));
+                    Vector3D velocityB = objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal));
+
+                    // check if energy is conserved
+                    double energyIn = 0.5 * objectA->getMass() * objectA->getVelocity().magnitude() * objectA->getVelocity().magnitude()
+                                    + 0.5 * objectB->getMass() * objectB->getVelocity().magnitude() * objectB->getVelocity().magnitude();
+
+                    double energyOut = 0.5 * objectA->getMass() * velocityA.magnitude() * velocityA.magnitude()
+                                       + 0.5 * objectB->getMass() * velocityB.magnitude() * velocityB.magnitude();
+
+                    if (energyOut < energyIn) {
+
+                        objectA->setLocation(objectA->getLocation().minus(minTransVector.times(-aRatio / 2.0)));
+                        objectB->setLocation(objectB->getLocation().plus(minTransVector.times(bRatio / 2.0)));
+
+                        objectA->setVelocity(objectA->getVelocity().minus(
+                                minTransUnit.times(aRatio * (1 + elasticity) * speedNormal)));
+                        objectB->setVelocity(objectB->getVelocity().plus(
+                                minTransUnit.times(bRatio * (1 + elasticity) * speedNormal)));
+
+                        movedObjects.insert(objectA);
+                        movedObjects.insert(objectB);
+                    }
                 }
             }
         }
