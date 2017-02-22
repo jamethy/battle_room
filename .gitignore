@@ -3,3 +3,6 @@ lib/*.a
 bin
 *.swp
 tags
+
+.idea
+cmake-build-debug

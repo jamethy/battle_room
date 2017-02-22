@@ -32,4 +32,8 @@ bool UniqueId::operator!=(const UniqueId& other) const {
     return !(*this == other);
 }
 
+bool UniqueId::operator<(const UniqueId& other) const {
+    return m_id < other.m_id;
+}
+
 } // BattleRoom namespace

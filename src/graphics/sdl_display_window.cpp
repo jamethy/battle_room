@@ -323,8 +323,8 @@ void SdlDisplayWindow::drawScreen() {
     // TODO add in error catching
     // TODO use opengl to render so I can have skewed rectangles
 
-    // Clear the screen by drawing it all black
-    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+    // Clear the screen by drawing it all dark grey
+    SDL_SetRenderDrawColor(m_renderer, 30, 30, 30, 255);
     SDL_RenderClear(m_renderer);
 
     vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesA : m_drawablesB;

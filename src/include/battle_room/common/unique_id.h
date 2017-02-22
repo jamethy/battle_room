@@ -44,6 +44,7 @@ public:
      */
     bool operator==(const UniqueId& other) const;
     bool operator!=(const UniqueId& other) const;
+    bool operator<(const UniqueId& other) const;
 
 private:
 

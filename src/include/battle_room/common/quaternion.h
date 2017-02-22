@@ -40,6 +40,14 @@ public:
     Vector3D getRotated(Vector3D vec) const;
 
     /**
+     * \brief Rotates a copy of vec by the inverse of this
+     *
+     * \param vec Vector to rotate
+     * \return Rotated input vector
+     */
+    Vector3D getInverseRotated(Vector3D vec) const;
+
+    /**
      * \brief Gets a rotated p by this
      *
      * Does (this) X (p)

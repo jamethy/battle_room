@@ -19,6 +19,10 @@ degrees toDegrees(std::string str) {
     return stod(str);
 }
 
+kilograms toKilograms(std::string str) {
+    return stod(str);
+}
+
 degrees toDegrees(radians angle) {
     return angle*180.0/3.14159265359;
 }

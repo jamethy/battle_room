@@ -2,10 +2,6 @@
 Running ToDo List
 -----------------------------------
 
-make circle object
-make simple wall
-make game with ball thrown at wall
-
 For full program
     Add speed to animations
     Move object intersectino to testable code
@@ -25,6 +21,7 @@ Maybe for fun
         Track FPS and rate of other functions
     Add a cleanup file paths function in file utils.
     Split up common somehow
+    Fix circle intersection
 
 Persistent to do
     Look for // TODO in the code

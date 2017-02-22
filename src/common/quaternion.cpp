@@ -81,6 +81,10 @@ Vector3D Quaternion::getRotated(Vector3D v) const {
     return Vector3D(fi,fj,fk);
 }
 
+Vector3D Quaternion::getInverseRotated(Vector3D v) const {
+    return Quaternion(m_w, -m_i, -m_j, -m_k).getRotated(v);
+}
+
 Quaternion Quaternion::getRotated(Quaternion p) const {
     
     // qp

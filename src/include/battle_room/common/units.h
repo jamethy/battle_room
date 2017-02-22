@@ -27,6 +27,11 @@ typedef double radians;
 typedef double degrees;
 
 /**
+ * \brief Mass in Kilograms
+ */
+typedef double kilograms;
+
+/**
  * \brief Parses the string for seconds
  * \param str String containing seconds to parse
  * \return Seconds value found in str
@@ -49,10 +54,17 @@ radians toRadians(std::string str);
 
 /**
  * \brief Utility function to parse the string for degrees
- * \param str Strong to parse from
+ * \param str String to parse from
  * \return Value in degrees found in the string
  */
 degrees toDegrees(std::string str);
+
+/**
+ * \brief Utility function to parse the string for kilograms
+ * @param str String to parse from
+ * @return Value in kilograms found in the string
+ */
+kilograms toKilograms(std::string str);
 
 /**
  * \brief Converts radians to degrees
@@ -65,6 +77,7 @@ degrees toDegrees(radians angle);
 radians toRadians(degrees angle);
 
 const meters MAX_METERS = 99e99;
+const seconds MIN_TIMESTEP = 0.0001;
 const meters EPS_METERS = std::numeric_limits<double>::epsilon();
 
 } // BattleRoom namespace
