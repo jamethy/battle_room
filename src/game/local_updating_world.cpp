@@ -57,23 +57,23 @@ LocalUpdatingWorld::LocalUpdatingWorld(ResourceDescriptor settings)
     applySettings(settings);
 }
 
-void updateObjectAnimation(GameObject& object, seconds timestep) {
+void updateObjectAnimation(GameObject* object, seconds timestep) {
 
-    Animation& animation = object.getAnimation();
-    seconds newState = object.getAnimationState() + timestep;
+    Animation& animation = object->getAnimation();
+    seconds newState = object->getAnimationState() + timestep;
 
     if (newState > animation.getLength()) {
 
         // set the new state (time elapsed since end of last animation)
-        object.setAnimationState(newState - animation.getLength());
+        object->setAnimationState(newState - animation.getLength());
 
         // find the new animation
         animation = AnimationHandler::getAnimation(animation.getNextAnimation());
     }
     else {
 
-        // iterate object animation
-        object.setAnimationState(newState);
+        // iterate object->animation
+        object->setAnimationState(newState);
     }
 
 }
@@ -92,20 +92,10 @@ SatIntersection checkForIntersection(GameObject* objectA, GameObject* objectB) {
     const BoundarySet& boundarySetA = objectA->getAnimation().getFrame(objectA->getAnimationState()).getBoundarySet();
     const BoundarySet& boundarySetB = objectB->getAnimation().getFrame(objectB->getAnimationState()).getBoundarySet();
 
-//    Vector2D dist = Vector2D(
-//                objectB->getLocation().x() - objectA->getLocation().x(),
-//                objectB->getLocation().y() - objectA->getLocation().y()
-//                );
-
-    Vector3D apos = objectA->getLocation();
-    Vector3D bpos = objectB->getLocation();
-    Vector3D temp = bpos.minus(apos);
-
-    Vector3D test = objectA->getOrientation().getInverseRotated(Vector3D(1,0,0));
-    Vector3D test2 = objectA->getOrientation().getInverseRotated(Vector3D(0,1,0));
     Vector3D delta = objectA->getOrientation().getInverseRotated(objectB->getLocation().minus(objectA->getLocation()));
     Vector2D dist(delta.x(),delta.y());
 
+    // TODO write something to get angle from quaternion
     Vector3D x(1,0,0);
     x = objectA->getOrientation().getInverseRotated(objectB->getOrientation().getRotated(x));
     radians angle = std::atan2(x.y(),x.x());
@@ -124,6 +114,140 @@ SatIntersection checkForIntersection(GameObject* objectA, GameObject* objectB) {
         }
     }
     return intersection;
+}
+
+void bounceOffStaticObject(GameObject* object, Vector3D minTransUnit, meters minTransMag) {
+
+    Vector3D minTransVector = minTransUnit.times(minTransMag);
+
+    double elasticity = 0.95;
+
+    meters speedNormal = object->getVelocity().dot(minTransUnit);
+
+    Vector3D velocity = object->getVelocity().minus( minTransUnit.times((1 + elasticity) * speedNormal));
+    object->setLocation(object->getLocation().plus(minTransVector));
+    object->setVelocity(velocity);
+}
+
+void bounceOffDynamicObject(GameObject* objectA, GameObject* objectB, Vector3D minTransUnit, meters minTransMag) {
+
+    Vector3D minTransVector = minTransUnit.times(minTransMag);
+
+    double elasticity = 0.95;
+    meters speedNormal = minTransUnit.dot(objectA->getVelocity().minus(objectB->getVelocity()));
+
+    double aRatio = 0.5;
+    double bRatio = 0.5;
+
+    if (objectA->getMass() > 0 && objectB->getMass() > 0) {
+        aRatio = (objectB->getMass() / (objectA->getMass() + objectB->getMass()));
+        bRatio = (objectA->getMass() / (objectA->getMass() + objectB->getMass()));
+    }
+
+    Vector3D velocityA = objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal));
+    Vector3D velocityB = objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal));
+
+    // check if energy is conserved
+    objectA->setLocation(objectA->getLocation().minus(minTransVector.times(-aRatio / 2.0)));
+    objectB->setLocation(objectB->getLocation().plus(minTransVector.times(bRatio / 2.0)));
+
+    objectA->setVelocity(objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal)));
+    objectB->setVelocity(objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal)));
+
+}
+
+void ballReact(GameObject* ball, GameObject* other, Vector3D minTransUnit, meters minTransMag) {
+
+    switch (other->getType()) {
+
+        case ObjectType::None:
+            break;
+        case ObjectType::Ball:
+            bounceOffDynamicObject(ball, other, minTransUnit, minTransMag);
+            break;
+        case ObjectType::Wall:
+            bounceOffStaticObject(ball, minTransUnit, minTransMag);
+            break;
+        case ObjectType::Bullet:
+        case ObjectType::Player:
+            break;
+    }
+
+}
+
+void wallReact(GameObject* wall, GameObject* other, Vector3D minTransUnit, meters minTransMag) {
+
+    switch (other->getType()) {
+        case ObjectType::Ball:
+            bounceOffStaticObject(other, minTransUnit, minTransMag);
+            break;
+        case ObjectType::Wall:
+        case ObjectType::None:
+        case ObjectType::Bullet:
+        case ObjectType::Player:
+            break;
+    }
+
+}
+
+void noneReact(GameObject* object, GameObject* other, Vector3D minTransUnit, meters minTransMag) {
+
+    if (object->isStatic()) {
+        switch (other->getType()) {
+            case ObjectType::Ball:
+                bounceOffStaticObject(other, minTransUnit, minTransMag);
+                break;
+            case ObjectType::None:
+                if (!other->isStatic()) {
+                    bounceOffStaticObject(other, minTransUnit, minTransMag);
+                }
+            case ObjectType::Wall:
+            case ObjectType::Bullet:
+            case ObjectType::Player:
+                break;
+        }
+    }
+    else {
+        switch (other->getType()) {
+            case ObjectType::Ball:
+                bounceOffDynamicObject(object, other, minTransUnit, minTransMag);
+                break;
+            case ObjectType::Wall:
+                bounceOffStaticObject(object, minTransUnit.times(-1), minTransMag);
+                break;
+            case ObjectType::None:
+                if (other->isStatic()) {
+                    bounceOffStaticObject(object, minTransUnit.times(-1), minTransMag);
+                }
+                else {
+                    bounceOffDynamicObject(object, other, minTransUnit, minTransMag);
+                }
+                break;
+            case ObjectType::Bullet:
+            case ObjectType::Player:
+                break;
+        }
+    }
+}
+
+
+void react(GameObject* objectA, GameObject* objectB, Vector3D minTransUnit, meters minTransMag) {
+
+    switch (objectA->getType()) {
+        case ObjectType::Ball:
+            ballReact(objectA, objectB, minTransUnit, minTransMag);
+            break;
+        case ObjectType::Wall:
+            wallReact(objectA, objectB, minTransUnit, minTransMag);
+            break;
+        case ObjectType::Bullet:
+            break;
+        case ObjectType::Player:
+            break;
+        case ObjectType::None:
+            noneReact(objectA, objectB, minTransUnit, minTransMag);
+            break;
+    }
 }
 
 void moveSetOfObjects(std::vector<GameObject*> gameObjects, seconds timestep, int level) {
@@ -223,66 +347,14 @@ void moveSetOfObjects(std::vector<GameObject*> gameObjects, seconds timestep, in
             GameObject* objectA = intersection.a;
             GameObject* objectB = intersection.b;
 
-            // rotate the MTV back into world coordinates
-            Vector3D minTransUnit = objectA->getOrientation().getRotated(Vector3D(intersection.minTranslationUnit.x(), intersection.minTranslationUnit.y(), 0));
-            Vector3D minTransVector = minTransUnit.times(intersection.minTranslationMagnetidue);
-
             // only intersect if object has not already been affected
             if (movedObjects.count(objectA) == 0 && movedObjects.count(objectB) == 0) {
 
-                double elasticity = 0.95;
-
-                if (objectA->isStatic()) {
-
-                    meters speedNormal = objectB->getVelocity().dot(minTransUnit);
-
-                    Vector3D velocity = objectB->getVelocity().minus( minTransUnit.times((1 + elasticity) * speedNormal));
-
-                    // check if energy is conserved
-                    double energyIn = 0.5 * objectB->getMass() * objectB->getVelocity().magnitude() * objectB->getVelocity().magnitude();
-                    double energyOut = 0.5 * objectB->getMass() * velocity.magnitude() * velocity.magnitude();
-                    if (energyOut < energyIn) {
-                        objectB->setLocation(objectB->getLocation().plus(minTransVector));
-                        objectB->setVelocity(velocity);
-                        movedObjects.insert(objectB);
-                    }
-                }
-                else {
-
-                    meters speedNormal = minTransUnit.dot(objectA->getVelocity().minus(objectB->getVelocity()));
-
-                    double aRatio = 0.5;
-                    double bRatio = 0.5;
-
-                    if (objectA->getMass() > 0 && objectB->getMass() > 0) {
-                        aRatio = (objectB->getMass() / (objectA->getMass() + objectB->getMass()));
-                        bRatio = (objectA->getMass() / (objectA->getMass() + objectB->getMass()));
-                    }
-
-                    Vector3D velocityA = objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal));
-                    Vector3D velocityB = objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal));
-
-                    // check if energy is conserved
-                    double energyIn = 0.5 * objectA->getMass() * objectA->getVelocity().magnitude() * objectA->getVelocity().magnitude()
-                                    + 0.5 * objectB->getMass() * objectB->getVelocity().magnitude() * objectB->getVelocity().magnitude();
-
-                    double energyOut = 0.5 * objectA->getMass() * velocityA.magnitude() * velocityA.magnitude()
-                                       + 0.5 * objectB->getMass() * velocityB.magnitude() * velocityB.magnitude();
-
-                    if (energyOut < energyIn) {
-
-                        objectA->setLocation(objectA->getLocation().minus(minTransVector.times(-aRatio / 2.0)));
-                        objectB->setLocation(objectB->getLocation().plus(minTransVector.times(bRatio / 2.0)));
-
-                        objectA->setVelocity(objectA->getVelocity().minus(
-                                minTransUnit.times(aRatio * (1 + elasticity) * speedNormal)));
-                        objectB->setVelocity(objectB->getVelocity().plus(
-                                minTransUnit.times(bRatio * (1 + elasticity) * speedNormal)));
-
-                        movedObjects.insert(objectA);
-                        movedObjects.insert(objectB);
-                    }
-                }
+                // rotate the MTV back into world coordinates
+                Vector3D minTransUnit = objectA->getOrientation().getRotated(Vector3D(intersection.minTranslationUnit.x(), intersection.minTranslationUnit.y(), 0));
+                react(objectA, objectB, minTransUnit, intersection.minTranslationMagnetidue);
+                movedObjects.insert(objectA);
+                movedObjects.insert(objectB);
             }
         }
     }
@@ -296,15 +368,10 @@ void LocalUpdatingWorld::update() {
     m_gameTime = m_timeController.get();
     seconds delta = m_timeController.getDelta();
 
-    std::vector<GameObject*> objects;
-    for (GameObject& obj : m_gameObjects) {
-        objects.push_back(&obj);
-    }
-
-    moveSetOfObjects(objects, delta, 0);
+    moveSetOfObjects(m_gameObjects, delta, 0);
 
     // update animations
-    for (GameObject& object : m_gameObjects) {
+    for (GameObject* object : m_gameObjects) {
         updateObjectAnimation(object, delta);
     }
 

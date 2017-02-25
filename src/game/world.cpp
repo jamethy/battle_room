@@ -2,12 +2,7 @@
 
 #include "battle_room/common/unique_id.h"
 #include "battle_room/common/animation_handler.h"
-
-#include <iostream>
-
-// temp
-#include <thread>
-#include <chrono>
+#include "battle_room/game/objects/ball.h"
 
 using std::vector;
 
@@ -17,9 +12,17 @@ namespace BattleRoom {
 
 void World::applySettings(ResourceDescriptor settings) {
 
+    // TODO make a factory
+
     for (ResourceDescriptor& objDesc : settings.getSubResources("Object")) {
-        GameObject obj(UniqueId::generateNewNetworkId());
-        obj.applySettings(objDesc);
+        GameObject* obj = new GameObject(UniqueId::generateNewNetworkId(), ObjectType::None);
+        obj->applySettings(objDesc);
+        m_gameObjects.push_back(obj);
+    }
+
+    for (ResourceDescriptor& objDesc : settings.getSubResources("Ball")) {
+        GameObject* obj = new Ball(UniqueId::generateNewNetworkId());
+        obj->applySettings(objDesc);
         m_gameObjects.push_back(obj);
     }
 
@@ -40,7 +43,7 @@ World::World(ResourceDescriptor settings)
     applySettings(settings);
 }
 
-vector<GameObject> World::getAllGameObjects() {
+vector<GameObject*> World::getAllGameObjects() {
     return m_gameObjects;
 }
 

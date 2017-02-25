@@ -9,4 +9,5 @@ add_library ( Game
         command_receiver.cpp
         local_updating_world.cpp
         local_world_updater.cpp
+        objects/ball.cpp
 )

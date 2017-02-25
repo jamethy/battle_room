@@ -24,7 +24,7 @@ public:
     /**
      * Likely a temp function that returns all the game objects in the world
      */
-    static std::vector<GameObject> getAllGameObjects();
+    static std::vector<GameObject*> getAllGameObjects();
 
 }; // QueryWorld class
 } // BattleRoom namespace

@@ -20,7 +20,7 @@ void QueryWorld::updateCopyWorld(const World& world) {
     m_copyWorldLock.unlock();
 }
 
-std::vector<GameObject> QueryWorld::getAllGameObjects() {
+std::vector<GameObject*> QueryWorld::getAllGameObjects() {
     return m_queryWorld.getAllGameObjects();
 }
 

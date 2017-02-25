@@ -19,7 +19,7 @@ public:
     World();
     World(ResourceDescriptor settings);
 
-    std::vector<GameObject> getAllGameObjects(); // TEMP
+    std::vector<GameObject*> getAllGameObjects(); // TEMP
 
     // getters
     seconds getGameTime();
@@ -29,7 +29,7 @@ public:
 
 protected:
 
-    std::vector<GameObject> m_gameObjects; // walls, stars, etc
+    std::vector<GameObject*> m_gameObjects; // walls, stars, etc
     seconds m_gameTime; // Time in game
 
 }; // World class

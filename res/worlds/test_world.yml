@@ -112,17 +112,17 @@ World:
         DegRotation: -90
         Static: true
 
-    Object: Ball
+    Ball: Ball
         Animation: ball
         AnimationState: 0.0
         Location: 0, 3
         DegRotation: 0
-        Velocity: 8, -1, 0
+        Velocity: 2, -1, 0
         Mass: 1
-    Object: Ball2
+    Ball: Ball2
         Animation: ball
         AnimationState: 0.0
         Location: -2, 3
         DegRotation: 0
         Velocity: 0.30, -1, 0
-        Mass: 1
+        Mass: 3

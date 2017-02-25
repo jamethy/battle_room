@@ -33,8 +33,8 @@ vector<DrawableObject> GameInterface::getDrawableObjects() {
     objects.clear();
 
 
-    for (GameObject& obj : QueryWorld::getAllGameObjects()) {
-        objects.push_back(obj);
+    for (GameObject* obj : QueryWorld::getAllGameObjects()) {
+        objects.push_back(DrawableObject(*obj));
     }
     return objects;
 }
@@ -72,9 +72,9 @@ vector<ResourceDescriptor> GameInterface::getNewSettings() {
     vector<ResourceDescriptor> settings;
 
     if (m_idToTrack.isValid()) {
-        for (GameObject& object : QueryWorld::getAllGameObjects()) {
-            if (object.getUniqueId() == m_idToTrack) {
-                Vector3D loc = object.getLocation();
+        for (GameObject* object : QueryWorld::getAllGameObjects()) {
+            if (object->getUniqueId() == m_idToTrack) {
+                Vector3D loc = object->getLocation();
                 ResourceDescriptor descriptor({
                         "View: " + getAssociatedView(),
                         "    Camera:",
