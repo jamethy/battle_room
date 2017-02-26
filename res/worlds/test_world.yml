@@ -126,3 +126,11 @@ World:
         DegRotation: 0
         Velocity: 0.30, -1, 0
         Mass: 3
+
+    Object: Star
+        Animation: star
+        AnimationState: 0.0
+        Location: 0, 1.3
+        DegRotation: 30
+        Static: true
+

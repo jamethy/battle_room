@@ -1,0 +1,14 @@
+
+ImageFile: star.png
+NextAnimation: star
+
+Frame:
+    EndTime: 99999999
+    TopLeft: 0, 0
+    BottomRight: 256, 256
+    Scale: 0.007812
+    Boundary: Box
+        Radius: 0.5
+        Width: 2.0
+        Height: 2.0
+
