@@ -18,6 +18,8 @@ using std::pair;
 
 namespace BattleRoom {
 
+const double ELASTICITY = 0.95;
+
 typedef struct ObjectIntersection {
 
     ObjectIntersection(GameObject* objA, GameObject* objB, SatIntersection sat)
@@ -55,27 +57,6 @@ LocalUpdatingWorld::LocalUpdatingWorld(ResourceDescriptor settings)
     : LocalUpdatingWorld()
 {
     applySettings(settings);
-}
-
-void updateObjectAnimation(GameObject* object, seconds timestep) {
-
-    Animation& animation = object->getAnimation();
-    seconds newState = object->getAnimationState() + timestep;
-
-    if (newState > animation.getLength()) {
-
-        // set the new state (time elapsed since end of last animation)
-        object->setAnimationState(newState - animation.getLength());
-
-        // find the new animation
-        animation = AnimationHandler::getAnimation(animation.getNextAnimation());
-    }
-    else {
-
-        // iterate object->animation
-        object->setAnimationState(newState);
-    }
-
 }
 
 void moveObject(GameObject* object, seconds timestep) {
@@ -120,13 +101,10 @@ void bounceOffStaticObject(GameObject* object, Vector3D minTransUnit, meters min
 
     Vector3D minTransVector = minTransUnit.times(minTransMag);
 
-    double elasticity = 0.95;
-
     meters speedNormal = object->getVelocity().dot(minTransUnit);
 
-    Vector3D velocity = object->getVelocity().minus( minTransUnit.times((1 + elasticity) * speedNormal));
-    object->setLocation(object->getLocation().plus(minTransVector));
-    object->setVelocity(velocity);
+    Vector3D velocity = object->getVelocity().minus( minTransUnit.times((1 + ELASTICITY) * speedNormal));
+    object->reactToCollision(velocity, minTransUnit);
 }
 
 void bounceOffDynamicObject(GameObject* objectA, GameObject* objectB, Vector3D minTransUnit, meters minTransMag) {
@@ -147,12 +125,8 @@ void bounceOffDynamicObject(GameObject* objectA, GameObject* objectB, Vector3D m
     Vector3D velocityA = objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal));
     Vector3D velocityB = objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal));
 
-    // check if energy is conserved
-    objectA->setLocation(objectA->getLocation().minus(minTransVector.times(-aRatio / 2.0)));
-    objectB->setLocation(objectB->getLocation().plus(minTransVector.times(bRatio / 2.0)));
-
-    objectA->setVelocity(objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal)));
-    objectB->setVelocity(objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal)));
+    objectA->reactToCollision(objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal)), minTransUnit.times(-1));
+    objectB->reactToCollision(objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal)), minTransUnit);
 
 }
 
@@ -179,7 +153,7 @@ void wallReact(GameObject* wall, GameObject* other, Vector3D minTransUnit, meter
 
     switch (other->getType()) {
         case ObjectType::Ball:
-            bounceOffStaticObject(other, minTransUnit, minTransMag);
+            bounceOffStaticObject(other, minTransUnit.times(-1), minTransMag);
             break;
         case ObjectType::Wall:
         case ObjectType::None:
@@ -232,6 +206,9 @@ void noneReact(GameObject* object, GameObject* other, Vector3D minTransUnit, met
 
 
 void react(GameObject* objectA, GameObject* objectB, Vector3D minTransUnit, meters minTransMag) {
+
+    Vector3D minTransVector = minTransUnit.times(minTransMag);
+    objectB->setLocation(objectB->getLocation().plus(minTransVector));
 
     switch (objectA->getType()) {
         case ObjectType::Ball:
@@ -372,7 +349,7 @@ void LocalUpdatingWorld::update() {
 
     // update animations
     for (GameObject* object : m_gameObjects) {
-        updateObjectAnimation(object, delta);
+        object->updateAnimation(delta);
     }
 
     // fake load

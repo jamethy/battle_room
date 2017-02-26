@@ -10,16 +10,16 @@ Frame:
 
 Frame:
     EndTime: 0.1
-    TopLeft: 25, 100
+    TopLeft: 0, 100
     BottomRight: 100, 200
     Scale: 0.01
 Frame:
     EndTime: 0.15
-    TopLeft: 50, 200
+    TopLeft: 0, 200
     BottomRight: 100, 300
     Scale: 0.01
 Frame:
     EndTime: 0.2
-    TopLeft: 25, 100
+    TopLeft: 0, 100
     BottomRight: 100, 200
     Scale: 0.01
