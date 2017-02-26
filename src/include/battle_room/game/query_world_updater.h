@@ -7,15 +7,15 @@
 
 namespace BattleRoom {
 
-class QueryWorldUpdater : public Resource {
+    class QueryWorldUpdater : public Resource {
 
-public:
+    public:
 
-    virtual ~QueryWorldUpdater(){}
+        virtual ~QueryWorldUpdater() {}
 
-}; // QueryWorldUpdater
+    }; // QueryWorldUpdater
 
-typedef std::unique_ptr<QueryWorldUpdater> UniqueWorldUpdater;
+    typedef std::unique_ptr<QueryWorldUpdater> UniqueWorldUpdater;
 
 } // BattleRoom namespace
 #endif // QUERY_WORLD_UPDATER_H

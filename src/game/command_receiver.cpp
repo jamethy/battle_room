@@ -6,24 +6,24 @@ using std::vector;
 
 namespace BattleRoom {
 
-vector<Command> m_commandStack;
-std::mutex m_stackLock;
+    vector<Command> m_commandStack;
+    std::mutex m_stackLock;
 
-void CommandReceiver::addCommands(const vector<Command>& commands) {
+    void CommandReceiver::addCommands(const vector<Command> &commands) {
 
-    m_stackLock.lock();
-    m_commandStack.insert(m_commandStack.end(), commands.begin(), commands.end());
-    m_stackLock.unlock();
-}
+        m_stackLock.lock();
+        m_commandStack.insert(m_commandStack.end(), commands.begin(), commands.end());
+        m_stackLock.unlock();
+    }
 
-vector<Command> CommandReceiver::getAndClearCommands() {
+    vector<Command> CommandReceiver::getAndClearCommands() {
 
-    m_stackLock.lock();
-    vector<Command> returnCommands = m_commandStack;
-    m_commandStack.clear();
-    m_stackLock.unlock();
+        m_stackLock.lock();
+        vector<Command> returnCommands = m_commandStack;
+        m_commandStack.clear();
+        m_stackLock.unlock();
 
-    return returnCommands;
-}
+        return returnCommands;
+    }
 
 } // BattleRoom namespace

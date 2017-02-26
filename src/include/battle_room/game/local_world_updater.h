@@ -13,23 +13,24 @@ namespace BattleRoom {
  * Updates a LocalUpdatingWorld on a thread and copies that to the QueryWorld
  * Gets commands directly from CommandReciever
  */
-class LocalWorldUpdater : public QueryWorldUpdater {
+    class LocalWorldUpdater : public QueryWorldUpdater {
 
-public:
+    public:
 
-    // constructors
-    LocalWorldUpdater(ResourceDescriptor settings);
-    ~LocalWorldUpdater();
+        // constructors
+        LocalWorldUpdater(ResourceDescriptor settings);
 
-    // inherited
-    void applySettings(ResourceDescriptor settings);
+        ~LocalWorldUpdater();
 
-private:
+        // inherited
+        void applySettings(ResourceDescriptor settings);
 
-    LocalUpdatingWorld m_world; ///< World that updates itself
-    std::thread m_worldThread; ///< Thread to update world on
-    bool m_keepUpdating; ///< Set to false when ready to destroy
+    private:
 
-}; // LocalWorldUpdater
+        LocalUpdatingWorld m_world; ///< World that updates itself
+        std::thread m_worldThread; ///< Thread to update world on
+        bool m_keepUpdating; ///< Set to false when ready to destroy
+
+    }; // LocalWorldUpdater
 } // BattleRoom namespace
 #endif // LOCAL_WORLD_UPDATER_H

@@ -6,35 +6,34 @@ namespace BattleRoom {
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Empty World Updater
-class EmptyWorldUpdater : public QueryWorldUpdater {
+    class EmptyWorldUpdater : public QueryWorldUpdater {
 
-public:
-    
-    ~EmptyWorldUpdater(){}
-    void applySettings(ResourceDescriptor settings) { (void)settings; /*unused*/ }
+    public:
 
-}; // EmptyWorldUpdater class
+        ~EmptyWorldUpdater() {}
+
+        void applySettings(ResourceDescriptor settings) { (void) settings; /*unused*/ }
+
+    }; // EmptyWorldUpdater class
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // World Updater Factory
 
-UniqueWorldUpdater WorldUpdaterFactory::createWorldUpdater(ResourceDescriptor settings) {
+    UniqueWorldUpdater WorldUpdaterFactory::createWorldUpdater(ResourceDescriptor settings) {
 
-    if ( keyMatch("Local", settings.getValue()) ) {
-        return UniqueWorldUpdater(new LocalWorldUpdater(settings));
+        if (keyMatch("Local", settings.getValue())) {
+            return UniqueWorldUpdater(new LocalWorldUpdater(settings));
+        } else if (keyMatch("Network", settings.getValue())) {
+            return UniqueWorldUpdater(new NetworkWorldUpdater(settings));
+        } else {
+            return UniqueWorldUpdater(new EmptyWorldUpdater());
+        }
     }
-    else if ( keyMatch("Network", settings.getValue()) ) {
-        return UniqueWorldUpdater(new NetworkWorldUpdater(settings));
-    }
-    else {
+
+    UniqueWorldUpdater WorldUpdaterFactory::createEmptyUpdater() {
         return UniqueWorldUpdater(new EmptyWorldUpdater());
     }
-}
-
-UniqueWorldUpdater WorldUpdaterFactory::createEmptyUpdater() {
-    return UniqueWorldUpdater(new EmptyWorldUpdater());
-}
 
 } // BattleRoom namespace
 

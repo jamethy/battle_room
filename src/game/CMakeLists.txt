@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-add_library ( Game
+add_library(Game
         game_object.cpp
         game_time.cpp
         world.cpp
@@ -10,4 +10,4 @@ add_library ( Game
         local_updating_world.cpp
         local_world_updater.cpp
         objects/ball.cpp
-)
+        )

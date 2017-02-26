@@ -5,21 +5,21 @@
 
 namespace BattleRoom {
 
-unsigned long MAX_MESSAGE_LENGTH = 1024;
+    unsigned long MAX_MESSAGE_LENGTH = 1024;
 
 /**
  * Message object that can be sent over the network
  */
-class Message {
+    class Message {
 
-public:
+    public:
 
-    virtual MessageType getMessageType() = 0;
+        virtual MessageType getMessageType() = 0;
 
-    virtual void copyFrom(void* buffer) = 0;
+        virtual void copyFrom(void *buffer) = 0;
 
-    virtual void copyTo(void* buffer) = 0;
+        virtual void copyTo(void *buffer) = 0;
 
-}; // Message class
+    }; // Message class
 } // BattleRoom namespace
 #endif // MESSAGE_H

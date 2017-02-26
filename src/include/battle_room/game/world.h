@@ -11,27 +11,28 @@ namespace BattleRoom {
 /**
  * Game world - includes all the objects, the time, and meta data
  */
-class World : public Resource {
+    class World : public Resource {
 
-public:
+    public:
 
-    // constructors
-    World();
-    World(ResourceDescriptor settings);
+        // constructors
+        World();
 
-    std::vector<GameObject*> getAllGameObjects(); // TEMP
+        World(ResourceDescriptor settings);
 
-    // getters
-    seconds getGameTime();
+        std::vector<GameObject *> getAllGameObjects(); // TEMP
 
-    // inherited
-    virtual void applySettings(ResourceDescriptor settings) override;
+        // getters
+        seconds getGameTime();
 
-protected:
+        // inherited
+        virtual void applySettings(ResourceDescriptor settings) override;
 
-    std::vector<GameObject*> m_gameObjects; // walls, stars, etc
-    seconds m_gameTime; // Time in game
+    protected:
 
-}; // World class
+        std::vector<GameObject *> m_gameObjects; // walls, stars, etc
+        seconds m_gameTime; // Time in game
+
+    }; // World class
 } // BattleRoom namespace
 #endif // WORLD_H

@@ -11,40 +11,39 @@ namespace BattleRoom {
 
 // constructors 
 
-SdlTextureManager::SdlTextureManager() 
-{ }
+    SdlTextureManager::SdlTextureManager() {}
 
-SdlTextureManager::~SdlTextureManager() {
-    clear(); // attempt to clear but should already be clear
-}
-
-SDL_Texture* SdlTextureManager::getTexture(string texture) {
-
-    //TODO Add error checking
-    if (m_textureMap.count(texture) == 0) {
-        string texture_path = getResourcePath() + "/animations/" + texture;
-        m_textureMap[texture] = IMG_LoadTexture(m_renderer, texture_path.c_str());
+    SdlTextureManager::~SdlTextureManager() {
+        clear(); // attempt to clear but should already be clear
     }
 
-    return m_textureMap[texture];
-}
+    SDL_Texture *SdlTextureManager::getTexture(string texture) {
 
-void SdlTextureManager::clear() {
+        //TODO Add error checking
+        if (m_textureMap.count(texture) == 0) {
+            string texture_path = getResourcePath() + "/animations/" + texture;
+            m_textureMap[texture] = IMG_LoadTexture(m_renderer, texture_path.c_str());
+        }
 
-    for (auto& texture : m_textureMap) {
-        SDL_DestroyTexture(texture.second);
+        return m_textureMap[texture];
     }
-    m_textureMap.clear();
-}
+
+    void SdlTextureManager::clear() {
+
+        for (auto &texture : m_textureMap) {
+            SDL_DestroyTexture(texture.second);
+        }
+        m_textureMap.clear();
+    }
 
 // getters and setters
 
-void SdlTextureManager::setRenderer(SDL_Renderer* renderer) {
-    m_renderer = renderer;
-}
+    void SdlTextureManager::setRenderer(SDL_Renderer *renderer) {
+        m_renderer = renderer;
+    }
 
-SDL_Renderer* SdlTextureManager::getRenderer() {
-    return m_renderer;
-}
+    SDL_Renderer *SdlTextureManager::getRenderer() {
+        return m_renderer;
+    }
 
 } // BattleRoom namespace

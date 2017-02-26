@@ -14,47 +14,51 @@ namespace BattleRoom {
  *
  * These objects is also constant and should never change
  */
-class Frame : public Resource {
+    class Frame : public Resource {
 
-public:
+    public:
 
-    // Constructors
-    Frame(ResourceDescriptor descriptor);
-    
-    /**
-     * \brief Calculates and returns the width from topLeft/botRight
-     * \return Width of object in space
-     */
-    meters getWidth() const;
+        // Constructors
+        Frame(ResourceDescriptor descriptor);
 
-    /**
-     * \brief Calculates and returns the height from topLeft/botRight
-     * \return Height of object in space
-     */
-    meters getHeight() const;
+        /**
+         * \brief Calculates and returns the width from topLeft/botRight
+         * \return Width of object in space
+         */
+        meters getWidth() const;
 
-    // getters
+        /**
+         * \brief Calculates and returns the height from topLeft/botRight
+         * \return Height of object in space
+         */
+        meters getHeight() const;
 
-    seconds getEndTime() const;
-    const Pixel& getTopLeft() const;
-    const Pixel& getBottomRight() const;
-    double getScale() const;
-    const BoundarySet& getBoundarySet() const;
+        // getters
 
-    // inherited
-    void applySettings(ResourceDescriptor settings) override;
+        seconds getEndTime() const;
 
-private:
-    
-    seconds m_endTime; ///< Time to move to next frame
+        const Pixel &getTopLeft() const;
 
-    Pixel m_topLeft; ///< Position of the top-left of the frame in the image
-    Pixel m_bottomRight; ///< Position of the bottom-rightof the frame in the image
+        const Pixel &getBottomRight() const;
 
-    double m_scale; // meters per pixel, amount to stretch image
+        double getScale() const;
 
-    BoundarySet m_boundarySet;
-    
-}; // Frame class
+        const BoundarySet &getBoundarySet() const;
+
+        // inherited
+        void applySettings(ResourceDescriptor settings) override;
+
+    private:
+
+        seconds m_endTime; ///< Time to move to next frame
+
+        Pixel m_topLeft; ///< Position of the top-left of the frame in the image
+        Pixel m_bottomRight; ///< Position of the bottom-rightof the frame in the image
+
+        double m_scale; // meters per pixel, amount to stretch image
+
+        BoundarySet m_boundarySet;
+
+    }; // Frame class
 } // BattleRoom namespace
 #endif // FRAME_H

@@ -6,23 +6,27 @@
 
 namespace BattleRoom {
 
-class GameInterface : public ViewInterface {
+    class GameInterface : public ViewInterface {
 
-public:
+    public:
 
-    GameInterface(ResourceDescriptor settings);
+        GameInterface(ResourceDescriptor settings);
 
-    // inherited
-    std::vector<DrawableObject> getDrawableObjects() override; 
-    std::vector<DrawableText> getDrawableTexts() override;
-    Inputs handleInputs(Inputs inputs) override;
-    std::vector<ResourceDescriptor> getNewSettings() override;
-    void applySettings(ResourceDescriptor settings) override;
+        // inherited
+        std::vector<DrawableObject> getDrawableObjects() override;
 
-private:
+        std::vector<DrawableText> getDrawableTexts() override;
 
-    UniqueId m_idToTrack; ///< Tracks the given unique id
+        Inputs handleInputs(Inputs inputs) override;
 
-}; // GameInterface class
+        std::vector<ResourceDescriptor> getNewSettings() override;
+
+        void applySettings(ResourceDescriptor settings) override;
+
+    private:
+
+        UniqueId m_idToTrack; ///< Tracks the given unique id
+
+    }; // GameInterface class
 } // BattleRoom namespace
 #endif // GAME_INTERFACE_H

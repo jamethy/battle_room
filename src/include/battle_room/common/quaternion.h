@@ -6,73 +6,77 @@
 
 namespace BattleRoom {
 
-class Quaternion : public Resource {
+    class Quaternion : public Resource {
 
-public:
+    public:
 
-    // constructors
-    Quaternion();
-    Quaternion(double w, double i, double j, double k);
+        // constructors
+        Quaternion();
 
-    /**
-     * \brief Rotates this quaternion about the Z axis
-     * \param angle Angle in radians to rotate
-     */
-    void rotateAboutZ(radians angle);
+        Quaternion(double w, double i, double j, double k);
 
-    /**
-     * \brief Rotates this quaternion about an axis by the given angle
-     * \param unit Axis to rotated about
-     * \angle Angle to rotate this about
-     * \return New Quaternion that is rotated
-     */
-    Quaternion getRotatedAbout(Vector3D unit, radians angle);
+        /**
+         * \brief Rotates this quaternion about the Z axis
+         * \param angle Angle in radians to rotate
+         */
+        void rotateAboutZ(radians angle);
 
-    /**
-     * \brief Rotates a copy of vec by this
-     *
-     * Assumes this quaternion is a unit quaternion
-     * Does (inverse(this)) X (vec ) X (this)
-     *
-     * \param vec Vector to rotate
-     * \return Rotated input vector
-     */
-    Vector3D getRotated(Vector3D vec) const;
+        /**
+         * \brief Rotates this quaternion about an axis by the given angle
+         * \param unit Axis to rotated about
+         * \angle Angle to rotate this about
+         * \return New Quaternion that is rotated
+         */
+        Quaternion getRotatedAbout(Vector3D unit, radians angle);
 
-    /**
-     * \brief Rotates a copy of vec by the inverse of this
-     *
-     * \param vec Vector to rotate
-     * \return Rotated input vector
-     */
-    Vector3D getInverseRotated(Vector3D vec) const;
+        /**
+         * \brief Rotates a copy of vec by this
+         *
+         * Assumes this quaternion is a unit quaternion
+         * Does (inverse(this)) X (vec ) X (this)
+         *
+         * \param vec Vector to rotate
+         * \return Rotated input vector
+         */
+        Vector3D getRotated(Vector3D vec) const;
 
-    /**
-     * \brief Gets a rotated p by this
-     *
-     * Does (this) X (p)
-     *
-     * \param p Quaternion to rotate
-     * \return Rotated p
-     */
-    Quaternion getRotated(Quaternion p) const;
+        /**
+         * \brief Rotates a copy of vec by the inverse of this
+         *
+         * \param vec Vector to rotate
+         * \return Rotated input vector
+         */
+        Vector3D getInverseRotated(Vector3D vec) const;
 
-    // Access by reference
-    double& w();
-    double& i();
-    double& j();
-    double& k();
+        /**
+         * \brief Gets a rotated p by this
+         *
+         * Does (this) X (p)
+         *
+         * \param p Quaternion to rotate
+         * \return Rotated p
+         */
+        Quaternion getRotated(Quaternion p) const;
 
-    // inherited
-    void applySettings(ResourceDescriptor settings) override;
+        // Access by reference
+        double &w();
 
-private:
+        double &i();
 
-    double m_w = 1;
-    double m_i = 0;
-    double m_j = 0;
-    double m_k = 0;
+        double &j();
 
-}; // Quaternion class
+        double &k();
+
+        // inherited
+        void applySettings(ResourceDescriptor settings) override;
+
+    private:
+
+        double m_w = 1;
+        double m_i = 0;
+        double m_j = 0;
+        double m_k = 0;
+
+    }; // Quaternion class
 } // BattleRoom namespace
 #endif // QUATERNION_H

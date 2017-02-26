@@ -8,37 +8,45 @@ namespace BattleRoom {
 /**
  * \brief Basic color class in RGBA space
  */
-class Color : public Resource {
+    class Color : public Resource {
 
-public:
+    public:
 
-    // Constructors
-    Color();
-    Color(int red, int green, int blue);
-    Color(int red, int green, int blue, int alpha);
+        // Constructors
+        Color();
 
-    //getters and setters
-    void setRed(int red);
-    void setGreen(int green);
-    void setBlue(int blue);
-    void setAlpha(int alpha);
+        Color(int red, int green, int blue);
 
-    int getRed();
-    int getGreen();
-    int getBlue();
-    int getAlpha();
+        Color(int red, int green, int blue, int alpha);
 
-    // inherited
+        //getters and setters
+        void setRed(int red);
 
-    void applySettings(ResourceDescriptor settings);
+        void setGreen(int green);
 
-private:
+        void setBlue(int blue);
 
-    int m_red; // Amount of red 0-255
-    int m_green; // Amount of green 0-255
-    int m_blue; // Amount of blue 0-255
-    int m_alpha; // Amount of alpha 0-255
+        void setAlpha(int alpha);
 
-}; // Color class
+        int getRed();
+
+        int getGreen();
+
+        int getBlue();
+
+        int getAlpha();
+
+        // inherited
+
+        void applySettings(ResourceDescriptor settings);
+
+    private:
+
+        int m_red; // Amount of red 0-255
+        int m_green; // Amount of green 0-255
+        int m_blue; // Amount of blue 0-255
+        int m_alpha; // Amount of alpha 0-255
+
+    }; // Color class
 } // BattleRoom namespace
 #endif // COLOR_H

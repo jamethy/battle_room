@@ -14,68 +14,76 @@ namespace BattleRoom {
  * Objects to display are assigned to a view, e.g. the menu objects will be put on a menue view
  * and game objects will be put in a world view or a minimap or something
  */
-class View : public Resource {
+    class View : public Resource {
 
-public:
+    public:
 
-    // constructor
-    View(ResourceDescriptor settings);
-    View(const View& original);
-    View& operator=(const View& original);
+        // constructor
+        View(ResourceDescriptor settings);
 
-    /**
-     * \brief Calculates the point on the view from the point in space
-     * Additionally adjusts the camera's bounds using the point
-     * \param point Position in space to calculate
-     * \return Location on the view of the point
-     */
-    RelPixel fromLocation(Vector3D point);
+        View(const View &original);
 
-    /**
-     * \brief Calculates the point in space from the point on the SCREEN
-     * That's right, it does all the view calcs for you
-     * \param point Pixel coordinates on the screen
-     * \return Position on the z = 0 plane of point
-     */
-    Vector3D zeroPlaneIntersection(Pixel point) const;
+        View &operator=(const View &original);
 
-    /**
-     * \brief Handles any inputs for the view and returns remaining
-     * Mainly used for camera controls
-     * \param inptus Collection of inputs to look through
-     * \return Remaining inputs that weren't used
-     */
-    Inputs handleInputs(Inputs inputs);
+        /**
+         * \brief Calculates the point on the view from the point in space
+         * Additionally adjusts the camera's bounds using the point
+         * \param point Position in space to calculate
+         * \return Location on the view of the point
+         */
+        RelPixel fromLocation(Vector3D point);
 
-    // getters and setters
+        /**
+         * \brief Calculates the point in space from the point on the SCREEN
+         * That's right, it does all the view calcs for you
+         * \param point Pixel coordinates on the screen
+         * \return Position on the z = 0 plane of point
+         */
+        Vector3D zeroPlaneIntersection(Pixel point) const;
 
-    std::string getName() const;
-    int getLayer() const;
-    Pixel getTopLeft() const;
-    Pixel getBottomRight() const;
+        /**
+         * \brief Handles any inputs for the view and returns remaining
+         * Mainly used for camera controls
+         * \param inptus Collection of inputs to look through
+         * \return Remaining inputs that weren't used
+         */
+        Inputs handleInputs(Inputs inputs);
 
-    void setName(std::string name);
-    void setLayer(int layer);
-    void setTopLeft(Pixel pixel);
-    void setBottomRight(Pixel pixel);
+        // getters and setters
 
-    // inherited
-    void applySettings(ResourceDescriptor settings);
+        std::string getName() const;
 
-private:
+        int getLayer() const;
 
-    /**
-     * \brief Utility function used to recalculate camera FOV
-     */
-    void recalculateVerticalFov();
+        Pixel getTopLeft() const;
 
-    std::string m_name; ///< Name and key of view
-    int m_layer = 0; //< higher numbers are rendered first (therefore then covered up)
-    Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
-    Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
+        Pixel getBottomRight() const;
 
-    UniqueCamera m_camera;
+        void setName(std::string name);
 
-}; // View class
+        void setLayer(int layer);
+
+        void setTopLeft(Pixel pixel);
+
+        void setBottomRight(Pixel pixel);
+
+        // inherited
+        void applySettings(ResourceDescriptor settings);
+
+    private:
+
+        /**
+         * \brief Utility function used to recalculate camera FOV
+         */
+        void recalculateVerticalFov();
+
+        std::string m_name; ///< Name and key of view
+        int m_layer = 0; //< higher numbers are rendered first (therefore then covered up)
+        Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
+        Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
+
+        UniqueCamera m_camera;
+
+    }; // View class
 } // BattleRoom namespace
 #endif // VIEW_H

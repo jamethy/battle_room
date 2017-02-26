@@ -23,7 +23,7 @@ namespace BattleRoom {
  * \param bottomRight Bottom-right corner of desired rect
  * \return SDL_Rect made from the corners
  */
-SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewHeight);
+    SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewHeight);
 
 /**
  * \brief Utility function to get SDL rect from two pixel coordinates
@@ -31,21 +31,21 @@ SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewH
  * \param bottomRight Bottom-right corner of desired rect
  * \return SDL_Rect made from the corners
  */
-SDL_Rect rectFrom(Pixel topLeft, Pixel bottomRight);
+    SDL_Rect rectFrom(Pixel topLeft, Pixel bottomRight);
 
 /**
  * \brief Retrieve the id of the window where event has occurred
  * \param event User input event that has occured
  * \return Window ID assigned by SDL
  */
-unsigned getWindowIdFrom(SDL_Event& event);
+    unsigned getWindowIdFrom(SDL_Event &event);
 
 /**
  * \brief Maps SDL_Keycode to InputKey::Key
  * \param code SDL_Keycode version of key
  * \return InputKey version of key
  */
-InputKey::Key sdlKeyToInputKey(SDL_Keycode code);
+    InputKey::Key sdlKeyToInputKey(SDL_Keycode code);
 
 /**
  * \brief Maps an SDL_Mouse_event button and number of clicks to a InputKey::Key
@@ -53,14 +53,14 @@ InputKey::Key sdlKeyToInputKey(SDL_Keycode code);
  * \param clicks Number of times the button was pressed (greater than 1 is double click)
  * \return InputKey version of sdl_mouse button click
  */
-InputKey::Key sdlMouseButtonToInputKey(unsigned key, unsigned clicks);
+    InputKey::Key sdlMouseButtonToInputKey(unsigned key, unsigned clicks);
 
 /**
  * \brief Maps Color class to SDL_Color
  * \param color Game version of color
  * \return SDL version of color
  */
-SDL_Color toSdlColor(Color color);
+    SDL_Color toSdlColor(Color color);
 
 /**
  * \brief Creates an instance drawable in SDL
@@ -68,7 +68,7 @@ SDL_Color toSdlColor(Color color);
  * \param view View that the object will be drawn on
  * \return Unique Pointer of SdlDrawable base class
  */
-UniqueDrawable getSdlDrawableFrom(const DrawableObject& object, View& view);
+    UniqueDrawable getSdlDrawableFrom(const DrawableObject &object, View &view);
 
 /**
  * \brief Creates an instance drawable in SDL
@@ -76,7 +76,7 @@ UniqueDrawable getSdlDrawableFrom(const DrawableObject& object, View& view);
  * \param view View that the text will be drawn on
  * \return Unique Pointer of SdlDrawable base class
  */
-UniqueDrawable getSdlDrawableFrom(const DrawableText& text, View& view);
+    UniqueDrawable getSdlDrawableFrom(const DrawableText &text, View &view);
 
 } // BattleRoom namespace
 #endif // SDL_HELPER_FUNCTIONS_H

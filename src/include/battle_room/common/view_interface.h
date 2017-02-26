@@ -14,50 +14,51 @@ namespace BattleRoom {
 /**
  *
  */
-class ViewInterface : public Resource {
+    class ViewInterface : public Resource {
 
-public:
+    public:
 
-    // destructor
-    virtual ~ViewInterface() {}
+        // destructor
+        virtual ~ViewInterface() {}
 
-    /**
-     * \brief Handle inputs and return any remaining
-     * \param inputs Collection of inputs from the display window
-     * \return Remaining inputs that were not used here
-     */
-    virtual Inputs handleInputs(Inputs inputs) = 0;
+        /**
+         * \brief Handle inputs and return any remaining
+         * \param inputs Collection of inputs from the display window
+         * \return Remaining inputs that were not used here
+         */
+        virtual Inputs handleInputs(Inputs inputs) = 0;
 
-    /**
-     * \brief Gets a list of objects that are drawable (probably on associated view)
-     * \return List of objects
-     */
-    virtual std::vector<DrawableObject> getDrawableObjects() = 0;
+        /**
+         * \brief Gets a list of objects that are drawable (probably on associated view)
+         * \return List of objects
+         */
+        virtual std::vector<DrawableObject> getDrawableObjects() = 0;
 
-    /**
-     * \brief Gets a list of drawable texts (probably on associated view)
-     * \return List of texts
-     */
-    virtual std::vector<DrawableText> getDrawableTexts() = 0;
+        /**
+         * \brief Gets a list of drawable texts (probably on associated view)
+         * \return List of texts
+         */
+        virtual std::vector<DrawableText> getDrawableTexts() = 0;
 
-    /**
-     * \brief Gets any new settings for other objects as inputted by the user
-     * \return List of settings for other objects
-     */
-    virtual std::vector<ResourceDescriptor> getNewSettings() = 0;
+        /**
+         * \brief Gets any new settings for other objects as inputted by the user
+         * \return List of settings for other objects
+         */
+        virtual std::vector<ResourceDescriptor> getNewSettings() = 0;
 
-    // getters and setters
+        // getters and setters
 
-    std::string getAssociatedView() const;
-    void setAssociatedView(std::string viewName);
+        std::string getAssociatedView() const;
 
-    // inherited
-    virtual void applySettings(ResourceDescriptor settings) override;
+        void setAssociatedView(std::string viewName);
 
-private:
+        // inherited
+        virtual void applySettings(ResourceDescriptor settings) override;
 
-    std::string m_associatedView; ///< View being interfaced with
+    private:
 
-}; // ViewInterface class
+        std::string m_associatedView; ///< View being interfaced with
+
+    }; // ViewInterface class
 } // BattleRoom namespace
 #endif // VIEW_INTERFACE_H

@@ -13,8 +13,8 @@
 
 using namespace BattleRoom;
 
-int main(int argc, char** argv) {
-    (void)argc; // unused
+int main(int argc, char **argv) {
+    (void) argc; // unused
 
     setResourcePathFromExe(argv[0]);
 
@@ -31,14 +31,14 @@ int main(int argc, char** argv) {
 
     GameServer(rd.getSubResource("Server"));
 
-    while(true) { // temp
+    while (true) { // temp
 
         QueryWorld::updateBuffer();
 
         // need to sleep or something or else this will jam up the mutex
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-    
+
     return 0;
 
 } // end main

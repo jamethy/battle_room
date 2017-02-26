@@ -8,22 +8,23 @@
 
 namespace BattleRoom {
 
-class NetworkWorldUpdater : public QueryWorldUpdater {
+    class NetworkWorldUpdater : public QueryWorldUpdater {
 
-public:
+    public:
 
-    NetworkWorldUpdater(ResourceDescriptor settings);
-    ~NetworkWorldUpdater();
+        NetworkWorldUpdater(ResourceDescriptor settings);
 
-    // inherited
-    void applySettings(ResourceDescriptor settings);
+        ~NetworkWorldUpdater();
 
-private:
+        // inherited
+        void applySettings(ResourceDescriptor settings);
 
-    World m_world;
-    std::thread m_worldThread;
-    bool m_keepUpdating;
+    private:
 
-}; // NetworkWorldUpdater
+        World m_world;
+        std::thread m_worldThread;
+        bool m_keepUpdating;
+
+    }; // NetworkWorldUpdater
 } // BattleRoom namespace
 #endif // NETWORK_WORLD_UPDATER_H

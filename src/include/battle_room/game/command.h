@@ -3,12 +3,12 @@
 
 namespace BattleRoom {
 
-class Command {
+    class Command {
 
-public:
+    public:
 
-private:
+    private:
 
-}; // Command class
+    }; // Command class
 } // BattleRoom namespace
 #endif // COMMAND_H

@@ -5,27 +5,27 @@
 
 namespace BattleRoom {
 
-class QueryWorld {
+    class QueryWorld {
 
-public:
+    public:
 
-    /**
-     * \brief Updates the query world buffer from the game world buffer
-     * May also send any commands etc.
-     */
-    static void updateBuffer();
+        /**
+         * \brief Updates the query world buffer from the game world buffer
+         * May also send any commands etc.
+         */
+        static void updateBuffer();
 
-    /*
-     * \brief Copies the parameter into the query world
-     * \param world World to copy into the query world
-     */
-    static void updateCopyWorld(const World& world);
+        /*
+         * \brief Copies the parameter into the query world
+         * \param world World to copy into the query world
+         */
+        static void updateCopyWorld(const World &world);
 
-    /**
-     * Likely a temp function that returns all the game objects in the world
-     */
-    static std::vector<GameObject*> getAllGameObjects();
+        /**
+         * Likely a temp function that returns all the game objects in the world
+         */
+        static std::vector<GameObject *> getAllGameObjects();
 
-}; // QueryWorld class
+    }; // QueryWorld class
 } // BattleRoom namespace
 #endif // QUERY_WORLD_H

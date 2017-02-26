@@ -11,35 +11,41 @@ namespace BattleRoom {
 /**
  * \brief Object that is drawable on a view
  */
-class DrawableObject : public Resource {
+    class DrawableObject : public Resource {
 
-public:
+    public:
 
-    // constructor
-    DrawableObject();
+        // constructor
+        DrawableObject();
 
-    // getters and setters
+        // getters and setters
 
-    Animation& getAnimation() const;
-    seconds getAnimationState() const;
-    Vector3D getLocation() const;
-    Quaternion getOrientation() const;
+        Animation &getAnimation() const;
 
-    void setAnimation(Animation& animation);
-    void setAnimationState(seconds animationState);
-    void setLocation(Vector3D location);
-    void setOrientation(Quaternion orientation);
+        seconds getAnimationState() const;
 
-    // inherited
-    virtual void applySettings(ResourceDescriptor settings) override;
+        Vector3D getLocation() const;
 
-private:
+        Quaternion getOrientation() const;
 
-    Animation* m_currentAnimation; ///< Animation object is on
-    seconds m_animationState; ///< Seconds into animation
-    Vector3D m_location; ///< Location of the object in 3D space
-    Quaternion m_orientation; ///< Orientationof the object in 3D space
+        void setAnimation(Animation &animation);
 
-}; // DrawableObject class
+        void setAnimationState(seconds animationState);
+
+        void setLocation(Vector3D location);
+
+        void setOrientation(Quaternion orientation);
+
+        // inherited
+        virtual void applySettings(ResourceDescriptor settings) override;
+
+    private:
+
+        Animation *m_currentAnimation; ///< Animation object is on
+        seconds m_animationState; ///< Seconds into animation
+        Vector3D m_location; ///< Location of the object in 3D space
+        Quaternion m_orientation; ///< Orientationof the object in 3D space
+
+    }; // DrawableObject class
 } // BattleRoom namespace
 #endif // DRAWABLE_OBJECT_H

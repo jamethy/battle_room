@@ -5,29 +5,31 @@
 
 namespace BattleRoom {
 
-class SdlDrawableImage : public SdlDrawable {
+    class SdlDrawableImage : public SdlDrawable {
 
-public:
+    public:
 
-    // constructors
-    SdlDrawableImage();
-    ~SdlDrawableImage();
+        // constructors
+        SdlDrawableImage();
 
-    // setters
+        ~SdlDrawableImage();
 
-    void setSourceRect(SDL_Rect sourceRect);
-    void setImageFile(std::string imageFile);
+        // setters
 
-    // inherited
+        void setSourceRect(SDL_Rect sourceRect);
 
-    void draw(SdlTextureManager& textureManager) override;
+        void setImageFile(std::string imageFile);
 
-private:
+        // inherited
 
-    SDL_Rect m_sourceRect; ///< Clip of texture for sprite
-    std::string m_imageFile; ///< Image sprite file
+        void draw(SdlTextureManager &textureManager) override;
 
-}; // SdlDrawableImage class
+    private:
+
+        SDL_Rect m_sourceRect; ///< Clip of texture for sprite
+        std::string m_imageFile; ///< Image sprite file
+
+    }; // SdlDrawableImage class
 } // BattleRoom namespace
 #endif // SDL_DRAWABLE_IMAGE_H
 

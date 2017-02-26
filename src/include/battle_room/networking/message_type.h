@@ -3,8 +3,8 @@
 
 namespace BattleRoom {
 
-enum MessageType {
-    Test
-}; // MessageType enum
+    enum MessageType {
+        Test
+    }; // MessageType enum
 } // BattleRoom namespace
 #endif // MESSAGE_TYPE_H

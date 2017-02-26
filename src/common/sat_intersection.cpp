@@ -2,36 +2,31 @@
 
 namespace BattleRoom {
 
-SatIntersection::SatIntersection()
-    : m_intersects(false), m_minTranslationMagnetidue(MAX_METERS)
-{
-}
+    SatIntersection::SatIntersection()
+            : m_intersects(false), m_minTranslationMagnitude(MAX_METERS) {
+    }
 
-void SatIntersection::setIntersects(bool intersects) {
-    m_intersects = intersects;
-}
+    void SatIntersection::setIntersects(bool intersects) {
+        m_intersects = intersects;
+    }
 
-void SatIntersection::setMinTranslationUnitVector(Vector2D vec) {
-    m_minTranslationUnit = vec;
-}
+    void SatIntersection::setMinTranslationUnitVector(Vector2D vec) {
+        m_minTranslationUnit = vec;
+    }
 
-void SatIntersection::setMinTranslationMagnitude(meters mag) {
-    m_minTranslationMagnetidue = mag;
-}
+    void SatIntersection::setMinTranslationMagnitude(meters mag) {
+        m_minTranslationMagnitude = mag;
+    }
 
-bool SatIntersection::doesIntersect() {
-    return m_intersects;
-}
+    bool SatIntersection::doesIntersect() {
+        return m_intersects;
+    }
 
-Vector2D SatIntersection::getMinTranslationUnitVector() {
-    return m_minTranslationUnit;
-}
+    Vector2D SatIntersection::getMinTranslationUnitVector() {
+        return m_minTranslationUnit;
+    }
 
-meters SatIntersection::getMinTranslationMagnitude() {
-    return m_minTranslationMagnetidue;
-}
-
-Vector2D SatIntersection::getMinTranslationVector() {
-    return m_minTranslationUnit.times(m_minTranslationMagnetidue);
-}
+    meters SatIntersection::getMinTranslationMagnitude() {
+        return m_minTranslationMagnitude;
+    }
 } // BattleRoom namespace

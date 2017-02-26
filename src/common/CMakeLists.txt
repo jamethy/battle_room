@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-add_library ( Common 
+add_library(Common
         animation.cpp
         animation_handler.cpp
         color.cpp
@@ -28,4 +28,4 @@ add_library ( Common
         circle_boundary.cpp
         box_boundary.cpp
         sat_intersection.cpp
-)
+        )

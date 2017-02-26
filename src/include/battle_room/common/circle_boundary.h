@@ -5,27 +5,30 @@
 
 namespace BattleRoom {
 
-class CircleBoundary : public Boundary {
+    class CircleBoundary : public Boundary {
 
-public:
+    public:
 
-    CircleBoundary(ResourceDescriptor settings);
+        CircleBoundary(ResourceDescriptor settings);
 
-    // inherited
-    bool contains(Vector2D delta) const;
-    void applySettings(ResourceDescriptor settings);
-    Boundary* clone() const;
+        // inherited
+        bool contains(Vector2D delta) const;
 
-protected:
+        void applySettings(ResourceDescriptor settings);
 
-    Projection1D projectOnto(Vector2D axis) const override;
-    std::vector<Vector2D> getSideNormals() const override;
+        Boundary *clone() const;
 
-private:
+    protected:
 
-    Vector2D m_center; ///< Center point relative to center of object
-    meters m_radius; ///< Radius of circle
+        Projection1D projectOnto(Vector2D axis) const override;
 
-}; // CircleBoundary class
+        std::vector<Vector2D> getSideNormals() const override;
+
+    private:
+
+        Vector2D m_center; ///< Center point relative to center of object
+        meters m_radius; ///< Radius of circle
+
+    }; // CircleBoundary class
 } // BattleRoom namespace
 #endif // CIRCLE_BOUNDARY_H

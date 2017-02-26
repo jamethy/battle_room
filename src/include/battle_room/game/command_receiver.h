@@ -7,14 +7,14 @@
 
 namespace BattleRoom {
 
-class CommandReceiver {
+    class CommandReceiver {
 
-public:
+    public:
 
-    static void addCommands(const std::vector<Command>& commands);
+        static void addCommands(const std::vector<Command> &commands);
 
-    static std::vector<Command> getAndClearCommands();
+        static std::vector<Command> getAndClearCommands();
 
-}; // CommandReceiver class
+    }; // CommandReceiver class
 } // BattleRoom namespace
 #endif // COMMAND_RECEIVER_H

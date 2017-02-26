@@ -5,19 +5,19 @@
 
 namespace BattleRoom {
 
-class WorldUpdaterFactory {
+    class WorldUpdaterFactory {
 
-public:
+    public:
 
-    static UniqueWorldUpdater createWorldUpdater(ResourceDescriptor settings);
+        static UniqueWorldUpdater createWorldUpdater(ResourceDescriptor settings);
 
-    /**
-     * \breif Creates a motionless camera
-     * \return Unique Pointer to a Camera instance
-     */
-    static UniqueWorldUpdater createEmptyUpdater();
+        /**
+         * \breif Creates a motionless camera
+         * \return Unique Pointer to a Camera instance
+         */
+        static UniqueWorldUpdater createEmptyUpdater();
 
 
-}; // WorldUpdaterFactory class
+    }; // WorldUpdaterFactory class
 } // BattleRoom namespace
 #endif // WORLD_UPDATER_FACTORY_H

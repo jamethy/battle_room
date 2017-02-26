@@ -1,6 +1,5 @@
 #include <src/include/battle_room/common/animation_handler.h>
 #include "battle_room/game/objects/ball.h"
-#include <cmath>
 
 namespace BattleRoom {
 
@@ -14,10 +13,12 @@ namespace BattleRoom {
 
         m_state = BallState::Bouncing;
         m_storedVelocity = velocityResult;
-        setVelocity(Vector3D(0, 0, 0));
+
+        Vector3D temp = intersectionNormal.cross(Vector3D(0, 0, 1));
+        setVelocity(temp.times(velocityResult.dot(temp)));
         setIsStatic(true);
 
-        Vector3D h = intersectionNormal.plus(Vector3D(0,1,0)).getUnit();
+        Vector3D h = intersectionNormal.plus(Vector3D(0, 1, 0)).getUnit();
         setOrientation(Quaternion(h.y(), 0, 0, -h.x()));
 
         setAnimation(AnimationHandler::getAnimation("ball_bounce"));

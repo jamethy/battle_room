@@ -9,65 +9,68 @@ namespace BattleRoom {
 /**
  * Value of pixel distance
  */
-typedef double px;
+    typedef double px;
 
 /*!
  * \brief Pixel coordinates
  * Note the row is the number of pixels from the TOP of the view/image
  * Note the col is the number of pixels from the LEFT of the view/image
  */
-class Pixel : public Resource {
+    class Pixel : public Resource {
 
-public:
-    
-    // Constructors
-    Pixel();
-    Pixel(px row, px col);
+    public:
 
-    /**
-     * \brief Returns the rounded column
-     * \return Column in integer form
-     */
-    int getColInt() const;
+        // Constructors
+        Pixel();
 
-    /**
-     * \brief Returns the rounded row
-     * \return Row in integer form
-     */
-    int getRowInt() const;
+        Pixel(px row, px col);
 
-    /**
-     * \brief Checks if this is in the rectangle of the two pixels
-     * \param topLeft Pixel coordinates in the top left
-     * \param bottomRight Pixel coordinates in the bottom right
-     * \return True if inside pixels
-     */
-    bool isBetween(Pixel topLeft, Pixel bottomRight);
+        /**
+         * \brief Returns the rounded column
+         * \return Column in integer form
+         */
+        int getColInt() const;
 
-    // getters and setters
+        /**
+         * \brief Returns the rounded row
+         * \return Row in integer form
+         */
+        int getRowInt() const;
 
-    px getRow() const;
-    px getCol() const;
+        /**
+         * \brief Checks if this is in the rectangle of the two pixels
+         * \param topLeft Pixel coordinates in the top left
+         * \param bottomRight Pixel coordinates in the bottom right
+         * \return True if inside pixels
+         */
+        bool isBetween(Pixel topLeft, Pixel bottomRight);
 
-    void setRow(px row);
-    void setCol(px col);
+        // getters and setters
 
-    // inherited
-    void applySettings(ResourceDescriptor settings) override;
+        px getRow() const;
 
-private:
+        px getCol() const;
 
-    px m_row = 0.0;
-    px m_col = 0.0;
+        void setRow(px row);
 
-}; // Pixel class
+        void setCol(px col);
+
+        // inherited
+        void applySettings(ResourceDescriptor settings) override;
+
+    private:
+
+        px m_row = 0.0;
+        px m_col = 0.0;
+
+    }; // Pixel class
 
 /**
  * \brief Parses a string and resturns a pixel count
  * \param s String to parse
  * \return px value found in s
  */
-px toPx(std::string s);
+    px toPx(std::string s);
 
 } // namespace BattleRoom
 #endif // PIXEL_H

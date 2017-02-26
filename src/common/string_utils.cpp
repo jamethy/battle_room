@@ -11,56 +11,55 @@ using std::vector;
 
 namespace BattleRoom {
 
-vector<string> split(const string& str, char delim) {
+    vector<string> split(const string &str, char delim) {
 
-    vector<string> items;
+        vector<string> items;
 
-    std::stringstream ss(str);
-    string item;
-    while (std::getline(ss, item, delim)) {
-        if (!item.empty()) {
-            items.push_back(item);
+        std::stringstream ss(str);
+        string item;
+        while (std::getline(ss, item, delim)) {
+            if (!item.empty()) {
+                items.push_back(item);
+            }
         }
-    }
-    return items;
-}
-
-string toLower(string str) {
-
-    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-    return str;
-}
-
-bool keyMatch(string a, string b) {
-    // compare returns the number of characters that differ
-    return toLower(a).compare(toLower(b)) == 0;
-}
-
-bool isNotEmpty(const string& str) {
-
-    if (str.empty()) {
-        return false;
+        return items;
     }
 
-    // \\S any non-whitespace character
-    std::regex rgx_char("\\S");
-    std::smatch sm;
-    return std::regex_search(str, sm, rgx_char);
-}
+    string toLower(string str) {
 
-bool isEmpty(const std::string& str) {
-    return !isNotEmpty(str);
-}
-
-std::string removeYmlComments(std::string str) {
-
-    std::size_t commentPos = str.find('#');
-    if (commentPos != std::string::npos) {
-        return str.substr(0,commentPos);
-    }
-    else {
+        std::transform(str.begin(), str.end(), str.begin(), ::tolower);
         return str;
     }
-}
+
+    bool keyMatch(string a, string b) {
+        // compare returns the number of characters that differ
+        return toLower(a).compare(toLower(b)) == 0;
+    }
+
+    bool isNotEmpty(const string &str) {
+
+        if (str.empty()) {
+            return false;
+        }
+
+        // \\S any non-whitespace character
+        std::regex rgx_char("\\S");
+        std::smatch sm;
+        return std::regex_search(str, sm, rgx_char);
+    }
+
+    bool isEmpty(const std::string &str) {
+        return !isNotEmpty(str);
+    }
+
+    std::string removeYmlComments(std::string str) {
+
+        std::size_t commentPos = str.find('#');
+        if (commentPos != std::string::npos) {
+            return str.substr(0, commentPos);
+        } else {
+            return str;
+        }
+    }
 
 } // BattleRoom namespace

@@ -7,22 +7,23 @@
 
 namespace BattleRoom {
 
-class GameServer : public Resource {
+    class GameServer : public Resource {
 
-public:
+    public:
 
-    // constructor
-    GameServer(ResourceDescriptor settings);
-    ~GameServer();
+        // constructor
+        GameServer(ResourceDescriptor settings);
 
-    // inherited
-    void applySettings(ResourceDescriptor settings);
+        ~GameServer();
 
-private:
+        // inherited
+        void applySettings(ResourceDescriptor settings);
 
-    std::thread m_serverThread; ///< Thread to update world on
-    bool m_keepGoing; ///< Set to false when ready to destroy
+    private:
 
-}; // GameServer class
+        std::thread m_serverThread; ///< Thread to update world on
+        bool m_keepGoing; ///< Set to false when ready to destroy
+
+    }; // GameServer class
 } // BattleRoom namespace
 #endif // GAME_SERVER_H

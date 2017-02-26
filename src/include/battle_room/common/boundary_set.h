@@ -7,25 +7,30 @@
 
 namespace BattleRoom {
 
-class BoundarySet {
+    class BoundarySet {
 
-public:
+    public:
 
-    BoundarySet();
-    BoundarySet(std::vector<ResourceDescriptor> boundarySettings);
-    BoundarySet(const BoundarySet& original);
-    BoundarySet& operator=(const BoundarySet& original);
-    ~BoundarySet();
+        BoundarySet();
 
-    static UniqueBoundary createBoundary(ResourceDescriptor settings);
+        BoundarySet(std::vector<ResourceDescriptor> boundarySettings);
 
-    std::vector<Boundary*>::const_iterator begin() const;
-    std::vector<Boundary*>::const_iterator end() const;
+        BoundarySet(const BoundarySet &original);
 
-private:
+        BoundarySet &operator=(const BoundarySet &original);
 
-    std::vector<Boundary*> m_boundaries;
+        ~BoundarySet();
 
-}; // BoundarySet class
+        static UniqueBoundary createBoundary(ResourceDescriptor settings);
+
+        std::vector<Boundary *>::const_iterator begin() const;
+
+        std::vector<Boundary *>::const_iterator end() const;
+
+    private:
+
+        std::vector<Boundary *> m_boundaries;
+
+    }; // BoundarySet class
 } // BattleRoom namespace
 #endif // BOUNDARY_SET_H

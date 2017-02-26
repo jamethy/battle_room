@@ -18,7 +18,7 @@ using std::string;
 using std::chrono::steady_clock;
 using std::chrono::duration;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
     setResourcePathFromExe(argv[0]);
 
@@ -31,8 +31,7 @@ int main(int argc, char** argv) {
     if (argc < 2) {
         std::cout << "Please enter animation name:\n";
         std::cin >> arg;
-    }
-    else {
+    } else {
         arg = argv[1];
     }
 
@@ -60,7 +59,7 @@ int main(int argc, char** argv) {
     px largestPxWidth = 0;
     px largestPxHeight = 0;
 
-    for (const Frame& frame : animation.getFrames()) {
+    for (const Frame &frame : animation.getFrames()) {
 
         px pxWidth = frame.getBottomRight().getCol() - frame.getTopLeft().getCol();
         px pxHeight = frame.getBottomRight().getRow() - frame.getTopLeft().getRow();
@@ -78,14 +77,14 @@ int main(int argc, char** argv) {
     // Create a mock settings file for easy application
 
     ResourceDescriptor descriptor({
-                "Settings:",
-                "    Window: mainWindow",
-                "        Width: " + std::to_string(largestPxWidth),
-                "        Height: " + std::to_string(largestPxHeight),
-                "        View: mainView",
-                "            Camera: Pyramid",
-                "                MinimumCameraZ: 0.1"
-    });
+                                          "Settings:",
+                                          "    Window: mainWindow",
+                                          "        Width: " + std::to_string(largestPxWidth),
+                                          "        Height: " + std::to_string(largestPxHeight),
+                                          "        View: mainView",
+                                          "            Camera: Pyramid",
+                                          "                MinimumCameraZ: 0.1"
+                                  });
 
 
     // create the window
@@ -97,14 +96,14 @@ int main(int argc, char** argv) {
 
     DrawableText fpsText;
     fpsText.setText("Sample Text");
-    fpsText.setColor(Color(0,0,0,255));
+    fpsText.setColor(Color(0, 0, 0, 255));
     fpsText.setFont("default.ttf");
-    fpsText.setWidth(largestWidth/2.0);
-    fpsText.setHeight(fpsText.getWidth()/5.0);
+    fpsText.setWidth(largestWidth / 2.0);
+    fpsText.setHeight(fpsText.getWidth() / 5.0);
     fpsText.setLocation(Vector3D(
-                -fpsText.getWidth()/2.0,
-                largestHeight/2.0 - fpsText.getHeight()/2.0, 
-                0.001
+            -fpsText.getWidth() / 2.0,
+            largestHeight / 2.0 - fpsText.getHeight() / 2.0,
+            0.001
     ));
     steady_clock::time_point lastTime = startTime;
 
@@ -112,11 +111,11 @@ int main(int argc, char** argv) {
     bool showFps = false;
     unsigned long frame_count = 0;
 
-    while(!InputGatherer::containsQuitEvent()) {
+    while (!InputGatherer::containsQuitEvent()) {
 
         // Iterate the clock
         steady_clock::time_point newtime = steady_clock::now();
-        double diff = std::chrono::duration_cast<duration<double>> (newtime - startTime).count();
+        double diff = std::chrono::duration_cast<duration<double>>(newtime - startTime).count();
         // Reset if above max
         if (diff > maxTime) { startTime = newtime; }
 
@@ -127,15 +126,14 @@ int main(int argc, char** argv) {
         DrawableObject object;
         object.setAnimation(animation);
         object.setAnimationState(diff);
-        window->addViewObjects({object},"mainView");
+        window->addViewObjects({object}, "mainView");
 
 
-        for (Input& input : inputs) {
+        for (Input &input : inputs) {
             if (input.getMotion() == InputKey::Motion::PressedDown) {
                 if (input.getKey() == InputKey::Key::Q) {
                     InputGatherer::addQuitEvent();
-                }
-                else if (input.getKey() == InputKey::Key::F) {
+                } else if (input.getKey() == InputKey::Key::F) {
                     showFps = !showFps;
                 }
             }
@@ -144,16 +142,16 @@ int main(int argc, char** argv) {
         window->handleInputs(inputs);
 
         // FPS Display
-        if (std::chrono::duration_cast<duration<double>> (newtime - lastTime).count() > 1) {
+        if (std::chrono::duration_cast<duration<double>>(newtime - lastTime).count() > 1) {
             slowedFps = frame_count;
             lastTime = newtime;
             frame_count = 0;
         }
 
         if (showFps) {
-            fpsText.setText("FPS: " + std::to_string((int)slowedFps));
-            window->addViewTexts({fpsText},"mainView");
-        } 
+            fpsText.setText("FPS: " + std::to_string((int) slowedFps));
+            window->addViewTexts({fpsText}, "mainView");
+        }
 
         ++frame_count;
 

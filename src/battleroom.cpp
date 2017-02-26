@@ -20,14 +20,13 @@
 using namespace BattleRoom;
 
 
-std::string getStartupScriptFromArgs(int argc, char** argv);
+std::string getStartupScriptFromArgs(int argc, char **argv);
 
 //TODO find a better way to sort these....
-void sortByViewLayer(std::vector<ViewInterface*>& interfaces, ResourceDescriptor settings); 
+void sortByViewLayer(std::vector<ViewInterface *> &interfaces, ResourceDescriptor settings);
 
 
-
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
     std::cout << "Hello World!\n";
 
@@ -53,7 +52,8 @@ int main(int argc, char** argv) {
     // Create the game-to-view interfaces (each one points to a view)
     // These produce UI objects that are only seen locally and also
     // handle user inputs - for example, the main view of the world or the minimap
-    std::vector<GameInterface> gameInterfaces; gameInterfaces.clear();
+    std::vector<GameInterface> gameInterfaces;
+    gameInterfaces.clear();
     for (ResourceDescriptor sub : rd.getSubResources("GameInterface")) {
         gameInterfaces.push_back(GameInterface(sub));
     }
@@ -67,28 +67,29 @@ int main(int argc, char** argv) {
     // Collect the view interfaces (game interfaces and menus) that will need
     // to get inputs from the display and that will send settings to the windows.
     // This is just a vector of pointers to the objects collected above
-    std::vector<ViewInterface*> viewInterfaces; viewInterfaces.clear();
-    for (GameInterface& interface : gameInterfaces) {
+    std::vector<ViewInterface *> viewInterfaces;
+    viewInterfaces.clear();
+    for (GameInterface &interface : gameInterfaces) {
         viewInterfaces.push_back(&interface);
     }
     sortByViewLayer(viewInterfaces, rd);
 
 
     // Until something adds a quit event to the input gatherer, repeat the loop:
-    while(!InputGatherer::containsQuitEvent()) { 
+    while (!InputGatherer::containsQuitEvent()) {
 
         // get inputs from last frame
-        for (UniqueDisplayWindow& window : windows) {
+        for (UniqueDisplayWindow &window : windows) {
             window->gatherInputs();
         }
         Inputs inputs = InputGatherer::getAndClearInputs();
 
 
         ///// start game interface thread
-        std::thread interfaceThread( [&viewInterfaces, &windows, &inputs] () {
+        std::thread interfaceThread([&viewInterfaces, &windows, &inputs]() {
 
             // Handle inputs view interfaces
-            for (ViewInterface* interface : viewInterfaces) {
+            for (ViewInterface *interface : viewInterfaces) {
                 inputs = interface->handleInputs(inputs);
             }
 
@@ -97,28 +98,28 @@ int main(int argc, char** argv) {
 
             // get any settings that need to be applied to windows
             ResourceDescriptor settings;
-            for (ViewInterface* interface : viewInterfaces) {
+            for (ViewInterface *interface : viewInterfaces) {
                 settings.addSubResources(interface->getNewSettings());
             }
-            for (UniqueDisplayWindow& window : windows) {
+            for (UniqueDisplayWindow &window : windows) {
                 window->applySettings(settings);
             }
 
             // Prepare objects for display
-            for (ViewInterface* interface : viewInterfaces) {
+            for (ViewInterface *interface : viewInterfaces) {
 
                 std::string associatedView = interface->getAssociatedView();
                 std::vector<DrawableObject> objects = interface->getDrawableObjects();
                 std::vector<DrawableText> texts = interface->getDrawableTexts();
 
-                for (UniqueDisplayWindow& window : windows) {
-                    window->addViewObjects( objects, associatedView );
-                    window->addViewTexts( texts, associatedView );
+                for (UniqueDisplayWindow &window : windows) {
+                    window->addViewObjects(objects, associatedView);
+                    window->addViewTexts(texts, associatedView);
                 }
             }
 
             // Handle inputs for windows
-            for (UniqueDisplayWindow& window : windows) {
+            for (UniqueDisplayWindow &window : windows) {
                 inputs = window->handleInputs(inputs);
             }
 
@@ -127,7 +128,7 @@ int main(int argc, char** argv) {
 
 
         ///// Start Drawing "thread" - must be on main thread
-        for (UniqueDisplayWindow& window : windows) {
+        for (UniqueDisplayWindow &window : windows) {
             window->drawScreen();
         }
         //// End drawing "thread"
@@ -135,12 +136,12 @@ int main(int argc, char** argv) {
         interfaceThread.join();
 
         // Switch buffers that view objects and texts are written to
-        for (UniqueDisplayWindow& window : windows) {
+        for (UniqueDisplayWindow &window : windows) {
             window->switchBuffers();
         }
 
     }
-    
+
     return 0;
 
 } // end main
@@ -151,17 +152,16 @@ bool fileExists(std::string filename) {
 
     if (!inFile.is_open()) {
         return false;
-    }
-    else {
+    } else {
         inFile.close();
         return true;
     }
 }
 
-std::string getStartupScriptFromArgs(int argc, char** argv) {
+std::string getStartupScriptFromArgs(int argc, char **argv) {
 
     setResourcePathFromExe(argv[0]);
-    std::string startupScript = getResourcePath() + "/startup" + DESCRIPTOR_EXTENSION; 
+    std::string startupScript = getResourcePath() + "/startup" + DESCRIPTOR_EXTENSION;
 
     if (argc > 1) {
         std::string arg = argv[1];
@@ -169,18 +169,16 @@ std::string getStartupScriptFromArgs(int argc, char** argv) {
         // try with no additions
         if (fileExists(arg)) {
             startupScript = arg;
-        }
-        else {
+        } else {
 
             // check if file extension is there, and then in res
             if (isEmpty(getFileExtension(arg))) {
                 arg += DESCRIPTOR_EXTENSION;
             }
-            
+
             if (fileExists(arg)) {
                 startupScript = arg;
-            }
-            else {
+            } else {
                 arg = getResourcePath() + "/" + arg;
                 if (fileExists(arg)) {
                     startupScript = arg;
@@ -193,10 +191,10 @@ std::string getStartupScriptFromArgs(int argc, char** argv) {
     return startupScript;
 }
 
-void sortByViewLayer(std::vector<ViewInterface*>& interfaces, ResourceDescriptor settings) {
+void sortByViewLayer(std::vector<ViewInterface *> &interfaces, ResourceDescriptor settings) {
 
     // create a map of view names to view layers
-    std::unordered_map<std::string,int> viewLayerMap;
+    std::unordered_map<std::string, int> viewLayerMap;
     for (ResourceDescriptor window : settings.getSubResources("Window")) {
         for (ResourceDescriptor view : window.getSubResources("View")) {
             int viewLayer = 0;
@@ -204,22 +202,22 @@ void sortByViewLayer(std::vector<ViewInterface*>& interfaces, ResourceDescriptor
                 viewLayer = std::stoi(view.getSubResource("Layer").getValue());
             }
 
-            viewLayerMap.insert(std::make_pair( view.getValue(), viewLayer ));
+            viewLayerMap.insert(std::make_pair(view.getValue(), viewLayer));
         }
     }
 
     // sort by created map
-    std::sort(interfaces.begin(), interfaces.end(), 
-            [&viewLayerMap](ViewInterface* a, ViewInterface* b) {
-                
-                int aLayer = 0, bLayer = 0;
-                if (viewLayerMap.count(a->getAssociatedView()) > 0) {
-                    aLayer = viewLayerMap.at(a->getAssociatedView());
-                }
-                if (viewLayerMap.count(b->getAssociatedView()) > 0) {
-                    bLayer = viewLayerMap.at(b->getAssociatedView());
-                }
-                return aLayer < bLayer;
-            }
+    std::sort(interfaces.begin(), interfaces.end(),
+              [&viewLayerMap](ViewInterface *a, ViewInterface *b) {
+
+                  int aLayer = 0, bLayer = 0;
+                  if (viewLayerMap.count(a->getAssociatedView()) > 0) {
+                      aLayer = viewLayerMap.at(a->getAssociatedView());
+                  }
+                  if (viewLayerMap.count(b->getAssociatedView()) > 0) {
+                      bLayer = viewLayerMap.at(b->getAssociatedView());
+                  }
+                  return aLayer < bLayer;
+              }
     );
 }

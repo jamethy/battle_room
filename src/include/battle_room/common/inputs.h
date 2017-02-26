@@ -9,24 +9,25 @@ namespace BattleRoom {
  * \brief Container class of user inputs from the screen
  * Get this collection of inputs from InputGatherer
  */
-class Inputs {
+    class Inputs {
 
-public:
+    public:
 
-    /**
-     * \brief Add an input to the collection
-     * \param input User input to add
-     */
-    void addInput(Input input);
+        /**
+         * \brief Add an input to the collection
+         * \param input User input to add
+         */
+        void addInput(Input input);
 
-    // These are used for ranged forloops
-    std::vector<Input>::iterator begin();
-    std::vector<Input>::iterator end();
+        // These are used for ranged forloops
+        std::vector<Input>::iterator begin();
 
-private:
+        std::vector<Input>::iterator end();
 
-    std::vector<Input> m_inputs; ///< Vector of inputs
+    private:
 
-}; // Inputs class
+        std::vector<Input> m_inputs; ///< Vector of inputs
+
+    }; // Inputs class
 } // BattleRoom namespace
 #endif // INPUTS_H

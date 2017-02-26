@@ -10,44 +10,45 @@ namespace BattleRoom {
 /**
  * Object containing time instance and alteration logic.
  */
-class GameTime {
+    class GameTime {
 
-public:
+    public:
 
-    // constructor
-    GameTime();
+        // constructor
+        GameTime();
 
-    /*
-     * \brief Pauses the game time
-     */
-    void pause();
+        /**
+         * \brief Pauses the game time
+         */
+        void pause();
 
-    /*
-     * \breif Unpauses the game time
-     */
-    void unpause();
+        /**
+         * \breif Unpauses the game time
+         */
+        void unpause();
 
-    /*
-     * \brief Increments the game time (if not paused)
-     */
-    void update();
+        /**
+         * \brief Increments the game time (if not paused)
+         */
+        void update();
 
-    // getters and setters
-    seconds get();
-    seconds getDelta();
+        // getters and setters
+        seconds get();
 
-    void set(seconds gameTime);
+        seconds getDelta();
 
-private:
+        void set(seconds gameTime);
 
-    seconds m_gameTime = 0.0; // Game time to report
-    seconds m_deltaTime = 0.0; // Timestep made during last update
-    bool m_paused = false; // If game time should be incremented
-    seconds m_timePaused = 0.0;
-    seconds m_startOffset = 0.0;
+    private:
 
-    std::chrono::steady_clock::time_point m_startTime;
+        seconds m_gameTime = 0.0; /// Game time to report
+        seconds m_deltaTime = 0.0; /// Timestep made during last update
+        bool m_paused = false; /// If game time should be incremented
+        seconds m_timePaused = 0.0; /// Amount of physical time the game has been paused
+        seconds m_startOffset = 0.0; /// Game resume time (for reloading games etc.)
 
-}; // GameTime class
+        std::chrono::steady_clock::time_point m_startTime; /// Physical time the game was started
+
+    }; // GameTime class
 } // BattleRoom namespace
 #endif // GAME_TIME_H

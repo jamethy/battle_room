@@ -24,126 +24,124 @@ using std::vector;
 
 namespace BattleRoom {
 
-unsigned SdlDisplayWindow::m_windowWithFocus = 1;
+    unsigned SdlDisplayWindow::m_windowWithFocus = 1;
 
 // apply settings
 
-void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
+    void SdlDisplayWindow::applySettings(ResourceDescriptor settings) {
 
-    SDL_GetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
+        SDL_GetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
 
-    // if window name matches, settings are for this window
-    if (m_windowName.compare(settings.getValue()) == 0) {
+        // if window name matches, settings are for this window
+        if (m_windowName.compare(settings.getValue()) == 0) {
 
-        // TODO figure out what a SDL_DisplayMode is
+            // TODO figure out what a SDL_DisplayMode is
 
-        bool changed = false;
-        ResourceDescriptor sub = settings.getSubResource("Width");
-        if (isNotEmpty(sub.getValue())) {
-            m_windowWidth = stoi(sub.getValue());
-            changed = true;
-        }
-
-        sub = settings.getSubResource("Height");
-        if (isNotEmpty(sub.getValue())) {
-            m_windowHeight = stoi(sub.getValue());
-            changed = true;
-        }
-
-        if (changed && m_windowWidth > 0 && m_windowHeight > 0) {
-            int oldWidth = 0, oldHeight = 0;
-            SDL_GetWindowSize(m_window, &oldWidth, &oldHeight);
-            SDL_SetWindowSize(m_window, m_windowWidth, m_windowHeight);
-            resizeViews(oldWidth,oldHeight);
-        }
-    }
-
-    // regardless of window name, compare against views
-    for (ResourceDescriptor sub : settings.getSubResources("View")) {
-
-        // If view exists, apply settings
-        if (m_views.count(sub.getValue()) > 0) {
-            View& view = m_views.at(sub.getValue());
-            view.applySettings(sub);
-        }
-        // Else, create a new view
-        else {
-            View newView = View(sub);
-            // Check if bottom right was set, if not use window dimensions
-            Pixel botRight = newView.getBottomRight();
-            if(botRight.getColInt() == 0 && botRight.getRowInt() == 0) {
-                newView.setBottomRight(Pixel(m_windowHeight,m_windowWidth));
+            bool changed = false;
+            ResourceDescriptor sub = settings.getSubResource("Width");
+            if (isNotEmpty(sub.getValue())) {
+                m_windowWidth = stoi(sub.getValue());
+                changed = true;
             }
-            // Add it to the view
-            string name = newView.getName();
-            m_views.insert(std::make_pair(name,newView));
+
+            sub = settings.getSubResource("Height");
+            if (isNotEmpty(sub.getValue())) {
+                m_windowHeight = stoi(sub.getValue());
+                changed = true;
+            }
+
+            if (changed && m_windowWidth > 0 && m_windowHeight > 0) {
+                int oldWidth = 0, oldHeight = 0;
+                SDL_GetWindowSize(m_window, &oldWidth, &oldHeight);
+                SDL_SetWindowSize(m_window, m_windowWidth, m_windowHeight);
+                resizeViews(oldWidth, oldHeight);
+            }
+        }
+
+        // regardless of window name, compare against views
+        for (ResourceDescriptor sub : settings.getSubResources("View")) {
+
+            // If view exists, apply settings
+            if (m_views.count(sub.getValue()) > 0) {
+                View &view = m_views.at(sub.getValue());
+                view.applySettings(sub);
+            }
+                // Else, create a new view
+            else {
+                View newView = View(sub);
+                // Check if bottom right was set, if not use window dimensions
+                Pixel botRight = newView.getBottomRight();
+                if (botRight.getColInt() == 0 && botRight.getRowInt() == 0) {
+                    newView.setBottomRight(Pixel(m_windowHeight, m_windowWidth));
+                }
+                // Add it to the view
+                string name = newView.getName();
+                m_views.insert(std::make_pair(name, newView));
+            }
         }
     }
-}
 
-int SdlDisplayWindow::m_windowCount = 0;
-int SdlDisplayWindow::m_windowsDrawn = 0;
-vector<SDL_Event> SdlDisplayWindow::m_sdlEvents;
+    int SdlDisplayWindow::m_windowCount = 0;
+    int SdlDisplayWindow::m_windowsDrawn = 0;
+    vector<SDL_Event> SdlDisplayWindow::m_sdlEvents;
 
 // constructors
 
-SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings)
-{
-    m_views.clear();
-    m_sdlEvents.clear();
-    m_drawablesA.clear();
-    m_drawablesB.clear();
+    SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings) {
+        m_views.clear();
+        m_sdlEvents.clear();
+        m_drawablesA.clear();
+        m_drawablesB.clear();
 
-    if (isNotEmpty(settings.getValue())) {
-        m_windowName = settings.getValue();
+        if (isNotEmpty(settings.getValue())) {
+            m_windowName = settings.getValue();
+        } else {
+            m_windowName = "PROVIDE WINDOW DURING CONSTRUCTION.\n";
+            std::cerr << "Must give a name during window construction.\n";
+        }
+
+        // TODO throw exceptions instead of cerr
+        if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+            std::cerr << "SDL_Init error: " << SDL_GetError() << std::endl;
+        }
+
+        if (TTF_Init() != 0) {
+            std::cerr << "TTF_Init error: " << SDL_GetError() << std::endl;
+            SDL_Quit();
+        }
+
+        m_window = SDL_CreateWindow(m_windowName.c_str(), 0, 0, 500, 500,
+                                    SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
+        if (m_window == nullptr) {
+            std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
+            SDL_Quit();
+        }
+
+        m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+        if (m_renderer == nullptr) {
+            std::cerr << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
+            SDL_DestroyWindow(m_window);
+            SDL_Quit();
+        }
+
+        ++m_windowCount;
+
+        m_sdlTextureManager.setRenderer(m_renderer);
+
+        applySettings(settings);
     }
-    else {
-        m_windowName = "PROVIDE WINDOW DURING CONSTRUCTION.\n";
-        std::cerr << "Must give a name during window construction.\n";
-    }
 
-    // TODO throw exceptions instead of cerr
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
-        std::cerr << "SDL_Init error: " << SDL_GetError() << std::endl;
-    }
+    SdlDisplayWindow::~SdlDisplayWindow() {
 
-    if (TTF_Init() != 0){
-        std::cerr << "TTF_Init error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-    }
-
-    m_window = SDL_CreateWindow(m_windowName.c_str(), 0, 0, 500, 500, 
-            SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-
-    if (m_window == nullptr){
-        std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-    }
-
-    m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
-    if (m_renderer == nullptr){
-        std::cerr << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
+        m_sdlTextureManager.clear();
+        SDL_DestroyRenderer(m_renderer);
         SDL_DestroyWindow(m_window);
-        SDL_Quit();
+
+        if (--m_windowCount <= 0) {
+            SDL_Quit();
+        }
     }
-
-    ++m_windowCount;
-
-    m_sdlTextureManager.setRenderer(m_renderer);
-
-    applySettings(settings);
-}
-
-SdlDisplayWindow::~SdlDisplayWindow() {
-
-    m_sdlTextureManager.clear();
-    SDL_DestroyRenderer(m_renderer);
-    SDL_DestroyWindow(m_window);
-
-    if (--m_windowCount <= 0) {
-        SDL_Quit();
-    }
-}
 
 
 // utilitiy funcitons
@@ -154,263 +152,261 @@ SdlDisplayWindow::~SdlDisplayWindow() {
  * \param viewMap Map of views to sort
  * \return Names of sorted values
  */
-vector<string> getSortedViews(const std::unordered_map<string,View>& viewMap) {
+    vector<string> getSortedViews(const std::unordered_map<string, View> &viewMap) {
 
-    vector<string> sortedViews(viewMap.size());
-    sortedViews.clear();
-    for (const auto& p : viewMap) {
-        sortedViews.push_back(p.first);
+        vector<string> sortedViews(viewMap.size());
+        sortedViews.clear();
+        for (const auto &p : viewMap) {
+            sortedViews.push_back(p.first);
+        }
+
+        std::sort(sortedViews.begin(), sortedViews.end(),
+                  [&viewMap](string a, string b) {
+                      return viewMap.at(a).getLayer() < viewMap.at(b).getLayer();
+                  }
+        );
+        return sortedViews;
     }
-
-    std::sort(sortedViews.begin(), sortedViews.end(), 
-            [&viewMap](string a, string b) {
-                return viewMap.at(a).getLayer() < viewMap.at(b).getLayer();
-            }
-    );
-    return sortedViews;
-}
 
 // other functions
 
-void SdlDisplayWindow::gatherInputs() {
+    void SdlDisplayWindow::gatherInputs() {
 
-    // For each SDL_Event that pertains to this window, create an Input
-    for (vector<SDL_Event>::iterator it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
+        // For each SDL_Event that pertains to this window, create an Input
+        for (vector<SDL_Event>::iterator it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
 
-        SDL_Event event = *it;
+            SDL_Event event = *it;
 
-        // Find special processes - anything non-window specific
-        // If Ctrl-C is used, or the window is closed
-        if (event.type == SDL_QUIT) {
-            InputGatherer::addQuitEvent();
-            continue;
+            // Find special processes - anything non-window specific
+            // If Ctrl-C is used, or the window is closed
+            if (event.type == SDL_QUIT) {
+                InputGatherer::addQuitEvent();
+                continue;
 
-        // if the OS is repeating a held down key, ignore it
-        } else if (event.type == SDL_KEYDOWN && event.key.repeat != 0) {
+                // if the OS is repeating a held down key, ignore it
+            } else if (event.type == SDL_KEYDOWN && event.key.repeat != 0) {
+                // Remove the SDL_Event from the events vector because
+                // it has been dealt with (and adjust iterator)
+                m_sdlEvents.erase(it);
+                --it;
+                continue;
+            }
+
+            unsigned windowId = SDL_GetWindowID(m_window);
+            if (event.type == SDL_WINDOWEVENT) {
+                switch (event.window.event) {
+                    case SDL_WINDOWEVENT_ENTER:
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        m_windowWithFocus = event.window.windowID;
+                        if (windowId != m_windowWithFocus) {
+                            m_mousePos = Pixel(-1, -1);
+                        }
+                }
+            }
+
+            // check if this is the right window
+            if (m_windowWithFocus != windowId || getWindowIdFrom(event) != windowId) {
+                continue;
+            }
+
+            Input input;
+
+            // Set motion, key, and scroll amount
+            switch (event.type) {
+                case SDL_KEYDOWN:
+                    input.setMotion(InputKey::Motion::PressedDown);
+                    input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
+                    break;
+                case SDL_KEYUP:
+                    input.setMotion(InputKey::Motion::Released);
+                    input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
+                    break;
+                case SDL_MOUSEMOTION:
+                    m_mousePos = Pixel(event.motion.y, event.motion.x);
+                    input.setMotion(InputKey::Motion::None);
+                    input.setKey(InputKey::Key::MouseOnly);
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    m_mousePos = Pixel(event.motion.y, event.motion.x);
+                    input.setMotion(InputKey::Motion::PressedDown);
+                    input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
+                    break;
+                case SDL_MOUSEBUTTONUP:
+                    m_mousePos = Pixel(event.motion.y, event.motion.x);
+                    input.setMotion(InputKey::Motion::Released);
+                    input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
+                    break;
+                case SDL_MOUSEWHEEL:
+                    if (event.wheel.y != 0) { // maybe later use horizontal scrolling
+                        input.setMotion(InputKey::Motion::Scroll);
+                        input.setKey(InputKey::Key::MouseOnly);
+                        input.setScrollAmount(event.wheel.y);
+                    }
+                    break;
+                case SDL_WINDOWEVENT:
+                    if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+                        resizeViews(m_windowWidth, m_windowHeight);
+                    }
+                    break;
+            }
+
+            // Set view intersections
+            for (string &viewName : getSortedViews(m_views)) {
+                const View &view = m_views.at(viewName);
+
+                // If it intersects the view, calculate the zero-plane intersection
+                if (m_mousePos.isBetween(view.getTopLeft(), view.getBottomRight())) {
+
+                    // Calculate the intersection point
+                    Vector3D zeroPoint = view.zeroPlaneIntersection(m_mousePos);
+
+                    // Add intersection to input's view list
+                    input.addViewIntersection(view.getName(), zeroPoint);
+                }
+            }
+
+            // Add input to the input gatherer
+            // Attain later with InputGatherer::getAndClearInputs
+            InputGatherer::addInput(input);
+
             // Remove the SDL_Event from the events vector because
             // it has been dealt with (and adjust iterator)
-            m_sdlEvents.erase(it); --it;
-            continue;
+            m_sdlEvents.erase(it);
+            --it;
+        }
+    }
+
+    Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
+
+        // Send inputs to each view to handle
+        for (string &viewName : getSortedViews(m_views)) {
+            View &view = m_views.at(viewName);
+            inputs = view.handleInputs(inputs);
         }
 
-        unsigned windowId = SDL_GetWindowID(m_window);
-        if (event.type == SDL_WINDOWEVENT) {
-            switch (event.window.event) {
-                case SDL_WINDOWEVENT_ENTER:
-                case SDL_WINDOWEVENT_FOCUS_GAINED:
-                case SDL_WINDOWEVENT_SIZE_CHANGED:
-                    m_windowWithFocus = event.window.windowID;
-                    if (windowId != m_windowWithFocus) {
-                        m_mousePos = Pixel(-1,-1);
-                    }
+        return inputs;
+    }
+
+    void SdlDisplayWindow::addViewObjects(const vector<DrawableObject> &objects, string viewName) {
+
+        // Check if view is in this window
+        if (m_views.count(viewName) > 0) {
+
+            View &view = m_views.at(viewName);
+            vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
+
+            for (const DrawableObject &object : objects) {
+                drawables.push_back(getSdlDrawableFrom(object, view));
             }
         }
+    }
 
-        // check if this is the right window
-        if (m_windowWithFocus != windowId || getWindowIdFrom(event) != windowId) {
-            continue;
-        }
+    void SdlDisplayWindow::addViewTexts(const std::vector<DrawableText> &texts, std::string viewName) {
 
-        Input input;
+        if (m_views.count(viewName) > 0) {
 
-        // Set motion, key, and scroll amount
-        switch (event.type) {
-            case SDL_KEYDOWN:
-                input.setMotion(InputKey::Motion::PressedDown);
-                input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
-                break;
-            case SDL_KEYUP:
-                input.setMotion(InputKey::Motion::Released);
-                input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
-                break;
-            case SDL_MOUSEMOTION:
-                m_mousePos = Pixel(event.motion.y, event.motion.x);
-                input.setMotion(InputKey::Motion::None);
-                input.setKey(InputKey::Key::MouseOnly);
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                m_mousePos = Pixel(event.motion.y, event.motion.x);
-                input.setMotion(InputKey::Motion::PressedDown);
-                input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
-                break;
-            case SDL_MOUSEBUTTONUP:
-                m_mousePos = Pixel(event.motion.y, event.motion.x);
-                input.setMotion(InputKey::Motion::Released);
-                input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
-                break;
-            case SDL_MOUSEWHEEL:
-                if (event.wheel.y != 0) { // maybe later use horizontal scrolling
-                    input.setMotion(InputKey::Motion::Scroll);
-                    input.setKey(InputKey::Key::MouseOnly);
-                    input.setScrollAmount(event.wheel.y); 
-                }
-                break;
-            case SDL_WINDOWEVENT:
-                if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                    resizeViews(m_windowWidth, m_windowHeight);
-                }
-                break;
-        }
+            View &view = m_views.at(viewName);
+            vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
-        // Set view intersections
-        for (string& viewName : getSortedViews(m_views)) {
-            const View& view = m_views.at(viewName);
-
-            // If it intersects the view, calculate the zero-plane intersection
-            if (m_mousePos.isBetween(view.getTopLeft(), view.getBottomRight())) {
-
-                // Calculate the intersection point
-                Vector3D zeroPoint = view.zeroPlaneIntersection(m_mousePos);
-
-                // Add intersection to input's view list
-                input.addViewIntersection(view.getName(), zeroPoint);
+            for (const DrawableText &text : texts) {
+                drawables.push_back(getSdlDrawableFrom(text, view));
             }
         }
-
-        // Add input to the input gatherer 
-        // Attain later with InputGatherer::getAndClearInputs
-        InputGatherer::addInput(input);
-
-        // Remove the SDL_Event from the events vector because
-        // it has been dealt with (and adjust iterator)
-        m_sdlEvents.erase(it); --it;
-    }
-}
-
-Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
-
-    // Send inputs to each view to handle
-    for (string& viewName : getSortedViews(m_views)) {
-        View& view = m_views.at(viewName);
-        inputs = view.handleInputs(inputs);
     }
 
-    return inputs;
-}
 
-void SdlDisplayWindow::addViewObjects(const vector<DrawableObject>& objects, string viewName) {
+    void SdlDisplayWindow::drawScreen() {
 
-    // Check if view is in this window
-    if (m_views.count(viewName) > 0) {
+        // TODO clean this up and put it in functions/classes
+        // TODO add in error catching
+        // TODO use opengl to render so I can have skewed rectangles
 
-        View& view = m_views.at(viewName);
-        vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesB : m_drawablesA;
+        // Clear the screen by drawing it all dark grey
+        SDL_SetRenderDrawColor(m_renderer, 30, 30, 30, 255);
+        SDL_RenderClear(m_renderer);
 
-        for (const DrawableObject& object : objects) {
-            drawables.push_back(getSdlDrawableFrom(object,view));
+        vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesA : m_drawablesB;
+
+        // Sort the drawables on the screen by view layer and position
+        // This will ensure the right things are drawn ontop of the right tings
+        std::sort(drawables.begin(), drawables.end(),
+                  [](UniqueDrawable &a, UniqueDrawable &b) {
+                      if (a->getViewLayer() == b->getViewLayer()) {
+                          return a->getZPosition() < b->getZPosition();
+                      } else {
+                          return a->getViewLayer() < b->getViewLayer();
+                      }
+                  }
+        );
+
+
+        // For every drawable that has been collected, get the texture and draw it on the screen
+        // If a texture is missing, use the missing animation texture
+        for (UniqueDrawable &drawable : drawables) {
+            drawable->draw(m_sdlTextureManager);
+        }
+
+
+        // Present the renderer
+        SDL_RenderPresent(m_renderer);
+
+        // Clear all the drawables that have been drawn to prepare for next frame
+        drawables.clear();
+
+        // Gather inputs
+        if (m_windowsDrawn >= m_windowCount) {
+            m_windowsDrawn = 0;
+            m_sdlEvents.clear();
+        }
+        ++m_windowsDrawn;
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            m_sdlEvents.push_back(event);
+        }
+
+    }
+
+    void SdlDisplayWindow::switchBuffers() {
+        m_drawingA = !m_drawingA;
+    }
+
+    UniqueDisplayWindow createDisplayWindow(ResourceDescriptor settings) {
+
+        try {
+            return UniqueDisplayWindow(new SdlDisplayWindow(settings));
+        }
+        catch (std::exception &e) {
+            std::cerr << e.what() << std::endl;
+            return nullptr;
         }
     }
-}
 
-void SdlDisplayWindow::addViewTexts(const std::vector<DrawableText>& texts, std::string viewName) {
+    void SdlDisplayWindow::resizeViews(int oldWidth, int oldHeight) {
 
-    if (m_views.count(viewName) > 0) {
+        int width = 0, height = 0;
+        SDL_GetWindowSize(m_window, &width, &height);
 
-        View& view = m_views.at(viewName);
-        vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesB : m_drawablesA;
+        if (width <= 0 || height <= 0 || oldWidth <= 0 || oldHeight <= 0) {
+            return;
+        }
+        m_windowWidth = width;
+        m_windowHeight = height;
 
-        for (const DrawableText& text : texts) {
-            drawables.push_back(getSdlDrawableFrom(text,view));
+        for (string &viewName : getSortedViews(m_views)) {
+            View &view = m_views.at(viewName);
+
+            view.setTopLeft(Pixel(
+                    height * view.getTopLeft().getRow() / oldHeight,
+                    width * view.getTopLeft().getCol() / oldWidth
+            ));
+
+            view.setBottomRight(Pixel(
+                    height * view.getBottomRight().getRow() / oldHeight,
+                    width * view.getBottomRight().getCol() / oldWidth
+            ));
         }
     }
-}
-
-
-
-void SdlDisplayWindow::drawScreen() {
-
-    // TODO clean this up and put it in functions/classes
-    // TODO add in error catching
-    // TODO use opengl to render so I can have skewed rectangles
-
-    // Clear the screen by drawing it all dark grey
-    SDL_SetRenderDrawColor(m_renderer, 30, 30, 30, 255);
-    SDL_RenderClear(m_renderer);
-
-    vector<UniqueDrawable>& drawables = m_drawingA ? m_drawablesA : m_drawablesB;
-
-    // Sort the drawables on the screen by view layer and position
-    // This will ensure the right things are drawn ontop of the right tings
-    std::sort(drawables.begin(), drawables.end(), 
-            [](UniqueDrawable& a, UniqueDrawable& b) {
-                if (a->getViewLayer() == b->getViewLayer()) { 
-                    return a->getZPosition() < b->getZPosition();
-                }
-                else { 
-                    return a->getViewLayer() < b->getViewLayer();
-                }
-            }
-    );
-    
-
-    // For every drawable that has been collected, get the texture and draw it on the screen
-    // If a texture is missing, use the missing animation texture
-    for (UniqueDrawable& drawable : drawables) {
-        drawable->draw(m_sdlTextureManager);
-    }
-
-
-    // Present the renderer
-    SDL_RenderPresent(m_renderer);
-
-    // Clear all the drawables that have been drawn to prepare for next frame
-    drawables.clear();
-
-    // Gather inputs
-    if (m_windowsDrawn >= m_windowCount) {
-        m_windowsDrawn = 0;
-        m_sdlEvents.clear();
-    } 
-    ++m_windowsDrawn;
-
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-        m_sdlEvents.push_back(event);
-    }
-
-}
-
-void SdlDisplayWindow::switchBuffers() {
-    m_drawingA = !m_drawingA;
-}
-
-UniqueDisplayWindow createDisplayWindow(ResourceDescriptor settings) {
-
-    try
-    {
-        return UniqueDisplayWindow(new SdlDisplayWindow(settings));
-    }
-    catch(std::exception& e)
-    {
-        std::cerr << e.what() << std::endl;
-        return nullptr;
-    }
-}
-
-void SdlDisplayWindow::resizeViews(int oldWidth, int oldHeight) {
-
-    int width = 0, height = 0;
-    SDL_GetWindowSize(m_window, &width, &height);
-
-    if (width <= 0 || height <= 0 || oldWidth <= 0 || oldHeight <= 0) {
-        return;
-    }
-    m_windowWidth = width;
-    m_windowHeight = height;
-
-    for (string& viewName : getSortedViews(m_views)) {
-        View& view = m_views.at(viewName);
-
-        view.setTopLeft( Pixel(
-                height*view.getTopLeft().getRow()/oldHeight,
-                width*view.getTopLeft().getCol()/oldWidth
-        ));
-
-        view.setBottomRight( Pixel(
-                height*view.getBottomRight().getRow()/oldHeight,
-                width*view.getBottomRight().getCol()/oldWidth
-        ));
-    }
-}
 
 } // BattleRoom namespace

@@ -9,27 +9,28 @@ namespace BattleRoom {
 /**
  * Game world - includes all the objects, the time, and meta data
  */
-class LocalUpdatingWorld : public World {
+    class LocalUpdatingWorld : public World {
 
-public:
+    public:
 
-    // constructors
-    LocalUpdatingWorld();
-    LocalUpdatingWorld(ResourceDescriptor settings);
+        // constructors
+        LocalUpdatingWorld();
 
-    /**
-     * Update everything in the world. This will iterate the time
-     * and updating everything else accordingly.
-     */
-    void update();
+        LocalUpdatingWorld(ResourceDescriptor settings);
 
-    // inherited
-    void applySettings(ResourceDescriptor settings) override;
+        /**
+         * Update everything in the world. This will iterate the time
+         * and updating everything else accordingly.
+         */
+        void update();
 
-private:
+        // inherited
+        void applySettings(ResourceDescriptor settings) override;
 
-    GameTime m_timeController; // Game time object
+    private:
 
-}; // LocalUpdatingWorld class
+        GameTime m_timeController; // Game time object
+
+    }; // LocalUpdatingWorld class
 } // BattleRoom namespace
 #endif // LOCAL_UPDATING_WORLD_H

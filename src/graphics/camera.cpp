@@ -8,135 +8,134 @@ using std::vector;
 namespace BattleRoom {
 // apply settings
 
-void Camera::applySettings(ResourceDescriptor settings) {
+    void Camera::applySettings(ResourceDescriptor settings) {
 
-    m_location.applySettings( settings.getSubResource("Location") );
-    m_orientation.applySettings( settings.getSubResource("Orientation") );
+        m_location.applySettings(settings.getSubResource("Location"));
+        m_orientation.applySettings(settings.getSubResource("Orientation"));
 
-    ResourceDescriptor sub = settings.getSubResource("Rotation");
-    if (isNotEmpty(sub.getValue())) {
-        Quaternion orientation; 
-        orientation.rotateAboutZ(toRadians(sub.getValue()));
-        setOrientation(orientation);
+        ResourceDescriptor sub = settings.getSubResource("Rotation");
+        if (isNotEmpty(sub.getValue())) {
+            Quaternion orientation;
+            orientation.rotateAboutZ(toRadians(sub.getValue()));
+            setOrientation(orientation);
+        }
+
+        sub = settings.getSubResource("DegRotation");
+        if (isNotEmpty(sub.getValue())) {
+            radians angle = toRadians(toDegrees(sub.getValue()));
+            Quaternion orientation;
+            orientation.rotateAboutZ(angle);
+            setOrientation(orientation);
+        }
     }
-
-    sub = settings.getSubResource("DegRotation");
-    if (isNotEmpty(sub.getValue())) {
-        radians angle = toRadians(toDegrees(sub.getValue()));
-        Quaternion orientation;
-        orientation.rotateAboutZ(angle);
-        setOrientation(orientation);
-    }
-}
 
 // constructors
 
-Camera::Camera() 
- :  m_location(Vector3D(0,0,99e99)),
-    m_forward(Vector3D(0,0,-1)),
-    m_up(Vector3D(0,1,0)),
-    m_right(Vector3D(1,0,0))
-{ }
+    Camera::Camera()
+            : m_location(Vector3D(0, 0, 99e99)),
+              m_forward(Vector3D(0, 0, -1)),
+              m_up(Vector3D(0, 1, 0)),
+              m_right(Vector3D(1, 0, 0)) {}
 
-Camera::Camera(ResourceDescriptor settings) : Camera()
-{
-    applySettings(settings);
-}
+    Camera::Camera(ResourceDescriptor settings) : Camera() {
+        applySettings(settings);
+    }
 
-Camera::~Camera() {}
+    Camera::~Camera() {}
 
-Camera* Camera::clone() {
-    return new Camera(*this);
-}
+    Camera *Camera::clone() {
+        return new Camera(*this);
+    }
 
 //setters and getters
 
-Vector3D Camera::getLocation() const {
-    return m_location;
-}
+    Vector3D Camera::getLocation() const {
+        return m_location;
+    }
 
-Quaternion Camera::getOrientation() const {
-    return m_orientation;
-}
+    Quaternion Camera::getOrientation() const {
+        return m_orientation;
+    }
 
-radians Camera::getHorizontalFov() const {
-    return m_horizontalFov;
-}
-radians Camera::getVerticalFov() const {
-    return m_verticalFov;
-}
+    radians Camera::getHorizontalFov() const {
+        return m_horizontalFov;
+    }
 
-void Camera::setLocation(Vector3D location) {
-    m_location = location;
-}
+    radians Camera::getVerticalFov() const {
+        return m_verticalFov;
+    }
 
-void Camera::setOrientation(Quaternion orientation) {
-    m_orientation = orientation;
-    m_forward = orientation.getRotated(Vector3D(0,0,-1));
-    m_up = orientation.getRotated(Vector3D(0,1,0));
-    m_right = orientation.getRotated(Vector3D(1,0,0));
-}
+    void Camera::setLocation(Vector3D location) {
+        m_location = location;
+    }
 
-void Camera::setHorizontalFov(radians angle) {
-    m_horizontalFov = angle;
-}
+    void Camera::setOrientation(Quaternion orientation) {
+        m_orientation = orientation;
+        m_forward = orientation.getRotated(Vector3D(0, 0, -1));
+        m_up = orientation.getRotated(Vector3D(0, 1, 0));
+        m_right = orientation.getRotated(Vector3D(1, 0, 0));
+    }
 
-void Camera::setVerticalFov(radians angle) {
-    m_verticalFov = angle;
-}
+    void Camera::setHorizontalFov(radians angle) {
+        m_horizontalFov = angle;
+    }
+
+    void Camera::setVerticalFov(radians angle) {
+        m_verticalFov = angle;
+    }
 
 // other functions
 
-void Camera::rotateCounterClockwise(radians theta) {
-    m_orientation.rotateAboutZ(theta);
-    setOrientation(m_orientation);
-}
+    void Camera::rotateCounterClockwise(radians theta) {
+        m_orientation.rotateAboutZ(theta);
+        setOrientation(m_orientation);
+    }
 
-RelPixel Camera::fromLocation(Vector3D location) {
+    RelPixel Camera::fromLocation(Vector3D location) {
 
-    Vector3D delta = location.minus(m_location);
-    meters dist = delta.dot(m_forward);
-    meters width = 2*dist*tan(m_horizontalFov / 2.0);
-    meters height = 2*dist*tan(m_verticalFov / 2.0);
+        Vector3D delta = location.minus(m_location);
+        meters dist = delta.dot(m_forward);
+        meters width = 2 * dist * tan(m_horizontalFov / 2.0);
+        meters height = 2 * dist * tan(m_verticalFov / 2.0);
 
-    Vector3D q = delta.minus( m_forward.times( dist ) );
+        Vector3D q = delta.minus(m_forward.times(dist));
 
-    meters qx = q.dot(m_right);
-    meters qy = q.dot(m_up);
-    
-    relpx col = (0.5 + qx/width);
-    relpx row = (0.5 - qy/height);
+        meters qx = q.dot(m_right);
+        meters qy = q.dot(m_up);
 
-    return RelPixel(row,col);
-}
+        relpx col = (0.5 + qx / width);
+        relpx row = (0.5 - qy / height);
 
-Vector3D Camera::getPixelRay(RelPixel pixel) const {
+        return RelPixel(row, col);
+    }
 
-    radians horiz = m_horizontalFov*(0.5 - pixel.getCol());
-    radians verti = m_verticalFov*(0.5 - pixel.getRow());
+    Vector3D Camera::getPixelRay(RelPixel pixel) const {
 
-    Vector3D ray1 = Quaternion(1,0,0,0)
-        .getRotatedAbout(m_up, horiz)
-        .getRotated(m_right);
+        radians horiz = m_horizontalFov * (0.5 - pixel.getCol());
+        radians verti = m_verticalFov * (0.5 - pixel.getRow());
 
-    Vector3D ray2 = Quaternion(1,0,0,0)
-        .getRotatedAbout(m_right, verti)
-        .getRotated(m_up);
-    
-    return ray2.cross(ray1);
-}
+        Vector3D ray1 = Quaternion(1, 0, 0, 0)
+                .getRotatedAbout(m_up, horiz)
+                .getRotated(m_right);
 
-Vector3D Camera::zeroPlaneIntersection(RelPixel pixel) const {
-    
-    Vector3D ray = getPixelRay(pixel);
-    Vector3D cam = getLocation();
-    return cam.plus(ray.times( -cam.z() / ray.z() ));
-}
+        Vector3D ray2 = Quaternion(1, 0, 0, 0)
+                .getRotatedAbout(m_right, verti)
+                .getRotated(m_up);
 
-Inputs Camera::handleInputs(Inputs inputs, const std::string viewName) {
-    (void)viewName; // unused
-    return inputs;
-}
+        return ray2.cross(ray1);
+    }
+
+    Vector3D Camera::zeroPlaneIntersection(RelPixel pixel) const {
+
+        Vector3D ray = getPixelRay(pixel);
+        Vector3D cam = getLocation();
+        return cam.plus(ray.times(-cam.z() / ray.z()));
+    }
+
+    Inputs Camera::handleInputs(Inputs inputs, const std::string viewName) {
+        (void) viewName; // unused
+        return inputs;
+    }
 
 // these two functions are not allowed
 /*void Camera::rotateUpDown(radians theta) {

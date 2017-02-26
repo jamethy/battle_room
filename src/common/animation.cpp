@@ -10,76 +10,75 @@ namespace BattleRoom {
 
 // apply settings
 
-void Animation::applySettings(ResourceDescriptor settings) {
+    void Animation::applySettings(ResourceDescriptor settings) {
 
-    ResourceDescriptor sub = settings.getSubResource("ImageFile");
-    if (isNotEmpty(sub.getValue())) {
-        m_imageFile = sub.getValue();
-    } 
-
-    sub = settings.getSubResource("NextAnimation");
-    if (isNotEmpty(sub.getValue())) {
-        m_nextAnimation = sub.getValue();
-    } 
-
-    vector<ResourceDescriptor> subs = settings.getSubResources("Frame");
-    if (subs.size() > 0) {
-
-        m_frames.clear();
-
-        for (ResourceDescriptor& rd : subs) {
-            m_frames.push_back(Frame(rd));
+        ResourceDescriptor sub = settings.getSubResource("ImageFile");
+        if (isNotEmpty(sub.getValue())) {
+            m_imageFile = sub.getValue();
         }
 
-        std::sort(m_frames.begin(), m_frames.end(), 
-                [](const Frame& a, const Frame& b) {
-                    return b.getEndTime() > a.getEndTime();
-                }
-        );
-    }
+        sub = settings.getSubResource("NextAnimation");
+        if (isNotEmpty(sub.getValue())) {
+            m_nextAnimation = sub.getValue();
+        }
 
-    if (m_frames.size() == 0) {
-        // throw exception
-        std::cerr << "There are no frames in animation with image file " << m_imageFile <<
-            ". This will crash the game.\n";
+        vector<ResourceDescriptor> subs = settings.getSubResources("Frame");
+        if (subs.size() > 0) {
+
+            m_frames.clear();
+
+            for (ResourceDescriptor &rd : subs) {
+                m_frames.push_back(Frame(rd));
+            }
+
+            std::sort(m_frames.begin(), m_frames.end(),
+                      [](const Frame &a, const Frame &b) {
+                          return b.getEndTime() > a.getEndTime();
+                      }
+            );
+        }
+
+        if (m_frames.size() == 0) {
+            // throw exception
+            std::cerr << "There are no frames in animation with image file " << m_imageFile <<
+                      ". This will crash the game.\n";
+        }
     }
-}
 
 // constructor
 
-Animation::Animation(ResourceDescriptor descriptor) 
-{
-    applySettings(descriptor);
-}
+    Animation::Animation(ResourceDescriptor descriptor) {
+        applySettings(descriptor);
+    }
 
 // getters
 
-const string& Animation::getImageFile() {
-    return m_imageFile;
-}
+    const string &Animation::getImageFile() {
+        return m_imageFile;
+    }
 
-const string& Animation::getNextAnimation() {
-    return m_nextAnimation;
-}
+    const string &Animation::getNextAnimation() {
+        return m_nextAnimation;
+    }
 
-const vector<Frame>& Animation::getFrames() {
-    return m_frames;
-}
+    const vector<Frame> &Animation::getFrames() {
+        return m_frames;
+    }
 
 // other functions
 
-seconds Animation::getLength() {
-    return m_frames.back().getEndTime();
-}
-
-const Frame& Animation::getFrame(seconds animationState) {
-
-    for (const Frame& frame : m_frames) {
-        if (animationState < frame.getEndTime()) {
-            return frame;
-        }
+    seconds Animation::getLength() {
+        return m_frames.back().getEndTime();
     }
-    return m_frames.back();
-}
+
+    const Frame &Animation::getFrame(seconds animationState) {
+
+        for (const Frame &frame : m_frames) {
+            if (animationState < frame.getEndTime()) {
+                return frame;
+            }
+        }
+        return m_frames.back();
+    }
 
 } // BattleRoom namespace

@@ -9,20 +9,23 @@ namespace BattleRoom {
  * \brief Camera implementation that always remains at the top seeing
  * everything.
  */
-class ZMaxCamera : public MovingCamera {
+    class ZMaxCamera : public MovingCamera {
 
-public:
+    public:
 
-    // constructors
+        // constructors
 
-    ZMaxCamera();
-    ZMaxCamera(ResourceDescriptor settings);
-    virtual ~ZMaxCamera() override;
-    virtual Camera* clone() override;
+        ZMaxCamera();
 
-    // inherited
-    void move(Vector3D deltaVelocity) override;
+        ZMaxCamera(ResourceDescriptor settings);
 
-}; // ZMaxCamera class
+        virtual ~ZMaxCamera() override;
+
+        virtual Camera *clone() override;
+
+        // inherited
+        void move(Vector3D deltaVelocity) override;
+
+    }; // ZMaxCamera class
 } // BattleRoom namespace
 #endif // Z_MAX_CAMERA_H

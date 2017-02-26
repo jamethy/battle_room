@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-add_library ( Graphics 
+add_library(Graphics
         camera.cpp
         moving_camera.cpp
         z_max_camera.cpp
@@ -22,4 +22,4 @@ add_library ( Graphics
         sdl_texture_manager.cpp
         sdl_texture_manager.h
         view.cpp
-)
+        )

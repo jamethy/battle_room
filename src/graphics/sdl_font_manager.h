@@ -11,22 +11,22 @@ namespace BattleRoom {
 /**
  * Creates and destroys SDL_Fonts
  */
-class SdlFontManager {
+    class SdlFontManager {
 
-public:
+    public:
 
-    /**
-     * \brief Gets the SDL_Font from the font key
-     * \para fontKey Key to font (filepath relative to res/fonts/ directory)
-     * \return Pointer to the font
-     */
-    static TTF_Font* getFont(std::string fontKey, int size);
+        /**
+         * \brief Gets the SDL_Font from the font key
+         * \para fontKey Key to font (filepath relative to res/fonts/ directory)
+         * \return Pointer to the font
+         */
+        static TTF_Font *getFont(std::string fontKey, int size);
 
-    /**
-     * \brief Destroys all the fonts that have been loaded
-     */
-    static void clear();
+        /**
+         * \brief Destroys all the fonts that have been loaded
+         */
+        static void clear();
 
-}; // SdlFontManager class
+    }; // SdlFontManager class
 } // BattleRoom namespace
 #endif // SDL_FONT_MANAGER

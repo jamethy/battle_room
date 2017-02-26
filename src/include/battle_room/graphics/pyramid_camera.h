@@ -11,24 +11,27 @@ namespace BattleRoom {
  * onto the camera plane. It additionally limits the camera by the extremes of the
  * actual z = 0 plane as well.
  */
-class PyramidCamera : public MovingCamera {
+    class PyramidCamera : public MovingCamera {
 
-public:
+    public:
 
-    // constructors
+        // constructors
 
-    PyramidCamera();
-    PyramidCamera(ResourceDescriptor settings);
-    virtual ~PyramidCamera() override;
-    virtual Camera* clone() override;
+        PyramidCamera();
 
-    // inherited
-    void move(Vector3D deltaVelocity) override;
+        PyramidCamera(ResourceDescriptor settings);
 
-private:
+        virtual ~PyramidCamera() override;
 
-    Vector3D m_camVelocity; ///< Current velocity of camera
+        virtual Camera *clone() override;
 
-}; // PyramidCamera class
+        // inherited
+        void move(Vector3D deltaVelocity) override;
+
+    private:
+
+        Vector3D m_camVelocity; ///< Current velocity of camera
+
+    }; // PyramidCamera class
 } // BattleRoom namespace
 #endif // PYRAMID_CAMERA_H
