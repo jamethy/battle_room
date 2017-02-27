@@ -1,5 +1,7 @@
 #include "battle_room/game/local_updating_world.h"
 
+#include "src/game/objects/object_intersection.h"
+
 #include "battle_room/game/command_receiver.h"
 
 #include <iostream>
@@ -17,23 +19,7 @@ using std::pair;
 
 namespace BattleRoom {
 
-    const double ELASTICITY = 0.95;
-
-    typedef struct ObjectIntersection {
-
-        ObjectIntersection(GameObject *objA, GameObject *objB, SatIntersection sat)
-                : a(objA), b(objB),
-                  minTranslationUnit(sat.getMinTranslationUnitVector()),
-                  minTranslationMagnitude(sat.getMinTranslationMagnitude()) {}
-
-        GameObject *a;
-        GameObject *b;
-        Vector2D minTranslationUnit;
-        meters minTranslationMagnitude;
-
-    } ObjectIntersection;
-
-// apply settings
+    // apply settings
 
     void LocalUpdatingWorld::applySettings(ResourceDescriptor settings) {
 
@@ -46,7 +32,7 @@ namespace BattleRoom {
         }
     }
 
-// constructors
+    // constructors
     LocalUpdatingWorld::LocalUpdatingWorld() {
     }
 
@@ -55,179 +41,34 @@ namespace BattleRoom {
         applySettings(settings);
     }
 
+    std::unordered_map<GameObject *, long> countObjectIntersections(vector<ObjectIntersection> intersections) {
+        std::unordered_map<GameObject *, long> counts;
+        for (ObjectIntersection &intersection : intersections) {
+
+            if (counts.count(intersection.getObjectA())) {
+                ++counts[intersection.getObjectA()];
+            }
+            else {
+                counts.emplace(intersection.getObjectA(), 1L);
+            }
+
+            if (counts.count(intersection.getObjectB())) {
+                ++counts[intersection.getObjectB()];
+            }
+            else {
+                counts.emplace(intersection.getObjectB(), 1L);
+            }
+        }
+        return counts;
+    }
+
+    // other functions
+
     void moveObject(GameObject *object, seconds timestep) {
-        object->setLocation(
-                object->getLocation()
-                        .plus(object->getVelocity().times(timestep)
-                        ));
+        object->setLocation(object->getLocation().plus(object->getVelocity().times(timestep)));
     }
 
-// other functions
-
-    SatIntersection checkForIntersection(GameObject *objectA, GameObject *objectB) {
-
-        const BoundarySet &boundarySetA = objectA->getAnimation().getFrame(
-                objectA->getAnimationState()).getBoundarySet();
-        const BoundarySet &boundarySetB = objectB->getAnimation().getFrame(
-                objectB->getAnimationState()).getBoundarySet();
-
-        Vector3D delta = objectA->getOrientation().getInverseRotated(
-                objectB->getLocation().minus(objectA->getLocation()));
-        Vector2D dist(delta.x(), delta.y());
-
-        // TODO write something to get angle from quaternion
-        Vector3D x(1, 0, 0);
-        x = objectA->getOrientation().getInverseRotated(objectB->getOrientation().getRotated(x));
-        radians angle = std::atan2(x.y(), x.x());
-
-        SatIntersection intersection;
-        intersection.setIntersects(false);
-
-        for (Boundary *boundaryA : boundarySetA) {
-            for (Boundary *boundaryB : boundarySetB) {
-
-                intersection = boundaryA->intersects(boundaryB, dist, angle);
-
-                if (intersection.doesIntersect()) {
-                    return intersection;
-                }
-            }
-        }
-        return intersection;
-    }
-
-    void bounceOffStaticObject(GameObject *object, Vector3D minTransUnit, meters minTransMag) {
-
-        Vector3D minTransVector = minTransUnit.times(minTransMag);
-
-        meters speedNormal = object->getVelocity().dot(minTransUnit);
-
-        Vector3D velocity = object->getVelocity().minus(minTransUnit.times((1 + ELASTICITY) * speedNormal));
-        object->reactToCollision(velocity, minTransUnit);
-    }
-
-    void bounceOffDynamicObject(GameObject *objectA, GameObject *objectB, Vector3D minTransUnit, meters minTransMag) {
-
-        Vector3D minTransVector = minTransUnit.times(minTransMag);
-
-        double elasticity = 0.95;
-        meters speedNormal = minTransUnit.dot(objectA->getVelocity().minus(objectB->getVelocity()));
-
-        double aRatio = 0.5;
-        double bRatio = 0.5;
-
-        if (objectA->getMass() > 0 && objectB->getMass() > 0) {
-            aRatio = (objectB->getMass() / (objectA->getMass() + objectB->getMass()));
-            bRatio = (objectA->getMass() / (objectA->getMass() + objectB->getMass()));
-        }
-
-        Vector3D velocityA = objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal));
-        Vector3D velocityB = objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal));
-
-        objectA->reactToCollision(
-                objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal)),
-                minTransUnit.times(-1));
-        objectB->reactToCollision(
-                objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal)), minTransUnit);
-
-    }
-
-    void ballReact(GameObject *ball, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
-
-        switch (other->getType()) {
-
-            case ObjectType::None:
-                break;
-            case ObjectType::Ball:
-                bounceOffDynamicObject(ball, other, minTransUnit, minTransMag);
-                break;
-            case ObjectType::Wall:
-                bounceOffStaticObject(ball, minTransUnit, minTransMag);
-                break;
-            case ObjectType::Bullet:
-            case ObjectType::Player:
-                break;
-        }
-
-    }
-
-    void wallReact(GameObject *wall, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
-
-        switch (other->getType()) {
-            case ObjectType::Ball:
-                bounceOffStaticObject(other, minTransUnit.times(-1), minTransMag);
-                break;
-            case ObjectType::Wall:
-            case ObjectType::None:
-            case ObjectType::Bullet:
-            case ObjectType::Player:
-                break;
-        }
-
-    }
-
-    void noneReact(GameObject *object, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
-
-        if (object->isStatic()) {
-            switch (other->getType()) {
-                case ObjectType::Ball:
-                    bounceOffStaticObject(other, minTransUnit, minTransMag);
-                    break;
-                case ObjectType::None:
-                    if (!other->isStatic()) {
-                        bounceOffStaticObject(other, minTransUnit, minTransMag);
-                    }
-                case ObjectType::Wall:
-                case ObjectType::Bullet:
-                case ObjectType::Player:
-                    break;
-            }
-        } else {
-            switch (other->getType()) {
-                case ObjectType::Ball:
-                    bounceOffDynamicObject(object, other, minTransUnit, minTransMag);
-                    break;
-                case ObjectType::Wall:
-                    bounceOffStaticObject(object, minTransUnit.times(-1), minTransMag);
-                    break;
-                case ObjectType::None:
-                    if (other->isStatic()) {
-                        bounceOffStaticObject(object, minTransUnit.times(-1), minTransMag);
-                    } else {
-                        bounceOffDynamicObject(object, other, minTransUnit, minTransMag);
-                    }
-                    break;
-                case ObjectType::Bullet:
-                case ObjectType::Player:
-                    break;
-            }
-        }
-    }
-
-
-    void react(GameObject *objectA, GameObject *objectB, Vector3D minTransUnit, meters minTransMag) {
-
-        Vector3D minTransVector = minTransUnit.times(minTransMag);
-        objectB->setLocation(objectB->getLocation().plus(minTransVector));
-
-        switch (objectA->getType()) {
-            case ObjectType::Ball:
-                ballReact(objectA, objectB, minTransUnit, minTransMag);
-                break;
-            case ObjectType::Wall:
-                wallReact(objectA, objectB, minTransUnit, minTransMag);
-                break;
-            case ObjectType::Bullet:
-                break;
-            case ObjectType::Player:
-                break;
-            case ObjectType::None:
-                noneReact(objectA, objectB, minTransUnit, minTransMag);
-                break;
-        }
-    }
-
-    void moveSetOfObjects(std::vector<GameObject *> gameObjects, seconds timestep, int level) {
+    void moveSetOfObjects(std::vector<GameObject *> gameObjects, seconds timestep) {
 
         // move all objects
         for (GameObject *object : gameObjects) {
@@ -235,52 +76,30 @@ namespace BattleRoom {
         }
 
         // check for intersections
-        vector<ObjectIntersection> intersections;
+        vector<ObjectIntersection> intersections = ObjectIntersection::getIntersections(gameObjects);
 
-        for (size_t i = 0; i < gameObjects.size(); ++i) {
-
-            for (size_t j = i + 1; j < gameObjects.size(); ++j) {
-                GameObject *objectA = gameObjects.at(i);
-                GameObject *objectB = gameObjects.at(j);
-
-                if (objectA->isStatic() && objectB->isStatic()) {
-                    continue;
-                }
-
-                SatIntersection intersection = checkForIntersection(objectA, objectB);
-                if (intersection.doesIntersect()) {
-                    intersections.push_back(ObjectIntersection(objectA, objectB, intersection));
-                }
-            }
-        }
-
-        // account for intersections
         if (intersections.size() > 0) {
 
-            // check for multiway intersections
-            // back up until only single intersections
-            std::unordered_map<GameObject *, long> intersectionCount;
-            for (ObjectIntersection &intersection : intersections) {
-
-                if (intersectionCount.count(intersection.a)) { ++intersectionCount[intersection.a]; }
-                else { intersectionCount.emplace(intersection.a, 1L); }
-
-                if (intersectionCount.count(intersection.b)) { ++intersectionCount[intersection.b]; }
-                else { intersectionCount.emplace(intersection.b, 1L); }
-            }
-
+            // if above min timestep, check for multi-intersections
             seconds miniStep = timestep / 10.0;
             if (miniStep > MIN_TIMESTEP) {
 
-                std::unordered_set<GameObject *> multiIntersectionObjects;
-                for (auto &count : intersectionCount) {
+                std::unordered_map<GameObject *, long> counts = countObjectIntersections(intersections);
+
+                // get set of multi-intersection objects
+                std::unordered_set<GameObject *> multiObjects;
+                for (auto &count : counts) {
                     if (count.second > 1) {
+
+                        // remove it from normal intersections
                         std::vector<ObjectIntersection>::iterator itr = intersections.begin();
                         while (itr != intersections.end()) {
+
                             ObjectIntersection &intersection = *itr;
-                            if (intersection.a == count.first || intersection.b == count.first) {
-                                multiIntersectionObjects.insert(intersection.a);
-                                multiIntersectionObjects.insert(intersection.b);
+                            if (intersection.getObjectA() == count.first || intersection.getObjectB() == count.first) {
+
+                                multiObjects.insert(intersection.getObjectA());
+                                multiObjects.insert(intersection.getObjectB());
                                 itr = intersections.erase(itr);
                             } else {
                                 ++itr;
@@ -289,10 +108,10 @@ namespace BattleRoom {
                     }
                 }
 
-                if (multiIntersectionObjects.size() > 0) {
+                // if any multi-intersections, rerun but 10x slower
+                if (multiObjects.size() > 0) {
 
-                    // move all objects back
-                    for (GameObject *object : multiIntersectionObjects) {
+                    for (GameObject *object : multiObjects) {
                         if (!object->isStatic()) {
                             moveObject(object, -timestep);
                         }
@@ -301,32 +120,20 @@ namespace BattleRoom {
                     double tempTime = 0;
                     while (tempTime < timestep) {
                         tempTime += miniStep;
-                        moveSetOfObjects(
-                                vector<GameObject *>(multiIntersectionObjects.begin(), multiIntersectionObjects.end()),
-                                miniStep, level + 1);
+                        moveSetOfObjects(vector<GameObject *>(multiObjects.begin(), multiObjects.end()), miniStep);
                     }
                 }
             }
 
             std::unordered_set<GameObject *> movedObjects;
-
-            // move each one back
-            // change velocities
-            // change animations
-            for (ObjectIntersection &intersection : intersections) {
-
-                GameObject *objectA = intersection.a;
-                GameObject *objectB = intersection.b;
+            for (ObjectIntersection &intrct : intersections) {
 
                 // only intersect if object has not already been affected
-                if (movedObjects.count(objectA) == 0 && movedObjects.count(objectB) == 0) {
+                if (movedObjects.count(intrct.getObjectA()) == 0 && movedObjects.count(intrct.getObjectB()) == 0) {
 
-                    // rotate the MTV back into world coordinates
-                    Vector3D minTransUnit = objectA->getOrientation().getRotated(
-                            Vector3D(intersection.minTranslationUnit.x(), intersection.minTranslationUnit.y(), 0));
-                    react(objectA, objectB, minTransUnit, intersection.minTranslationMagnitude);
-                    movedObjects.insert(objectA);
-                    movedObjects.insert(objectB);
+                    intrct.reactToCollision();
+                    movedObjects.insert(intrct.getObjectA());
+                    movedObjects.insert(intrct.getObjectB());
                 }
             }
         }
@@ -343,7 +150,7 @@ namespace BattleRoom {
         seconds timestep = m_timeController.getDelta();
 
         // move objects, check for collisions, react to collisions
-        moveSetOfObjects(m_gameObjects, timestep, 0);
+        moveSetOfObjects(m_gameObjects, timestep);
 
         // update animations
         for (GameObject *object : m_gameObjects) {

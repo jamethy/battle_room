@@ -10,4 +10,4 @@ add_library(Game
         local_updating_world.cpp
         local_world_updater.cpp
         objects/ball.cpp
-        )
+        objects/object_intersection.cpp objects/object_intersection.h)
