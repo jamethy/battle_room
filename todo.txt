@@ -12,6 +12,7 @@ For full program
     Create an exception scheme
     create menus
     Add saving configs
+    path tracing for high speed intersection
 
 Maybe for fun
     Create animation pre loader that searches through cpp files for animations to load

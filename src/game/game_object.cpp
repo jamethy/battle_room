@@ -21,7 +21,6 @@ namespace BattleRoom {
         if (isNotEmpty(sub.getValue())) {
             setMass(toKilograms(sub.getValue()));
         }
-
     }
 
 // constructors
@@ -29,6 +28,7 @@ namespace BattleRoom {
     GameObject::GameObject(UniqueId uniqueId, ObjectType type)
             : m_uniqueId(uniqueId),
               m_isStatic(false),
+              m_destroy(false),
               m_type(type) {}
 
 // other functinos
@@ -75,6 +75,10 @@ namespace BattleRoom {
         return m_isStatic;
     }
 
+    bool GameObject::destroy() const {
+        return m_destroy;
+    }
+
     std::string GameObject::getName() const {
         return m_name;
     }
@@ -85,6 +89,10 @@ namespace BattleRoom {
 
     void GameObject::setIsStatic(bool isStatic) {
         m_isStatic = isStatic;
+    }
+
+    void GameObject::setToDestroy(bool destroy) {
+        m_destroy = destroy;
     }
 
     void GameObject::setVelocity(Vector3D velocity) {

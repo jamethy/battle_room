@@ -139,6 +139,19 @@ namespace BattleRoom {
         }
     }
 
+    std::vector<GameObject*> deleteDestroyed(std::vector<GameObject*> gameObjects) {
+        std::vector<GameObject*> filtered;
+        for (GameObject* obj : gameObjects) {
+            if (obj->destroy()) {
+                delete obj;
+            }
+            else {
+                filtered.push_back(obj);
+            }
+        }
+        return filtered;
+    }
+
     void LocalUpdatingWorld::update() {
 
         // get user/ai input
@@ -156,6 +169,8 @@ namespace BattleRoom {
         for (GameObject *object : m_gameObjects) {
             object->updateAnimation(timestep);
         }
+
+        m_gameObjects = deleteDestroyed(m_gameObjects);
 
         // fake load
         std::this_thread::sleep_for(std::chrono::milliseconds(20));

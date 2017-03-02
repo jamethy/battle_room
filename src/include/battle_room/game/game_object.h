@@ -26,6 +26,8 @@ namespace BattleRoom {
 
         bool isStatic() const;
 
+        bool destroy() const;
+
         kilograms getMass() const;
 
         std::string getName() const;
@@ -35,6 +37,8 @@ namespace BattleRoom {
         void setVelocity(Vector3D velocity);
 
         void setIsStatic(bool isStatic);
+
+        void setToDestroy(bool destroy);
 
         void setMass(kilograms mass);
 
@@ -49,6 +53,7 @@ namespace BattleRoom {
         UniqueId m_uniqueId; ///< Object's uniqueId
         Vector3D m_velocity; ///< Object's velocity
         bool m_isStatic; ///< If object is static, it does not move or intersect other static objects
+        bool m_destroy; ///< if the object should be destroyed at the end of the frame
         kilograms m_mass; ///< mass in kilograms of the object
         std::string m_name; ///< label used for debugging
         ObjectType m_type; ///< Type of object

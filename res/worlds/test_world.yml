@@ -134,3 +134,10 @@ World:
         DegRotation: 30
         Static: true
 
+    Bullet: bullet
+        Animation: bullet
+        AnimationState: 0.0
+        Location: -8, 1
+        Static: false
+        DegRotation: 0
+        Velocity: 20,0

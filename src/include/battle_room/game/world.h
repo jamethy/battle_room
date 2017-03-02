@@ -17,6 +17,7 @@ namespace BattleRoom {
 
         // constructors
         World();
+        World(const World& other);
 
         World(ResourceDescriptor settings);
 

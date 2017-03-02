@@ -16,7 +16,7 @@ namespace BattleRoom {
 
     void QueryWorld::updateCopyWorld(const World &world) {
         m_copyWorldLock.lock();
-        m_copyWorld = world;
+        m_copyWorld = World(world);
         m_copyWorldLock.unlock();
     }
 

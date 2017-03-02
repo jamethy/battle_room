@@ -52,6 +52,28 @@ namespace BattleRoom {
 
     }
 
+    void bulletReact(GameObject *bullet, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
+        (void) minTransMag; // unused
+
+        switch (other->getType()) {
+
+            case ObjectType::None:
+            case ObjectType::Ball:
+            case ObjectType::Wall:
+                bullet->reactToCollision(Vector3D(0, 0, 0), minTransUnit.times(-1));
+                break;
+            case ObjectType::Bullet:
+                bullet->reactToCollision(Vector3D(0, 0, 0), minTransUnit.times(-1));
+                other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                break;
+            case ObjectType::Player:
+                bullet->reactToCollision(Vector3D(0, 0, 0), minTransUnit.times(-1));
+                // do damage to player
+                break;
+        }
+
+    }
+
     void ballReact(GameObject *ball, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
 
         switch (other->getType()) {
@@ -65,6 +87,8 @@ namespace BattleRoom {
                 bounceOffStaticObject(ball, minTransUnit, minTransMag);
                 break;
             case ObjectType::Bullet:
+                other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                break;
             case ObjectType::Player:
                 break;
         }
@@ -80,6 +104,8 @@ namespace BattleRoom {
             case ObjectType::Wall:
             case ObjectType::None:
             case ObjectType::Bullet:
+                other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                break;
             case ObjectType::Player:
                 break;
         }
@@ -99,6 +125,8 @@ namespace BattleRoom {
                     }
                 case ObjectType::Wall:
                 case ObjectType::Bullet:
+                    other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                    break;
                 case ObjectType::Player:
                     break;
             }
@@ -118,6 +146,8 @@ namespace BattleRoom {
                     }
                     break;
                 case ObjectType::Bullet:
+                    other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                    break;
                 case ObjectType::Player:
                     break;
             }
@@ -137,6 +167,7 @@ namespace BattleRoom {
                 wallReact(m_objectA, m_objectB, m_minTransUnit, m_minTransMag);
                 break;
             case ObjectType::Bullet:
+                bulletReact(m_objectA, m_objectB, m_minTransUnit, m_minTransMag);
                 break;
             case ObjectType::Player:
                 break;
@@ -178,7 +209,7 @@ namespace BattleRoom {
         return intersection;
     }
 
-    std::vector<ObjectIntersection> ObjectIntersection::getIntersections(std::vector<GameObject*> objects) {
+    std::vector<ObjectIntersection> ObjectIntersection::getIntersections(std::vector<GameObject *> objects) {
 
         std::vector<ObjectIntersection> intersections;
 
