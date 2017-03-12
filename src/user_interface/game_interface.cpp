@@ -49,13 +49,14 @@ namespace BattleRoom {
 
         for (Input input : inputs) {
 
-            if (input.containsView(getAssociatedView())) {
-
-                if (input.getMotion() == InputKey::Motion::PressedDown) {
-                    if (input.getKey() == InputKey::Key::Q) {
-                        InputGatherer::addQuitEvent();
-                    }
+            // temp for easy testing and quitting
+            if (input.getMotion() == InputKey::Motion::PressedDown) {
+                if (input.getKey() == InputKey::Key::Q) {
+                    InputGatherer::addQuitEvent();
                 }
+            }
+
+            if (input.containsView(getAssociatedView())) {
 
             }
 

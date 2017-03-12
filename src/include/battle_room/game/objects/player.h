@@ -1,5 +1,5 @@
-#ifndef BATTLE_ROOM_BULLET_H
-#define BATTLE_ROOM_BULLET_H
+#ifndef BATTLE_ROOM_PLAYER_H
+#define BATTLE_ROOM_PLAYER_H
 
 #include "battle_room/game/game_object.h"
 
@@ -8,12 +8,12 @@ namespace BattleRoom {
     /**
      * Class for the object that is a great big red ball
      */
-    class Bullet : public GameObject {
+    class Player : public GameObject {
 
     public:
 
         // constructor
-        Bullet(UniqueId id);
+        Player(UniqueId id);
 
         // inherited
         void reactToCollision(Vector3D velocityResult, Vector3D intersectionNormal) override;
@@ -23,14 +23,16 @@ namespace BattleRoom {
     private:
 
         /**
-         * State of ball object
+         * State of player object
          */
-        enum class BulletState {
-            Normal,
-            Hit
+        enum class PlayerState {
+            Flying,
+            Landing,
+            Landed
         };
 
-        BulletState m_state; /// Current state of the ball object
-    }; // Bullet class
+        PlayerState m_state; /// Current state of the ball object
+
+    }; // Player class
 } // BattleRoom namespace
-#endif //BATTLE_ROOM_BULLET_H
+#endif //BATTLE_ROOM_PLAYER_H

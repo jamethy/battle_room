@@ -1,6 +1,8 @@
 #include <src/include/battle_room/common/animation_handler.h>
 #include "battle_room/game/game_object.h"
 
+#include <iostream>
+
 namespace BattleRoom {
 
 // apply settings

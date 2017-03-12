@@ -1,10 +1,11 @@
 
 Running ToDo List
 -----------------------------------
+Look into blender or other program
 
 For full program
     Add speed to animations
-    Move object intersectino to testable code
+    Move object intersection to testable code
     Add networking code to networking...
     fix missing animation
     create commands

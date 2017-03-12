@@ -1,5 +1,6 @@
 #include "object_intersection.h"
 #include <cmath>
+#include <iostream>
 
 const double ELASTICITY = 0.95;
 
@@ -68,7 +69,7 @@ namespace BattleRoom {
                 break;
             case ObjectType::Player:
                 bullet->reactToCollision(Vector3D(0, 0, 0), minTransUnit.times(-1));
-                // do damage to player
+                // TODO do damage to player
                 break;
         }
 
@@ -95,6 +96,26 @@ namespace BattleRoom {
 
     }
 
+    void playerReact(GameObject *player, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
+
+        switch (other->getType()) {
+
+            case ObjectType::None:
+                player->reactToCollision(Vector3D(0,0,0), minTransUnit);
+                break;
+            case ObjectType::Ball:
+                break;
+            case ObjectType::Wall:
+                player->reactToCollision(Vector3D(0,0,0), minTransUnit);
+                break;
+            case ObjectType::Bullet:
+                break;
+            case ObjectType::Player:
+                break;
+        }
+
+    }
+
     void wallReact(GameObject *wall, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
 
         switch (other->getType()) {
@@ -107,6 +128,7 @@ namespace BattleRoom {
                 other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
                 break;
             case ObjectType::Player:
+                other->reactToCollision(Vector3D(0,0,0), minTransUnit);
                 break;
         }
 
@@ -125,9 +147,8 @@ namespace BattleRoom {
                     }
                 case ObjectType::Wall:
                 case ObjectType::Bullet:
-                    other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
-                    break;
                 case ObjectType::Player:
+                    other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
                     break;
             }
         } else {
@@ -146,9 +167,8 @@ namespace BattleRoom {
                     }
                     break;
                 case ObjectType::Bullet:
-                    other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
-                    break;
                 case ObjectType::Player:
+                    other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
                     break;
             }
         }
@@ -170,6 +190,7 @@ namespace BattleRoom {
                 bulletReact(m_objectA, m_objectB, m_minTransUnit, m_minTransMag);
                 break;
             case ObjectType::Player:
+                playerReact(m_objectA, m_objectB, m_minTransUnit, m_minTransMag);
                 break;
             case ObjectType::None:
                 noneReact(m_objectA, m_objectB, m_minTransUnit, m_minTransMag);

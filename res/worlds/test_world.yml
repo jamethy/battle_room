@@ -131,7 +131,7 @@ World:
         Animation: star
         AnimationState: 0.0
         Location: 0, 1.3
-        DegRotation: 30
+        DegRotation: 70
         Static: true
 
     Bullet: bullet
@@ -140,4 +140,12 @@ World:
         Location: -8, 1
         Static: false
         DegRotation: 0
-        Velocity: 20,0
+        Velocity: 5,0
+
+    Player: man
+        Animation: player_flying
+        AnimationState: 0.0
+        Location: -6, 0
+        Static: false
+        DegRotation: 30
+        Velocity: 1.6, 1

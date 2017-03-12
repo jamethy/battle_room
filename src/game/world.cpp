@@ -4,6 +4,7 @@
 #include "battle_room/common/animation_handler.h"
 #include "battle_room/game/objects/ball.h"
 #include "battle_room/game/objects/bullet.h"
+#include "battle_room/game/objects/player.h"
 
 using std::vector;
 
@@ -29,6 +30,12 @@ namespace BattleRoom {
 
         for (ResourceDescriptor &objDesc : settings.getSubResources("Bullet")) {
             GameObject *obj = new Bullet(UniqueId::generateNewNetworkId());
+            obj->applySettings(objDesc);
+            m_gameObjects.push_back(obj);
+        }
+
+        for (ResourceDescriptor &objDesc : settings.getSubResources("Player")) {
+            GameObject *obj = new Player(UniqueId::generateNewNetworkId());
             obj->applySettings(objDesc);
             m_gameObjects.push_back(obj);
         }
