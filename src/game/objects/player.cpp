@@ -1,6 +1,8 @@
 #include <src/include/battle_room/common/animation_handler.h>
 #include "battle_room/game/objects/player.h"
 
+#include <iostream>
+
 namespace BattleRoom {
 
     // constructors
@@ -13,15 +15,20 @@ namespace BattleRoom {
 
         m_state = PlayerState::Landing;
 
-        Vector3D temp = intersectionNormal.cross(Vector3D(0, 0, 1));
-        setVelocity(temp.times(velocityResult.dot(temp)));
         setIsStatic(true);
-
-        Vector3D h = intersectionNormal.plus(Vector3D(0, 1, 0)).getUnit();
-        setOrientation(Quaternion(h.y(), 0, 0, -h.x()));
 
         setAnimation(AnimationHandler::getAnimation("player_landing"));
         setAnimationState(0.0);
+
+        // lasts .44 seconds
+        Vector3D v = getVelocity().getUnit();
+        double m = v.dot(intersectionNormal);
+        std::cout << "m : " << m << std::endl;
+
+        setVelocity(v.times(1.6/ (m * (m < 0 ? -1 : 1))));
+
+        radians angleDelta = getOrientation().getAngleFrom(intersectionNormal.times(-1));
+        setAngularVelocity(angleDelta/0.44);
     }
 
     void Player::updateAnimation(seconds timestep) {
@@ -46,6 +53,7 @@ namespace BattleRoom {
                 setAnimation(AnimationHandler::getAnimation(animation.getNextAnimation()));
                 m_state = PlayerState::Landed;
                 setVelocity(Vector3D(0,0,0));
+                setAngularVelocity(0);
             } else {
 
                 // iterate object->animation

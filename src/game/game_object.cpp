@@ -29,6 +29,7 @@ namespace BattleRoom {
 
     GameObject::GameObject(UniqueId uniqueId, ObjectType type)
             : m_uniqueId(uniqueId),
+              m_angularVelocity(0.0),
               m_isStatic(false),
               m_destroy(false),
               m_type(type) {}
@@ -69,6 +70,10 @@ namespace BattleRoom {
         return m_velocity;
     }
 
+    double GameObject::getAngularVelocity() const {
+        return m_angularVelocity;
+    }
+
     kilograms GameObject::getMass() const {
         return m_mass;
     }
@@ -99,6 +104,10 @@ namespace BattleRoom {
 
     void GameObject::setVelocity(Vector3D velocity) {
         m_velocity = velocity;
+    }
+
+    void GameObject::setAngularVelocity(double radiansPerSecond) {
+        m_angularVelocity = radiansPerSecond;
     }
 
     void GameObject::setMass(kilograms mass) {

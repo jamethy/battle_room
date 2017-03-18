@@ -145,7 +145,7 @@ World:
     Player: man
         Animation: player_flying
         AnimationState: 0.0
-        Location: -6, 0
+        Location: -6, 2
         Static: false
-        DegRotation: 30
-        Velocity: 1.6, 1
+        DegRotation: 0
+        Velocity: 1.6, 0

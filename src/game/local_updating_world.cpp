@@ -66,6 +66,9 @@ namespace BattleRoom {
 
     void moveObject(GameObject *object, seconds timestep) {
         object->setLocation(object->getLocation().plus(object->getVelocity().times(timestep)));
+        Quaternion q = object->getOrientation();
+        q.rotateAboutZ(timestep*object->getAngularVelocity());
+        object->setOrientation(q);
     }
 
     void moveSetOfObjects(std::vector<GameObject *> gameObjects, seconds timestep) {

@@ -58,6 +58,23 @@ namespace BattleRoom {
          */
         Quaternion getRotated(Quaternion p) const;
 
+        /**
+         * \brief Gets the current angle from the vector
+         * this is a gross abuse of quaternions // TODO fix that
+         *
+         * @param v Vector to compare against
+         * @return Angle in Radians from v
+         */
+        radians getAngleFrom(Vector3D v) const;
+
+        /**
+         * \brief Gets the current angle from other quaternion
+         *
+         * @param q Quaternion to compare against
+         * @return Angle in Radians from q
+         */
+        radians getAngleFrom(Quaternion q) const;
+
         // Access by reference
         double &w();
 

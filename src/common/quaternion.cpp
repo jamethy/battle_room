@@ -94,7 +94,17 @@ namespace BattleRoom {
         return Quaternion(w, i, j, k);
     }
 
-// Accessors by reference
+    radians Quaternion::getAngleFrom(Vector3D v) const {
+        Vector3D b = getRotated(Vector3D(1, 0, 0));
+        return std::atan2(v.y(), v.x()) - std::atan2(b.y(), b.x());
+    }
+
+    radians Quaternion::getAngleFrom(Quaternion q) const {
+        Vector3D x = getInverseRotated(q.getRotated(Vector3D(1, 0, 0)));
+        return std::atan2(x.y(), x.x());
+    }
+
+    // Accessors by reference
 
     double &Quaternion::w() {
         return m_w;

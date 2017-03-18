@@ -24,6 +24,8 @@ namespace BattleRoom {
 
         Vector3D getVelocity();
 
+        double getAngularVelocity() const;
+
         bool isStatic() const;
 
         bool destroy() const;
@@ -35,6 +37,8 @@ namespace BattleRoom {
         ObjectType getType() const;
 
         void setVelocity(Vector3D velocity);
+
+        void setAngularVelocity(double radiansPerSecond);
 
         void setIsStatic(bool isStatic);
 
@@ -52,6 +56,7 @@ namespace BattleRoom {
 
         UniqueId m_uniqueId; ///< Object's uniqueId
         Vector3D m_velocity; ///< Object's velocity
+        double m_angularVelocity; ///< Object's angular velocity about z-axis in radians per second
         bool m_isStatic; ///< If object is static, it does not move or intersect other static objects
         bool m_destroy; ///< if the object should be destroyed at the end of the frame
         kilograms m_mass; ///< mass in kilograms of the object

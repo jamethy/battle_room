@@ -5,6 +5,7 @@
 #include "gmock/gmock.h"
 
 #include <cmath>
+#include <iostream>
 
 namespace BattleRoom {
 
@@ -59,5 +60,13 @@ TEST(Test_rotated, ninetyAboutXY) {
     EXPECT_DOUBLE_EQ(0, xx.z());
 }
 
+TEST(Test_getAngle, thrity) {
+    Quaternion q;
+    q = q.getRotatedAbout(Vector3D(0, 0, 1), toRadians(30.0));
+
+    Vector3D x(1, 0, 0);
+    Vector3D b = q.getRotated(x);
+    std::cout << "Get angle: " << toDegrees(q.getAngleFrom(Vector3D(0, 1, 0))) << std::endl;;
+}
 
 } // BattleRoom namespace
