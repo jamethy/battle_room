@@ -28,5 +28,5 @@ This will make and run all the tests
 The packages required in Ubuntu include:
 
 ```shell
-cmake libsdl2-dev libsdl2-image-dev libsdl2-tff-dev libsdl2-gfx-dev
+cmake libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-gfx-dev
 ```
