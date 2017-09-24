@@ -1,3 +1,6 @@
+use new man_0.yml
+get him to rotate
+follow mouse
 
 Running ToDo List
 -----------------------------------
