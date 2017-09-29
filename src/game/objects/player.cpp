@@ -1,7 +1,9 @@
 #include <src/include/battle_room/common/animation_handler.h>
 #include "battle_room/game/objects/player.h"
 
-#include <iostream>
+#include <cmath>
+
+const double MAX_ANGULAR_VEL = 1; // radians per second
 
 namespace BattleRoom {
 
@@ -55,6 +57,34 @@ namespace BattleRoom {
                 // iterate object->animation
                 setAnimationState(newState);
             }
+        }
+    }
+
+    radians diffOfAngles(radians a, radians b) {
+        return fmod(a - b + PI, 2*PI) - PI;
+
+    }
+
+    double calcFlyingAngularVelocity(Vector2D vel, radians angle, double current) {
+
+        if (current > MAX_ANGULAR_VEL) {
+            return 0.9*current;
+        } else {
+            radians desired = std::atan2(vel.x(), -vel.y());
+            radians diff = diffOfAngles(desired, angle);
+
+            if (diff*current < 0) {
+                diff = diff + (current > 0 ? 2*PI : -2*PI);
+            }
+            return diff;
+        }
+    }
+
+    void Player::updateForNext(seconds timestep) {
+
+        if (m_state == PlayerState::Flying) {
+            // desired is feet leading
+            setAngularVelocity(calcFlyingAngularVelocity(getVelocity(), getRotation(), getAngularVelocity()));
         }
     }
 

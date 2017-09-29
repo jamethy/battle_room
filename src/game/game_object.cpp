@@ -1,7 +1,6 @@
 #include <src/include/battle_room/common/animation_handler.h>
 #include "battle_room/game/game_object.h"
 
-#include <iostream>
 #include <cmath>
 
 namespace BattleRoom {
@@ -19,6 +18,11 @@ namespace BattleRoom {
         ResourceDescriptor sub = settings.getSubResource("Rotation");
         if (isNotEmpty(sub.getValue())) {
             m_rotation = toRadians(sub.getValue());
+        }
+
+        sub = settings.getSubResource("AngularVelocity");
+        if (isNotEmpty(sub.getValue())) {
+            m_angularVelocity = toRadians(sub.getValue()); // cheating
         }
 
         sub = settings.getSubResource("DegRotation");
@@ -72,6 +76,10 @@ namespace BattleRoom {
             setAnimationState(newState);
         }
 
+    }
+
+    void GameObject::updateForNext(seconds timestep) {
+        (void)timestep; // not used
     }
 
     void GameObject::setUp(Vector2D up) {

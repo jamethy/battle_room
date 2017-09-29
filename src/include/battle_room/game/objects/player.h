@@ -20,6 +20,8 @@ namespace BattleRoom {
 
         void updateAnimation(seconds timestep) override;
 
+        void updateForNext(seconds timestep) override;
+
     private:
 
         /**

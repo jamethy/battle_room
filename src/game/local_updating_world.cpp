@@ -170,6 +170,7 @@ namespace BattleRoom {
         // update animations
         for (GameObject *object : m_gameObjects) {
             object->updateAnimation(timestep);
+            object->updateForNext(timestep);
         }
 
         m_gameObjects = deleteDestroyed(m_gameObjects);

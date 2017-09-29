@@ -19,6 +19,8 @@ namespace BattleRoom {
 
         virtual void updateAnimation(seconds timestep);
 
+        virtual void updateForNext(seconds timestep);
+
         void setUp(Vector2D up);
 
         // getters and setters

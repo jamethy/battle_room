@@ -52,4 +52,5 @@ World:
         Static: false
         DegRotation: 0
         Velocity: 1.6, 0
+        AngularVelocity: 10
 
