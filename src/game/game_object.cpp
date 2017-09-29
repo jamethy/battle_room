@@ -2,6 +2,7 @@
 #include "battle_room/game/game_object.h"
 
 #include <iostream>
+#include <cmath>
 
 namespace BattleRoom {
 
@@ -12,9 +13,20 @@ namespace BattleRoom {
         setName(settings.getValue());
         DrawableObject::applySettings(settings);
 
+        m_position.applySettings(settings.getSubResource("Location"));
         m_velocity.applySettings(settings.getSubResource("Velocity"));
 
-        ResourceDescriptor sub = settings.getSubResource("Static");
+        ResourceDescriptor sub = settings.getSubResource("Rotation");
+        if (isNotEmpty(sub.getValue())) {
+            m_rotation = toRadians(sub.getValue());
+        }
+
+        sub = settings.getSubResource("DegRotation");
+        if (isNotEmpty(sub.getValue())) {
+            m_rotation  = toRadians(toDegrees(sub.getValue()));
+        }
+
+        sub = settings.getSubResource("Static");
         if (isNotEmpty(sub.getValue())) {
             setIsStatic(keyMatch("True", sub.getValue()));
         }
@@ -29,13 +41,15 @@ namespace BattleRoom {
 
     GameObject::GameObject(UniqueId uniqueId, ObjectType type)
             : m_uniqueId(uniqueId),
+              m_position(Vector2D(0,0)),
+              m_rotation(0),
               m_angularVelocity(0.0),
               m_isStatic(false),
               m_destroy(false),
               m_type(type) {}
 
 // other functinos
-    void GameObject::reactToCollision(Vector3D velocityResult, Vector3D intersectionNormal) {
+    void GameObject::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
         (void) intersectionNormal; // unused
         setVelocity(velocityResult);
     }
@@ -60,13 +74,25 @@ namespace BattleRoom {
 
     }
 
+    void GameObject::setUp(Vector2D up) {
+        setRotation(atan2(-up.x(), up.y()));
+    }
+
 // getters and setters
 
     const UniqueId GameObject::getUniqueId() const {
         return m_uniqueId;
     }
 
-    Vector3D GameObject::getVelocity() {
+    Vector2D GameObject::getPosition() {
+        return m_position;
+    }
+
+    radians GameObject::getRotation() const {
+        return m_rotation;
+    }
+
+    Vector2D GameObject::getVelocity() {
         return m_velocity;
     }
 
@@ -94,6 +120,16 @@ namespace BattleRoom {
         return m_type;
     }
 
+    void GameObject::setPosition(Vector2D position) {
+        m_position = position;
+        setLocation(Vector3D(position.x(), position.y(), 0));
+    }
+
+    void GameObject::setRotation(radians rotation) {
+        m_rotation = rotation;
+        setOrientation(Quaternion(rotation));
+    }
+
     void GameObject::setIsStatic(bool isStatic) {
         m_isStatic = isStatic;
     }
@@ -102,7 +138,7 @@ namespace BattleRoom {
         m_destroy = destroy;
     }
 
-    void GameObject::setVelocity(Vector3D velocity) {
+    void GameObject::setVelocity(Vector2D velocity) {
         m_velocity = velocity;
     }
 

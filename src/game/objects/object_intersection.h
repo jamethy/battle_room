@@ -1,7 +1,7 @@
 #ifndef COLLISION_REACTIONS_H
 #define COLLISION_REACTIONS_H
 
-#include "battle_room/common/vector3d.h"
+#include "battle_room/common/vector2d.h"
 #include "battle_room/game/game_object.h"
 
 namespace BattleRoom {
@@ -32,7 +32,7 @@ namespace BattleRoom {
 
         GameObject *m_objectA;
         GameObject *m_objectB;
-        Vector3D m_minTransUnit;
+        Vector2D m_minTransUnit;
         meters m_minTransMag;
 
     }; // ObjectIntersection class

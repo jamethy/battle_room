@@ -13,6 +13,8 @@ namespace BattleRoom {
         // constructors
         Quaternion();
 
+        Quaternion(radians angle); // angle about z
+
         Quaternion(double w, double i, double j, double k);
 
         /**

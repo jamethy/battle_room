@@ -2,6 +2,7 @@
 #define GAME_OBJECT_H
 
 #include "battle_room/common/drawable_object.h"
+#include "battle_room/common/vector2d.h"
 #include "battle_room/common/unique_id.h"
 #include "battle_room/game/objects/object_type.h"
 
@@ -14,15 +15,21 @@ namespace BattleRoom {
         // constructor
         GameObject(UniqueId uniqueId, ObjectType type);
 
-        virtual void reactToCollision(Vector3D velocityResult, Vector3D intersectionNormal);
+        virtual void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal);
 
         virtual void updateAnimation(seconds timestep);
+
+        void setUp(Vector2D up);
 
         // getters and setters
 
         const UniqueId getUniqueId() const;
 
-        Vector3D getVelocity();
+        Vector2D getPosition();
+
+        radians getRotation() const;
+
+        Vector2D getVelocity();
 
         double getAngularVelocity() const;
 
@@ -36,7 +43,11 @@ namespace BattleRoom {
 
         ObjectType getType() const;
 
-        void setVelocity(Vector3D velocity);
+        void setPosition(Vector2D position);
+
+        void setRotation(radians rotation);
+
+        void setVelocity(Vector2D velocity);
 
         void setAngularVelocity(double radiansPerSecond);
 
@@ -54,8 +65,11 @@ namespace BattleRoom {
 
     private:
 
+        Vector2D m_position;
+        radians m_rotation;
+
         UniqueId m_uniqueId; ///< Object's uniqueId
-        Vector3D m_velocity; ///< Object's velocity
+        Vector2D m_velocity; ///< Object's velocity
         double m_angularVelocity; ///< Object's angular velocity about z-axis in radians per second
         bool m_isStatic; ///< If object is static, it does not move or intersect other static objects
         bool m_destroy; ///< if the object should be destroyed at the end of the frame

@@ -11,7 +11,7 @@ namespace BattleRoom {
               m_state(PlayerState::Flying) {}
 
     // other functions
-    void Player::reactToCollision(Vector3D velocityResult, Vector3D intersectionNormal) {
+    void Player::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
 
         m_state = PlayerState::Landing;
 
@@ -21,14 +21,10 @@ namespace BattleRoom {
         setAnimationState(0.0);
 
         // lasts .44 seconds
-        Vector3D v = getVelocity().getUnit();
+        Vector2D v = getVelocity().getUnit();
         double m = v.dot(intersectionNormal);
-        std::cout << "m : " << m << std::endl;
 
         setVelocity(v.times(1.6/ (m * (m < 0 ? -1 : 1))));
-
-        radians angleDelta = getOrientation().getAngleFrom(intersectionNormal.times(-1));
-        setAngularVelocity(angleDelta/0.44);
     }
 
     void Player::updateAnimation(seconds timestep) {
@@ -52,7 +48,7 @@ namespace BattleRoom {
                 // find the new animation
                 setAnimation(AnimationHandler::getAnimation(animation.getNextAnimation()));
                 m_state = PlayerState::Landed;
-                setVelocity(Vector3D(0,0,0));
+                setVelocity(Vector2D(0, 0));
                 setAngularVelocity(0);
             } else {
 

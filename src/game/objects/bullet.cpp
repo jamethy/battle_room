@@ -10,7 +10,7 @@ namespace BattleRoom {
               m_state(BulletState::Normal) {}
 
     // other functions
-    void Bullet::reactToCollision(Vector3D velocityResult, Vector3D intersectionNormal) {
+    void Bullet::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
         (void)velocityResult; // unused
         (void)intersectionNormal; // unused
 

@@ -65,10 +65,9 @@ namespace BattleRoom {
     // other functions
 
     void moveObject(GameObject *object, seconds timestep) {
-        object->setLocation(object->getLocation().plus(object->getVelocity().times(timestep)));
-        Quaternion q = object->getOrientation();
-        q.rotateAboutZ(timestep*object->getAngularVelocity());
-        object->setOrientation(q);
+
+        object->setPosition(object->getPosition().plus(object->getVelocity().times(timestep)));
+        object->setRotation(object->getRotation() + timestep*object->getAngularVelocity());
     }
 
     void moveSetOfObjects(std::vector<GameObject *> gameObjects, seconds timestep) {
@@ -176,7 +175,7 @@ namespace BattleRoom {
         m_gameObjects = deleteDestroyed(m_gameObjects);
 
         // fake load
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        std::this_thread::sleep_for(std::chrono::milliseconds(25));
     }
 
 } // BattleRoom namespace

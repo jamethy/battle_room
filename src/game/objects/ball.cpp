@@ -9,17 +9,17 @@ namespace BattleRoom {
               m_state(BallState::Normal) {}
 
     // other functions
-    void Ball::reactToCollision(Vector3D velocityResult, Vector3D intersectionNormal) {
+    void Ball::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
 
         m_state = BallState::Bouncing;
-        m_storedVelocity = velocityResult;
+        m_storedVelocity = velocityResult; // ball will bounce after
 
-        Vector3D temp = intersectionNormal.cross(Vector3D(0, 0, 1));
+        // have the ball slide along the other object by setting it velocity to normal the normal
+        Vector2D temp = Vector2D(-intersectionNormal.y(), intersectionNormal.x());
         setVelocity(temp.times(velocityResult.dot(temp)));
         setIsStatic(true);
 
-        Vector3D h = intersectionNormal.plus(Vector3D(0, 1, 0)).getUnit();
-        setOrientation(Quaternion(h.y(), 0, 0, -h.x()));
+        setUp(intersectionNormal);
 
         setAnimation(AnimationHandler::getAnimation("ball_bounce"));
         setAnimationState(0.0);

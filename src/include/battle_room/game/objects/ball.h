@@ -16,7 +16,7 @@ namespace BattleRoom {
         Ball(UniqueId id);
 
         // inherited
-        void reactToCollision(Vector3D velocityResult, Vector3D intersectionNormal) override;
+        void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) override;
 
         void updateAnimation(seconds timestep) override;
 
@@ -30,7 +30,7 @@ namespace BattleRoom {
             Bouncing
         };
 
-        Vector3D m_storedVelocity; /// Velocity resulting from a collision
+        Vector2D m_storedVelocity; /// Velocity resulting from a collision
         BallState m_state; /// Current state of the ball object
 
     }; // Ball class

@@ -1,3 +1,6 @@
+
+ball bouncing code doesn't look right
+
 use new man_0.yml
 get him to rotate
 follow mouse

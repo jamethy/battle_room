@@ -1,6 +1,6 @@
 #include "object_intersection.h"
 #include <cmath>
-#include <iostream>
+#include <algorithm>
 
 const double ELASTICITY = 0.95;
 
@@ -13,23 +13,22 @@ namespace BattleRoom {
               m_minTransMag(sat.getMinTranslationMagnitude()) {
 
         // back to world coordinates
-        m_minTransUnit = m_objectA->getOrientation().getRotated(
-                Vector3D(sat.getMinTranslationUnitVector().x(), sat.getMinTranslationUnitVector().y(), 0));
+        m_minTransUnit = sat.getMinTranslationUnitVector().getRotated(objA->getRotation());
     }
 
-    void bounceOffStaticObject(GameObject *object, Vector3D minTransUnit, meters minTransMag) {
+    void bounceOffStaticObject(GameObject *object, Vector2D minTransUnit, meters minTransMag) {
 
-        Vector3D minTransVector = minTransUnit.times(minTransMag);
+        Vector2D minTransVector = minTransUnit.times(minTransMag);
 
         meters speedNormal = object->getVelocity().dot(minTransUnit);
 
-        Vector3D velocity = object->getVelocity().minus(minTransUnit.times((1 + ELASTICITY) * speedNormal));
+        Vector2D velocity = object->getVelocity().minus(minTransUnit.times((1 + ELASTICITY) * speedNormal));
         object->reactToCollision(velocity, minTransUnit);
     }
 
-    void bounceOffDynamicObject(GameObject *objectA, GameObject *objectB, Vector3D minTransUnit, meters minTransMag) {
+    void bounceOffDynamicObject(GameObject *objectA, GameObject *objectB, Vector2D minTransUnit, meters minTransMag) {
 
-        Vector3D minTransVector = minTransUnit.times(minTransMag);
+        Vector2D minTransVector = minTransUnit.times(minTransMag);
 
         double elasticity = 0.95;
         meters speedNormal = minTransUnit.dot(objectA->getVelocity().minus(objectB->getVelocity()));
@@ -42,8 +41,8 @@ namespace BattleRoom {
             bRatio = (objectA->getMass() / (objectA->getMass() + objectB->getMass()));
         }
 
-        Vector3D velocityA = objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal));
-        Vector3D velocityB = objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal));
+        Vector2D velocityA = objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal));
+        Vector2D velocityB = objectB->getVelocity().plus(minTransUnit.times(bRatio * (1 + elasticity) * speedNormal));
 
         objectA->reactToCollision(
                 objectA->getVelocity().minus(minTransUnit.times(aRatio * (1 + elasticity) * speedNormal)),
@@ -53,7 +52,7 @@ namespace BattleRoom {
 
     }
 
-    void bulletReact(GameObject *bullet, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
+    void bulletReact(GameObject *bullet, GameObject *other, Vector2D minTransUnit, meters minTransMag) {
         (void) minTransMag; // unused
 
         switch (other->getType()) {
@@ -61,21 +60,21 @@ namespace BattleRoom {
             case ObjectType::None:
             case ObjectType::Ball:
             case ObjectType::Wall:
-                bullet->reactToCollision(Vector3D(0, 0, 0), minTransUnit.times(-1));
+                bullet->reactToCollision(Vector2D(0, 0), minTransUnit.times(-1));
                 break;
             case ObjectType::Bullet:
-                bullet->reactToCollision(Vector3D(0, 0, 0), minTransUnit.times(-1));
-                other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                bullet->reactToCollision(Vector2D(0, 0), minTransUnit.times(-1));
+                other->reactToCollision(Vector2D(0, 0), minTransUnit);
                 break;
             case ObjectType::Player:
-                bullet->reactToCollision(Vector3D(0, 0, 0), minTransUnit.times(-1));
+                bullet->reactToCollision(Vector2D(0, 0), minTransUnit.times(-1));
                 // TODO do damage to player
                 break;
         }
 
     }
 
-    void ballReact(GameObject *ball, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
+    void ballReact(GameObject *ball, GameObject *other, Vector2D minTransUnit, meters minTransMag) {
 
         switch (other->getType()) {
 
@@ -88,7 +87,7 @@ namespace BattleRoom {
                 bounceOffStaticObject(ball, minTransUnit, minTransMag);
                 break;
             case ObjectType::Bullet:
-                other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                other->reactToCollision(Vector2D(0, 0), minTransUnit);
                 break;
             case ObjectType::Player:
                 break;
@@ -96,17 +95,17 @@ namespace BattleRoom {
 
     }
 
-    void playerReact(GameObject *player, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
+    void playerReact(GameObject *player, GameObject *other, Vector2D minTransUnit, meters minTransMag) {
 
         switch (other->getType()) {
 
             case ObjectType::None:
-                player->reactToCollision(Vector3D(0,0,0), minTransUnit);
+                player->reactToCollision(Vector2D(0,0), minTransUnit);
                 break;
             case ObjectType::Ball:
                 break;
             case ObjectType::Wall:
-                player->reactToCollision(Vector3D(0,0,0), minTransUnit);
+                player->reactToCollision(Vector2D(0,0), minTransUnit);
                 break;
             case ObjectType::Bullet:
                 break;
@@ -116,7 +115,7 @@ namespace BattleRoom {
 
     }
 
-    void wallReact(GameObject *wall, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
+    void wallReact(GameObject *wall, GameObject *other, Vector2D minTransUnit, meters minTransMag) {
 
         switch (other->getType()) {
             case ObjectType::Ball:
@@ -125,16 +124,16 @@ namespace BattleRoom {
             case ObjectType::Wall:
             case ObjectType::None:
             case ObjectType::Bullet:
-                other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                other->reactToCollision(Vector2D(0, 0), minTransUnit);
                 break;
             case ObjectType::Player:
-                other->reactToCollision(Vector3D(0,0,0), minTransUnit);
+                other->reactToCollision(Vector2D(0, 0), minTransUnit);
                 break;
         }
 
     }
 
-    void noneReact(GameObject *object, GameObject *other, Vector3D minTransUnit, meters minTransMag) {
+    void noneReact(GameObject *object, GameObject *other, Vector2D minTransUnit, meters minTransMag) {
 
         if (object->isStatic()) {
             switch (other->getType()) {
@@ -148,7 +147,7 @@ namespace BattleRoom {
                 case ObjectType::Wall:
                 case ObjectType::Bullet:
                 case ObjectType::Player:
-                    other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                    other->reactToCollision(Vector2D(0, 0), minTransUnit);
                     break;
             }
         } else {
@@ -168,7 +167,7 @@ namespace BattleRoom {
                     break;
                 case ObjectType::Bullet:
                 case ObjectType::Player:
-                    other->reactToCollision(Vector3D(0, 0, 0), minTransUnit);
+                    other->reactToCollision(Vector2D(0, 0), minTransUnit);
                     break;
             }
         }
@@ -177,7 +176,7 @@ namespace BattleRoom {
 
     void ObjectIntersection::reactToCollision() {
 
-        m_objectB->setLocation(m_objectB->getLocation().plus(m_minTransUnit.times(m_minTransMag)));
+        m_objectB->setPosition(m_objectB->getPosition().plus(m_minTransUnit.times(m_minTransMag)));
 
         switch (m_objectA->getType()) {
             case ObjectType::Ball:
@@ -205,14 +204,8 @@ namespace BattleRoom {
         const BoundarySet &boundarySetB = objectB->getAnimation().getFrame(
                 objectB->getAnimationState()).getBoundarySet();
 
-        Vector3D delta = objectA->getOrientation().getInverseRotated(
-                objectB->getLocation().minus(objectA->getLocation()));
-        Vector2D dist(delta.x(), delta.y());
-
-        // TODO write something to get angle from quaternion
-        Vector3D x(1, 0, 0);
-        x = objectA->getOrientation().getInverseRotated(objectB->getOrientation().getRotated(x));
-        radians angle = std::atan2(x.y(), x.x());
+        Vector2D delta = objectB->getPosition().minus(objectA->getPosition()).getRotated(-objectA->getRotation());
+        radians angle = objectB->getRotation() - objectA->getRotation();
 
         SatIntersection intersection;
         intersection.setIntersects(false);
@@ -220,7 +213,7 @@ namespace BattleRoom {
         for (Boundary *boundaryA : boundarySetA) {
             for (Boundary *boundaryB : boundarySetB) {
 
-                intersection = boundaryA->intersects(boundaryB, dist, angle);
+                intersection = boundaryA->intersects(boundaryB, delta, angle);
 
                 if (intersection.doesIntersect()) {
                     return intersection;
@@ -242,6 +235,8 @@ namespace BattleRoom {
 
                 if (objectA->isStatic() && objectB->isStatic()) {
                     continue;
+                } else if (objectB->isStatic()) {
+                    std::swap(objectA, objectB);
                 }
 
                 SatIntersection intersection = checkForIntersection(objectA, objectB);

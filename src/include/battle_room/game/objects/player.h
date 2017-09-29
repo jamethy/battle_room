@@ -16,7 +16,7 @@ namespace BattleRoom {
         Player(UniqueId id);
 
         // inherited
-        void reactToCollision(Vector3D velocityResult, Vector3D intersectionNormal) override;
+        void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) override;
 
         void updateAnimation(seconds timestep) override;
 
