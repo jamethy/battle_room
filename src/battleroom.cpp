@@ -1,4 +1,3 @@
-
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/common/animation_handler.h"

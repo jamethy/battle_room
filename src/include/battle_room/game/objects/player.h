@@ -22,6 +22,8 @@ namespace BattleRoom {
 
         void updateForNext(seconds timestep) override;
 
+        bool interpretCommand(Command& cmd) override;
+
     private:
 
         /**
@@ -33,7 +35,8 @@ namespace BattleRoom {
             Landed
         };
 
-        PlayerState m_state; /// Current state of the ball object
+        PlayerState m_state; /// Current state of the player object
+        Vector2D m_aim; // point aiming att
 
     }; // Player class
 } // BattleRoom namespace

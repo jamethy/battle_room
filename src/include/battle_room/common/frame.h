@@ -43,6 +43,8 @@ namespace BattleRoom {
 
         double getScale() const;
 
+        std::string getFlip() const;
+
         const BoundarySet &getBoundarySet() const;
 
         // inherited
@@ -56,6 +58,7 @@ namespace BattleRoom {
         Pixel m_bottomRight; ///< Position of the bottom-rightof the frame in the image
 
         double m_scale; // meters per pixel, amount to stretch image
+        std::string m_flip; // horizontal, veritcal, both, none
 
         BoundarySet m_boundarySet;
 

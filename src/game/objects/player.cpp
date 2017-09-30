@@ -1,6 +1,7 @@
 #include <src/include/battle_room/common/animation_handler.h>
 #include "battle_room/game/objects/player.h"
 
+#include <iostream>
 #include <cmath>
 
 const double MAX_ANGULAR_VEL = 1; // radians per second
@@ -14,6 +15,7 @@ namespace BattleRoom {
 
     // other functions
     void Player::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
+        (void)velocityResult; // unused
 
         m_state = PlayerState::Landing;
 
@@ -36,6 +38,19 @@ namespace BattleRoom {
         }
 
         if (m_state == PlayerState::Flying) {
+
+            Vector2D delta = m_aim.minus(getPosition());
+            radians exactAngle = (PI*0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
+            degrees aimAngle = under180(45*round(toDegrees(exactAngle)/45));
+
+            std::string animationName = "man_";
+            if (aimAngle < 0) {
+                animationName += "n" + std::to_string((int)std::abs(aimAngle));
+            } else {
+                animationName += std::to_string((int)std::abs(aimAngle));
+            }
+
+            setAnimation(AnimationHandler::getAnimation(animationName));
             GameObject::updateAnimation(timestep);
         }
         else if (m_state == PlayerState::Landing) {
@@ -81,11 +96,20 @@ namespace BattleRoom {
     }
 
     void Player::updateForNext(seconds timestep) {
+        (void)timestep; // unused
 
         if (m_state == PlayerState::Flying) {
             // desired is feet leading
             setAngularVelocity(calcFlyingAngularVelocity(getVelocity(), getRotation(), getAngularVelocity()));
         }
+    }
+
+    bool Player::interpretCommand(Command& cmd) {
+        if (GameObject::interpretCommand(cmd)) {
+            m_aim = cmd.getPoint();
+            return true;
+        }
+        return false;
     }
 
 } // BattleRoom namespace

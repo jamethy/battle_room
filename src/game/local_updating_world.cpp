@@ -6,13 +6,13 @@
 
 #include <iostream>
 #include <map>
+#include <cmath>
 
 // temp for fake load
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <iomanip>
-#include <cmath>
 
 using std::vector;
 using std::pair;
@@ -157,7 +157,13 @@ namespace BattleRoom {
     void LocalUpdatingWorld::update() {
 
         // get user/ai input
-        vector<Command> commands = CommandReceiver::getAndClearCommands();
+        for (auto& cmd : CommandReceiver::getAndClearCommands()) {
+            for (GameObject* obj : m_gameObjects) {
+                if (obj->interpretCommand(cmd)) {
+                    break;
+                }
+            }
+        }
 
         // tick game clock
         m_timeController.update();

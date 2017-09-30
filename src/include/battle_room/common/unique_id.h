@@ -1,6 +1,8 @@
 #ifndef UNIQUE_ID_H
 #define UNIQUE_ID_H
 
+#include <string>
+
 namespace BattleRoom {
 
 /**
@@ -35,7 +37,12 @@ namespace BattleRoom {
          * Checks if the given unique id is valid
          * \return True if is valid unique id
          */
-        bool isValid();
+        bool isValid() const;
+
+        /**
+         * \return String version of id
+         */
+        std::string toString() const;
 
         /**
          * \brief Overload of == operator that tests for equivelance

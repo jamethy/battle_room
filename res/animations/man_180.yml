@@ -1,6 +1,6 @@
 
 ImageFile: tiny_man.png
-NextAnimation: tiny_man
+NextAnimation: man_180
 
 # hand goes 0 - 180 degress over 1 second
     

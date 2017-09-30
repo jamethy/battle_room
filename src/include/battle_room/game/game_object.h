@@ -4,6 +4,7 @@
 #include "battle_room/common/drawable_object.h"
 #include "battle_room/common/vector2d.h"
 #include "battle_room/common/unique_id.h"
+#include "battle_room/game/command.h"
 #include "battle_room/game/objects/object_type.h"
 
 namespace BattleRoom {
@@ -20,6 +21,8 @@ namespace BattleRoom {
         virtual void updateAnimation(seconds timestep);
 
         virtual void updateForNext(seconds timestep);
+
+        virtual bool interpretCommand(Command& cmd);
 
         void setUp(Vector2D up);
 

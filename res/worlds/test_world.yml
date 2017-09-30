@@ -51,6 +51,6 @@ World:
         Location: -6, -2
         Static: false
         DegRotation: 0
-        Velocity: 1.6, 0
-        AngularVelocity: 10
+        Velocity: 0, 0
+        AngularVelocity: 0
 

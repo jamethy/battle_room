@@ -40,12 +40,11 @@ namespace BattleRoom {
                 texture = textureManager.getTexture(missing_animation.getImageFile());
                 sourceRect = NULL;
             }
-
             // Draw the image on the screen
             SDL_RenderCopyEx(textureManager.getRenderer(), texture,
                              sourceRect, &destinationRect,
                              toDegrees(getAngle()),
-                             NULL, SDL_FLIP_NONE
+                             NULL, getFlip()
             );
         }
     }

@@ -446,6 +446,14 @@ namespace BattleRoom {
         drawable->setSourceRect(rectFrom(frame.getTopLeft(), frame.getBottomRight()));
         drawable->setImageFile(animation.getImageFile());
 
+        if (keyMatch(frame.getFlip(), "horizontal")) {
+            drawable->setFlip(SDL_FLIP_HORIZONTAL);
+        } else if (keyMatch(frame.getFlip(), "vertical")) {
+            drawable->setFlip(SDL_FLIP_VERTICAL);
+        } else if (keyMatch(frame.getFlip(), "both")) {
+            drawable->setFlip((SDL_RendererFlip)(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL));
+        }
+
         return UniqueDrawable(drawable);
 
     } // end getSdlDrawableFrom

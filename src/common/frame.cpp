@@ -19,6 +19,11 @@ namespace BattleRoom {
             m_scale = toPx(sub.getValue());
         }
 
+        sub = settings.getSubResource("Flip");
+        if (isNotEmpty(sub.getValue())) {
+            m_flip = sub.getValue();
+        }
+
         m_boundarySet = BoundarySet(settings.getSubResources("Boundary"));
     }
 
@@ -52,6 +57,10 @@ namespace BattleRoom {
 
     meters Frame::getHeight() const {
         return m_scale * (m_bottomRight.getRow() - m_topLeft.getRow());
+    }
+
+    std::string Frame::getFlip() const {
+        return m_flip;
     }
 
     const BoundarySet &Frame::getBoundarySet() const {

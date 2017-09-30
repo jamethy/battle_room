@@ -1,4 +1,5 @@
 #include "battle_room/common/units.h"
+#include <cmath>
 
 namespace BattleRoom {
 
@@ -29,6 +30,26 @@ namespace BattleRoom {
 
     radians toRadians(degrees angle) {
         return angle * 3.14159265359 / 180.0;
+    }
+
+    radians underPi(radians angle) {
+        angle = fmod(angle, 2*PI);
+        if (angle < -PI) {
+            angle += 2*PI;
+        } else if (angle > PI) {
+            angle -= 2*PI;
+        }
+        return angle;
+    }
+
+    degrees under180(degrees angle) {
+        angle = fmod(angle, 360);
+        if (angle < -180) {
+            angle += 360;
+        } else if (angle > 180) {
+            angle -= 360;
+        }
+        return angle;
     }
 
 

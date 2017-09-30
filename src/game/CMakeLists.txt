@@ -7,6 +7,7 @@ add_library(Game
         world.cpp
         query_world.cpp
         command_receiver.cpp
+        command.cpp
         local_updating_world.cpp
         local_world_updater.cpp
         objects/ball.cpp

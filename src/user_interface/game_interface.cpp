@@ -3,7 +3,6 @@
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/game/query_world.h"
 #include "battle_room/game/command_receiver.h"
-#include <iostream>
 
 using std::vector;
 
@@ -42,10 +41,20 @@ namespace BattleRoom {
         return vector<DrawableText>();
     }
 
+    UniqueId getPlayerId() {
+        for (GameObject *obj : QueryWorld::getAllGameObjects()) {
+            if (obj->getName().compare("man") == 0) {
+                return obj->getUniqueId();
+            }
+        }
+        return UniqueId::generateInvalidId();
+    }
+
     Inputs GameInterface::handleInputs(Inputs inputs) {
 
         Inputs remainingInputs;
-
+        vector<Command> commands;
+        UniqueId player = getPlayerId();
 
         for (Input input : inputs) {
 
@@ -56,14 +65,27 @@ namespace BattleRoom {
                 }
             }
 
+            Command cmd;
             if (input.containsView(getAssociatedView())) {
+                if (InputKey::MouseOnly == input.getKey() && player.isValid()) {
+                    Vector3D viewInt = input.getViewIntersection(getAssociatedView());
+                    cmd = Command(
+                            CommandType::Aim,
+                            player,
+                            Vector2D(viewInt.x(), viewInt.y())
+                            );
 
+                }
             }
 
-            remainingInputs.addInput(input);
+            if (cmd.getType() == CommandType::Invalid) {
+                remainingInputs.addInput(input);
+            } else {
+                commands.push_back(cmd);
+            }
         }
 
-        // CommandReceiver::addCommands
+        CommandReceiver::addCommands(commands);
 
         return remainingInputs;
     }
@@ -76,12 +98,12 @@ namespace BattleRoom {
                 if (object->getUniqueId() == m_idToTrack) {
                     Vector3D loc = object->getLocation();
                     ResourceDescriptor descriptor({
-                                                          "View: " + getAssociatedView(),
-                                                          "    Camera:",
-                                                          "        Location: "
-                                                          + std::to_string(loc.x()) + ","
-                                                          + std::to_string(loc.y())
-                                                  });
+                            "View: " + getAssociatedView(),
+                            "    Camera:",
+                            "        Location: "
+                            + std::to_string(loc.x()) + ","
+                            + std::to_string(loc.y())
+                            });
                     settings.push_back(descriptor);
                     break;
                 }

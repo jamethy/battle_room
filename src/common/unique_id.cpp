@@ -19,8 +19,12 @@ namespace BattleRoom {
         return UniqueId(0);
     }
 
-    bool UniqueId::isValid() {
+    bool UniqueId::isValid() const {
         return m_id != 0;
+    }
+
+    std::string UniqueId::toString() const {
+        return std::to_string(m_id);
     }
 
     bool UniqueId::operator==(const UniqueId &other) const {
