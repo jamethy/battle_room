@@ -1,0 +1,17 @@
+
+ImageFile: tiny_man.png
+NextAnimation: man_n135
+
+# hand goes 0 - 180 degress over 1 second
+
+# 105-150 degress
+Frame:
+    EndTime: 9999
+    TopLeft: 18, 0
+    BottomRight: 35, 17
+    Scale: 0.1
+    Flip: horizontal
+    Boundary: Box
+        Width: 1.2
+        Height: 1.6
+    

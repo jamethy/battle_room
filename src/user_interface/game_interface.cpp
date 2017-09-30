@@ -67,7 +67,9 @@ namespace BattleRoom {
 
             Command cmd;
             if (input.containsView(getAssociatedView())) {
-                if (InputKey::MouseOnly == input.getKey() && player.isValid()) {
+                if (InputKey::MouseOnly == input.getKey() 
+                        && InputKey::None == input.getMotion()
+                        && player.isValid()) {
                     Vector3D viewInt = input.getViewIntersection(getAssociatedView());
                     cmd = Command(
                             CommandType::Aim,
