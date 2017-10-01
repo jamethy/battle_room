@@ -34,6 +34,7 @@ namespace BattleRoom {
         std::vector<GameObject *> m_gameObjects; // walls, stars, etc
         seconds m_gameTime; // Time in game
 
+
     }; // World class
 } // BattleRoom namespace
 #endif // WORLD_H

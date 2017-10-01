@@ -60,6 +60,10 @@ namespace BattleRoom {
         return std::sqrt(this->dot(*this));
     }
 
+    radians Vector2D::angle() const {
+        return std::atan2(m_y, m_x);
+    }
+
     Vector2D Vector2D::plus(Vector2D b) const {
         return Vector2D(m_x + b.x(), m_y + b.y());
     }

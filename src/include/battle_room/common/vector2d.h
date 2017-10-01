@@ -31,6 +31,12 @@ namespace BattleRoom {
         meters magnitude() const;
 
         /**
+         * \brief Returns the angle of the vector from the x-axis
+         * \return Angle of vector in radians
+         */
+        radians angle() const;
+
+        /**
          * \brief Returns addition of this to b
          * \param b Vector to add with
          * \return New vector containing result of addition

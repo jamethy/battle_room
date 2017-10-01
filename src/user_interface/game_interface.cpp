@@ -67,12 +67,22 @@ namespace BattleRoom {
 
             Command cmd;
             if (input.containsView(getAssociatedView())) {
-                if (InputKey::MouseOnly == input.getKey() 
-                        && InputKey::None == input.getMotion()
+                if (InputKey::Key::MouseOnly == input.getKey() 
+                        && InputKey::Motion::None == input.getMotion()
                         && player.isValid()) {
                     Vector3D viewInt = input.getViewIntersection(getAssociatedView());
                     cmd = Command(
                             CommandType::Aim,
+                            player,
+                            Vector2D(viewInt.x(), viewInt.y())
+                            );
+
+                } else if (InputKey::Key::RightClick == input.getKey() 
+                        && InputKey::Motion::PressedDown == input.getMotion()
+                        && player.isValid()) {
+                    Vector3D viewInt = input.getViewIntersection(getAssociatedView());
+                    cmd = Command(
+                            CommandType::Shoot,
                             player,
                             Vector2D(viewInt.x(), viewInt.y())
                             );

@@ -24,6 +24,8 @@ namespace BattleRoom {
 
         virtual bool interpretCommand(Command& cmd);
 
+        virtual std::vector<GameObject*> getAddedObjects();
+
         void setUp(Vector2D up);
 
         // getters and setters

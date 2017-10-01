@@ -96,6 +96,7 @@ namespace BattleRoom {
     }
 
     void playerReact(GameObject *player, GameObject *other, Vector2D minTransUnit, meters minTransMag) {
+        (void)minTransMag; // unused
 
         switch (other->getType()) {
 
@@ -116,6 +117,7 @@ namespace BattleRoom {
     }
 
     void wallReact(GameObject *wall, GameObject *other, Vector2D minTransUnit, meters minTransMag) {
+        (void)wall; // unused
 
         switch (other->getType()) {
             case ObjectType::Ball:

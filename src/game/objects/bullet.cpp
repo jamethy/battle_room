@@ -5,9 +5,11 @@
 namespace BattleRoom {
 
     // constructors
-    Bullet::Bullet(UniqueId id)
-            : GameObject(id, ObjectType::Bullet),
-              m_state(BulletState::Normal) {}
+    Bullet::Bullet(UniqueId id) : 
+        GameObject(id, ObjectType::Bullet),
+        m_state(BulletState::Normal) {
+            setAnimation(AnimationHandler::getAnimation("bullet"));
+        }
 
     // other functions
     void Bullet::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
@@ -43,4 +45,5 @@ namespace BattleRoom {
             return;
         }
     }
+
 } // BattleRoom namespace

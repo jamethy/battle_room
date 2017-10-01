@@ -30,6 +30,7 @@ namespace BattleRoom {
     private:
 
         GameTime m_timeController; // Game time object
+        UniqueBoundary m_boundary = nullptr; // limits of the world
 
     }; // LocalUpdatingWorld class
 } // BattleRoom namespace

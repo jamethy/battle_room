@@ -90,6 +90,10 @@ namespace BattleRoom {
         return cmd.getTarget() == getUniqueId();
     }
 
+    std::vector<GameObject*> GameObject::getAddedObjects() {
+        return std::vector<GameObject*>();
+    }
+
 // getters and setters
 
     const UniqueId GameObject::getUniqueId() const {

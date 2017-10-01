@@ -30,6 +30,11 @@ namespace BattleRoom {
             m_timeController.set(toSeconds(sub.getValue()));
             m_gameTime = m_timeController.get();
         }
+
+        sub = settings.getSubResource("Boundary");
+        if (isNotEmpty(sub.getValue())) {
+            m_boundary = BoundarySet::createBoundary(sub);
+        } // TODO else create one?
     }
 
     // constructors
@@ -146,8 +151,7 @@ namespace BattleRoom {
         for (GameObject* obj : gameObjects) {
             if (obj->destroy()) {
                 delete obj;
-            }
-            else {
+            } else {
                 filtered.push_back(obj);
             }
         }
@@ -156,10 +160,14 @@ namespace BattleRoom {
 
     void LocalUpdatingWorld::update() {
 
+        std::vector<GameObject*> addedObjects;
+
         // get user/ai input
         for (auto& cmd : CommandReceiver::getAndClearCommands()) {
             for (GameObject* obj : m_gameObjects) {
                 if (obj->interpretCommand(cmd)) {
+                    std::vector<GameObject*> objects = obj->getAddedObjects();
+                    addedObjects.insert(addedObjects.end(), objects.begin(), objects.end());
                     break;
                 }
             }
@@ -177,9 +185,20 @@ namespace BattleRoom {
         for (GameObject *object : m_gameObjects) {
             object->updateAnimation(timestep);
             object->updateForNext(timestep);
+
         }
 
+        // check boundary
+        if (m_boundary != nullptr) {
+            for (GameObject *object : m_gameObjects) {
+                if (!m_boundary->contains(object->getPosition())) {
+                    object->setToDestroy(true);
+                }
+            } 
+        } 
+
         m_gameObjects = deleteDestroyed(m_gameObjects);
+        m_gameObjects.insert(m_gameObjects.end(), addedObjects.begin(), addedObjects.end());
 
         // fake load
         std::this_thread::sleep_for(std::chrono::milliseconds(25));

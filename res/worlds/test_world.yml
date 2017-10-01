@@ -51,6 +51,10 @@ World:
         Location: -6, -2
         Static: false
         DegRotation: 0
-        Velocity: 0, 0
+        Velocity: 1, 0
         AngularVelocity: 0
+
+    Boundary: Box
+        Width: 50.0
+        Height: 50.0
 

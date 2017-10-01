@@ -15,6 +15,8 @@ namespace BattleRoom {
         // constructor
         Player(UniqueId id);
 
+        void shootBullet(Vector2D aim);
+
         // inherited
         void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) override;
 
@@ -23,6 +25,8 @@ namespace BattleRoom {
         void updateForNext(seconds timestep) override;
 
         bool interpretCommand(Command& cmd) override;
+
+        std::vector<GameObject*> getAddedObjects() override;
 
     private:
 
@@ -37,6 +41,7 @@ namespace BattleRoom {
 
         PlayerState m_state; /// Current state of the player object
         Vector2D m_aim; // point aiming att
+        std::vector<GameObject*> m_addedObjects;
 
     }; // Player class
 } // BattleRoom namespace
