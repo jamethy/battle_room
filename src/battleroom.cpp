@@ -122,6 +122,9 @@ int main(int argc, char **argv) {
                 inputs = window->handleInputs(inputs);
             }
 
+            // prevents the CPU from railing
+            std::this_thread::sleep_for(std::chrono::milliseconds(25));
+
         });
         ////// End game interface thread
 

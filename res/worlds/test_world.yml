@@ -2,40 +2,174 @@ World:
 
     Object: Bottom
         Animation: wall_panel
-        AnimationState: 0.0
-        Location: -2, 0
-        DegRotation: 0
+        Location: -20, -24.5
+        Static: true
+
+    Object: Bottom
+        Animation: wall_panel
+        Location: -10, -24.5
+        Static: true
+
+    Object: Bottom
+        Animation: wall_panel
+        Location: 0, -24.5
+        Static: true
+
+    Object: Bottom
+        Animation: wall_panel
+        Location: 10, -24.5
+        Static: true
+
+    Object: Bottom
+        Animation: wall_panel
+        Location: 20, -24.5
         Static: true
 
     Object: Top
-        Animation: wall_panel
-        AnimationState: 0.0
-        Location: -2, 5
         DegRotation: 180
+        Animation: wall_panel
+        Location: -20, 24.5
+        Static: true
+
+    Object: Top
+        DegRotation: 180
+        Animation: wall_panel
+        Location: -10, 24.5
+        Static: true
+
+    Object: Top
+        DegRotation: 180
+        Animation: wall_panel
+        Location: 0, 24.5
+        Static: true
+
+    Object: Top
+        DegRotation: 180
+        Animation: wall_panel
+        Location: 10, 24.5
+        Static: true
+
+    Object: Top
+        DegRotation: 180
+        Animation: wall_panel
+        Location: 20, 24.5
         Static: true
 
     Object: Right
         Animation: wall_panel
-        AnimationState: 0.0
-        Location: 4, 4
+        Location: 24.5, -20
+        DegRotation: 90
+        Static: true
+
+    Object: Right
+        Animation: wall_panel
+        Location: 24.5, -10
+        DegRotation: 90
+        Static: true
+
+    Object: Right
+        Animation: wall_panel
+        Location: 24.5, 0
+        DegRotation: 90
+        Static: true
+
+    Object: Right
+        Animation: wall_panel
+        Location: 24.5, 10
+        DegRotation: 90
+        Static: true
+
+    Object: Right
+        Animation: wall_panel
+        Location: 24.5, 20
         DegRotation: 90
         Static: true
 
     Object: Left
         Animation: wall_panel
-        AnimationState: 0.0
-        Location: -6, 4
+        Location: -24.5, -20
         DegRotation: -90
+        Static: true
+
+    Object: Left
+        Animation: wall_panel
+        Location: -24.5, -10
+        DegRotation: -90
+        Static: true
+
+    Object: Left
+        Animation: wall_panel
+        Location: -24.5, 0
+        DegRotation: -90
+        Static: true
+
+    Object: Left
+        Animation: wall_panel
+        Location: -24.5, 10
+        DegRotation: -90
+        Static: true
+
+    Object: Left
+        Animation: wall_panel
+        Location: -24.5, 20
+        DegRotation: -90
+        Static: true
+
+    Object: Star
+        Animation: star
+        Location: 0, 0
+        Static: true
+
+    Object: Star
+        Animation: star
+        Location: 20, 0
+        DegRotation: 45
+        Static: true
+
+    Object: Star
+        Animation: star
+        Location: 15, 15
+        DegRotation: 30
+        Static: true
+
+    Object: Star
+        Animation: star
+        Location: 0, 0
+        Static: true
+
+    Object: Star
+        Animation: star
+        Location: -15, 5
+        DegRotation: -60
+        Static: true
+
+    Object: Star
+        Animation: star
+        Location: -5, 8
+        DegRotation: -120
+        Static: true
+
+    Object: Star
+        Animation: star
+        Location: -8, -10
+        DegRotation: 0
+        Static: true
+
+    Object: Star
+        Animation: star
+        Location: -1, -12
+        DegRotation: 0
         Static: true
 
     Player: man
         Animation: tiny_man
-        AnimationState: 0.0
-        Location: 1, 3
-        Static: false
-        DegRotation: 0
-        Velocity: 1, -0.5
-        AngularVelocity: 0
+        Location: 3, 3
+        Velocity: 3, -0.5
+
+    Player: enemy
+        Animation: tiny_man
+        Location: -20, -20
+        Velocity: 3, -0.5
 
     Boundary: Box
         Width: 50.0

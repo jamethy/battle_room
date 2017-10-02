@@ -5,8 +5,10 @@
 #include <cmath>
 
 const double MAX_ANGULAR_VEL = 1; // radians per second
-const double BULLET_SPEED = 30; // meters per second
-const double JUMP_SPEED = 2; // meters per second
+const double MAX_BULLET_SPEED = 60; // meters per second
+const double MIN_BULLET_SPEED = 20; // meters per second
+const double MAX_JUMP_SPEED = 6; // meters per second
+const double MIN_JUMP_SPEED = 2; // meters per second
 
 namespace BattleRoom {
 
@@ -31,22 +33,21 @@ namespace BattleRoom {
 
     void Player::updateAnimation(seconds timestep) {
 
-        if (m_state == PlayerState::Flying || m_state == PlayerState::Landed) {
+        // should be dependent on m_state, m_chargingGun, m_chargingJump
 
-            Vector2D delta = m_aim.minus(getPosition());
-            radians exactAngle = (PI*0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
-            degrees aimAngle = under180(45*round(toDegrees(exactAngle)/45));
+        Vector2D delta = m_aim.minus(getPosition());
+        radians exactAngle = (PI*0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
+        degrees aimAngle = under180(45*round(toDegrees(exactAngle)/45));
 
-            std::string animationName = "man_";
-            if (aimAngle < 0) {
-                animationName += "n" + std::to_string((int)std::abs(aimAngle));
-            } else {
-                animationName += std::to_string((int)std::abs(aimAngle));
-            }
-
-            setAnimation(AnimationHandler::getAnimation(animationName));
-            GameObject::updateAnimation(timestep);
+        std::string animationName = "man_";
+        if (aimAngle < 0) {
+            animationName += "n" + std::to_string((int)std::abs(aimAngle));
+        } else {
+            animationName += std::to_string((int)std::abs(aimAngle));
         }
+
+        setAnimation(AnimationHandler::getAnimation(animationName));
+        GameObject::updateAnimation(timestep);
     }
 
     radians diffOfAngles(radians a, radians b) {
@@ -70,12 +71,14 @@ namespace BattleRoom {
     }
 
     void Player::updateForNext(seconds timestep) {
-        (void)timestep; // unused
 
         if (m_state == PlayerState::Flying) {
             // desired is feet leading
             setAngularVelocity(calcFlyingAngularVelocity(getVelocity(), getRotation(), getAngularVelocity()));
         }
+
+        m_gunCharge = m_chargingGun ? std::min(m_gunCharge + timestep, 1.0) : 0;
+        m_jumpCharge = m_chargingJump ? std::min(m_jumpCharge + timestep, 1.0) : 0;
     }
 
     void Player::shootBullet(Vector2D aim) {
@@ -86,29 +89,52 @@ namespace BattleRoom {
         const Frame& frame = getAnimation().getFrame(getAnimationState());
         meters dist = std::max(frame.getWidth(), frame.getHeight()) / 2;
 
-        bullet->setVelocity(bulletVelUnit.times(BULLET_SPEED).plus(getVelocity()));
+        double speed = std::max(m_gunCharge*MAX_BULLET_SPEED, MIN_BULLET_SPEED);
+        bullet->setVelocity(bulletVelUnit.times(speed).plus(getVelocity()));
         bullet->setRotation(bulletVelUnit.angle());
         bullet->setPosition(getPosition().plus(bulletVelUnit.times(dist)));
+
+        m_gunCharge = 0;
+        m_chargingGun = false;
 
         m_addedObjects.push_back(bullet);
     }
 
     void Player::jump(Vector2D aim) {
         if (m_state == PlayerState::Landed) {
+
             setIsStatic(false);
             m_state = PlayerState::Flying;
-            setVelocity(aim.minus(getPosition()).getUnit().times(JUMP_SPEED));
+            double speed = std::max(m_jumpCharge*MAX_JUMP_SPEED, MIN_JUMP_SPEED);
+            setVelocity(aim.minus(getPosition()).getUnit().times(speed));
+
+            m_jumpCharge = 0;
+            m_chargingJump = false;
         }
     }
 
     bool Player::interpretCommand(Command& cmd) {
         if (GameObject::interpretCommand(cmd)) {
-            if (CommandType::Aim == cmd.getType()) {
-                m_aim = cmd.getPoint();
-            } else if (CommandType::Shoot == cmd.getType()) {
-                shootBullet(cmd.getPoint());
-            } else if (CommandType::Jump == cmd.getType()) {
-                jump(cmd.getPoint());
+
+            switch (cmd.getType()) {
+                case CommandType::Aim:
+                    m_aim = cmd.getPoint();
+                    break;
+                case CommandType::ShootCharge:
+                    m_chargingGun = true;
+                    break;
+                case CommandType::ShootRelease:
+                    shootBullet(cmd.getPoint());
+                    break;
+                case CommandType::JumpCharge:
+                    m_chargingJump = true;
+                    break;
+                case CommandType::JumpRelease:
+                    jump(cmd.getPoint());
+                    break;
+                default:
+                    break;
+
             }
             return true;
         }

@@ -67,36 +67,33 @@ namespace BattleRoom {
 
             Command cmd;
             if (input.containsView(getAssociatedView())) {
-                if (InputKey::Key::MouseOnly == input.getKey() 
-                        && InputKey::Motion::None == input.getMotion()
-                        && player.isValid()) {
-                    Vector3D viewInt = input.getViewIntersection(getAssociatedView());
-                    cmd = Command(
-                            CommandType::Aim,
-                            player,
-                            Vector2D(viewInt.x(), viewInt.y())
-                            );
 
-                } else if (InputKey::Key::RightClick == input.getKey() 
-                        && InputKey::Motion::PressedDown == input.getMotion()
-                        && player.isValid()) {
-                    Vector3D viewInt = input.getViewIntersection(getAssociatedView());
-                    cmd = Command(
-                            CommandType::Shoot,
-                            player,
-                            Vector2D(viewInt.x(), viewInt.y())
-                            );
+                if (player.isValid()) {
 
-                } else if (InputKey::Key::Space == input.getKey() 
-                        && InputKey::Motion::PressedDown == input.getMotion()
-                        && player.isValid()) {
                     Vector3D viewInt = input.getViewIntersection(getAssociatedView());
-                    cmd = Command(
-                            CommandType::Jump,
-                            player,
-                            Vector2D(viewInt.x(), viewInt.y())
-                            );
+                    Vector2D point = Vector2D(viewInt.x(), viewInt.y());
 
+                    if (InputKey::Key::MouseOnly == input.getKey() && InputKey::Motion::None == input.getMotion()) {
+                        cmd = Command(CommandType::Aim, player, point);
+
+                    } else if (InputKey::Key::RightClick == input.getKey()) {
+
+                        if (InputKey::Motion::PressedDown == input.getMotion()) {
+                            cmd = Command(CommandType::ShootCharge, player, point);
+
+                        } else if (InputKey::Motion::Released == input.getMotion()) {
+                            cmd = Command(CommandType::ShootRelease, player, point);
+                        }
+
+                    } else if (InputKey::Key::Space == input.getKey()) {
+                        if (InputKey::Motion::PressedDown == input.getMotion()) {
+                            cmd = Command(CommandType::JumpCharge, player, point);
+
+                        } else if (InputKey::Motion::Released == input.getMotion()) {
+                            cmd = Command(CommandType::JumpRelease, player, point);
+                        }
+
+                    }
                 }
             }
 

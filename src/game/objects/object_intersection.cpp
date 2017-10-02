@@ -109,6 +109,7 @@ namespace BattleRoom {
                 player->reactToCollision(Vector2D(0,0), minTransUnit);
                 break;
             case ObjectType::Bullet:
+                other->reactToCollision(Vector2D(0, 0), minTransUnit.times(-1));
                 break;
             case ObjectType::Player:
                 break;

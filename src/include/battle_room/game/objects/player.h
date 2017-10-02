@@ -45,6 +45,12 @@ namespace BattleRoom {
         Vector2D m_aim; // point aiming att
         std::vector<GameObject*> m_addedObjects;
 
+        bool m_chargingGun = false;
+        double m_gunCharge = 0;
+
+        bool m_chargingJump = false;
+        double m_jumpCharge = 0;
+
     }; // Player class
 } // BattleRoom namespace
 #endif //BATTLE_ROOM_PLAYER_H

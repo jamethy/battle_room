@@ -6,8 +6,10 @@ namespace BattleRoom {
     enum CommandType {
 
         Aim,
-        Shoot,
-        Jump,
+        ShootCharge,
+        ShootRelease,
+        JumpCharge,
+        JumpRelease,
         Invalid
     }; // CommandType enum
 } // BattleRoom namespace
