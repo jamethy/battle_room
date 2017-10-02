@@ -6,6 +6,7 @@
 
 const double MAX_ANGULAR_VEL = 1; // radians per second
 const double BULLET_SPEED = 30; // meters per second
+const double JUMP_SPEED = 2; // meters per second
 
 namespace BattleRoom {
 
@@ -20,27 +21,17 @@ namespace BattleRoom {
     void Player::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
         (void)velocityResult; // unused
 
-        m_state = PlayerState::Landing;
+        m_state = PlayerState::Landed;
 
         setIsStatic(true);
-
-        setAnimation(AnimationHandler::getAnimation("player_landing"));
-        setAnimationState(0.0);
-
-        // lasts .44 seconds
-        Vector2D v = getVelocity().getUnit();
-        double m = v.dot(intersectionNormal);
-
-        setVelocity(v.times(1.6/ (m * (m < 0 ? -1 : 1))));
+        setVelocity(Vector2D(0, 0));
+        setAngularVelocity(0);
+        setUp(intersectionNormal);
     }
 
     void Player::updateAnimation(seconds timestep) {
 
-        if (m_state == PlayerState::Landed) {
-            return;
-        }
-
-        if (m_state == PlayerState::Flying) {
+        if (m_state == PlayerState::Flying || m_state == PlayerState::Landed) {
 
             Vector2D delta = m_aim.minus(getPosition());
             radians exactAngle = (PI*0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
@@ -55,26 +46,6 @@ namespace BattleRoom {
 
             setAnimation(AnimationHandler::getAnimation(animationName));
             GameObject::updateAnimation(timestep);
-        }
-        else if (m_state == PlayerState::Landing) {
-            Animation &animation = getAnimation();
-            seconds newState = getAnimationState() + timestep;
-
-            if (newState > animation.getLength()) {
-
-                // set the new state (time elapsed since end of last animation)
-                setAnimationState(newState - animation.getLength());
-
-                // find the new animation
-                setAnimation(AnimationHandler::getAnimation(animation.getNextAnimation()));
-                m_state = PlayerState::Landed;
-                setVelocity(Vector2D(0, 0));
-                setAngularVelocity(0);
-            } else {
-
-                // iterate object->animation
-                setAnimationState(newState);
-            }
         }
     }
 
@@ -122,12 +93,22 @@ namespace BattleRoom {
         m_addedObjects.push_back(bullet);
     }
 
+    void Player::jump(Vector2D aim) {
+        if (m_state == PlayerState::Landed) {
+            setIsStatic(false);
+            m_state = PlayerState::Flying;
+            setVelocity(aim.minus(getPosition()).getUnit().times(JUMP_SPEED));
+        }
+    }
+
     bool Player::interpretCommand(Command& cmd) {
         if (GameObject::interpretCommand(cmd)) {
             if (CommandType::Aim == cmd.getType()) {
                 m_aim = cmd.getPoint();
             } else if (CommandType::Shoot == cmd.getType()) {
                 shootBullet(cmd.getPoint());
+            } else if (CommandType::Jump == cmd.getType()) {
+                jump(cmd.getPoint());
             }
             return true;
         }

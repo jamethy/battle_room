@@ -87,6 +87,16 @@ namespace BattleRoom {
                             Vector2D(viewInt.x(), viewInt.y())
                             );
 
+                } else if (InputKey::Key::Space == input.getKey() 
+                        && InputKey::Motion::PressedDown == input.getMotion()
+                        && player.isValid()) {
+                    Vector3D viewInt = input.getViewIntersection(getAssociatedView());
+                    cmd = Command(
+                            CommandType::Jump,
+                            player,
+                            Vector2D(viewInt.x(), viewInt.y())
+                            );
+
                 }
             }
 

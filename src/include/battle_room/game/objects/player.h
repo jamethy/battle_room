@@ -17,6 +17,8 @@ namespace BattleRoom {
 
         void shootBullet(Vector2D aim);
 
+        void jump(Vector2D aim);
+
         // inherited
         void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) override;
 
