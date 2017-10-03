@@ -38,7 +38,8 @@ namespace BattleRoom {
         enum class PlayerState {
             Flying,
             Landing,
-            Landed
+            Landed,
+            Frozen
         };
 
         PlayerState m_state; /// Current state of the player object

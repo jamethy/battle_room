@@ -6,6 +6,8 @@ const double ELASTICITY = 0.95;
 
 namespace BattleRoom {
 
+    Command FREEZE = Command(CommandType::Freeze, UniqueId::generateInvalidId(), Vector2D(0, 0));
+
     // constructor
 
     ObjectIntersection::ObjectIntersection(GameObject *objA, GameObject *objB, SatIntersection sat)
@@ -68,7 +70,7 @@ namespace BattleRoom {
                 break;
             case ObjectType::Player:
                 bullet->reactToCollision(Vector2D(0, 0), minTransUnit.times(-1));
-                // TODO do damage to player
+                other->interpretCommand(FREEZE);
                 break;
         }
 
@@ -101,15 +103,16 @@ namespace BattleRoom {
         switch (other->getType()) {
 
             case ObjectType::None:
-                player->reactToCollision(Vector2D(0,0), minTransUnit);
+                bounceOffStaticObject(player, minTransUnit, minTransMag);
                 break;
             case ObjectType::Ball:
                 break;
             case ObjectType::Wall:
-                player->reactToCollision(Vector2D(0,0), minTransUnit);
+                bounceOffStaticObject(player, minTransUnit, minTransMag);
                 break;
             case ObjectType::Bullet:
                 other->reactToCollision(Vector2D(0, 0), minTransUnit.times(-1));
+                player->interpretCommand(FREEZE);
                 break;
             case ObjectType::Player:
                 break;
@@ -130,7 +133,7 @@ namespace BattleRoom {
                 other->reactToCollision(Vector2D(0, 0), minTransUnit);
                 break;
             case ObjectType::Player:
-                other->reactToCollision(Vector2D(0, 0), minTransUnit);
+                bounceOffStaticObject(other, minTransUnit, minTransMag);
                 break;
         }
 
@@ -150,7 +153,7 @@ namespace BattleRoom {
                 case ObjectType::Wall:
                 case ObjectType::Bullet:
                 case ObjectType::Player:
-                    other->reactToCollision(Vector2D(0, 0), minTransUnit);
+                    bounceOffStaticObject(other, minTransUnit, minTransMag);
                     break;
             }
         } else {
@@ -170,7 +173,7 @@ namespace BattleRoom {
                     break;
                 case ObjectType::Bullet:
                 case ObjectType::Player:
-                    other->reactToCollision(Vector2D(0, 0), minTransUnit);
+                    bounceOffStaticObject(other, minTransUnit, minTransMag);
                     break;
             }
         }

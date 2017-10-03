@@ -92,7 +92,10 @@ namespace BattleRoom {
                         } else if (InputKey::Motion::Released == input.getMotion()) {
                             cmd = Command(CommandType::JumpRelease, player, point);
                         }
-
+                    } else if (InputKey::Key::K == input.getKey()) {
+                        if (InputKey::Motion::PressedDown == input.getMotion()) {
+                            cmd = Command(CommandType::Freeze, player, point);
+                        }
                     }
                 }
             }

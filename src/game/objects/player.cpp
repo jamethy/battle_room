@@ -21,33 +21,45 @@ namespace BattleRoom {
 
     // other functions
     void Player::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
-        (void)velocityResult; // unused
 
-        m_state = PlayerState::Landed;
+        velocityResult = velocityResult.times(0.7);
 
-        setIsStatic(true);
-        setVelocity(Vector2D(0, 0));
-        setAngularVelocity(0);
-        setUp(intersectionNormal);
+        if (m_state == PlayerState::Frozen) {
+            if (velocityResult.magnitude() < 0.01) {
+                setVelocity(Vector2D(0, 0));
+            } else {
+                setVelocity(velocityResult);
+            }
+
+        } else {
+            m_state = PlayerState::Landed;
+
+            setIsStatic(true);
+            setVelocity(Vector2D(0, 0));
+            setAngularVelocity(0);
+            setUp(intersectionNormal);
+        }
     }
 
     void Player::updateAnimation(seconds timestep) {
 
-        // should be dependent on m_state, m_chargingGun, m_chargingJump
+        if (m_state != PlayerState::Frozen) {
+            // should be dependent on m_state, m_chargingGun, m_chargingJump
 
-        Vector2D delta = m_aim.minus(getPosition());
-        radians exactAngle = (PI*0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
-        degrees aimAngle = under180(45*round(toDegrees(exactAngle)/45));
+            Vector2D delta = m_aim.minus(getPosition());
+            radians exactAngle = (PI*0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
+            degrees aimAngle = under180(45*round(toDegrees(exactAngle)/45));
 
-        std::string animationName = "man_";
-        if (aimAngle < 0) {
-            animationName += "n" + std::to_string((int)std::abs(aimAngle));
-        } else {
-            animationName += std::to_string((int)std::abs(aimAngle));
+            std::string animationName = "man_";
+            if (aimAngle < 0) {
+                animationName += "n" + std::to_string((int)std::abs(aimAngle));
+            } else {
+                animationName += std::to_string((int)std::abs(aimAngle));
+            }
+
+            setAnimation(AnimationHandler::getAnimation(animationName));
+            GameObject::updateAnimation(timestep);
         }
-
-        setAnimation(AnimationHandler::getAnimation(animationName));
-        GameObject::updateAnimation(timestep);
     }
 
     radians diffOfAngles(radians a, radians b) {
@@ -116,6 +128,10 @@ namespace BattleRoom {
     bool Player::interpretCommand(Command& cmd) {
         if (GameObject::interpretCommand(cmd)) {
 
+            if (m_state == PlayerState::Frozen) {
+                return true;
+            }
+
             switch (cmd.getType()) {
                 case CommandType::Aim:
                     m_aim = cmd.getPoint();
@@ -131,6 +147,9 @@ namespace BattleRoom {
                     break;
                 case CommandType::JumpRelease:
                     jump(cmd.getPoint());
+                    break;
+                case CommandType::Freeze:
+                    m_state = PlayerState::Frozen;
                     break;
                 default:
                     break;
