@@ -19,6 +19,15 @@ namespace BattleRoom {
         }
     }
 
+    void Projection1D::adjustForProjection(Projection1D projection) {
+        if (projection.getMin() < getMin()) {
+            setMin(projection.getMin());
+        }
+        if (projection.getMax() > getMax()) {
+            setMax(projection.getMax());
+        }
+    }
+
     bool Projection1D::doesNotOverlap(const Projection1D &other) const {
 
         return getMin() >= other.getMax() || other.getMin() >= getMax();

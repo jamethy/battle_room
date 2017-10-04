@@ -3,6 +3,7 @@
 #include "battle_room/game/objects/bullet.h"
 
 #include <cmath>
+#include <iostream>
 
 const double MAX_ANGULAR_VEL = 1; // radians per second
 const double MAX_BULLET_SPEED = 60; // meters per second
@@ -34,9 +35,17 @@ namespace BattleRoom {
         } else {
             m_state = PlayerState::Landed;
 
+            // move to wall after rotating
+            const Frame& frame = getAnimation().getFrame(getAnimationState());
+            Projection1D rotated = frame.getBoundarySet().projectOnto(intersectionNormal.getRotated(-getRotation()));
+            Projection1D upright = frame.getBoundarySet().projectOnto(Vector2D(0, 1));
+            meters delta = rotated.getMin() - upright.getMin();
+            setPosition(getPosition().plus(intersectionNormal.times(delta)));
+
             setIsStatic(true);
             setVelocity(Vector2D(0, 0));
             setAngularVelocity(0);
+
             setUp(intersectionNormal);
         }
     }

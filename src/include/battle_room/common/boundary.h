@@ -33,9 +33,9 @@ namespace BattleRoom {
 
         virtual Boundary *clone() const = 0;
 
-    protected:
-
         virtual Projection1D projectOnto(Vector2D axis) const = 0;
+
+    protected:
 
         virtual std::vector<Vector2D> getSideNormals() const = 0;
 

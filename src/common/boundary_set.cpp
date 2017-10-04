@@ -100,4 +100,21 @@ namespace BattleRoom {
         return m_boundaries.end();
     }
 
+    bool BoundarySet::contains(Vector2D delta) const {
+        for (auto b : m_boundaries) {
+            if (b->contains(delta)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    Projection1D BoundarySet::projectOnto(Vector2D axis) const {
+        Projection1D proj;
+        for (auto b : m_boundaries) {
+            proj.adjustForProjection(b->projectOnto(axis));
+        }
+        return proj;
+    }
+
 } // BattleRoom namespace

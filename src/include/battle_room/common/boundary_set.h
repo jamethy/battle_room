@@ -27,6 +27,10 @@ namespace BattleRoom {
 
         std::vector<Boundary *>::const_iterator end() const;
 
+        bool contains(Vector2D delta) const;
+
+        Projection1D projectOnto(Vector2D axis) const;
+
     private:
 
         std::vector<Boundary *> m_boundaries;

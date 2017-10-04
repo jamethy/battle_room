@@ -68,6 +68,9 @@ namespace BattleRoom {
         Vector3D m_cameraMin; ///< Minimum point in view in camera coordinates
         Vector3D m_cameraMax; ///< Maximum point in view in camera coordinates
 
+        bool m_rotating = false;
+        Vector3D m_rotationAnchor;
+
     }; // MovingCamera class
 } // BattleRoom namespace
 #endif // MOVING_CAMERA_H

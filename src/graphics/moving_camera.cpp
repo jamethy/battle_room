@@ -103,24 +103,24 @@ namespace BattleRoom {
 
             if (input.containsView(viewName)) {
 
-                if (input.getMotion() == InputKey::Scroll) {
+                if (InputKey::Motion::Scroll == input.getMotion()) {
 
                     if (input.getScrollAmount() < 0) {
                         // MOVE CAMERA UP
                         camVelocityDelta = camVelocityDelta.plus(
                                 Vector3D(0, 0, -m_zoomInMultiplier * input.getScrollAmount())
-                        );
+                                );
                     } else {
                         // MOVE CAMERA TOWRAD POS
                         camVelocityDelta = camVelocityDelta.plus(
                                 input.getViewIntersection(viewName)
-                                        .minus(m_location)
-                                        .getUnit()
-                                        .times(m_zoomOutMultiplier * input.getScrollAmount())
-                        );
+                                .minus(m_location)
+                                .getUnit()
+                                .times(m_zoomOutMultiplier * input.getScrollAmount())
+                                );
                     }
                     continue;
-                }
+                }            
             }
 
             remainingInputs.addInput(input);

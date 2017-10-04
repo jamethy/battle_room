@@ -21,6 +21,12 @@ namespace BattleRoom {
         void adjustForPoint(meters point);
 
         /**
+         * \brief Checks if the min or max should be changed based on other adjustment
+         * \param projection Projection to compare min/max against
+         */
+        void adjustForProjection(Projection1D projection);
+
+        /**
          * \brief Checks if the projection overlaps another
          * \param other Other proejction to compare against
          * \return False if they overlap, true otherwise
