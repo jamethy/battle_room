@@ -129,9 +129,9 @@ namespace BattleRoom {
             double speed = std::max(m_jumpCharge*MAX_JUMP_SPEED, MIN_JUMP_SPEED);
             setVelocity(aim.minus(getPosition()).getUnit().times(speed));
 
-            m_jumpCharge = 0;
-            m_chargingJump = false;
         }
+        m_jumpCharge = 0;
+        m_chargingJump = false;
     }
 
     bool Player::interpretCommand(Command& cmd) {
