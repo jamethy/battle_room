@@ -39,6 +39,12 @@ namespace BattleRoom {
          */
         Vector3D getViewIntersection(std::string viewName);
 
+        // useful matchers
+        bool isKeyDown(InputKey::Key k);
+        bool isKeyUp(InputKey::Key k);
+        bool isModKeyDown(InputKey::Modifier mod, InputKey::Key k);
+        bool isModKeyUp(InputKey::Modifier mod, InputKey::Key k);
+
         // getters and setters
 
         InputKey::Key getKey();
@@ -58,6 +64,7 @@ namespace BattleRoom {
         std::unordered_map<std::string, Vector3D> m_viewIntersections; ///< Z = 0 where mouse was
         InputKey::Key m_key; ///< Key or button performing the action
         InputKey::Motion m_keyMotion; ///< Whether the key was pressed, released, or neither
+        InputKey::Modifier m_modifier; ///< Which modifier key was being pressed (or none)
         int m_scrollAmount;///< Amount Scrolled - only valid when m_key == Scroll
 
     }; // Input class

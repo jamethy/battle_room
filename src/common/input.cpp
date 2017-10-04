@@ -19,6 +19,29 @@ namespace BattleRoom {
         return Vector3D(0, 0, -1);
     }
 
+    bool Input::isKeyDown(InputKey::Key k) {
+        return k == m_key 
+            && InputKey::Motion::PressedDown == m_keyMotion
+            && InputKey::Modifier::Plain == m_modifier;
+    }
+
+    bool Input::isKeyUp(InputKey::Key k) {
+        return k == m_key 
+            && InputKey::Motion::Released == m_keyMotion
+            && InputKey::Modifier::Plain == m_modifier;
+    }
+
+    bool Input::isModKeyDown(InputKey::Modifier mod, InputKey::Key k) {
+        return mod == m_modifier 
+            && k == m_key 
+            && InputKey::Motion::PressedDown == m_keyMotion;
+    }
+
+    bool Input::isModKeyUp(InputKey::Modifier mod, InputKey::Key k) {
+        return mod == m_modifier 
+            && k == m_key 
+            && InputKey::Motion::Released == m_keyMotion;
+    }
 
 // setters and getters
 

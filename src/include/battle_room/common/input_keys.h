@@ -46,5 +46,13 @@ namespace InputKey {
         None
     };
 
+    enum Modifier {
+        Plain,
+        Shift,
+        Ctrl,
+        Alt,
+        Cmd
+    };
+
 } // InputKey namespace
 #endif // INPUT_KEYS_H

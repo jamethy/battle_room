@@ -76,26 +76,20 @@ namespace BattleRoom {
                     if (InputKey::Key::MouseOnly == input.getKey() && InputKey::Motion::None == input.getMotion()) {
                         cmd = Command(CommandType::Aim, player, point);
 
-                    } else if (InputKey::Key::RightClick == input.getKey()) {
+                    } else if (input.isKeyDown(InputKey::Key::RightClick)) {
+                        cmd = Command(CommandType::ShootCharge, player, point);
 
-                        if (InputKey::Motion::PressedDown == input.getMotion()) {
-                            cmd = Command(CommandType::ShootCharge, player, point);
+                    } else if (input.isKeyUp(InputKey::Key::RightClick)) {
+                        cmd = Command(CommandType::ShootRelease, player, point);
 
-                        } else if (InputKey::Motion::Released == input.getMotion()) {
-                            cmd = Command(CommandType::ShootRelease, player, point);
-                        }
+                    } else if (input.isKeyDown(InputKey::Key::Space)) {
+                        cmd = Command(CommandType::JumpCharge, player, point);
 
-                    } else if (InputKey::Key::Space == input.getKey()) {
-                        if (InputKey::Motion::PressedDown == input.getMotion()) {
-                            cmd = Command(CommandType::JumpCharge, player, point);
+                    } else if (input.isKeyUp(InputKey::Key::Space)) {
+                        cmd = Command(CommandType::JumpRelease, player, point);
 
-                        } else if (InputKey::Motion::Released == input.getMotion()) {
-                            cmd = Command(CommandType::JumpRelease, player, point);
-                        }
-                    } else if (InputKey::Key::K == input.getKey()) {
-                        if (InputKey::Motion::PressedDown == input.getMotion()) {
-                            cmd = Command(CommandType::Freeze, player, point);
-                        }
+                    } else if (input.isKeyDown(InputKey::Key::K)) {
+                        cmd = Command(CommandType::Freeze, player, point);
                     }
                 }
             }

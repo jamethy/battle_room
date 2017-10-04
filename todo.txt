@@ -4,11 +4,16 @@ Running ToDo List
 Look into blender or other program
 
 For full program
+    add a background
+    add overlays
+        jump charge
+        gun charge
+    camera
+        move on edges
+        add modifier keys
     Add speed to animations
     Move object intersection to testable code
     Add networking code to networking...
-    fix missing animation
-    create commands
     create messages
     Create an exception scheme
     create menus
