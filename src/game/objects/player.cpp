@@ -26,10 +26,13 @@ namespace BattleRoom {
         velocityResult = velocityResult.times(0.7);
 
         if (m_state == PlayerState::Frozen) {
-            if (velocityResult.magnitude() < 0.01) {
+            if (velocityResult.magnitude() < 0.1) {
                 setVelocity(Vector2D(0, 0));
+                setAngularVelocity(0);
             } else {
                 setVelocity(velocityResult);
+                Vector2D temp = Vector2D(-intersectionNormal.y(), intersectionNormal.x());
+                setAngularVelocity(velocityResult.dot(temp));
             }
 
         } else {
