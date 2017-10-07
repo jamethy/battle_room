@@ -136,6 +136,10 @@ namespace BattleRoom {
         return m_type;
     }
 
+    ObjectType GameObject::type() {
+        return ObjectType::None;
+    }
+
     void GameObject::setPosition(Vector2D position) {
         m_position = position;
         setLocation(Vector3D(position.x(), position.y(), 0));

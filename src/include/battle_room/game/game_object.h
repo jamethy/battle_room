@@ -49,6 +49,7 @@ namespace BattleRoom {
         std::string getName() const;
 
         ObjectType getType() const;
+        static ObjectType type();
 
         void setPosition(Vector2D position);
 
@@ -85,5 +86,11 @@ namespace BattleRoom {
         ObjectType m_type; ///< Type of object
 
     }; // GameObject class
+
+    /**
+     * Unique pointer to camera instance
+     */
+    typedef std::unique_ptr<GameObject> UniqueGameObject;
+
 } // BattleRoom namespace
 #endif // GAME_OBJECT_H

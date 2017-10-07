@@ -1,9 +1,9 @@
-#include <src/include/battle_room/common/animation_handler.h>
+#include "battle_room/common/animation_handler.h"
+#include "battle_room/game/objects/object_factory.h"
 #include "battle_room/game/objects/player.h"
 #include "battle_room/game/objects/bullet.h"
 
 #include <cmath>
-#include <iostream>
 
 const double MAX_ANGULAR_VEL = 1; // radians per second
 const double MAX_BULLET_SPEED = 60; // meters per second
@@ -107,7 +107,7 @@ namespace BattleRoom {
 
     void Player::shootBullet(Vector2D aim) {
         m_aim = aim;
-        Bullet *bullet = new Bullet(UniqueId::generateNewNetworkId());
+        Bullet *bullet = (Bullet*)ObjectFactory::createObjectOfType(ObjectType::Bullet);
         Vector2D bulletVelUnit = m_aim.minus(getPosition()).getUnit();
 
         const Frame& frame = getAnimation().getFrame(getAnimationState());

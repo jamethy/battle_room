@@ -30,6 +30,8 @@ namespace BattleRoom {
 
         std::vector<GameObject*> getAddedObjects() override;
 
+        static ObjectType type();
+
     private:
 
         /**

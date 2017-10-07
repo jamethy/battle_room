@@ -14,4 +14,5 @@ add_library(Game
         objects/bullet.cpp
         objects/player.cpp
         objects/object_intersection.cpp
+        objects/object_factory.cpp
         )

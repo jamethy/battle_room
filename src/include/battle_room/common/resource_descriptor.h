@@ -34,7 +34,7 @@ namespace BattleRoom {
          * \param filter Filter to Key
          * \return Vector of descriptors that match the filter
          */
-        std::vector<ResourceDescriptor> getSubResources(std::string filter = "");
+        std::vector<ResourceDescriptor> getSubResources(std::string filter = "") const;
 
         /**
          * \brief Gets the first resource descriptor that matches the filter
@@ -45,7 +45,7 @@ namespace BattleRoom {
          * \param filter Filter to keys
          * \return ResourceDescriptor that matches the fitler
          */
-        ResourceDescriptor getSubResource(std::string filter);
+        ResourceDescriptor getSubResource(std::string filter) const;
 
         /**
          * \brief Gets the resource Descriptor from the file
@@ -61,9 +61,9 @@ namespace BattleRoom {
 
         // Getters and Setters
 
-        std::string getKey();
+        std::string getKey() const;
 
-        std::string getValue();
+        std::string getValue() const;
 
         void setKey(std::string key);
 

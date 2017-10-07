@@ -24,14 +24,14 @@ namespace BattleRoom {
         fillFromInput(lines, start);
     }
 
-    vector<ResourceDescriptor> ResourceDescriptor::getSubResources(string filter) {
+    vector<ResourceDescriptor> ResourceDescriptor::getSubResources(string filter) const {
 
         if (filter.empty()) {
             return m_subResources;
         }
 
         vector<ResourceDescriptor> returnVector;
-        for (ResourceDescriptor &descriptor : m_subResources) {
+        for (const ResourceDescriptor &descriptor : m_subResources) {
             if (filter.compare(descriptor.getKey()) == 0) {
                 returnVector.push_back(descriptor);
             }
@@ -40,9 +40,9 @@ namespace BattleRoom {
         return returnVector;
     }
 
-    ResourceDescriptor ResourceDescriptor::getSubResource(string filter) {
+    ResourceDescriptor ResourceDescriptor::getSubResource(string filter) const {
 
-        for (ResourceDescriptor &descriptor : m_subResources) {
+        for (const ResourceDescriptor &descriptor : m_subResources) {
             if (filter.compare(descriptor.getKey()) == 0) {
                 return descriptor;
             }
@@ -182,11 +182,11 @@ namespace BattleRoom {
 
 // setters and getters
 
-    string ResourceDescriptor::getKey() {
+    string ResourceDescriptor::getKey() const {
         return m_key;
     }
 
-    string ResourceDescriptor::getValue() {
+    string ResourceDescriptor::getValue() const {
         return m_value;
     }
 
