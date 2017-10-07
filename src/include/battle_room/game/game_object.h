@@ -49,7 +49,6 @@ namespace BattleRoom {
         std::string getName() const;
 
         ObjectType getType() const;
-        static ObjectType type();
 
         void setPosition(Vector2D position);
 
