@@ -24,4 +24,8 @@ namespace BattleRoom {
         return m_queryWorld.getAllGameObjects();
     }
 
+    std::vector<DrawableObject *> QueryWorld::getBackgroundObjects() {
+        return m_queryWorld.getBackgroundObjects();
+    }
+
 } // BattleRoom namespace

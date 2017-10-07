@@ -4,7 +4,6 @@ Running ToDo List
 Look into blender or other program
 
 For full program
-    add a background
     add overlays
         jump charge
         gun charge

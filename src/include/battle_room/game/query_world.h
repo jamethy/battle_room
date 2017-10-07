@@ -26,6 +26,8 @@ namespace BattleRoom {
          */
         static std::vector<GameObject *> getAllGameObjects();
 
+        static std::vector<DrawableObject *> getBackgroundObjects();
+
     }; // QueryWorld class
 } // BattleRoom namespace
 #endif // QUERY_WORLD_H

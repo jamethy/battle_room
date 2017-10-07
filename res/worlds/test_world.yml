@@ -175,3 +175,7 @@ World:
         Width: 50.0
         Height: 50.0
 
+    Background: bg
+        Animation: backgrounds/basic_1
+        Location: 0, 0, -30
+

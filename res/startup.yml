@@ -5,8 +5,8 @@ Window: mainWindow
     View: mainView
         Camera: Pyramid
             DegRotation: 0
-            ZoomInMultiplier: 0.2
-            ZoomOutMultiplier: 0.2
+            ZoomInMultiplier: 0.5
+            ZoomOutMultiplier: 0.5
             CameraFriction: 0.25
 
 GameInterface: mainView

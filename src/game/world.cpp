@@ -22,6 +22,12 @@ namespace BattleRoom {
             m_gameObjects.push_back(obj);
         }
 
+        for (ResourceDescriptor &objDesc : settings.getSubResources("Background")) {
+            DrawableObject *obj = new DrawableObject();
+            obj->applySettings(objDesc);
+            m_backgroundObjects.push_back(obj);
+        }
+
         for (ResourceDescriptor &objDesc : settings.getSubResources("Ball")) {
             GameObject *obj = new Ball(UniqueId::generateNewNetworkId());
             obj->applySettings(objDesc);
@@ -49,6 +55,7 @@ namespace BattleRoom {
 // constructors
     World::World() {
         m_gameObjects.clear();
+        m_backgroundObjects.clear();
     }
 
     World::World(const World& other)
@@ -57,6 +64,10 @@ namespace BattleRoom {
         m_gameObjects.clear();
         for (GameObject* obj : other.m_gameObjects) {
             m_gameObjects.push_back(new GameObject(*obj));
+        }
+        m_backgroundObjects.clear();
+        for (DrawableObject* obj : other.m_backgroundObjects) {
+            m_backgroundObjects.push_back(new DrawableObject(*obj));
         }
     }
 
@@ -67,6 +78,10 @@ namespace BattleRoom {
 
     vector<GameObject *> World::getAllGameObjects() {
         return m_gameObjects;
+    }
+
+    vector<DrawableObject *> World::getBackgroundObjects() {
+        return m_backgroundObjects;
     }
 
     seconds World::getGameTime() {

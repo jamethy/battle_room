@@ -30,6 +30,9 @@ namespace BattleRoom {
         vector<DrawableObject> objects;
         objects.clear();
 
+        for (DrawableObject *obj : QueryWorld::getBackgroundObjects()) {
+            objects.push_back(DrawableObject(*obj));
+        }
 
         for (GameObject *obj : QueryWorld::getAllGameObjects()) {
             objects.push_back(DrawableObject(*obj));
