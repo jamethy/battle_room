@@ -18,6 +18,8 @@ namespace BattleRoom {
 
         static GameObject* createObjectOfType(ObjectType type);
 
+        static void applySettings(ResourceDescriptor settings);
+
     }; // ObjectFactory class
 } // BattleRoom namespace
 #endif // OBJECT_FACTORY_H

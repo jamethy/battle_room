@@ -89,6 +89,7 @@ namespace BattleRoom {
     const meters MAX_METERS = 99e99;
     const seconds MIN_TIMESTEP = 0.0001;
     const meters EPS_METERS = std::numeric_limits<double>::epsilon();
+    const kilograms EPS_KILOGRAMS = std::numeric_limits<double>::epsilon();
     const radians PI = 3.141592653589;
 
 } // BattleRoom namespace

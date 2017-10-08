@@ -4,6 +4,7 @@
 #include "battle_room/common/file_utils.h"
 
 #include "battle_room/game/query_world.h"
+#include "battle_room/game/objects/object_factory.h"
 
 #include "battle_room/networking/world_updater_factory.h"
 
@@ -33,6 +34,7 @@ int main(int argc, char **argv) {
     std::string settings_file = getStartupScriptFromArgs(argc, argv);
     ResourceDescriptor rd = ResourceDescriptor::readFile(settings_file);
 
+    ObjectFactory::applySettings(rd.getSubResource("ObjectTemplates"));
 
     // Create the world updater - empty if startup menu, or a server connection,
     // or a local updater

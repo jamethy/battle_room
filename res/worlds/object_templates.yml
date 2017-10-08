@@ -1,0 +1,18 @@
+
+Object: object
+    Animation: star
+    Mass: 100
+    Static: true
+
+Player: man
+    Animation: man_0
+    Mass: 10
+
+Ball: ball
+    Animation: ball
+    Mass: 10
+
+Bullet:
+    Animation: bullet
+    Mass: 0.001
+

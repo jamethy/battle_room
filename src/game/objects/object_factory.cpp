@@ -7,7 +7,7 @@
 
 namespace BattleRoom {
 
-    const std::map<ObjectType, ResourceDescriptor> OBJECT_TEMPLATES = {
+    std::map<ObjectType, ResourceDescriptor> OBJECT_TEMPLATES = {
         { ObjectType::Player, ResourceDescriptor("Player", "") },
         { ObjectType::Bullet, ResourceDescriptor("Bullet", "") },
         { ObjectType::Ball, ResourceDescriptor("Ball", "") },
@@ -23,6 +23,14 @@ namespace BattleRoom {
             return ObjectType::Ball;
         } else {
             return ObjectType::None;
+        }
+    }
+
+    void ObjectFactory::applySettings(ResourceDescriptor settings) {
+
+        for (const ResourceDescriptor& sub : settings.getSubResources()) {
+            ObjectType type = keyToType(sub.getKey());
+            OBJECT_TEMPLATES.at(type) = sub;
         }
     }
 
@@ -43,7 +51,6 @@ namespace BattleRoom {
         obj->applySettings(settings);
         return obj;
     }
-
 
     std::vector<GameObject*> ObjectFactory::getGameObjects(ResourceDescriptor settings) {
         std::vector<GameObject*> objects;

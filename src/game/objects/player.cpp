@@ -118,6 +118,13 @@ namespace BattleRoom {
         bullet->setRotation(bulletVelUnit.angle());
         bullet->setPosition(getPosition().plus(bulletVelUnit.times(dist)));
 
+        // kickback
+        if (!isStatic() && bullet->getMass() > EPS_KILOGRAMS) {
+            double bullet_kinetic = 0.5*bullet->getMass()*speed*speed;
+            double delta = std::sqrt(2*bullet_kinetic/getMass());
+            setVelocity(getVelocity().minus(bullet->getVelocity().getUnit().times(delta)));
+        }
+
         m_gunCharge = 0;
         m_chargingGun = false;
 
