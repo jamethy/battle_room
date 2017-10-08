@@ -38,6 +38,13 @@ namespace BattleRoom {
         Vector3D cross(Vector3D b) const;
 
         /**
+         * \brief Rotate this around b by angle
+         * \param b Vector to rotate around
+         * \return Vector that has been rotated
+         */
+        Vector3D rotateAbout(Vector3D b, radians angle) const;
+
+        /**
          * \brief Returns addition of this to b
          * \param b Vector to add with
          * \return New vector containing result of addition

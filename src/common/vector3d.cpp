@@ -79,6 +79,24 @@ namespace BattleRoom {
         return Vector3D(x, y, z);
     }
 
+    Vector3D Vector3D::rotateAbout(Vector3D b, radians angle) const {
+        Vector3D par = b.times(this->dot(b)/b.magnitude());
+        Vector3D perp = this->minus(par);
+        meters perpm = perp.magnitude();
+
+        if (perpm <= EPS_METERS) {
+            return *this;
+        }
+
+        Vector3D w = b.cross(perp);
+
+        double x1 = std::cos(angle)/perpm;
+        double x2 = std::sin(angle)/w.magnitude();
+
+        Vector3D rot = perp.times(x1).plus(w.times(x2)).times(perpm);
+        return par.plus(rot);
+    }
+
     Vector3D Vector3D::plus(Vector3D b) const {
         return Vector3D(m_x + b.x(), m_y + b.y(), m_z + b.z());
     }

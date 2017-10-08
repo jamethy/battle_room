@@ -111,8 +111,8 @@ namespace BattleRoom {
 
     Vector3D Camera::getPixelRay(RelPixel pixel) const {
 
-        radians horiz = m_horizontalFov * (0.5 - pixel.getCol());
-        radians verti = m_verticalFov * (0.5 - pixel.getRow());
+        radians horiz = std::atan(2*(0.5 - pixel.getCol())*std::tan(m_horizontalFov/2.0));
+        radians verti = std::atan(2*(0.5 - pixel.getRow())*std::tan(m_verticalFov/2.0));
 
         Vector3D ray1 = Quaternion(1, 0, 0, 0)
                 .getRotatedAbout(m_up, horiz)
@@ -129,7 +129,8 @@ namespace BattleRoom {
 
         Vector3D ray = getPixelRay(pixel);
         Vector3D cam = getLocation();
-        return cam.plus(ray.times(-cam.z() / ray.z()));
+        Vector3D res = cam.plus(ray.times(-cam.z() / ray.z()));
+        return res;
     }
 
     Inputs Camera::handleInputs(Inputs inputs, const std::string viewName) {
