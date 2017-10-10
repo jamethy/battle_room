@@ -1,5 +1,5 @@
-#include <src/include/battle_room/common/animation_handler.h>
 #include "battle_room/game/objects/ball.h"
+#include "battle_room/common/animation_handler.h"
 
 namespace BattleRoom {
 

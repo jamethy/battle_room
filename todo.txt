@@ -9,7 +9,13 @@ For full program
         gun charge
     camera
         move on edges
-        add modifier keys
+    gameinterface
+        select my player
+        select object (to defend, attack, etc)
+        select group of players
+        select point
+
+    add modifier keys
     Add speed to animations
     Move object intersection to testable code
     Add networking code to networking...

@@ -2,7 +2,7 @@
 #define GAME_INTERFACE_H
 
 #include "battle_room/common/view_interface.h"
-#include "battle_room/game/world.h"
+#include "battle_room/user_interface/spatial_element.h"
 
 namespace BattleRoom {
 
@@ -26,6 +26,8 @@ namespace BattleRoom {
     private:
 
         UniqueId m_idToTrack; ///< Tracks the given unique id
+        UniqueId m_selectedObject; ///< Selected game object
+        std::vector<SpatialElement*> m_spatialElements;
 
     }; // GameInterface class
 } // BattleRoom namespace

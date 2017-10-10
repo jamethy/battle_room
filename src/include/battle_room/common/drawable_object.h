@@ -18,6 +18,8 @@ namespace BattleRoom {
         // constructor
         DrawableObject();
 
+        bool boundaryContains(Vector3D point);
+
         // getters and setters
 
         Animation &getAnimation() const;

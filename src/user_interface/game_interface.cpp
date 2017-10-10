@@ -18,9 +18,11 @@ namespace BattleRoom {
 
 // constructors
 
-    GameInterface::GameInterface(ResourceDescriptor settings)
-            : m_idToTrack(UniqueId::generateInvalidId()) {
-        applySettings(settings);
+    GameInterface::GameInterface(ResourceDescriptor settings) : 
+        m_idToTrack(UniqueId::generateInvalidId()),
+        m_selectedObject(UniqueId::generateInvalidId()) {
+            m_spatialElements.clear();
+            applySettings(settings);
     }
 
 // other functions
@@ -34,9 +36,16 @@ namespace BattleRoom {
             objects.push_back(DrawableObject(*obj));
         }
 
-        for (GameObject *obj : QueryWorld::getAllGameObjects()) {
+        std::vector<GameObject*> gameObjects = QueryWorld::getAllGameObjects();
+        for (GameObject *obj : gameObjects) {
             objects.push_back(DrawableObject(*obj));
         }
+
+        for (SpatialElement* sptl : m_spatialElements) {
+            sptl->update(gameObjects);
+            objects.push_back(DrawableObject(*sptl));
+        }
+
         return objects;
     }
 
@@ -44,20 +53,42 @@ namespace BattleRoom {
         return vector<DrawableText>();
     }
 
-    UniqueId getPlayerId() {
-        for (GameObject *obj : QueryWorld::getAllGameObjects()) {
-            if (obj->getName().compare("man") == 0) {
-                return obj->getUniqueId();
+    bool objectBoundaryContains(GameObject* obj, Vector2D point) {
+
+        Vector2D relP = point
+            .minus(obj->getPosition())
+            .getRotated(obj->getRotation());
+
+        return obj->getAnimation()
+            .getFrame(obj->getAnimationState())
+            .getBoundarySet()
+            .contains(relP);
+    }
+
+    GameObject* findIntersectingObject(std::vector<GameObject*>& objects, Vector2D point) {
+        for (GameObject* obj : objects) {
+            if (objectBoundaryContains(obj, point)) {
+                return obj; 
             }
         }
-        return UniqueId::generateInvalidId();
+        return nullptr;
+    }
+
+    GameObject* getPlayerId() {
+        for (GameObject *obj : QueryWorld::getAllGameObjects()) {
+            if (obj->getName().compare("man") == 0) {
+                return obj;
+            }
+        }
+        return nullptr;
     }
 
     Inputs GameInterface::handleInputs(Inputs inputs) {
 
         Inputs remainingInputs;
         vector<Command> commands;
-        UniqueId player = getPlayerId();
+
+        std::vector<GameObject*> gameObjects = QueryWorld::getAllGameObjects();
 
         for (Input input : inputs) {
 
@@ -71,30 +102,45 @@ namespace BattleRoom {
             Command cmd;
             if (input.containsView(getAssociatedView())) {
 
-                if (player.isValid()) {
+                Vector3D viewInt = input.getViewIntersection(getAssociatedView());
+                Vector2D point = Vector2D(viewInt.x(), viewInt.y());
 
-                    Vector3D viewInt = input.getViewIntersection(getAssociatedView());
-                    Vector2D point = Vector2D(viewInt.x(), viewInt.y());
+                if (m_selectedObject.isValid()) {
 
                     if (InputKey::Key::MouseOnly == input.getKey() && InputKey::Motion::None == input.getMotion()) {
-                        cmd = Command(CommandType::Aim, player, point);
+                        cmd = Command(CommandType::Aim, m_selectedObject, point);
 
                     } else if (input.isKeyDown(InputKey::Key::RightClick)) {
-                        cmd = Command(CommandType::ShootCharge, player, point);
+                        cmd = Command(CommandType::ShootCharge, m_selectedObject, point);
 
                     } else if (input.isKeyUp(InputKey::Key::RightClick)) {
-                        cmd = Command(CommandType::ShootRelease, player, point);
+                        cmd = Command(CommandType::ShootRelease, m_selectedObject, point);
 
                     } else if (input.isKeyDown(InputKey::Key::Space)) {
-                        cmd = Command(CommandType::JumpCharge, player, point);
+                        cmd = Command(CommandType::JumpCharge, m_selectedObject, point);
 
                     } else if (input.isKeyUp(InputKey::Key::Space)) {
-                        cmd = Command(CommandType::JumpRelease, player, point);
+                        cmd = Command(CommandType::JumpRelease, m_selectedObject, point);
 
                     } else if (input.isKeyDown(InputKey::Key::K)) {
-                        cmd = Command(CommandType::Freeze, player, point);
+                        cmd = Command(CommandType::Freeze, m_selectedObject, point);
                     }
                 }
+
+                if (input.isKeyDown(InputKey::Key::LeftClick)) {
+
+                    // check spatial components
+                    // check game objects
+                    GameObject* obj = findIntersectingObject(gameObjects, point);
+                    if (obj != nullptr) {
+                        m_selectedObject = obj->getUniqueId();
+                        m_spatialElements.push_back(new SpatialElement(m_selectedObject));
+                    } else {
+                        m_spatialElements.clear();
+                        m_selectedObject = UniqueId::generateInvalidId();
+                    }
+                }
+
             }
 
             if (cmd.getType() == CommandType::Invalid) {

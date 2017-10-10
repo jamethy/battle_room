@@ -63,6 +63,7 @@ int main(int argc, char **argv) {
     // Collect the menus. These produce UI objects that are only seen locally and
     // also handle user inputs - they are menus...
     // TODO add menus to vew interfaces
+    // TODO add an interface factory
 
 
     // Collect the view interfaces (game interfaces and menus) that will need
@@ -112,10 +113,12 @@ int main(int argc, char **argv) {
                 std::string associatedView = interface->getAssociatedView();
                 std::vector<DrawableObject> objects = interface->getDrawableObjects();
                 std::vector<DrawableText> texts = interface->getDrawableTexts();
+                // TODO std::vector<DrawableMenu> menus = interface->getDrawableMenus();
 
                 for (UniqueDisplayWindow &window : windows) {
                     window->addViewObjects(objects, associatedView);
                     window->addViewTexts(texts, associatedView);
+                    // TODO window->addViewMenus(menus, associatedView);
                 }
             }
 
