@@ -2,6 +2,10 @@
 
 #include <cmath>
 
+using InputKey::Key;
+using InputKey::Motion;
+using InputKey::Modifier;
+
 namespace BattleRoom {
 
 // apply settings
@@ -98,12 +102,13 @@ namespace BattleRoom {
 
         // adjust camera position
         Vector3D camVelocityDelta(0, 0, 0);
+        radians camRotDelta = 0;
 
         for (Input input : inputs) {
 
             if (input.containsView(viewName)) {
 
-                if (InputKey::Motion::Scroll == input.getMotion()) {
+                if (Motion::Scroll == input.getMotion()) {
 
                     if (input.getScrollAmount() < 0) {
                         // MOVE CAMERA UP
@@ -120,7 +125,25 @@ namespace BattleRoom {
                                 );
                     }
                     continue;
-                }            
+                } else if (input.isModKeyDown(Modifier::Ctrl, Key::LeftClick)) {
+                    m_rotating = true;
+                    RelPixel point = fromLocation(input.getViewIntersection(viewName));
+                    m_originalClick = std::atan2(0.5 - point.getRow(), point.getCol() - 0.5);
+                    m_originalAngle = std::atan2(m_right.y(), m_right.x());
+                    if (m_originalClick < 0) m_originalClick += 2*PI;
+                    if (m_originalAngle < 0) m_originalAngle += 2*PI;
+
+                } else if (m_rotating && Key::LeftClick == input.getKey() && Motion::Released == input.getMotion()) {
+                    m_rotating = false;
+                } else if (m_rotating && Key::MouseOnly == input.getKey()) {
+                    RelPixel point = fromLocation(input.getViewIntersection(viewName));
+                    radians click = std::atan2(0.5 - point.getRow(), point.getCol() - 0.5);
+                    radians currentDelta = std::atan2(m_right.y(), m_right.x());
+                    if (click < 0) click += 2*PI;
+                    if (currentDelta < 0) currentDelta += 2*PI;
+
+                    camRotDelta = (-currentDelta + m_originalAngle - (click - m_originalClick));
+                }
             }
 
             remainingInputs.addInput(input);
@@ -128,6 +151,7 @@ namespace BattleRoom {
 
         // Move camera based on input
         move(camVelocityDelta);
+        rotateCounterClockwise(camRotDelta);
         clearBounds();
 
         // return remaining inputs

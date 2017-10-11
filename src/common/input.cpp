@@ -53,6 +53,10 @@ namespace BattleRoom {
         m_keyMotion = motion;
     }
 
+    void Input::setModifier(InputKey::Modifier modifier) {
+        m_modifier = modifier;
+    }
+
     void Input::setScrollAmount(int amount) {
         m_scrollAmount = amount;
     }
@@ -63,6 +67,10 @@ namespace BattleRoom {
 
     InputKey::Motion Input::getMotion() {
         return m_keyMotion;
+    }
+
+    InputKey::Modifier Input::getModifier() {
+        return m_modifier;
     }
 
     int Input::getScrollAmount() {

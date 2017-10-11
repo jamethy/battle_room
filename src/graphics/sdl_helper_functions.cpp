@@ -3,6 +3,7 @@
 #include "sdl_drawable_image.h"
 
 #include <cmath>
+#include <iostream>
 
 namespace BattleRoom {
 
@@ -216,9 +217,33 @@ namespace BattleRoom {
                 return InputKey::Key::Y;
             case SDLK_z:
                 return InputKey::Key::Z;
+            default:
+                return InputKey::Key::MouseOnly;
         }
+    }
 
-        return InputKey::Key::MouseOnly;
+    InputKey::Modifier sdlModifierToInputModifier(SDL_Keymod code) {
+        switch (code - 4096) {
+            case KMOD_LSHIFT:
+            case KMOD_RSHIFT:
+                return InputKey::Modifier::Shift;
+            case KMOD_LCTRL:
+            case KMOD_RCTRL:
+                return InputKey::Modifier::Ctrl;
+            case KMOD_LALT:
+            case KMOD_RALT:
+                return InputKey::Modifier::Alt;
+            case KMOD_LGUI:
+            case KMOD_RGUI:
+                return InputKey::Modifier::Cmd;
+            case KMOD_NUM:
+            case KMOD_CAPS:
+            case KMOD_MODE:
+            case KMOD_RESERVED:
+            case KMOD_NONE:
+            default:
+                return InputKey::Modifier::Plain;
+        }
     }
 
     SDL_Color toSdlColor(Color color) {

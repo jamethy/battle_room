@@ -5,6 +5,9 @@
 #include "battle_room/game/command_receiver.h"
 
 using std::vector;
+using InputKey::Key;
+using InputKey::Motion;
+using InputKey::Modifier;
 
 namespace BattleRoom {
 
@@ -93,8 +96,8 @@ namespace BattleRoom {
         for (Input input : inputs) {
 
             // temp for easy testing and quitting
-            if (input.getMotion() == InputKey::Motion::PressedDown) {
-                if (input.getKey() == InputKey::Key::Q) {
+            if (input.getMotion() == Motion::PressedDown) {
+                if (input.getKey() == Key::Q) {
                     InputGatherer::addQuitEvent();
                 }
             }
@@ -107,27 +110,27 @@ namespace BattleRoom {
 
                 if (m_selectedObject.isValid()) {
 
-                    if (InputKey::Key::MouseOnly == input.getKey() && InputKey::Motion::None == input.getMotion()) {
+                    if (Key::MouseOnly == input.getKey() && Motion::None == input.getMotion()) {
                         cmd = Command(CommandType::Aim, m_selectedObject, point);
 
-                    } else if (input.isKeyDown(InputKey::Key::RightClick)) {
+                    } else if (input.isKeyDown(Key::RightClick)) {
                         cmd = Command(CommandType::ShootCharge, m_selectedObject, point);
 
-                    } else if (input.isKeyUp(InputKey::Key::RightClick)) {
+                    } else if (input.isKeyUp(Key::RightClick)) {
                         cmd = Command(CommandType::ShootRelease, m_selectedObject, point);
 
-                    } else if (input.isKeyDown(InputKey::Key::Space)) {
+                    } else if (input.isKeyDown(Key::Space)) {
                         cmd = Command(CommandType::JumpCharge, m_selectedObject, point);
 
-                    } else if (input.isKeyUp(InputKey::Key::Space)) {
+                    } else if (input.isKeyUp(Key::Space)) {
                         cmd = Command(CommandType::JumpRelease, m_selectedObject, point);
 
-                    } else if (input.isKeyDown(InputKey::Key::K)) {
+                    } else if (input.isKeyDown(Key::K)) {
                         cmd = Command(CommandType::Freeze, m_selectedObject, point);
                     }
                 }
 
-                if (input.isKeyDown(InputKey::Key::LeftClick)) {
+                if (input.isKeyDown(Key::LeftClick)) {
 
                     // check spatial components
                     // check game objects
@@ -139,8 +142,7 @@ namespace BattleRoom {
                         m_spatialElements.clear();
                         m_selectedObject = UniqueId::generateInvalidId();
                     }
-                }
-
+                } 
             }
 
             if (cmd.getType() == CommandType::Invalid) {

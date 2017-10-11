@@ -51,11 +51,15 @@ namespace BattleRoom {
 
         InputKey::Motion getMotion();
 
+        InputKey::Modifier getModifier();
+
         int getScrollAmount();
 
         void setKey(InputKey::Key key);
 
         void setMotion(InputKey::Motion motion);
+
+        void setModifier(InputKey::Modifier modifier);
 
         void setScrollAmount(int amount);
 
