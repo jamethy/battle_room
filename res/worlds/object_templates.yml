@@ -14,5 +14,5 @@ Ball: ball
 
 Bullet:
     Animation: bullet
-    Mass: 0.001
+    Mass: 0.0001
 

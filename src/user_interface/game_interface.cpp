@@ -110,7 +110,9 @@ namespace BattleRoom {
 
                 if (m_selectedObject.isValid()) {
 
-                    if (Key::MouseOnly == input.getKey() && Motion::None == input.getMotion()) {
+                    if (Key::MouseOnly == input.getKey() 
+                            && Motion::None == input.getMotion() 
+                            && Modifier::Plain == input.getModifier()) {
                         cmd = Command(CommandType::Aim, m_selectedObject, point);
 
                     } else if (input.isKeyDown(Key::RightClick)) {
@@ -136,6 +138,7 @@ namespace BattleRoom {
                     // check game objects
                     GameObject* obj = findIntersectingObject(gameObjects, point);
                     if (obj != nullptr) {
+                        m_spatialElements.clear();
                         m_selectedObject = obj->getUniqueId();
                         m_spatialElements.push_back(new SpatialElement(m_selectedObject));
                     } else {

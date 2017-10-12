@@ -1,5 +1,8 @@
 World:
 
+    #Ball: ball
+    #   Location: 3, 3
+
     Object: Bottom
         Animation: wall_panel
         Location: -20, -24.5
