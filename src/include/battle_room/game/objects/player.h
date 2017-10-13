@@ -26,7 +26,7 @@ namespace BattleRoom {
 
         void updateForNext(seconds timestep) override;
 
-        bool interpretCommand(Command& cmd) override;
+        bool interpretCommand(const Command& cmd) override;
 
         std::vector<GameObject*> getAddedObjects() override;
 

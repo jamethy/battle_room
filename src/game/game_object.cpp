@@ -86,7 +86,7 @@ namespace BattleRoom {
         setRotation(atan2(-up.x(), up.y()));
     }
 
-    bool GameObject::interpretCommand(Command& cmd) {
+    bool GameObject::interpretCommand(const Command& cmd) {
         return cmd.getTarget() == getUniqueId();
     }
 

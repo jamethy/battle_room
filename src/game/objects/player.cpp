@@ -144,10 +144,15 @@ namespace BattleRoom {
         m_chargingJump = false;
     }
 
-    bool Player::interpretCommand(Command& cmd) {
+    bool Player::interpretCommand(const Command& cmd) {
         if (GameObject::interpretCommand(cmd)) {
 
             if (m_state == PlayerState::Frozen) {
+                switch (cmd.getType()) {
+                    case CommandType::Unfreeze:
+                        m_state = PlayerState::Flying;
+                        break;
+                }
                 return true;
             }
 

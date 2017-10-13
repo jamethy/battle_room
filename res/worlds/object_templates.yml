@@ -6,7 +6,7 @@ Object: object
 
 Player: man
     Animation: man_0
-    Mass: 10
+    Mass: 80
 
 Ball: ball
     Animation: ball

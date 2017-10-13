@@ -22,7 +22,7 @@ namespace BattleRoom {
 
         virtual void updateForNext(seconds timestep);
 
-        virtual bool interpretCommand(Command& cmd);
+        virtual bool interpretCommand(const Command& cmd);
 
         virtual std::vector<GameObject*> getAddedObjects();
 

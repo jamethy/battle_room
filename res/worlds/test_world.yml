@@ -1,8 +1,5 @@
 World:
 
-    #Ball: ball
-    #   Location: 3, 3
-
     Object: Bottom
         Animation: wall_panel
         Location: -20, -24.5
@@ -125,11 +122,42 @@ World:
 
     Player: man
         Location: 3, 3
-        Velocity: 3, -0.5
+        Velocity: -3, -0.5
 
     Player: enemy
         Location: -20, -20
         Velocity: 3, -0.5
+
+    #    Ball: ball
+    #       Location: 16, 3
+    #    Ball: ball
+    #       Location: 14, 3
+    #    Ball: ball
+    #       Location: 12, 3
+    #    Ball: ball
+    #       Location: 10, 3
+    #    Ball: ball
+    #       Location: 8, 3
+    #    Ball: ball
+    #       Location: 16, 5
+    #    Ball: ball
+    #       Location: 14, 5
+    #    Ball: ball
+    #       Location: 12, 5
+    #    Ball: ball
+    #       Location: 10, 5
+    #    Ball: ball
+    #       Location: 8, 5
+    #    Ball: ball
+    #       Location: 16, 7
+    #    Ball: ball
+    #       Location: 14, 7
+    #    Ball: ball
+    #       Location: 12, 7
+    #    Ball: ball
+    #       Location: 10, 7
+    #    Ball: ball
+    #       Location: 8, 7
 
     Boundary: Box
         Width: 50.0

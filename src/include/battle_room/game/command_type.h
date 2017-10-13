@@ -11,6 +11,7 @@ namespace BattleRoom {
         JumpCharge,
         JumpRelease,
         Freeze,
+        Unfreeze,
         Invalid
     }; // CommandType enum
 } // BattleRoom namespace

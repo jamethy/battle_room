@@ -129,6 +129,8 @@ namespace BattleRoom {
 
                     } else if (input.isKeyDown(Key::K)) {
                         cmd = Command(CommandType::Freeze, m_selectedObject, point);
+                    } else if (input.isModKeyDown(Modifier::Shift, Key::K)) {
+                        cmd = Command(CommandType::Unfreeze, m_selectedObject, point);
                     }
                 }
 
