@@ -11,7 +11,9 @@ add_subdirectory(tester_programs)
 
 # MAIN PROGRAM CLIENT
 add_executable(battleroom
-        battleroom.cpp)
+        battleroom.cpp
+        application.cpp
+        )
 target_link_libraries(battleroom
         ${START_GROUP}
         Common
