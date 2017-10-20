@@ -28,4 +28,6 @@ add_library(Common
         circle_boundary.cpp
         box_boundary.cpp
         sat_intersection.cpp
+        application_message.cpp
+        application_message_receiver.cpp
         )

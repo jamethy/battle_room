@@ -1,6 +1,7 @@
 #include "battle_room/application.h"
 
 #include "battle_room/common/input_gatherer.h"
+#include "battle_room/common/application_message_receiver.h"
 #include "battle_room/game/query_world.h"
 #include "battle_room/game/objects/object_factory.h"
 #include "battle_room/user_interface/game_interface.h"
@@ -19,8 +20,6 @@ namespace BattleRoom {
         m_viewInterfaces.clear();
 
         applySettings(settings);
-
-        runApplicationLoop();
     }
 
     void Application::runApplicationLoop() {
@@ -94,7 +93,12 @@ namespace BattleRoom {
                 window->switchBuffers();
             }
 
-        }   
+            // apply application message
+            std::vector<ApplicationMessage> messages = ApplicationMessageReceiver::getAndClearMessages();
+            for (auto& message : messages) {
+                applyMessage(message);
+            }
+        }
     }
 
     void Application::applySettings(ResourceDescriptor settings) {
@@ -126,6 +130,84 @@ namespace BattleRoom {
         // TODO add an interface factory
         
         sortByViewLayer(m_viewInterfaces, settings);
+    }
+
+    void Application::addResource(ResourceDescriptor settings) {
+        
+        if (keyMatch("Window", settings.getKey())) {
+            m_windows.push_back(createDisplayWindow(settings));
+        } else if (keyMatch("GameInterface", settings.getKey())) {
+            m_viewInterfaces.push_back(new GameInterface(settings));
+        }
+    }
+
+    template <typename T> T findIn(std::vector<T>& vec, UniqueId target) {
+        
+        auto res = std::find_if(vec.begin(), vec.end(), 
+             [target](const T v) -> bool { return v->getUniqueId() == target; });
+
+        return res != vec.end() ? *res : nullptr;
+    }
+
+    template <typename R> R* findUniqueIn(std::vector<std::unique_ptr<R>>& vec, UniqueId target) {
+        for (const auto& v : vec) {
+            if (v->getUniqueId() == target) {
+                return v.get();
+            }
+        }
+        return nullptr;
+    }
+
+    void Application::modifyResource(UniqueId target, ResourceDescriptor settings) {
+
+        Resource* resource = findIn(m_viewInterfaces, target);
+
+        if (!resource) {
+            resource = findUniqueIn(m_windows, target);
+        }
+
+        if (!resource && m_worldUpdater && m_worldUpdater->getUniqueId() == target) {
+            resource = m_worldUpdater.get();
+        }
+
+        // apply
+        if (resource) {
+            resource->applySettings(settings);
+        }
+    }
+
+    void Application::removeResource(UniqueId target) {
+
+        auto res = std::find_if(m_viewInterfaces.begin(), m_viewInterfaces.end(), 
+             [target](const ViewInterface* v) -> bool { return v->getUniqueId() == target; });
+        if (res != m_viewInterfaces.end()) {
+            delete *res;
+            m_viewInterfaces.erase(res);
+        }
+
+        auto win = std::find_if(m_windows.begin(), m_windows.end(), 
+             [target](const UniqueDisplayWindow& v) -> bool { return v->getUniqueId() == target; });
+        if (win != m_windows.end()) {
+            m_windows.erase(win);
+        }
+
+        if (m_worldUpdater && m_worldUpdater->getUniqueId() == target) {
+            m_worldUpdater = nullptr;
+        }
+    }
+
+    void Application::applyMessage(ApplicationMessage message) {
+
+        if (ApplicationMessage::Type::Add == message.getType()) {
+            addResource(message.getSettings());
+
+        } else if (ApplicationMessage::Type::Modify == message.getType()) {
+            modifyResource(message.getTarget(), message.getSettings());
+
+        } else if (ApplicationMessage::Type::Remove == message.getType()) {
+            removeResource(message.getTarget());
+
+        }
     }
 
     void sortByViewLayer(std::vector<ViewInterface *> &interfaces, ResourceDescriptor settings) {

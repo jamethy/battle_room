@@ -1,6 +1,7 @@
 #ifndef DISPLAY_WINDOW_H
 #define DISPLAY_WINDOW_H
 
+#include "battle_room/common/unique_id.h"
 #include "battle_room/common/drawable_object.h"
 #include "battle_room/common/drawable_text.h"
 #include "battle_room/common/inputs.h"
@@ -63,6 +64,15 @@ namespace BattleRoom {
          * \return Any inputs remaining after using the param
          */
         virtual Inputs handleInputs(Inputs inputs) = 0;
+
+
+        const UniqueId getUniqueId() const {
+            return m_uniqueId;
+        }
+
+    private:
+
+        UniqueId m_uniqueId = UniqueId::generateNewLocalId();
 
     }; // DisplayWindow class
 

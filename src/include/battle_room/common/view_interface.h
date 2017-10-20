@@ -2,6 +2,7 @@
 #define VIEW_INTERFACE_H
 
 #include "battle_room/common/resource.h"
+#include "battle_room/common/unique_id.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/common/drawable_object.h"
 #include "battle_room/common/drawable_text.h"
@@ -49,15 +50,21 @@ namespace BattleRoom {
         // getters and setters
 
         std::string getAssociatedView() const;
+        const UniqueId getUniqueId() const;
 
         void setAssociatedView(std::string viewName);
 
         // inherited
         virtual void applySettings(ResourceDescriptor settings) override;
 
+    protected:
+
+        ViewInterface();
+
     private:
 
         std::string m_associatedView; ///< View being interfaced with
+        UniqueId m_uniqueId;
 
     }; // ViewInterface class
 } // BattleRoom namespace
