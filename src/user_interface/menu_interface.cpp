@@ -1,7 +1,9 @@
 #include "battle_room/user_interface/menu_interface.h"
+#include "battle_room/user_interface/pull_down_menu.h"
 
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/common/application_message_receiver.h"
+
 #include <iostream>
 
 using std::vector;
@@ -16,9 +18,10 @@ namespace BattleRoom {
     void MenuInterface::applySettings(ResourceDescriptor settings) {
 
         for (ResourceDescriptor &objDesc : settings.getSubResources("Menu")) {
-            DrawableMenu menu;
-            menu.applySettings(objDesc);
-            m_menus.push_back(menu);
+
+            if (keyMatch("PullDown", objDesc.getValue())) {
+                m_menus.push_back(UniqueMenu(new PullDownMenu()));
+            }
         }
 
         ViewInterface::applySettings(settings);
@@ -27,6 +30,7 @@ namespace BattleRoom {
 // constructors
 
     MenuInterface::MenuInterface(ResourceDescriptor settings) {
+        m_menus.clear();
         applySettings(settings);
     }
 
@@ -41,22 +45,24 @@ namespace BattleRoom {
     vector<DrawableText> MenuInterface::getDrawableTexts() {
         vector<DrawableText> texts;
         texts.clear();
+        for (auto& menu : m_menus) {
+            vector<DrawableText> menuDrawables = menu->getDrawableTexts();
+            texts.insert(texts.end(), menuDrawables.begin(), menuDrawables.end());
+        }
+
         return texts;
     }
 
     vector<DrawableMenu> MenuInterface::getDrawableMenus() {
-        return m_menus;
-    }
+        vector<DrawableMenu> drawables;
+        drawables.clear();
 
-    bool objectBoundaryContains(DrawableMenu& menu, RelPixel point) {
+        for (auto& menu : m_menus) {
+            vector<DrawableMenu> menuDrawables = menu->getDrawableMenus();
+            drawables.insert(drawables.end(), menuDrawables.begin(), menuDrawables.end());
+        }
 
-        Vector2D relP = Vector2D(point.getCol(), point.getRow())
-            .minus(menu.getLocation());
-
-        return menu.getAnimation()
-            .getFrame(menu.getAnimationState())
-            .getBoundarySet()
-            .contains(relP);
+        return drawables;
     }
 
     Inputs MenuInterface::handleInputs(Inputs inputs) {
@@ -79,7 +85,7 @@ namespace BattleRoom {
                 if (input.isKeyDown(Key::LeftClick) || input.isKeyDown(Key::DoubleClick)) {
 
                     for (auto& menu : m_menus) {
-                        if (objectBoundaryContains(menu, point)) {
+                        if (menu->contains(point)) {
                             std::cout << "here\n";
                         }
                     }

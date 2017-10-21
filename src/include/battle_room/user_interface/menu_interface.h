@@ -2,6 +2,7 @@
 #define MENU_INTERFACE_H
 
 #include "battle_room/common/view_interface.h"
+#include "battle_room/user_interface/menu.h"
 
 namespace BattleRoom {
 
@@ -26,7 +27,7 @@ namespace BattleRoom {
 
         private:
 
-            std::vector<DrawableMenu> m_menus;
+            std::vector<UniqueMenu> m_menus;
 
     }; // MenuInterface class
 } // BattleRoom namespace

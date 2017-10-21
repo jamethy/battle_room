@@ -15,8 +15,6 @@ GameInterface: mainView
 
 MenuInterface: menuView
     Menu: PullDown
-        Animation: menus/pull_down
-        Location: 0.046666, 0.02
 
 WorldUpdater: Local
     Resource: worlds/test_world
