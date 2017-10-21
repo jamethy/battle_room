@@ -25,18 +25,6 @@ namespace BattleRoom {
          */
         static void addInput(Input input);
 
-        /**
-         * \brief Adds a quit event, when something within the program or
-         * outside is telling the program to close
-         */
-        static void addQuitEvent();
-
-        /**
-         * \brief Returns if a quit event has occurred
-         * \return True if the program should be quit
-         */
-        static bool containsQuitEvent();
-
     }; // InputGatherer class
 } // BattleRoom namespace
 #endif // INPUT_GATHERER_H

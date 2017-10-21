@@ -3,7 +3,6 @@
 namespace BattleRoom {
 
     Inputs m_inputs; ///< Current stash of inputs
-    bool m_quitEvent = false; ///< Current state of quitting
 
     Inputs InputGatherer::getAndClearInputs() {
 
@@ -13,18 +12,7 @@ namespace BattleRoom {
     }
 
     void InputGatherer::addInput(Input input) {
-
         m_inputs.addInput(input);
-
     }
-
-    void InputGatherer::addQuitEvent() {
-        m_quitEvent = true;
-    }
-
-    bool InputGatherer::containsQuitEvent() {
-        return m_quitEvent;
-    }
-
 
 } // BattleRoom namespace

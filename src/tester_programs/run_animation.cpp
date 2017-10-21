@@ -3,6 +3,7 @@
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/file_utils.h"
 #include "battle_room/common/input_gatherer.h"
+#include "battle_room/common/application_message_receiver.h"
 #include "battle_room/common/animation_handler.h"
 
 #include <cmath>
@@ -111,7 +112,7 @@ int main(int argc, char **argv) {
     bool showFps = false;
     unsigned long frame_count = 0;
 
-    while (!InputGatherer::containsQuitEvent()) {
+    while (!ApplicationMessageReceiver::containsQuitEvent()) {
 
         // Iterate the clock
         steady_clock::time_point newtime = steady_clock::now();
@@ -132,7 +133,7 @@ int main(int argc, char **argv) {
         for (Input &input : inputs) {
             if (input.getMotion() == InputKey::Motion::PressedDown) {
                 if (input.getKey() == InputKey::Key::Q) {
-                    InputGatherer::addQuitEvent();
+                    ApplicationMessageReceiver::addQuitEvent();
                 } else if (input.getKey() == InputKey::Key::F) {
                     showFps = !showFps;
                 }

@@ -25,7 +25,7 @@ namespace BattleRoom {
 
     void Application::runApplicationLoop() {
 
-        while (!InputGatherer::containsQuitEvent()) {
+        while (!ApplicationMessageReceiver::containsQuitEvent()) {
 
             // get inputs from last frame
             for (UniqueDisplayWindow &window : m_windows) {

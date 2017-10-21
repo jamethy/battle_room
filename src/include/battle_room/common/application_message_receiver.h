@@ -13,6 +13,14 @@ namespace BattleRoom {
 
         static std::vector<ApplicationMessage> getAndClearMessages();
 
+        static void addQuitEvent();
+
+        /**
+         * \brief Returns if a quit event has occurred
+         * \return True if the program should be quit
+         */
+        static bool containsQuitEvent();
+
     }; // ApplicationMessageReceiver class
 } // BattleRoom namespace
 #endif // APPLICATION_MESSAGE_RECEIVER_H

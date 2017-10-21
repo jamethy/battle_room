@@ -6,6 +6,8 @@ using std::vector;
 
 namespace BattleRoom {
 
+    bool m_quitEvent = false; ///< Current state of quitting
+
     vector<ApplicationMessage> m_messageStack;
     std::mutex m_appMsgStackLock;
 
@@ -24,6 +26,14 @@ namespace BattleRoom {
         m_appMsgStackLock.unlock();
 
         return returnMessages;
+    }
+
+    void ApplicationMessageReceiver::addQuitEvent() {
+        m_quitEvent = true;
+    }
+
+    bool ApplicationMessageReceiver::containsQuitEvent() {
+        return m_quitEvent;
     }
 
 } // BattleRoom namespace

@@ -1,6 +1,7 @@
 #include "battle_room/user_interface/menu_interface.h"
 
 #include "battle_room/common/input_gatherer.h"
+#include "battle_room/common/application_message_receiver.h"
 #include <iostream>
 
 using std::vector;
@@ -32,15 +33,15 @@ namespace BattleRoom {
 // other functions
 
     vector<DrawableObject> MenuInterface::getDrawableObjects() {
-
         vector<DrawableObject> objects;
         objects.clear();
-
         return objects;
     }
 
     vector<DrawableText> MenuInterface::getDrawableTexts() {
-        return vector<DrawableText>();
+        vector<DrawableText> texts;
+        texts.clear();
+        return texts;
     }
 
     vector<DrawableMenu> MenuInterface::getDrawableMenus() {
@@ -65,11 +66,11 @@ namespace BattleRoom {
         for (Input input : inputs) {
 
             // temp for easy testing and quitting
-//            if (input.getMotion() == Motion::PressedDown) {
-//                if (input.getKey() == Key::Q) {
-//                    InputGatherer::addQuitEvent();
-//                }
-//            }
+            if (input.getMotion() == Motion::PressedDown) {
+                if (input.getKey() == Key::Q) {
+                    ApplicationMessageReceiver::addQuitEvent();
+                }
+            }
 
             if (input.containsView(getAssociatedView())) {
 

@@ -5,6 +5,7 @@
 
 #include "battle_room/common/resource_descriptor.h"
 #include "battle_room/common/input_gatherer.h"
+#include "battle_room/common/application_message_receiver.h"
 #include "battle_room/common/animation_handler.h"
 
 #include "SDL_image.h"
@@ -187,7 +188,7 @@ namespace BattleRoom {
             // Find special processes - anything non-window specific
             // If Ctrl-C is used, or the window is closed
             if (event.type == SDL_QUIT) {
-                InputGatherer::addQuitEvent();
+                ApplicationMessageReceiver::addQuitEvent();
                 continue;
 
                 // if the OS is repeating a held down key, ignore it

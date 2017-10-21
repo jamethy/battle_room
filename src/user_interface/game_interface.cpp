@@ -99,13 +99,6 @@ namespace BattleRoom {
 
         for (Input input : inputs) {
 
-            // temp for easy testing and quitting
-            if (input.getMotion() == Motion::PressedDown) {
-                if (input.getKey() == Key::Q) {
-                    InputGatherer::addQuitEvent();
-                }
-            }
-
             Command cmd;
             if (input.containsView(getAssociatedView())) {
 
