@@ -1,9 +1,8 @@
-#ifndef DRAWABLE_OBJECT_H
-#define DRAWABLE_OBJECT_H
+#ifndef DRAWABLE_MENU_H
+#define DRAWABLE_MENU_H
 
 #include "battle_room/common/resource.h"
-#include "battle_room/common/vector3d.h"
-#include "battle_room/common/quaternion.h"
+#include "battle_room/common/vector2d.h"
 #include "battle_room/common/animation.h"
 
 namespace BattleRoom {
@@ -11,12 +10,12 @@ namespace BattleRoom {
 /**
  * \brief Object that is drawable on a view
  */
-    class DrawableObject : public Resource {
+    class DrawableMenu : public Resource {
 
     public:
 
         // constructor
-        DrawableObject();
+        DrawableMenu();
 
         // getters and setters
 
@@ -24,17 +23,13 @@ namespace BattleRoom {
 
         seconds getAnimationState() const;
 
-        Vector3D getLocation() const;
-
-        Quaternion getOrientation() const;
+        Vector2D getLocation() const;
 
         void setAnimation(Animation &animation);
 
         void setAnimationState(seconds animationState);
 
-        void setLocation(Vector3D location);
-
-        void setOrientation(Quaternion orientation);
+        void setLocation(Vector2D location);
 
         // inherited
         virtual void applySettings(ResourceDescriptor settings) override;
@@ -43,9 +38,8 @@ namespace BattleRoom {
 
         Animation *m_currentAnimation; ///< Animation object is on
         seconds m_animationState; ///< Seconds into animation
-        Vector3D m_location; ///< Location of the object in 3D space
-        Quaternion m_orientation; ///< Orientationof the object in 3D space
+        Vector2D m_location; ///< Location of the object in 2D space 0-1
 
-    }; // DrawableObject class
+    }; // DrawableMenu class
 } // BattleRoom namespace
-#endif // DRAWABLE_OBJECT_H
+#endif // DRAWABLE_MENU_H

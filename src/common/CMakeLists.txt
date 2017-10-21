@@ -7,6 +7,7 @@ add_library(Common
         color.cpp
         drawable_object.cpp
         drawable_text.cpp
+        drawable_menu.cpp
         file_utils.cpp
         frame.cpp
         input.cpp

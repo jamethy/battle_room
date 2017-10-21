@@ -6,6 +6,7 @@
 #include "battle_room/common/inputs.h"
 #include "battle_room/common/drawable_object.h"
 #include "battle_room/common/drawable_text.h"
+#include "battle_room/common/drawable_menu.h"
 
 #include <vector>
 
@@ -40,6 +41,12 @@ namespace BattleRoom {
          * \return List of texts
          */
         virtual std::vector<DrawableText> getDrawableTexts() = 0;
+
+        /**
+         * \brief Gets a list of drawable menus (probably on associated view)
+         * \return List of menus
+         */
+        virtual std::vector<DrawableMenu> getDrawableMenus() = 0;
 
         /**
          * \brief Gets any new settings for other objects as inputted by the user

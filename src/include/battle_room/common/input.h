@@ -3,6 +3,7 @@
 
 #include "battle_room/common/input_keys.h"
 #include "battle_room/common/vector3d.h"
+#include "battle_room/common/rel_pixel.h"
 
 #include <unordered_map>
 
@@ -16,6 +17,8 @@ namespace BattleRoom {
     class Input {
 
     public:
+
+        Input();
 
         /**
          * Checks the input for the view of the given name and getViewIntersection can
@@ -31,6 +34,7 @@ namespace BattleRoom {
          * \intersection Point in 3D space on the z = 0 plane where the event occurred
          */
         void addViewIntersection(std::string viewName, Vector3D intersection);
+        void addViewIntersection(std::string viewName, RelPixel intersection);
 
         /**
          * Gets the Intersection of the z = 0 plane for the view
@@ -38,6 +42,7 @@ namespace BattleRoom {
          * \return Zero-plane intersection of view or (0,0,-1) if view not hit
          */
         Vector3D getViewIntersection(std::string viewName);
+        RelPixel getViewRelIntersection(std::string viewName);
 
         // useful matchers
         bool isKeyDown(InputKey::Key k);
@@ -66,6 +71,7 @@ namespace BattleRoom {
     private:
 
         std::unordered_map<std::string, Vector3D> m_viewIntersections; ///< Z = 0 where mouse was
+        std::unordered_map<std::string, RelPixel> m_viewRelIntersections; ///< Z = 0 where mouse was
         InputKey::Key m_key; ///< Key or button performing the action
         InputKey::Motion m_keyMotion; ///< Whether the key was pressed, released, or neither
         InputKey::Modifier m_modifier; ///< Which modifier key was being pressed (or none)

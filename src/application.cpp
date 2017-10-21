@@ -5,6 +5,7 @@
 #include "battle_room/game/query_world.h"
 #include "battle_room/game/objects/object_factory.h"
 #include "battle_room/user_interface/game_interface.h"
+#include "battle_room/user_interface/menu_interface.h"
 #include "battle_room/networking/world_updater_factory.h"
 
 #include <thread>
@@ -32,7 +33,6 @@ namespace BattleRoom {
             }
             Inputs inputs = InputGatherer::getAndClearInputs();
 
-
             ///// start game interface thread
             std::thread interfaceThread([this, &inputs]() {
 
@@ -59,12 +59,12 @@ namespace BattleRoom {
                         std::string associatedView = interface->getAssociatedView();
                         std::vector<DrawableObject> objects = interface->getDrawableObjects();
                         std::vector<DrawableText> texts = interface->getDrawableTexts();
-                        // TODO std::vector<DrawableMenu> menus = interface->getDrawableMenus();
+                        std::vector<DrawableMenu> menus = interface->getDrawableMenus();
 
                         for (UniqueDisplayWindow &window : m_windows) {
                             window->addViewObjects(objects, associatedView);
                             window->addViewTexts(texts, associatedView);
-                            // TODO window->addViewMenus(menus, associatedView);
+                            window->addViewMenus(menus, associatedView);
                         }
                     }
 
@@ -123,6 +123,9 @@ namespace BattleRoom {
             m_viewInterfaces.push_back(new GameInterface(sub));
         }
 
+        for (ResourceDescriptor sub : settings.getSubResources("MenuInterface")) {
+            m_viewInterfaces.push_back(new MenuInterface(sub));
+        }
 
         // Collect the menus. These produce UI objects that are only seen locally and
         // also handle user inputs - they are menus...

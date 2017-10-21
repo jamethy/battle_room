@@ -3,24 +3,20 @@ Window: mainWindow
     Width: 1500
     Height: 1000
     View: mainView
+        Layer: 10
         Camera: Pyramid
             DegRotation: 0
             ZoomInMultiplier: 0.5
             ZoomOutMultiplier: 0.5
             CameraFriction: 0.25
+    View: menuView
 
 GameInterface: mainView
 
-#Window: SecondWindow
-#    Width: 1500
-#    Height: 1000
-#    View: secondView
-#        Camera: Pyramid
-#            DegRotation: 0
-#            ZoomInMultiplier: 0.5
-#            ZoomOutMultiplier: 0.5
-#            CameraFriction: 0.25
-#GameInterface: secondView
+MenuInterface: menuView
+    Menu: PullDown
+        Animation: menus/pull_down
+        Location: 0.046666, 0.02
 
 WorldUpdater: Local
     Resource: worlds/test_world

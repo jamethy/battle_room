@@ -4,6 +4,11 @@ using std::string;
 
 namespace BattleRoom {
 
+    Input::Input() {
+        m_viewIntersections.clear(); 
+        m_viewRelIntersections.clear();
+    }
+
     bool Input::containsView(string viewName) {
         return m_viewIntersections.count(viewName) != 0;
     }
@@ -12,11 +17,22 @@ namespace BattleRoom {
         m_viewIntersections.insert(std::pair<string, Vector3D>(viewName, intersection));
     }
 
+    void Input::addViewIntersection(string viewName, RelPixel intersection) {
+        m_viewRelIntersections.insert(std::pair<string, RelPixel>(viewName, intersection));
+    }
+
     Vector3D Input::getViewIntersection(string viewName) {
         if (containsView(viewName)) {
             return m_viewIntersections.at(viewName);
         }
         return Vector3D(0, 0, -1);
+    }
+
+    RelPixel Input::getViewRelIntersection(string viewName) {
+        if (containsView(viewName)) {
+            return m_viewRelIntersections.at(viewName);
+        }
+        return RelPixel(-1, -1);
     }
 
     bool Input::isKeyDown(InputKey::Key k) {

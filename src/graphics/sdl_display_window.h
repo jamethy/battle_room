@@ -36,6 +36,8 @@ namespace BattleRoom {
 
         void addViewTexts(const std::vector<DrawableText> &texts, std::string viewName) override;
 
+        void addViewMenus(const std::vector<DrawableMenu> menus, std::string viewName) override;
+
         void drawScreen() override;
 
         void switchBuffers() override;

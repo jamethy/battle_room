@@ -17,6 +17,8 @@ namespace BattleRoom {
 
         std::vector<DrawableText> getDrawableTexts() override;
 
+        std::vector<DrawableMenu> getDrawableMenus() override;
+
         Inputs handleInputs(Inputs inputs) override;
 
         std::vector<ResourceDescriptor> getNewSettings() override;

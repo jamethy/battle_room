@@ -4,6 +4,7 @@
 #include "battle_room/common/unique_id.h"
 #include "battle_room/common/drawable_object.h"
 #include "battle_room/common/drawable_text.h"
+#include "battle_room/common/drawable_menu.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/common/resource.h"
 
@@ -45,6 +46,14 @@ namespace BattleRoom {
          * \param viewName Key to find view to draw on
          */
         virtual void addViewTexts(const std::vector<DrawableText> &texts, std::string viewName) = 0;
+
+        /*!
+         * \brief Sets the drawable menu to the view to be rendered
+         * If view not found, nothing is done
+         * \param texts List of menus to be drawn on the view
+         * \param viewName Key to find view to draw on
+         */
+        virtual void addViewMenus(const std::vector<DrawableMenu> menus, std::string viewName) = 0;
 
         /*!
          * \brief Draws the world, UI, and then menu objects

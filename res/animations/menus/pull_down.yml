@@ -1,0 +1,14 @@
+
+ImageFile: menus/pull_down.png
+NextAnimation: menus/pull_down
+
+Frame:
+    EndTime: 99999999
+    TopLeft: 0, 0
+    BottomRight: 15, 15
+    Scale: 0.003333333
+
+    Boundary: Box
+        Width: 0.053333
+        Height: 0.053333
+

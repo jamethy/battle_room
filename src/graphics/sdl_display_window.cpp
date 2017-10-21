@@ -170,6 +170,13 @@ namespace BattleRoom {
 
 // other functions
 
+    RelPixel calRel(Pixel p, Pixel topLeft, Pixel botRight) {
+        return RelPixel(
+                (p.getRow() - topLeft.getRow()) / (botRight.getRow() - topLeft.getRow()),
+                (p.getCol() - topLeft.getCol()) / (botRight.getCol() - topLeft.getCol())
+                );
+    }
+
     void SdlDisplayWindow::gatherInputs() {
 
         // For each SDL_Event that pertains to this window, create an Input
@@ -233,7 +240,7 @@ namespace BattleRoom {
                 case SDL_MOUSEBUTTONDOWN:
                     m_mousePos = Pixel(event.motion.y, event.motion.x);
                     input.setMotion(InputKey::Motion::PressedDown);
-                    input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
+                    input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks % 2));
                     input.setModifier(sdlModifierToInputModifier(SDL_GetModState()));
                     break;
                 case SDL_MOUSEBUTTONUP:
@@ -257,7 +264,6 @@ namespace BattleRoom {
                     break;
             }
 
-
             // Set view intersections
             for (string &viewName : getSortedViews(m_views)) {
                 const View &view = m_views.at(viewName);
@@ -270,6 +276,8 @@ namespace BattleRoom {
 
                     // Add intersection to input's view list
                     input.addViewIntersection(view.getName(), zeroPoint);
+                    input.addViewIntersection(view.getName(), 
+                            calRel(m_mousePos, view.getTopLeft(), view.getBottomRight()));
                 }
             }
 
@@ -322,6 +330,19 @@ namespace BattleRoom {
         }
     }
 
+    void SdlDisplayWindow::addViewMenus(const std::vector<DrawableMenu> menus, std::string viewName) {
+
+        if (m_views.count(viewName) > 0) {
+
+            View &view = m_views.at(viewName);
+            vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
+
+            for (const DrawableMenu &menu : menus) {
+                drawables.push_back(getSdlDrawableFrom(menu, view));
+            }
+        }
+    }
+
 
     void SdlDisplayWindow::drawScreen() {
 
@@ -342,7 +363,7 @@ namespace BattleRoom {
                       if (a->getViewLayer() == b->getViewLayer()) {
                           return a->getZPosition() < b->getZPosition();
                       } else {
-                          return a->getViewLayer() < b->getViewLayer();
+                          return a->getViewLayer() > b->getViewLayer();
                       }
                   }
         );

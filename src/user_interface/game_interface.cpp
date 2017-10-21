@@ -56,6 +56,10 @@ namespace BattleRoom {
         return vector<DrawableText>();
     }
 
+    vector<DrawableMenu> GameInterface::getDrawableMenus() {
+        return vector<DrawableMenu>();
+    }
+
     bool objectBoundaryContains(GameObject* obj, Vector2D point) {
 
         Vector2D relP = point

@@ -3,7 +3,6 @@
 #include "sdl_drawable_image.h"
 
 #include <cmath>
-#include <iostream>
 
 namespace BattleRoom {
 
@@ -60,9 +59,10 @@ namespace BattleRoom {
     }
 
     InputKey::Key sdlMouseButtonToInputKey(unsigned key, unsigned clicks) {
+
         if (key == (unsigned) SDL_BUTTON_LEFT && clicks == 1) {
             return InputKey::Key::LeftClick;
-        } else if (key == (unsigned) SDL_BUTTON_LEFT && clicks == 2) {
+        } else if (key == (unsigned) SDL_BUTTON_LEFT && clicks == 0) {
             return InputKey::Key::DoubleClick;
         } else if (key == (unsigned) SDL_BUTTON_MIDDLE) {
             return InputKey::Key::MiddleClick;
@@ -466,6 +466,67 @@ namespace BattleRoom {
         fillBaseDrawable(drawable, view, object.getLocation(), object.getOrientation(),
                          frame.getWidth(), frame.getHeight()
         );
+
+        // Fill SdlDrawableImage
+        drawable->setSourceRect(rectFrom(frame.getTopLeft(), frame.getBottomRight()));
+        drawable->setImageFile(animation.getImageFile());
+
+        if (keyMatch(frame.getFlip(), "horizontal")) {
+            drawable->setFlip(SDL_FLIP_HORIZONTAL);
+        } else if (keyMatch(frame.getFlip(), "vertical")) {
+            drawable->setFlip(SDL_FLIP_VERTICAL);
+        } else if (keyMatch(frame.getFlip(), "both")) {
+            drawable->setFlip((SDL_RendererFlip)(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL));
+        }
+
+        return UniqueDrawable(drawable);
+
+    } // end getSdlDrawableFrom
+
+
+    UniqueDrawable getSdlDrawableFrom(const DrawableMenu &menu, View &view) {
+
+        SdlDrawableImage *drawable = new SdlDrawableImage();
+
+        Animation &animation = menu.getAnimation();
+        const Frame &frame = animation.getFrame(menu.getAnimationState());
+
+        // Fill base SdlDrawable
+        //fillBaseDrawable(drawable, view, menu.getLocation(), menu.getOrientation(),
+        //                 frame.getWidth(), frame.getHeight()
+        //);
+
+        meters objWidth = frame.getWidth(); 
+        meters objHeight = frame.getHeight();
+
+        double col = menu.getLocation().x(),
+               row = menu.getLocation().y(),
+               colOffset = objWidth / 2.0,
+               rowOffset = objHeight / 2.0;
+
+        RelPixel objCenter(row, col); 
+        RelPixel topLeftRel(row - rowOffset, col - colOffset);
+        RelPixel topRightRel(row - rowOffset, col + colOffset);
+        RelPixel botRightRel(row + rowOffset, col + colOffset);
+        RelPixel botLeftRel(row + rowOffset, col - colOffset);
+
+        if (isInRelativeFrame(topLeftRel, topRightRel, botRightRel, botLeftRel)) {
+
+            // fix to get angle until I figure out the skewing issue
+            // aka the camera must be facing straight down
+
+            px viewHeight = view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt();
+            px viewWidth = view.getBottomRight().getColInt() - view.getTopLeft().getColInt();
+            Pixel topLeft(topLeftRel.getRow() * viewHeight, topLeftRel.getCol() * viewWidth);
+            Pixel botRight(botRightRel.getRow() * viewHeight, botRightRel.getCol() * viewWidth);
+
+            // Fill SdlDrawable
+            drawable->setIsInFrame(true);
+            drawable->setViewLayer(view.getLayer());
+            drawable->setZPosition(0);
+            drawable->setAngle(0);
+            drawable->setDestinationRect(rectFrom(topLeft, botRight));
+        }
 
         // Fill SdlDrawableImage
         drawable->setSourceRect(rectFrom(frame.getTopLeft(), frame.getBottomRight()));
