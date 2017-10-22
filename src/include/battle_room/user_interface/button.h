@@ -1,25 +1,26 @@
-#ifndef PULL_DOWN_MENU_H
-#define PULL_DOWN_MENU_H
+#ifndef BUTTON_H
+#define BUTTON_H
 
 #include "battle_room/user_interface/menu.h"
 
 namespace BattleRoom {
 
-    class PullDownMenu : public Menu {
+    class Button : public Menu {
 
         public:
 
-            PullDownMenu();
+            Button();
 
             std::vector<DrawableText> getDrawableTexts() override;
             std::vector<DrawableMenu> getDrawableMenus() override;
             bool handleInput(Input input, RelPixel point) override;
             void updateAnimation(seconds timestep) override;
-
         private:
-            DrawableMenu m_pullDown;
+
+            DrawableMenu m_button;
 
     }; // Menu Class
 } // BattleRoom namespace
-#endif // PULL_DOWN_MENU_H
+#endif // BUTTON_H
+
 

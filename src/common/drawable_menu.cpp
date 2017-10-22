@@ -26,6 +26,26 @@ namespace BattleRoom {
             m_currentAnimation(&AnimationHandler::getAnimation(MISSING_ANIMATION)),
             m_animationState(0) {}
 
+// other functions
+
+    void DrawableMenu::updateAnimation(seconds timestep) {
+        Animation &animation = getAnimation();
+        seconds newState = getAnimationState() + timestep;
+
+        if (newState > animation.getLength()) {
+
+            // set the new state (time elapsed since end of last animation)
+            setAnimationState(newState - animation.getLength());
+
+            // find the new animation
+            animation = AnimationHandler::getAnimation(animation.getNextAnimation());
+        } else {
+
+            // iterate object->animation
+            setAnimationState(newState);
+        }
+    }
+
 // getters and setters
 
     Animation &DrawableMenu::getAnimation() const {

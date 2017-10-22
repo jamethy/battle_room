@@ -1,10 +1,9 @@
 #include "battle_room/user_interface/menu_interface.h"
 #include "battle_room/user_interface/pull_down_menu.h"
+#include "battle_room/user_interface/button.h"
 
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/common/application_message_receiver.h"
-
-#include <iostream>
 
 using std::vector;
 using InputKey::Key;
@@ -21,6 +20,8 @@ namespace BattleRoom {
 
             if (keyMatch("PullDown", objDesc.getValue())) {
                 m_menus.push_back(UniqueMenu(new PullDownMenu()));
+            } else if (keyMatch("Button", objDesc.getValue())) {
+                m_menus.push_back(UniqueMenu(new Button()));
             }
         }
 
@@ -71,6 +72,8 @@ namespace BattleRoom {
 
         for (Input input : inputs) {
 
+            bool inputHandled = false;
+
             // temp for easy testing and quitting
             if (input.getMotion() == Motion::PressedDown) {
                 if (input.getKey() == Key::Q) {
@@ -82,18 +85,17 @@ namespace BattleRoom {
 
                 RelPixel point = input.getViewRelIntersection(getAssociatedView());
 
-                if (input.isKeyDown(Key::LeftClick) || input.isKeyDown(Key::DoubleClick)) {
-
-                    for (auto& menu : m_menus) {
-                        if (menu->contains(point)) {
-                            std::cout << "here\n";
-                        }
+                for (auto& menu : m_menus) {
+                    if (menu->handleInput(input, point)) {
+                        inputHandled = true;
                     }
-
-                } 
+                }
+                //if (input.isKeyDown(Key::LeftClick) || input.isKeyDown(Key::DoubleClick)) {
             }
 
-            remainingInputs.addInput(input);
+            if (!inputHandled) {
+                remainingInputs.addInput(input);
+            }
         }
 
         return remainingInputs;

@@ -5,6 +5,7 @@ add_library(UserInterface
         spatial_element.cpp
         menu.cpp
         pull_down_menu.cpp
+        button.cpp
         game_interface.cpp
         menu_interface.cpp
         )

@@ -4,6 +4,7 @@
 #include "battle_room/common/drawable_text.h"
 #include "battle_room/common/drawable_menu.h"
 #include "battle_room/common/unique_id.h"
+#include "battle_room/common/input.h"
 
 namespace BattleRoom {
 
@@ -13,18 +14,20 @@ namespace BattleRoom {
 
             Menu();
 
-            bool contains(RelPixel point);
+            virtual bool handleInput(Input input, RelPixel point) = 0;
 
-            std::vector<DrawableText> getDrawableTexts();
+            virtual void updateAnimation(seconds timestep) = 0;
 
-            std::vector<DrawableMenu> getDrawableMenus();
+            virtual std::vector<DrawableText> getDrawableTexts() = 0;
+
+            virtual std::vector<DrawableMenu> getDrawableMenus() = 0;
 
             UniqueId getUniqueId();
 
         protected:
 
-            std::vector<DrawableText> m_texts;
-            std::vector<DrawableMenu> m_menus;
+            bool objectBoundaryContains(const DrawableMenu& menu, RelPixel point);
+
             UniqueId m_uniqueId;
 
     }; // Menu Class

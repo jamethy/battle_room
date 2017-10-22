@@ -25,6 +25,8 @@ namespace BattleRoom {
 
         Vector2D getLocation() const;
 
+        void updateAnimation(seconds timestep);
+
         void setAnimation(Animation &animation);
 
         void setAnimationState(seconds animationState);

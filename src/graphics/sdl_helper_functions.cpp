@@ -60,7 +60,7 @@ namespace BattleRoom {
 
     InputKey::Key sdlMouseButtonToInputKey(unsigned key, unsigned clicks) {
 
-        if (key == (unsigned) SDL_BUTTON_LEFT && clicks == 1) {
+        if (key == (unsigned) SDL_BUTTON_LEFT/* && clicks == 1*/) {
             return InputKey::Key::LeftClick;
         } else if (key == (unsigned) SDL_BUTTON_LEFT && clicks == 0) {
             return InputKey::Key::DoubleClick;
