@@ -26,6 +26,8 @@ namespace BattleRoom {
 
         protected:
 
+            bool objectBoundaryContains(const DrawableMenu& obj, RelPixel point);
+
             UniqueId m_uniqueId;
 
     }; // Menu Class

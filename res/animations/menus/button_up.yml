@@ -1,0 +1,13 @@
+
+ImageFile: menus/button.png
+NextAnimation: menus/button
+
+Frame:
+    EndTime: 99999999
+    TopLeft: 0, 0
+    BottomRight: 31, 127
+
+    Boundary: Box
+        Width: 1
+        Height: 1
+
