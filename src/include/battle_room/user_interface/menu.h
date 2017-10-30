@@ -8,7 +8,7 @@
 
 namespace BattleRoom {
 
-    class Menu {
+    class Menu : public Resource {
 
         public:
 
@@ -25,8 +25,6 @@ namespace BattleRoom {
             UniqueId getUniqueId();
 
         protected:
-
-            bool objectBoundaryContains(const DrawableMenu& menu, RelPixel point);
 
             UniqueId m_uniqueId;
 

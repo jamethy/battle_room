@@ -19,9 +19,13 @@ namespace BattleRoom {
         for (ResourceDescriptor &objDesc : settings.getSubResources("Menu")) {
 
             if (keyMatch("PullDown", objDesc.getValue())) {
-                m_menus.push_back(UniqueMenu(new PullDownMenu()));
+                Menu* m = new PullDownMenu();
+                m->applySettings(objDesc);
+                m_menus.push_back(UniqueMenu(m));
             } else if (keyMatch("Button", objDesc.getValue())) {
-                m_menus.push_back(UniqueMenu(new Button()));
+                Menu* m = new Button();
+                m->applySettings(objDesc);
+                m_menus.push_back(UniqueMenu(m));
             }
         }
 

@@ -16,6 +16,8 @@ namespace BattleRoom {
             bool handleInput(Input input, RelPixel point) override;
             void updateAnimation(seconds timestep) override;
 
+            void applySettings(ResourceDescriptor settings) override;
+
         private:
             DrawableMenu m_pullDown;
 

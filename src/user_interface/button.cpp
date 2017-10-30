@@ -1,17 +1,24 @@
 #include "battle_room/user_interface/button.h"
 #include "battle_room/common/animation_handler.h"
 
+#include <iostream>
+
 using InputKey::Key;
 
 namespace BattleRoom {
 
+    void Button::applySettings(ResourceDescriptor settings) {
+        m_button.applySettings(settings);
+    }
+
     Button::Button() {
         m_button.setAnimation(AnimationHandler::getAnimation("menus/button_up"));
-        m_button.setLocation(Vector2D(0.5, 0.5));
+        //m_button.setLocation(Vector2D(0.5, 0.5));
     }
 
     bool Button::handleInput(Input input, RelPixel point) {
         if (objectBoundaryContains(m_button, point)) {
+            std::cout << "here.\n";
 
             if (input.isKeyDown(Key::LeftClick)) {
                 m_button.setAnimation(AnimationHandler::getAnimation("menus/button_down"));

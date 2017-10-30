@@ -14,6 +14,16 @@ namespace BattleRoom {
             setAnimation(AnimationHandler::getAnimation(sub.getValue()));
         }
 
+        sub = settings.getSubResource("Width");
+        if (isNotEmpty(sub.getValue())) {
+            m_width = stod(sub.getValue());
+        }
+
+        sub = settings.getSubResource("Height");
+        if (isNotEmpty(sub.getValue())) {
+            m_height = stod(sub.getValue());
+        }
+
         sub = settings.getSubResource("AnimationState");
         if (isNotEmpty(sub.getValue())) {
             setAnimationState(toSeconds(sub.getValue()));
@@ -24,7 +34,10 @@ namespace BattleRoom {
 
     DrawableMenu::DrawableMenu() :
             m_currentAnimation(&AnimationHandler::getAnimation(MISSING_ANIMATION)),
-            m_animationState(0) {}
+            m_animationState(0.0),
+            m_width(1), 
+            m_height(1)
+    {}
 
 // other functions
 
@@ -60,6 +73,14 @@ namespace BattleRoom {
         return m_location;
     }
 
+    relpx DrawableMenu::getWidth() const {
+        return m_width;
+    }
+
+    relpx DrawableMenu::getHeight() const {
+        return m_height;
+    }
+
     void DrawableMenu::setAnimation(Animation &animation) {
         m_currentAnimation = &animation;
     }
@@ -70,6 +91,14 @@ namespace BattleRoom {
 
     void DrawableMenu::setLocation(Vector2D location) {
         m_location = location;
+    }
+
+    void DrawableMenu::setWidth(relpx width) {
+        m_width = width;
+    }
+
+    void DrawableMenu::setHeight(relpx height) {
+        m_height = height;
     }
 
 } // BattleRoom namespace

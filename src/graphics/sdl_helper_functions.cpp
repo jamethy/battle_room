@@ -410,7 +410,10 @@ namespace BattleRoom {
 
             // Get pixel coordinates of texture
             RelPixel centerRel = view.fromLocation(objCenter);
-            Pixel center(centerRel.getRow() * viewHeight, centerRel.getCol() * viewWidth);
+            Pixel center(
+                    view.getTopLeft().getRow() + centerRel.getRow() * viewHeight, 
+                    view.getTopLeft().getCol() + centerRel.getCol() * viewWidth
+                    );
             Pixel unrotatedDelta(
                     drawn.x() * std::sin(-angle) + drawn.y() * std::cos(-angle),
                     drawn.x() * std::cos(-angle) - drawn.y() * std::sin(-angle)
@@ -491,42 +494,24 @@ namespace BattleRoom {
         Animation &animation = menu.getAnimation();
         const Frame &frame = animation.getFrame(menu.getAnimationState());
 
-        // Fill base SdlDrawable
-        //fillBaseDrawable(drawable, view, menu.getLocation(), menu.getOrientation(),
-        //                 frame.getWidth(), frame.getHeight()
-        //);
+        px viewHeight = view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt();
+        px viewWidth = view.getBottomRight().getColInt() - view.getTopLeft().getColInt();
 
-        meters objWidth = frame.getWidth(); 
-        meters objHeight = frame.getHeight();
+        px col = view.getTopLeft().getCol() + menu.getLocation().x()*viewWidth;
+        px row = view.getTopLeft().getRow() + menu.getLocation().y()*viewHeight;
 
-        double col = menu.getLocation().x(),
-               row = menu.getLocation().y(),
-               colOffset = objWidth / 2.0,
-               rowOffset = objHeight / 2.0;
+        px colOffset = viewWidth*menu.getWidth() / 2.0;
+        px rowOffset = viewHeight*menu.getHeight() / 2.0;
 
-        RelPixel objCenter(row, col); 
-        RelPixel topLeftRel(row - rowOffset, col - colOffset);
-        RelPixel topRightRel(row - rowOffset, col + colOffset);
-        RelPixel botRightRel(row + rowOffset, col + colOffset);
-        RelPixel botLeftRel(row + rowOffset, col - colOffset);
+        Pixel topLeft(row - rowOffset, col - colOffset);
+        Pixel botRight(row + rowOffset, col + colOffset);
 
-        if (isInRelativeFrame(topLeftRel, topRightRel, botRightRel, botLeftRel)) {
-
-            // fix to get angle until I figure out the skewing issue
-            // aka the camera must be facing straight down
-
-            px viewHeight = view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt();
-            px viewWidth = view.getBottomRight().getColInt() - view.getTopLeft().getColInt();
-            Pixel topLeft(topLeftRel.getRow() * viewHeight, topLeftRel.getCol() * viewWidth);
-            Pixel botRight(botRightRel.getRow() * viewHeight, botRightRel.getCol() * viewWidth);
-
-            // Fill SdlDrawable
-            drawable->setIsInFrame(true);
-            drawable->setViewLayer(view.getLayer());
-            drawable->setZPosition(0);
-            drawable->setAngle(0);
-            drawable->setDestinationRect(rectFrom(topLeft, botRight));
-        }
+        // Fill SdlDrawable
+        drawable->setIsInFrame(true);
+        drawable->setViewLayer(view.getLayer());
+        drawable->setZPosition(0);
+        drawable->setAngle(0);
+        drawable->setDestinationRect(rectFrom(topLeft, botRight));
 
         // Fill SdlDrawableImage
         drawable->setSourceRect(rectFrom(frame.getTopLeft(), frame.getBottomRight()));

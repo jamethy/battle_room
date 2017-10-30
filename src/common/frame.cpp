@@ -29,7 +29,9 @@ namespace BattleRoom {
 
 // constructor
 
-    Frame::Frame(ResourceDescriptor descriptor) {
+    Frame::Frame(ResourceDescriptor descriptor) :
+        m_scale(1), m_flip("none")
+    {
         applySettings(descriptor);
     }
 

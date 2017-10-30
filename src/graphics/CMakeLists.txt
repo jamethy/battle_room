@@ -7,6 +7,8 @@ add_library(Graphics
         z_max_camera.cpp
         pyramid_camera.cpp
         camera_factory.cpp
+        screen_anchor.cpp
+        view_position.cpp
         sdl_display_window.cpp
         sdl_display_window.h
         sdl_drawable.cpp

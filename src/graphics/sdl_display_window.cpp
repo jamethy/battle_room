@@ -69,13 +69,7 @@ namespace BattleRoom {
             }
                 // Else, create a new view
             else {
-                View newView = View(sub);
-                // Check if bottom right was set, if not use window dimensions
-                Pixel botRight = newView.getBottomRight();
-                if (botRight.getColInt() == 0 && botRight.getRowInt() == 0) {
-                    newView.setBottomRight(Pixel(m_windowHeight, m_windowWidth));
-                }
-                // Add it to the view
+                View newView = View(sub, m_windowWidth, m_windowHeight);
                 string name = newView.getName();
                 m_views.insert(std::make_pair(name, newView));
             }
@@ -277,8 +271,12 @@ namespace BattleRoom {
 
                     // Add intersection to input's view list
                     input.addViewIntersection(view.getName(), zeroPoint);
-                    input.addViewIntersection(view.getName(), 
-                            calRel(m_mousePos, view.getTopLeft(), view.getBottomRight()));
+                    px width = view.getBottomRight().getCol() - view.getTopLeft().getCol();
+                    px height = view.getBottomRight().getRow() - view.getTopLeft().getRow();
+
+                    relpx col = (m_mousePos.getCol() - view.getTopLeft().getCol())/width;
+                    relpx row = (m_mousePos.getRow() - view.getTopLeft().getRow())/height;
+                    input.addViewIntersection(view.getName(), RelPixel(row, col));
                 }
             }
 
@@ -425,16 +423,7 @@ namespace BattleRoom {
 
         for (string &viewName : getSortedViews(m_views)) {
             View &view = m_views.at(viewName);
-
-            view.setTopLeft(Pixel(
-                    height * view.getTopLeft().getRow() / oldHeight,
-                    width * view.getTopLeft().getCol() / oldWidth
-            ));
-
-            view.setBottomRight(Pixel(
-                    height * view.getBottomRight().getRow() / oldHeight,
-                    width * view.getBottomRight().getCol() / oldWidth
-            ));
+            view.adjustForResize(width, height, oldWidth, oldHeight);
         }
     }
 

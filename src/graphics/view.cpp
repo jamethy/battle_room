@@ -12,8 +12,7 @@ namespace BattleRoom {
             setName(settings.getValue());
         }
 
-        m_topLeft.applySettings(settings.getSubResource("TopLeft"));
-        m_bottomRight.applySettings(settings.getSubResource("BottomRight"));
+        m_position.applySettings(settings.getSubResource("Position"));
 
         ResourceDescriptor sub = settings.getSubResource("Layer");
         if (isNotEmpty(sub.getValue())) {
@@ -36,24 +35,24 @@ namespace BattleRoom {
     }
 
 // constructors
-    View::View(ResourceDescriptor settings)
-            : m_camera(CameraFactory::createMotionlessCamera()) {
+    View::View(ResourceDescriptor settings, int windowWidth, int windowHeight) :
+        m_camera(CameraFactory::createMotionlessCamera()),
+        m_position(ViewPosition(settings.getSubResource("Position"), windowWidth, windowHeight)) 
+    {
         applySettings(settings);
     }
 
     View::View(const View &original)
             : m_name(original.m_name),
               m_layer(original.m_layer),
-              m_topLeft(original.m_topLeft),
-              m_bottomRight(original.m_bottomRight),
+              m_position(original.m_position),
               m_camera(UniqueCamera(original.m_camera->clone())) {}
 
 
     View &View::operator=(const View &original) {
         m_name = original.m_name;
         m_layer = original.m_layer;
-        m_topLeft = original.m_topLeft;
-        m_bottomRight = original.m_bottomRight;
+        m_position = original.m_position;
         m_camera = UniqueCamera(original.m_camera->clone());
         return *this;
     }
@@ -75,16 +74,20 @@ namespace BattleRoom {
         RelPixel relPos;
 
         relPos.setCol(
-                (point.getCol() - m_topLeft.getCol())
-                / (m_bottomRight.getCol() - m_topLeft.getCol())
+                (point.getCol() - getTopLeft().getCol())
+                / (getBottomRight().getCol() - getTopLeft().getCol())
         );
 
         relPos.setRow(
-                (point.getRow() - m_topLeft.getRow())
-                / (m_bottomRight.getRow() - m_topLeft.getRow())
+                (point.getRow() - getTopLeft().getRow())
+                / (getBottomRight().getRow() -  getTopLeft().getRow())
         );
 
         return m_camera->zeroPlaneIntersection(relPos);
+    }
+
+    void View::adjustForResize(int width, int height, int oldWidth, int oldHeight) {
+        m_position.adjustForResize(width, height, oldWidth, oldHeight);
     }
 
 // getters and setters
@@ -97,15 +100,15 @@ namespace BattleRoom {
         m_layer = layer;
     }
 
-    void View::setTopLeft(Pixel pixel) {
-        m_topLeft = pixel;
-        recalculateVerticalFov();
-    }
+    //void View::setTopLeft(Pixel pixel) {
+    //    m_topLeft = pixel;
+    //    recalculateVerticalFov();
+    //}
 
-    void View::setBottomRight(Pixel pixel) {
-        m_bottomRight = pixel;
-        recalculateVerticalFov();
-    }
+    //void View::setBottomRight(Pixel pixel) {
+    //    m_bottomRight = pixel;
+    //    recalculateVerticalFov();
+    //}
 
     std::string View::getName() const {
         return m_name;
@@ -116,18 +119,18 @@ namespace BattleRoom {
     }
 
     Pixel View::getTopLeft() const {
-        return m_topLeft;
+        return m_position.getTopLeft();
     }
 
     Pixel View::getBottomRight() const {
-        return m_bottomRight;
+        return m_position.getBottomRight();
     }
 
     void View::recalculateVerticalFov() {
 
         radians horFov = m_camera->getHorizontalFov();
-        px width = m_bottomRight.getCol() - m_topLeft.getCol();
-        px height = m_bottomRight.getRow() - m_topLeft.getRow();
+        px width = getBottomRight().getCol() - getTopLeft().getCol();
+        px height = getBottomRight().getRow() - getTopLeft().getRow();
         m_camera->setVerticalFov(2 * std::atan2(height * 2.0 * std::tan(horFov / 2.0), 2.0 * width));
     }
 

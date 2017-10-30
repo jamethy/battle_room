@@ -3,17 +3,18 @@
 
 namespace BattleRoom {
 
+    void PullDownMenu::applySettings(ResourceDescriptor settings) {
+        m_pullDown.applySettings(settings);
+    }
+
     PullDownMenu::PullDownMenu() {
         m_pullDown.setAnimation(AnimationHandler::getAnimation("menus/pull_down"));
-        m_pullDown.setLocation(Vector2D(0.046666, 0.02));
+        //m_pullDown.setLocation(Vector2D(0.046666, 0.02));
     }
 
     bool PullDownMenu::handleInput(Input input, RelPixel point) {
-        if (objectBoundaryContains(m_pullDown, point)) {
 
-            return true;
-        }
-        return false;
+        return true;
     }
 
     void PullDownMenu::updateAnimation(seconds timestep) {

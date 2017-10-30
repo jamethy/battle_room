@@ -5,6 +5,7 @@
 #include "battle_room/common/resource.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/graphics/camera.h"
+#include "battle_room/graphics/view_position.h"
 
 namespace BattleRoom {
 
@@ -19,7 +20,7 @@ namespace BattleRoom {
     public:
 
         // constructor
-        View(ResourceDescriptor settings);
+        View(ResourceDescriptor settings, int windowWidth, int windowHeight);
 
         View(const View &original);
 
@@ -49,6 +50,8 @@ namespace BattleRoom {
          */
         Inputs handleInputs(Inputs inputs);
 
+        void adjustForResize(int width, int height, int oldWidth, int oldHeight);
+
         // getters and setters
 
         std::string getName() const;
@@ -63,10 +66,6 @@ namespace BattleRoom {
 
         void setLayer(int layer);
 
-        void setTopLeft(Pixel pixel);
-
-        void setBottomRight(Pixel pixel);
-
         // inherited
         void applySettings(ResourceDescriptor settings);
 
@@ -79,9 +78,7 @@ namespace BattleRoom {
 
         std::string m_name; ///< Name and key of view
         int m_layer = 0; //< higher numbers are rendered first (therefore then covered up)
-        Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
-        Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
-
+        ViewPosition m_position;
         UniqueCamera m_camera;
 
     }; // View class
