@@ -12,7 +12,7 @@ Window: mainWindow
     View: menuView
         Position: Absolute
             TopLeft: 100, 100
-            BottomRight: 150, 150
+            BottomRight: 420, 1000
 
 GameInterface: mainView
 

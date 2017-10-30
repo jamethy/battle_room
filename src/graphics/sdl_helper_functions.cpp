@@ -500,16 +500,13 @@ namespace BattleRoom {
         px col = view.getTopLeft().getCol() + menu.getLocation().x()*viewWidth;
         px row = view.getTopLeft().getRow() + menu.getLocation().y()*viewHeight;
 
-        px colOffset = viewWidth*menu.getWidth() / 2.0;
-        px rowOffset = viewHeight*menu.getHeight() / 2.0;
-
-        Pixel topLeft(row - rowOffset, col - colOffset);
-        Pixel botRight(row + rowOffset, col + colOffset);
+        Pixel topLeft(row, col);
+        Pixel botRight(row + viewHeight*menu.getHeight(), col + viewWidth*menu.getWidth());
 
         // Fill SdlDrawable
         drawable->setIsInFrame(true);
         drawable->setViewLayer(view.getLayer());
-        drawable->setZPosition(0);
+        drawable->setZPosition(1);
         drawable->setAngle(0);
         drawable->setDestinationRect(rectFrom(topLeft, botRight));
 

@@ -1,12 +1,9 @@
 #include "battle_room/graphics/view_position.h"
-#include <iostream>
 
 namespace BattleRoom {
 
     SizeType parseSizeType(const std::string str) {
-        std::cout << "str: " << str << std::endl;
         if (keyMatch(str, "Absolute")) {
-            std::cout << " absolute\n";
             return SizeType::Absolute;
         } else if (keyMatch(str, "Anchored")) {
             return SizeType::Anchored;

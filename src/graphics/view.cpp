@@ -2,7 +2,6 @@
 #include "battle_room/graphics/camera_factory.h"
 
 #include <cmath>
-#include <iostream>
 
 namespace BattleRoom {
 
