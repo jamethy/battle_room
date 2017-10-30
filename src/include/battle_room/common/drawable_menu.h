@@ -24,11 +24,9 @@ namespace BattleRoom {
 
         seconds getAnimationState() const;
 
-        Vector2D getLocation() const;
+        RelPixel getTopLeft() const;
 
-        relpx getWidth() const;
-
-        relpx getHeight() const;
+        RelPixel getBottomRight() const;
 
         void updateAnimation(seconds timestep);
 
@@ -36,11 +34,9 @@ namespace BattleRoom {
 
         void setAnimationState(seconds animationState);
 
-        void setLocation(Vector2D location);
+        void setTopLeft(RelPixel topLeft);
 
-        void setWidth(relpx width);
-
-        void setHeight(relpx height);
+        void setBottomRight(RelPixel bottomRight);
 
         // inherited
         virtual void applySettings(ResourceDescriptor settings) override;
@@ -49,9 +45,8 @@ namespace BattleRoom {
 
         Animation *m_currentAnimation; ///< Animation object is on
         seconds m_animationState; ///< Seconds into animation
-        Vector2D m_location; ///< Location of the object in 2D space 0-1
-        relpx m_width;
-        relpx m_height;
+        RelPixel m_topLeft;
+        RelPixel m_bottomRight;
 
     }; // DrawableMenu class
 } // BattleRoom namespace

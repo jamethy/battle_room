@@ -17,12 +17,7 @@ Window: mainWindow
 GameInterface: mainView
 
 MenuInterface: menuView
-    #Menu: PullDown
-        #Anchor: TopLeft
-        #Location: 50, 7
     Menu: Button
-        #Anchor: Center
-        #Location: 0.5, 0.5
 
 WorldUpdater: Local
     Resource: worlds/test_world

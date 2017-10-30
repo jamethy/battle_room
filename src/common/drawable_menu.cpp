@@ -7,21 +7,12 @@ namespace BattleRoom {
 
     void DrawableMenu::applySettings(ResourceDescriptor settings) {
 
-        m_location.applySettings(settings.getSubResource("Location"));
+        m_topLeft.applySettings(settings.getSubResource("TopLeft"));
+        m_bottomRight.applySettings(settings.getSubResource("BottomRight"));
 
         ResourceDescriptor sub = settings.getSubResource("Animation");
         if (isNotEmpty(sub.getValue())) {
             setAnimation(AnimationHandler::getAnimation(sub.getValue()));
-        }
-
-        sub = settings.getSubResource("Width");
-        if (isNotEmpty(sub.getValue())) {
-            m_width = stod(sub.getValue());
-        }
-
-        sub = settings.getSubResource("Height");
-        if (isNotEmpty(sub.getValue())) {
-            m_height = stod(sub.getValue());
         }
 
         sub = settings.getSubResource("AnimationState");
@@ -35,8 +26,8 @@ namespace BattleRoom {
     DrawableMenu::DrawableMenu() :
             m_currentAnimation(&AnimationHandler::getAnimation(MISSING_ANIMATION)),
             m_animationState(0.0),
-            m_width(1), 
-            m_height(1)
+            m_topLeft(RelPixel(0,0)),
+            m_bottomRight(RelPixel(1,1))
     {}
 
 // other functions
@@ -69,16 +60,12 @@ namespace BattleRoom {
         return m_animationState;
     }
 
-    Vector2D DrawableMenu::getLocation() const {
-        return m_location;
+    RelPixel DrawableMenu::getTopLeft() const {
+        return m_topLeft;
     }
 
-    relpx DrawableMenu::getWidth() const {
-        return m_width;
-    }
-
-    relpx DrawableMenu::getHeight() const {
-        return m_height;
+    RelPixel DrawableMenu::getBottomRight() const {
+        return m_bottomRight;
     }
 
     void DrawableMenu::setAnimation(Animation &animation) {
@@ -89,16 +76,13 @@ namespace BattleRoom {
         m_animationState = animationState;
     }
 
-    void DrawableMenu::setLocation(Vector2D location) {
-        m_location = location;
+
+    void DrawableMenu::setTopLeft(RelPixel topLeft) {
+        m_topLeft = topLeft;
     }
 
-    void DrawableMenu::setWidth(relpx width) {
-        m_width = width;
-    }
-
-    void DrawableMenu::setHeight(relpx height) {
-        m_height = height;
+    void DrawableMenu::setBottomRight(RelPixel bottomRight) {
+        m_bottomRight = bottomRight;
     }
 
 } // BattleRoom namespace

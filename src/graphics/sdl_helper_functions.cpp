@@ -497,11 +497,13 @@ namespace BattleRoom {
         px viewHeight = view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt();
         px viewWidth = view.getBottomRight().getColInt() - view.getTopLeft().getColInt();
 
-        px col = view.getTopLeft().getCol() + menu.getLocation().x()*viewWidth;
-        px row = view.getTopLeft().getRow() + menu.getLocation().y()*viewHeight;
+        px topLeftCol = view.getTopLeft().getCol() + menu.getTopLeft().getCol()*viewWidth;
+        px topLeftRow = view.getTopLeft().getRow() + menu.getTopLeft().getRow()*viewHeight;
+        px botRightCol = view.getTopLeft().getCol() + menu.getBottomRight().getCol()*viewWidth;
+        px botRightRow = view.getTopLeft().getRow() + menu.getBottomRight().getRow()*viewHeight;
 
-        Pixel topLeft(row, col);
-        Pixel botRight(row + viewHeight*menu.getHeight(), col + viewWidth*menu.getWidth());
+        Pixel topLeft(topLeftRow, topLeftCol);
+        Pixel botRight(botRightRow, botRightCol);
 
         // Fill SdlDrawable
         drawable->setIsInFrame(true);

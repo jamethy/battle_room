@@ -5,6 +5,8 @@
 #include "battle_room/common/input_gatherer.h"
 #include "battle_room/common/application_message_receiver.h"
 
+#include <iostream>
+
 using std::vector;
 using InputKey::Key;
 using InputKey::Motion;

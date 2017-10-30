@@ -8,15 +8,14 @@ namespace BattleRoom {
 
     bool Menu::objectBoundaryContains(const DrawableMenu& obj, RelPixel point) {
 
-        Vector2D objLoc = obj.getLocation();
+        RelPixel topLeft = obj.getTopLeft();
+        RelPixel botRight = obj.getBottomRight();
 
-        if (point.getRow() < objLoc.y() - obj.getHeight()/2.0 
-                || point.getRow() > objLoc.y() + obj.getHeight()/2.0) {
+        if (point.getRow() < topLeft.getRow() || point.getRow() > botRight.getRow()) {
             return false;
         }
 
-        if (point.getCol() < objLoc.y() - obj.getHeight()/2.0 
-                || point.getCol() > objLoc.y() + obj.getHeight()/2.0) {
+        if (point.getCol() < topLeft.getCol() || point.getCol() > botRight.getCol()) {
             return false;
         }
 
