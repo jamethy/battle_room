@@ -87,6 +87,7 @@ namespace BattleRoom {
 
     void View::adjustForResize(int width, int height, int oldWidth, int oldHeight) {
         m_position.adjustForResize(width, height, oldWidth, oldHeight);
+        recalculateVerticalFov();
     }
 
 // getters and setters
@@ -98,16 +99,6 @@ namespace BattleRoom {
     void View::setLayer(int layer) {
         m_layer = layer;
     }
-
-    //void View::setTopLeft(Pixel pixel) {
-    //    m_topLeft = pixel;
-    //    recalculateVerticalFov();
-    //}
-
-    //void View::setBottomRight(Pixel pixel) {
-    //    m_bottomRight = pixel;
-    //    recalculateVerticalFov();
-    //}
 
     std::string View::getName() const {
         return m_name;
