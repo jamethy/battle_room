@@ -19,6 +19,16 @@ namespace BattleRoom {
         if (isNotEmpty(sub.getValue())) {
             setAnimationState(toSeconds(sub.getValue()));
         }
+
+        sub = settings.getSubResource("Text");
+        if (isNotEmpty(sub.getValue())) {
+            setText(sub.getValue());
+        }
+
+        sub = settings.getSubResource("ZLayer");
+        if (isNotEmpty(sub.getValue())) {
+            setZLayer(stod(sub.getValue()));
+        }
     }
 
 // Constructor
@@ -27,7 +37,9 @@ namespace BattleRoom {
             m_currentAnimation(&AnimationHandler::getAnimation(MISSING_ANIMATION)),
             m_animationState(0.0),
             m_topLeft(RelPixel(0,0)),
-            m_bottomRight(RelPixel(1,1))
+            m_bottomRight(RelPixel(1,1)),
+            m_text(""),
+            m_zLayer(0.0)
     {}
 
 // other functions
@@ -68,6 +80,14 @@ namespace BattleRoom {
         return m_bottomRight;
     }
 
+    std::string DrawableMenu::getText() const {
+        return m_text;
+    }
+
+    double DrawableMenu::getZLayer() const {
+        return m_zLayer;
+    }
+
     void DrawableMenu::setAnimation(Animation &animation) {
         m_currentAnimation = &animation;
     }
@@ -83,6 +103,14 @@ namespace BattleRoom {
 
     void DrawableMenu::setBottomRight(RelPixel bottomRight) {
         m_bottomRight = bottomRight;
+    }
+
+    void DrawableMenu::setText(std::string text) {
+        m_text = text;
+    }
+
+    void DrawableMenu::setZLayer(double zLayer) {
+        m_zLayer = zLayer;
     }
 
 } // BattleRoom namespace

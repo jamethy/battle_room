@@ -94,5 +94,13 @@ namespace BattleRoom {
      */
     UniqueDrawable getSdlDrawableFrom(const DrawableMenu &menu, View &view);
 
+    /**
+     * \brief Creates an instance drawable in SDL
+     * \param object Menu's text to be made into a drawable
+     * \param view View that the text will be drawn on
+     * \return Unique Pointer of SdlDrawable base class
+     */
+    UniqueDrawable getSdlDrawableTextFrom(const DrawableMenu &menu, View &view);
+
 } // BattleRoom namespace
 #endif // SDL_HELPER_FUNCTIONS_H

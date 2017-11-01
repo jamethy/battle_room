@@ -338,6 +338,9 @@ namespace BattleRoom {
 
             for (const DrawableMenu &menu : menus) {
                 drawables.push_back(getSdlDrawableFrom(menu, view));
+                if (menu.getText().length() > 0) {
+                    drawables.push_back(getSdlDrawableTextFrom(menu, view));
+                }
             }
         }
     }

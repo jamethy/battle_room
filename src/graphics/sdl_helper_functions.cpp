@@ -3,6 +3,7 @@
 #include "sdl_drawable_image.h"
 
 #include <cmath>
+#include <iostream>
 
 namespace BattleRoom {
 
@@ -484,7 +485,7 @@ namespace BattleRoom {
 
         return UniqueDrawable(drawable);
 
-    } // end getSdlDrawableFrom
+    } 
 
 
     UniqueDrawable getSdlDrawableFrom(const DrawableMenu &menu, View &view) {
@@ -508,7 +509,7 @@ namespace BattleRoom {
         // Fill SdlDrawable
         drawable->setIsInFrame(true);
         drawable->setViewLayer(view.getLayer());
-        drawable->setZPosition(1);
+        drawable->setZPosition(menu.getZLayer());
         drawable->setAngle(0);
         drawable->setDestinationRect(rectFrom(topLeft, botRight));
 
@@ -526,7 +527,42 @@ namespace BattleRoom {
 
         return UniqueDrawable(drawable);
 
-    } // end getSdlDrawableFrom
+    } 
+
+    const double BUFF = 0.25;
+
+    UniqueDrawable getSdlDrawableTextFrom(const DrawableMenu &menu, View &view) {
+        SdlDrawableText *drawable = new SdlDrawableText();
+
+        px viewHeight = view.getBottomRight().getRowInt() - view.getTopLeft().getRowInt();
+        px viewWidth = view.getBottomRight().getColInt() - view.getTopLeft().getColInt();
+
+        px menuHeight = viewHeight*(menu.getBottomRight().getRow() - menu.getTopLeft().getRow());
+        px menuWidth = viewWidth*(menu.getBottomRight().getCol() - menu.getTopLeft().getCol());
+
+        px topLeftCol = (view.getTopLeft().getCol() + menu.getTopLeft().getCol()*viewWidth) + BUFF*menuWidth;
+        px topLeftRow = (view.getTopLeft().getRow() + menu.getTopLeft().getRow()*viewHeight) + BUFF*menuHeight;
+        px botRightCol = (view.getTopLeft().getCol() + menu.getBottomRight().getCol()*viewWidth) - BUFF*menuWidth;
+        px botRightRow = (view.getTopLeft().getRow() + menu.getBottomRight().getRow()*viewHeight) - BUFF*menuHeight;
+
+        Pixel topLeft(topLeftRow, topLeftCol);
+        Pixel botRight(botRightRow, botRightCol);
+
+        drawable->setIsInFrame(true);
+        drawable->setViewLayer(view.getLayer());
+        drawable->setZPosition(menu.getZLayer() + 0.1);
+        drawable->setAngle(0);
+        drawable->setDestinationRect(rectFrom(topLeft, botRight));
+
+        // Fill SdlDrawableImage
+        drawable->setColor(toSdlColor(Color()));
+        drawable->setFont("default.ttf");
+        drawable->setFontSize(50); // TODO calculate font size
+        drawable->setText(menu.getText());
+
+        return UniqueDrawable(drawable);
+
+    }
 
 } // BattleRoom namespace
 

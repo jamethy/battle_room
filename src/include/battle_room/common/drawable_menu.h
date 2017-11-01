@@ -28,6 +28,10 @@ namespace BattleRoom {
 
         RelPixel getBottomRight() const;
 
+        std::string getText() const;
+
+        double getZLayer() const;
+
         void updateAnimation(seconds timestep);
 
         void setAnimation(Animation &animation);
@@ -38,6 +42,10 @@ namespace BattleRoom {
 
         void setBottomRight(RelPixel bottomRight);
 
+        void setText(std::string text);
+
+        void setZLayer(double zLayer);
+
         // inherited
         virtual void applySettings(ResourceDescriptor settings) override;
 
@@ -45,8 +53,10 @@ namespace BattleRoom {
 
         Animation *m_currentAnimation; ///< Animation object is on
         seconds m_animationState; ///< Seconds into animation
+        double m_zLayer;
         RelPixel m_topLeft;
         RelPixel m_bottomRight;
+        std::string m_text;
 
     }; // DrawableMenu class
 } // BattleRoom namespace

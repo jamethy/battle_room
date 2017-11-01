@@ -5,8 +5,8 @@ NextAnimation: menus/button_down
 
 Frame:
     EndTime: 99999999
-    TopLeft: 32, 0
-    BottomRight: 63, 127
+    TopLeft: 33, 1
+    BottomRight: 64, 128
 
     Boundary: Box
         Width: 128

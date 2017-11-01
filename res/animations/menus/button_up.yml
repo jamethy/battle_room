@@ -4,8 +4,8 @@ NextAnimation: menus/button
 
 Frame:
     EndTime: 99999999
-    TopLeft: 0, 0
-    BottomRight: 31, 127
+    TopLeft: 1, 1
+    BottomRight: 32, 128
 
     Boundary: Box
         Width: 1
