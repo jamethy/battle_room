@@ -36,6 +36,7 @@ Maybe for fun
     Add a cleanup file paths function in file utils.
     Split up common somehow
     Fix circle intersection
+    use menus to spawn objects (map creator)
 
 Persistent to do
     Look for // TODO in the code

@@ -97,7 +97,7 @@ namespace BattleRoom {
                 anchor = Pixel(oldHeight - m_bottomRight.getRow(), oldWidth - m_bottomRight.getCol());
                 break;
             case Center:
-                anchor = Pixel(m_topLeft.getRow() - oldHeight/2, m_topLeft.getCol() - oldWidth/2);
+                anchor = Pixel(m_topLeft.getRow() - (oldHeight - viewHeight)/2, m_topLeft.getCol() - (oldWidth - viewWidth)/2);
                 break;
             case TopLeft: 
             default:
@@ -171,7 +171,7 @@ namespace BattleRoom {
                 m_topLeft = Pixel(m_windowHeight - (anchor.getRow() + height), m_windowWidth - (anchor.getCol() + width));
                 break;
             case Center:
-                m_topLeft = Pixel(m_windowHeight/2.0 + anchor.getRow(), m_windowWidth/2.0 + anchor.getCol());
+                m_topLeft = Pixel(m_windowHeight/2.0 - height/2.0 + anchor.getRow(), m_windowWidth/2.0 - width/2.0 + anchor.getCol());
                 break;
             case TopLeft: 
             default:

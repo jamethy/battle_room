@@ -11,8 +11,8 @@ Window: mainWindow
             CameraFriction: 0.25
     View: menuView
         Position: Relative
-            ScreenAnchor: TopRight
-            Anchor: 00, 00
+            ScreenAnchor: Center
+            Anchor: 100, 00
             Scale: 400
             Ratio: 4
 
