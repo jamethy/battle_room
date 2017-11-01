@@ -26,16 +26,18 @@ namespace BattleRoom {
 
         private:
 
+            void setAnchoredPosition(Pixel topLeft, Pixel botRight);
+            void setRelativePosition(Pixel anchor, px width, px height);
+
+            void adjustAnchoredPosition(px oldWidth, px oldHeight);
+            void adjustRelativePosition(px oldWidth, px oldHeight);
+
             Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
             Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
 
             SizeType m_sizeType;
-
             ScreenAnchor m_anchor;
-            px m_width;
-            px m_height;
-            double m_ratio;
-            double m_scale;
+
 
             px m_windowWidth;
             px m_windowHeight;
@@ -43,7 +45,7 @@ namespace BattleRoom {
             //positioning
                 // abs = topleft, botright
                 // fill = none
-                // rel = anchor, width, height
+                // anchored = anchor, width, height
                 // rel = ancho, ratio, scale
 
     };

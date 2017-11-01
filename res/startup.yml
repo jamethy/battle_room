@@ -9,15 +9,20 @@ Window: mainWindow
             ZoomInMultiplier: 0.5
             ZoomOutMultiplier: 0.5
             CameraFriction: 0.25
-    View: menuView
-        Position: Absolute
-            TopLeft: 100, 100
-            BottomRight: 420, 1000
+#    View: menuView
+#        Position: Relative
+#            ScreenAnchor: TopRight
+#            Anchor: 00, 00
+#            Scale: 400
+#            Ratio: 4
+
+            #TopLeft: 100, 100
+            #BottomRight: 420, 1000
 
 GameInterface: mainView
 
-MenuInterface: menuView
-    Menu: Button
+#MenuInterface: menuView
+#Menu: Button
 
 WorldUpdater: Local
     Resource: worlds/test_world
