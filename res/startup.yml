@@ -11,19 +11,15 @@ Window: mainWindow
             CameraFriction: 0.25
     View: menuView
         Position: Relative
-            ScreenAnchor: Center
-            Anchor: 100, 00
-            Scale: 400
-            Ratio: 4
-
-            #TopLeft: 100, 100
-            #BottomRight: 420, 1000
+            ScreenAnchor: TopLeft
+            Anchor: 0, 100
+            Scale: 50
+            Ratio: 1
 
 GameInterface: mainView
 
 MenuInterface: menuView
-    Menu: Button
-        Text: hello world
+    Menu: PullDown
 
 WorldUpdater: Local
     Resource: worlds/test_world

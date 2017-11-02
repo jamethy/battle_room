@@ -57,21 +57,20 @@ namespace BattleRoom {
                 SDL_SetWindowSize(m_window, m_windowWidth, m_windowHeight);
                 resizeViews(oldWidth, oldHeight);
             }
-        }
 
-        // regardless of window name, compare against views
-        for (ResourceDescriptor sub : settings.getSubResources("View")) {
+            for (ResourceDescriptor sub : settings.getSubResources("View")) {
 
-            // If view exists, apply settings
-            if (m_views.count(sub.getValue()) > 0) {
-                View &view = m_views.at(sub.getValue());
-                view.applySettings(sub);
-            }
+                // If view exists, apply settings
+                if (m_views.count(sub.getValue()) > 0) {
+                    View &view = m_views.at(sub.getValue());
+                    view.applySettings(sub);
+                }
                 // Else, create a new view
-            else {
-                View newView = View(sub, m_windowWidth, m_windowHeight);
-                string name = newView.getName();
-                m_views.insert(std::make_pair(name, newView));
+                else {
+                    View newView = View(sub, m_windowWidth, m_windowHeight);
+                    string name = newView.getName();
+                    m_views.insert(std::make_pair(name, newView));
+                }
             }
         }
     }

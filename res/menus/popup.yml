@@ -1,0 +1,10 @@
+
+Window: mainWindow
+    View: popupView
+        Position: Relative
+            ScreenAnchor: Center
+            Scale: 400
+            Ratio: 4
+
+MenuInterface: popupView
+    Menu: Button
