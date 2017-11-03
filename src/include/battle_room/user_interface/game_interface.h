@@ -10,7 +10,7 @@ namespace BattleRoom {
 
     public:
 
-        GameInterface(ResourceDescriptor settings);
+        GameInterface(ResourceDescriptor settings, UniqueId viewId);
 
         // inherited
         std::vector<DrawableObject> getDrawableObjects() override;

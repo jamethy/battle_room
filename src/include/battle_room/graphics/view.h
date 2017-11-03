@@ -1,6 +1,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+#include "battle_room/common/unique_id.h"
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/resource.h"
 #include "battle_room/common/inputs.h"
@@ -54,6 +55,8 @@ namespace BattleRoom {
 
         // getters and setters
 
+        UniqueId getUniqueId() const;
+
         std::string getName() const;
 
         int getLayer() const;
@@ -76,6 +79,7 @@ namespace BattleRoom {
          */
         void recalculateVerticalFov();
 
+        UniqueId m_uniqueId;
         std::string m_name; ///< Name and key of view
         int m_layer = 0; //< higher numbers are rendered first (therefore then covered up)
         ViewPosition m_position;

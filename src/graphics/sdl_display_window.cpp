@@ -57,21 +57,6 @@ namespace BattleRoom {
                 SDL_SetWindowSize(m_window, m_windowWidth, m_windowHeight);
                 resizeViews(oldWidth, oldHeight);
             }
-
-            for (ResourceDescriptor sub : settings.getSubResources("View")) {
-
-                // If view exists, apply settings
-                if (m_views.count(sub.getValue()) > 0) {
-                    View &view = m_views.at(sub.getValue());
-                    view.applySettings(sub);
-                }
-                // Else, create a new view
-                else {
-                    View newView = View(sub, m_windowWidth, m_windowHeight);
-                    string name = newView.getName();
-                    m_views.insert(std::make_pair(name, newView));
-                }
-            }
         }
     }
 
@@ -81,7 +66,9 @@ namespace BattleRoom {
 
 // constructors
 
-    SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings) {
+    SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings) : 
+        m_uniqueId(UniqueId::generateNewLocalId())
+    {
         m_views.clear();
         m_sdlEvents.clear();
         m_drawablesA.clear();
@@ -146,16 +133,16 @@ namespace BattleRoom {
  * \param viewMap Map of views to sort
  * \return Names of sorted values
  */
-    vector<string> getSortedViews(const std::unordered_map<string, View> &viewMap) {
+    vector<UniqueId> getSortedViews(const std::unordered_map<UniqueId, View> &viewMap) {
 
-        vector<string> sortedViews(viewMap.size());
+        vector<UniqueId> sortedViews;
         sortedViews.clear();
         for (const auto &p : viewMap) {
             sortedViews.push_back(p.first);
         }
 
         std::sort(sortedViews.begin(), sortedViews.end(),
-                  [&viewMap](string a, string b) {
+                  [&viewMap](UniqueId a, UniqueId b) {
                       return viewMap.at(a).getLayer() < viewMap.at(b).getLayer();
                   }
         );
@@ -259,8 +246,8 @@ namespace BattleRoom {
             }
 
             // Set view intersections
-            for (string &viewName : getSortedViews(m_views)) {
-                const View &view = m_views.at(viewName);
+            for (UniqueId &viewId : getSortedViews(m_views)) {
+                const View &view = m_views.at(viewId);
 
                 // If it intersects the view, calculate the zero-plane intersection
                 if (m_mousePos.isBetween(view.getTopLeft(), view.getBottomRight())) {
@@ -269,13 +256,13 @@ namespace BattleRoom {
                     Vector3D zeroPoint = view.zeroPlaneIntersection(m_mousePos);
 
                     // Add intersection to input's view list
-                    input.addViewIntersection(view.getName(), zeroPoint);
+                    input.addViewIntersection(viewId, zeroPoint);
                     px width = view.getBottomRight().getCol() - view.getTopLeft().getCol();
                     px height = view.getBottomRight().getRow() - view.getTopLeft().getRow();
 
                     relpx col = (m_mousePos.getCol() - view.getTopLeft().getCol())/width;
                     relpx row = (m_mousePos.getRow() - view.getTopLeft().getRow())/height;
-                    input.addViewIntersection(view.getName(), RelPixel(row, col));
+                    input.addViewIntersection(viewId, RelPixel(row, col));
                 }
             }
 
@@ -293,20 +280,39 @@ namespace BattleRoom {
     Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
 
         // Send inputs to each view to handle
-        for (string &viewName : getSortedViews(m_views)) {
-            View &view = m_views.at(viewName);
+        for (UniqueId &viewId : getSortedViews(m_views)) {
+            View &view = m_views.at(viewId);
             inputs = view.handleInputs(inputs);
         }
 
         return inputs;
     }
 
-    void SdlDisplayWindow::addViewObjects(const vector<DrawableObject> &objects, string viewName) {
+    UniqueId SdlDisplayWindow::addView(ResourceDescriptor settings) {
+        View newView = View(settings, m_windowWidth, m_windowHeight);
+        m_views.insert(std::make_pair(newView.getUniqueId(), newView));
+        return newView.getUniqueId();
+    }
+
+    void SdlDisplayWindow::deleteView(UniqueId viewId) {
+        m_views.erase(viewId);
+    }
+
+
+    const UniqueId SdlDisplayWindow::getUniqueId() const {
+        return m_uniqueId;
+    }
+
+    std::string SdlDisplayWindow::getName() const {
+        return m_windowName;
+    }
+
+    void SdlDisplayWindow::addViewObjects(const vector<DrawableObject> &objects, UniqueId viewId) {
 
         // Check if view is in this window
-        if (m_views.count(viewName) > 0) {
+        if (m_views.count(viewId) > 0) {
 
-            View &view = m_views.at(viewName);
+            View &view = m_views.at(viewId);
             vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
             for (const DrawableObject &object : objects) {
@@ -315,11 +321,11 @@ namespace BattleRoom {
         }
     }
 
-    void SdlDisplayWindow::addViewTexts(const std::vector<DrawableText> &texts, std::string viewName) {
+    void SdlDisplayWindow::addViewTexts(const std::vector<DrawableText> &texts, UniqueId viewId) {
 
-        if (m_views.count(viewName) > 0) {
+        if (m_views.count(viewId) > 0) {
 
-            View &view = m_views.at(viewName);
+            View &view = m_views.at(viewId);
             vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
             for (const DrawableText &text : texts) {
@@ -328,11 +334,11 @@ namespace BattleRoom {
         }
     }
 
-    void SdlDisplayWindow::addViewMenus(const std::vector<DrawableMenu> menus, std::string viewName) {
+    void SdlDisplayWindow::addViewMenus(const std::vector<DrawableMenu> menus, UniqueId viewId) {
 
-        if (m_views.count(viewName) > 0) {
+        if (m_views.count(viewId) > 0) {
 
-            View &view = m_views.at(viewName);
+            View &view = m_views.at(viewId);
             vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
             for (const DrawableMenu &menu : menus) {
@@ -423,8 +429,8 @@ namespace BattleRoom {
         m_windowWidth = width;
         m_windowHeight = height;
 
-        for (string &viewName : getSortedViews(m_views)) {
-            View &view = m_views.at(viewName);
+        for (UniqueId &viewId : getSortedViews(m_views)) {
+            View &view = m_views.at(viewId);
             view.adjustForResize(width, height, oldWidth, oldHeight);
         }
     }

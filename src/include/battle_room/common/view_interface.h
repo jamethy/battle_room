@@ -56,21 +56,19 @@ namespace BattleRoom {
 
         // getters and setters
 
-        std::string getAssociatedView() const;
+        UniqueId getAssociatedView() const;
         const UniqueId getUniqueId() const;
-
-        void setAssociatedView(std::string viewName);
 
         // inherited
         virtual void applySettings(ResourceDescriptor settings) override;
 
     protected:
 
-        ViewInterface();
+        ViewInterface(UniqueId associatedView);
 
     private:
 
-        std::string m_associatedView; ///< View being interfaced with
+        UniqueId m_associatedView; ///< View being interfaced with
         UniqueId m_uniqueId;
 
     }; // ViewInterface class

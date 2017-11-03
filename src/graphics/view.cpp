@@ -35,17 +35,19 @@ namespace BattleRoom {
 
 // constructors
     View::View(ResourceDescriptor settings, int windowWidth, int windowHeight) :
+        m_uniqueId(UniqueId::generateNewLocalId()),
         m_camera(CameraFactory::createMotionlessCamera()),
-        m_position(ViewPosition(settings.getSubResource("Position"), windowWidth, windowHeight)) 
+        m_position(ViewPosition(settings.getSubResource("Position"), windowWidth, windowHeight))
     {
         applySettings(settings);
     }
 
-    View::View(const View &original)
-            : m_name(original.m_name),
-              m_layer(original.m_layer),
-              m_position(original.m_position),
-              m_camera(UniqueCamera(original.m_camera->clone())) {}
+    View::View(const View &original) : 
+        m_uniqueId(original.m_uniqueId),
+        m_name(original.m_name),
+        m_layer(original.m_layer),
+        m_position(original.m_position),
+        m_camera(UniqueCamera(original.m_camera->clone())) {}
 
 
     View &View::operator=(const View &original) {
@@ -65,7 +67,7 @@ namespace BattleRoom {
 
     Inputs View::handleInputs(Inputs inputs) {
         // current just passed to camera
-        return m_camera->handleInputs(inputs, getName());
+        return m_camera->handleInputs(inputs, m_uniqueId);
     }
 
     Vector3D View::zeroPlaneIntersection(Pixel point) const {
@@ -91,6 +93,10 @@ namespace BattleRoom {
     }
 
 // getters and setters
+
+    UniqueId View::getUniqueId() const {
+        return m_uniqueId;
+    }
 
     void View::setName(std::string name) {
         m_name = name;

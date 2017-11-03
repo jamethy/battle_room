@@ -21,9 +21,11 @@ namespace BattleRoom {
 
 // constructors
 
-    GameInterface::GameInterface(ResourceDescriptor settings) : 
+    GameInterface::GameInterface(ResourceDescriptor settings, UniqueId viewId) : 
+        ViewInterface(viewId),
         m_idToTrack(UniqueId::generateInvalidId()),
-        m_selectedObject(UniqueId::generateInvalidId()) {
+        m_selectedObject(UniqueId::generateInvalidId())
+    {
             m_spatialElements.clear();
             applySettings(settings);
     }
@@ -167,7 +169,7 @@ namespace BattleRoom {
                 if (object->getUniqueId() == m_idToTrack) {
                     Vector3D loc = object->getLocation();
                     ResourceDescriptor descriptor({
-                            "View: " + getAssociatedView(),
+                            "View: " + getAssociatedView().toString(),
                             "    Camera:",
                             "        Location: "
                             + std::to_string(loc.x()) + ","

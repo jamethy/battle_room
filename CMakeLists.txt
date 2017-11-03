@@ -51,7 +51,7 @@ add_subdirectory(src)
 
 if (test)
 
-    enable_testing()
-    add_subdirectory(tests)
+    #enable_testing()
+    #add_subdirectory(tests)
 
 endif(test)

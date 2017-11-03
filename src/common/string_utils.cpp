@@ -62,4 +62,15 @@ namespace BattleRoom {
         }
     }
 
+    bool isNumber(const std::string &str) {
+
+        if (str.empty()) {
+            return false;
+        }
+
+        std::regex rgx_char("^\s*\d+\s*$");
+        std::smatch sm;
+        return std::regex_search(str, sm, rgx_char);
+    }
+
 } // BattleRoom namespace

@@ -2,26 +2,20 @@
 
 namespace BattleRoom {
 
-    ViewInterface::ViewInterface() : m_uniqueId(UniqueId::generateNewLocalId()) {}
+    ViewInterface::ViewInterface(UniqueId associatedView) : 
+        m_associatedView(associatedView),
+        m_uniqueId(UniqueId::generateNewLocalId()) {}
 
     void ViewInterface::applySettings(ResourceDescriptor settings) {
-
-        if (isNotEmpty(settings.getValue())) {
-            setAssociatedView(settings.getValue());
-        }
-
+        (void)settings;
     }
 
-    std::string ViewInterface::getAssociatedView() const {
+    UniqueId ViewInterface::getAssociatedView() const {
         return m_associatedView;
     }
 
     const UniqueId ViewInterface::getUniqueId() const {
         return m_uniqueId;
-    }
-
-    void ViewInterface::setAssociatedView(std::string viewName) {
-        m_associatedView = viewName;
     }
 
 } // BattleRoom namespace

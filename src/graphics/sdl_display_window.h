@@ -32,17 +32,25 @@ namespace BattleRoom {
 
         void gatherInputs() override;
 
-        void addViewObjects(const std::vector<DrawableObject> &objects, std::string viewName) override;
+        UniqueId addView(ResourceDescriptor settings) override;
 
-        void addViewTexts(const std::vector<DrawableText> &texts, std::string viewName) override;
+        void deleteView(UniqueId viewId) override;
 
-        void addViewMenus(const std::vector<DrawableMenu> menus, std::string viewName) override;
+        void addViewObjects(const std::vector<DrawableObject> &objects, UniqueId viewId) override;
+
+        void addViewTexts(const std::vector<DrawableText> &texts, UniqueId viewId) override;
+
+        void addViewMenus(const std::vector<DrawableMenu> menus, UniqueId viewId) override;
 
         void drawScreen() override;
 
         void switchBuffers() override;
 
         Inputs handleInputs(Inputs inputs) override;
+
+        const UniqueId getUniqueId() const override;
+
+        std::string getName() const override;
 
     private:
 
@@ -58,7 +66,7 @@ namespace BattleRoom {
         SDL_Window *m_window; ///< SDL Window Pointer
         std::string m_windowName; ///< Name and title of window
 
-        std::unordered_map<std::string, View> m_views; ///< Container for views
+        std::unordered_map<UniqueId, View> m_views; ///< Container for views
 
         bool m_drawingA = true; ///< Switches between drawables for multithreading
         std::vector<UniqueDrawable> m_drawablesA; ///< Container for drawables
@@ -73,6 +81,8 @@ namespace BattleRoom {
         static int m_windowCount; ///< If this gets to zero, it quits SDL
         static int m_windowsDrawn; // TODO figure out a better way
         static unsigned m_windowWithFocus;
+
+        UniqueId m_uniqueId;
 
     }; // SdlWindow class
 } // BattleRoom namespace

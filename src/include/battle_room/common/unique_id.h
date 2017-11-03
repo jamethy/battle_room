@@ -34,6 +34,12 @@ namespace BattleRoom {
         static UniqueId generateInvalidId();
 
         /**
+         * \brief Generates an ID from a string
+         * \return Id from string or invalid
+         */
+        static UniqueId fromString(std::string str);
+
+        /**
          * Checks if the given unique id is valid
          * \return True if is valid unique id
          */
@@ -55,6 +61,8 @@ namespace BattleRoom {
 
         bool operator<(const UniqueId &other) const;
 
+        std::size_t hash() const;
+
     private:
 
         // private constructor
@@ -64,4 +72,12 @@ namespace BattleRoom {
 
     }; // UniqueId class
 } // BattleRoom namespace
+
+namespace std {
+    template <> struct hash<BattleRoom::UniqueId> {
+        size_t operator()(const BattleRoom::UniqueId& id) const {
+            return id.hash();
+        }
+    };
+}
 #endif // UNIQUE_ID_H

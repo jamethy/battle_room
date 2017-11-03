@@ -56,7 +56,7 @@ namespace BattleRoom {
                     // Prepare objects for display
                     for (ViewInterface *interface : m_viewInterfaces) {
 
-                        std::string associatedView = interface->getAssociatedView();
+                        UniqueId associatedView = interface->getAssociatedView();
                         std::vector<DrawableObject> objects = interface->getDrawableObjects();
                         std::vector<DrawableText> texts = interface->getDrawableTexts();
                         std::vector<DrawableMenu> menus = interface->getDrawableMenus();
@@ -111,37 +111,18 @@ namespace BattleRoom {
 
 
         // Create the windows for displaying - including view/camera setup in each
-        for (ResourceDescriptor windowDescriptor : settings.getSubResources("Window")) {
-            m_windows.push_back(createDisplayWindow(windowDescriptor));
+        for (ResourceDescriptor window : settings.getSubResources("Window")) {
+            addResource(window);
         }
 
-
-        // Create the game-to-view interfaces (each one points to a view)
-        // These produce UI objects that are only seen locally and also
-        // handle user inputs - for example, the main view of the world or the minimap
         for (ResourceDescriptor sub : settings.getSubResources("GameInterface")) {
-            m_viewInterfaces.push_back(new GameInterface(sub));
+            addResource(sub);
         }
-
+ 
         for (ResourceDescriptor sub : settings.getSubResources("MenuInterface")) {
-            m_viewInterfaces.push_back(new MenuInterface(sub));
-        }
-
-        // Collect the menus. These produce UI objects that are only seen locally and
-        // also handle user inputs - they are menus...
-        // TODO add menus to vew interfaces
-        // TODO add an interface factory
-        
-        sortByViewLayer(m_viewInterfaces, settings);
-    }
-
-    void Application::addResource(ResourceDescriptor settings) {
-        
-        if (keyMatch("Window", settings.getKey())) {
-            m_windows.push_back(createDisplayWindow(settings));
-        } else if (keyMatch("GameInterface", settings.getKey())) {
-            m_viewInterfaces.push_back(new GameInterface(settings));
-        }
+            addResource(sub);
+        }       
+        //sortByViewLayer(m_viewInterfaces, settings);
     }
 
     template <typename T> T findIn(std::vector<T>& vec, UniqueId target) {
@@ -159,6 +140,53 @@ namespace BattleRoom {
             }
         }
         return nullptr;
+    }
+
+    DisplayWindow* findWindow(std::vector<UniqueDisplayWindow>& vec, std::string val) {
+
+        if (isEmpty(val)) {
+            return nullptr;
+        }
+
+        UniqueId id = UniqueId::fromString(val);
+
+        if (id.isValid()) {
+            for (const auto& w : vec) {
+                if (w->getUniqueId() == id) {
+                    return w.get();
+                }
+            }
+        }
+
+        for (const auto& w : vec) {
+            if (keyMatch(w->getName(), val)) {
+                return w.get();
+            }
+        }
+
+        return nullptr;
+    }
+
+    void Application::addResource(ResourceDescriptor settings) {
+        
+        // TODO add an interface factory
+        if (keyMatch("Window", settings.getKey())) {
+            m_windows.push_back(createDisplayWindow(settings));
+        } else if (keyMatch("GameInterface", settings.getKey())) {
+
+            ResourceDescriptor sub = settings.getSubResource("Window");
+            DisplayWindow* window = findWindow(m_windows, sub.getValue());
+            if (window) {
+                m_viewInterfaces.push_back(new GameInterface(settings, window->addView(settings)));
+            }
+
+        } else if (keyMatch("MenuInterface", settings.getKey())) {
+            ResourceDescriptor sub = settings.getSubResource("Window");
+            DisplayWindow* window = findWindow(m_windows, sub.getValue());
+            if (window) {
+                m_viewInterfaces.push_back(new MenuInterface(settings, window->addView(settings)));
+            }
+        }
     }
 
     void Application::modifyResource(UniqueId target, ResourceDescriptor settings) {
@@ -213,35 +241,35 @@ namespace BattleRoom {
         }
     }
 
-    void sortByViewLayer(std::vector<ViewInterface *> &interfaces, ResourceDescriptor settings) {
-
-        // create a map of view names to view layers
-        std::unordered_map<std::string, int> viewLayerMap;
-        for (ResourceDescriptor window : settings.getSubResources("Window")) {
-            for (ResourceDescriptor view : window.getSubResources("View")) {
-                int viewLayer = 0;
-                if (isNotEmpty(view.getSubResource("Layer").getValue())) {
-                    viewLayer = std::stoi(view.getSubResource("Layer").getValue());
-                }
-
-                viewLayerMap.insert(std::make_pair(view.getValue(), viewLayer));
-            }
-        }
-
-        // sort by created map
-        std::sort(interfaces.begin(), interfaces.end(),
-                [&viewLayerMap](ViewInterface *a, ViewInterface *b) {
-
-                int aLayer = 0, bLayer = 0;
-                if (viewLayerMap.count(a->getAssociatedView()) > 0) {
-                aLayer = viewLayerMap.at(a->getAssociatedView());
-                }
-                if (viewLayerMap.count(b->getAssociatedView()) > 0) {
-                bLayer = viewLayerMap.at(b->getAssociatedView());
-                }
-                return aLayer < bLayer;
-                }
-                );
-    }
+//    void sortByViewLayer(std::vector<ViewInterface *> &interfaces, ResourceDescriptor settings) {
+//
+//        // create a map of view names to view layers
+//        std::unordered_map<std::string, int> viewLayerMap;
+//        for (ResourceDescriptor window : settings.getSubResources("Window")) {
+//            for (ResourceDescriptor view : window.getSubResources("View")) {
+//                int viewLayer = 0;
+//                if (isNotEmpty(view.getSubResource("Layer").getValue())) {
+//                    viewLayer = std::stoi(view.getSubResource("Layer").getValue());
+//                }
+//
+//                viewLayerMap.insert(std::make_pair(view.getValue(), viewLayer));
+//            }
+//        }
+//
+//        // sort by created map
+//        std::sort(interfaces.begin(), interfaces.end(),
+//                [&viewLayerMap](ViewInterface *a, ViewInterface *b) {
+//
+//                int aLayer = 0, bLayer = 0;
+//                if (viewLayerMap.count(a->getAssociatedView()) > 0) {
+//                aLayer = viewLayerMap.at(a->getAssociatedView());
+//                }
+//                if (viewLayerMap.count(b->getAssociatedView()) > 0) {
+//                bLayer = viewLayerMap.at(b->getAssociatedView());
+//                }
+//                return aLayer < bLayer;
+//                }
+//                );
+//    }
 
 } // BattleRoom namespace

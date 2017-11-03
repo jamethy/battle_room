@@ -1,7 +1,5 @@
 #include "battle_room/common/input.h"
 
-using std::string;
-
 namespace BattleRoom {
 
     Input::Input() {
@@ -9,28 +7,28 @@ namespace BattleRoom {
         m_viewRelIntersections.clear();
     }
 
-    bool Input::containsView(string viewName) {
-        return m_viewIntersections.count(viewName) != 0;
+    bool Input::containsView(UniqueId viewId) {
+        return m_viewIntersections.count(viewId) != 0;
     }
 
-    void Input::addViewIntersection(string viewName, Vector3D intersection) {
-        m_viewIntersections.insert(std::pair<string, Vector3D>(viewName, intersection));
+    void Input::addViewIntersection(UniqueId viewId, Vector3D intersection) {
+        m_viewIntersections.insert(std::pair<UniqueId, Vector3D>(viewId, intersection));
     }
 
-    void Input::addViewIntersection(string viewName, RelPixel intersection) {
-        m_viewRelIntersections.insert(std::pair<string, RelPixel>(viewName, intersection));
+    void Input::addViewIntersection(UniqueId viewId, RelPixel intersection) {
+        m_viewRelIntersections.insert(std::pair<UniqueId, RelPixel>(viewId, intersection));
     }
 
-    Vector3D Input::getViewIntersection(string viewName) {
-        if (containsView(viewName)) {
-            return m_viewIntersections.at(viewName);
+    Vector3D Input::getViewIntersection(UniqueId viewId) {
+        if (containsView(viewId)) {
+            return m_viewIntersections.at(viewId);
         }
         return Vector3D(0, 0, -1);
     }
 
-    RelPixel Input::getViewRelIntersection(string viewName) {
-        if (containsView(viewName)) {
-            return m_viewRelIntersections.at(viewName);
+    RelPixel Input::getViewRelIntersection(UniqueId viewId) {
+        if (containsView(viewId)) {
+            return m_viewRelIntersections.at(viewId);
         }
         return RelPixel(-1, -1);
     }

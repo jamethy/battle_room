@@ -48,7 +48,7 @@ namespace BattleRoom {
 
         RelPixel fromLocation(Vector3D location) override;
 
-        Inputs handleInputs(Inputs inputs, const std::string viewName) override;
+        Inputs handleInputs(Inputs inputs, const UniqueId viewId) override;
 
         void setLocation(Vector3D location) override;
 
@@ -58,9 +58,9 @@ namespace BattleRoom {
 
     protected:
 
-        double m_cameraFriction = 0.05; ///< Friction of camera motion
-        double m_zoomInMultiplier = 1.0; ///< Multiplier of zooming input
-        double m_zoomOutMultiplier = 1.0; ///< Multiplier of zooming input
+        double m_cameraFriction = 0.25; ///< Friction of camera motion
+        double m_zoomInMultiplier = 0.5; ///< Multiplier of zooming input
+        double m_zoomOutMultiplier = 0.5; ///< Multiplier of zooming input
         meters m_minimumCameraZ = 10;
 
         Vector3D m_boundsMin; ///< Minimum x and y of point in view

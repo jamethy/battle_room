@@ -39,7 +39,9 @@ namespace BattleRoom {
 
 // constructors
 
-    MenuInterface::MenuInterface(ResourceDescriptor settings) {
+    MenuInterface::MenuInterface(ResourceDescriptor settings, UniqueId viewId) :
+        ViewInterface(viewId)
+    {
         m_menus.clear();
         applySettings(settings);
     }

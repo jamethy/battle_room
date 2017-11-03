@@ -67,10 +67,10 @@ namespace BattleRoom {
         /**
          * \brief Applys the inputs for the given view to alter the camera
          * \param inputs Input list to look through
-         * \param viewName View to filter input list by
+         * \param viewId View to filter input list by
          * \return Remaining inputs that weren't used
          */
-        virtual Inputs handleInputs(Inputs inputs, const std::string viewName);
+        virtual Inputs handleInputs(Inputs inputs, const UniqueId viewId);
 
         // getters and setters
 

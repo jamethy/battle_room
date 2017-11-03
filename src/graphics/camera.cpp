@@ -133,8 +133,8 @@ namespace BattleRoom {
         return res;
     }
 
-    Inputs Camera::handleInputs(Inputs inputs, const std::string viewName) {
-        (void) viewName; // unused
+    Inputs Camera::handleInputs(Inputs inputs, const UniqueId viewId) {
+        (void) viewId; // unused
         return inputs;
     }
 

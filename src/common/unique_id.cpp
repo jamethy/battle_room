@@ -1,4 +1,5 @@
 #include "battle_room/common/unique_id.h"
+#include "battle_room/common/string_utils.h"
 
 namespace BattleRoom {
 
@@ -19,6 +20,10 @@ namespace BattleRoom {
         return UniqueId(0);
     }
 
+    UniqueId UniqueId::fromString(std::string str) {
+        return isNumber(str) ? UniqueId(stoll(str)) : generateInvalidId();
+    }
+
     bool UniqueId::isValid() const {
         return m_id != 0;
     }
@@ -37,6 +42,10 @@ namespace BattleRoom {
 
     bool UniqueId::operator<(const UniqueId &other) const {
         return m_id < other.m_id;
+    }
+
+    std::size_t UniqueId::hash() const {
+        return std::hash<long long>()(m_id);
     }
 
 } // BattleRoom namespace

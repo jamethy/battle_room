@@ -96,7 +96,7 @@ namespace BattleRoom {
         m_cameraMax = getMaxEnds(m_cameraMax, cameraCoord);
     }
 
-    Inputs MovingCamera::handleInputs(Inputs inputs, const std::string viewName) {
+    Inputs MovingCamera::handleInputs(Inputs inputs, const UniqueId viewId) {
 
         Inputs remainingInputs;
 
@@ -106,7 +106,7 @@ namespace BattleRoom {
 
         for (Input input : inputs) {
 
-            if (input.containsView(viewName)) {
+            if (input.containsView(viewId)) {
 
                 if (Motion::Scroll == input.getMotion()) {
 
@@ -118,7 +118,7 @@ namespace BattleRoom {
                     } else {
                         // MOVE CAMERA TOWRAD POS
                         camVelocityDelta = camVelocityDelta.plus(
-                                input.getViewIntersection(viewName)
+                                input.getViewIntersection(viewId)
                                 .minus(m_location)
                                 .getUnit()
                                 .times(m_zoomOutMultiplier * input.getScrollAmount())
@@ -127,7 +127,7 @@ namespace BattleRoom {
                     continue;
                 } else if (input.isModKeyDown(Modifier::Ctrl, Key::LeftClick)) {
                     m_rotating = true;
-                    RelPixel point = fromLocation(input.getViewIntersection(viewName));
+                    RelPixel point = fromLocation(input.getViewIntersection(viewId));
                     m_originalClick = std::atan2(0.5 - point.getRow(), point.getCol() - 0.5);
                     m_originalAngle = std::atan2(m_right.y(), m_right.x());
                     if (m_originalClick < 0) m_originalClick += 2*PI;
@@ -136,7 +136,7 @@ namespace BattleRoom {
                 } else if (m_rotating && Key::LeftClick == input.getKey() && Motion::Released == input.getMotion()) {
                     m_rotating = false;
                 } else if (m_rotating && Key::MouseOnly == input.getKey()) {
-                    RelPixel point = fromLocation(input.getViewIntersection(viewName));
+                    RelPixel point = fromLocation(input.getViewIntersection(viewId));
                     radians click = std::atan2(0.5 - point.getRow(), point.getCol() - 0.5);
                     radians currentDelta = std::atan2(m_right.y(), m_right.x());
                     if (click < 0) click += 2*PI;

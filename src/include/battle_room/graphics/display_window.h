@@ -31,13 +31,17 @@ namespace BattleRoom {
          */
         virtual void gatherInputs() = 0;
 
+        virtual UniqueId addView(ResourceDescriptor settings) = 0;
+
+        virtual void deleteView(UniqueId viewId) = 0;
+
         /*!
          * \brief Sets the objects that need to be rendered
          * If view not found, nothing is done
          * \param objects Objects that will be drawn on the view
          * \param viewName Key to find view to draw on
          */
-        virtual void addViewObjects(const std::vector<DrawableObject> &objects, std::string viewName) = 0;
+        virtual void addViewObjects(const std::vector<DrawableObject> &objects, UniqueId viewId) = 0;
 
         /*!
          * \brief Sets the drawable text to the view to be rendered
@@ -45,7 +49,7 @@ namespace BattleRoom {
          * \param texts List of texts to be drawn on the view
          * \param viewName Key to find view to draw on
          */
-        virtual void addViewTexts(const std::vector<DrawableText> &texts, std::string viewName) = 0;
+        virtual void addViewTexts(const std::vector<DrawableText> &texts, UniqueId viewId) = 0;
 
         /*!
          * \brief Sets the drawable menu to the view to be rendered
@@ -53,7 +57,7 @@ namespace BattleRoom {
          * \param texts List of menus to be drawn on the view
          * \param viewName Key to find view to draw on
          */
-        virtual void addViewMenus(const std::vector<DrawableMenu> menus, std::string viewName) = 0;
+        virtual void addViewMenus(const std::vector<DrawableMenu> menus, UniqueId viewId) = 0;
 
         /*!
          * \brief Draws the world, UI, and then menu objects
@@ -75,13 +79,9 @@ namespace BattleRoom {
         virtual Inputs handleInputs(Inputs inputs) = 0;
 
 
-        const UniqueId getUniqueId() const {
-            return m_uniqueId;
-        }
+        virtual const UniqueId getUniqueId() const = 0;
 
-    private:
-
-        UniqueId m_uniqueId = UniqueId::generateNewLocalId();
+        virtual std::string getName() const = 0;
 
     }; // DisplayWindow class
 

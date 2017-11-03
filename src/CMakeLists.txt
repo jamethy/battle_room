@@ -7,7 +7,7 @@ add_subdirectory(graphics)
 add_subdirectory(game)
 add_subdirectory(user_interface)
 add_subdirectory(networking)
-add_subdirectory(tester_programs)
+#add_subdirectory(tester_programs)
 
 # MAIN PROGRAM CLIENT
 add_executable(battleroom
