@@ -117,10 +117,6 @@ namespace BattleRoom {
         for (ResourceDescriptor sub : settings.getSubResources("Interface")) {
             addResource(sub);
         }
- 
-        for (ResourceDescriptor sub : settings.getSubResources("MenuInterface")) {
-            addResource(sub);
-        }       
         //sortByViewLayer(m_viewInterfaces, settings);
     }
 
@@ -168,7 +164,6 @@ namespace BattleRoom {
 
     void Application::addResource(ResourceDescriptor settings) {
         
-        // TODO add an interface factory
         if (keyMatch("Window", settings.getKey())) {
             m_windows.push_back(createDisplayWindow(settings));
         } else if (keyMatch("Interface", settings.getKey())) {
