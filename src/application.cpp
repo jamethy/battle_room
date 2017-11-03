@@ -4,8 +4,7 @@
 #include "battle_room/common/application_message_receiver.h"
 #include "battle_room/game/query_world.h"
 #include "battle_room/game/objects/object_factory.h"
-#include "battle_room/user_interface/game_interface.h"
-#include "battle_room/user_interface/menu_interface.h"
+#include "battle_room/user_interface/interface_factory.h"
 #include "battle_room/networking/world_updater_factory.h"
 
 #include <thread>
@@ -37,7 +36,7 @@ namespace BattleRoom {
             std::thread interfaceThread([this, &inputs]() {
 
                     // Handle inputs view interfaces
-                    for (ViewInterface *interface : m_viewInterfaces) {
+                    for (const auto& interface : m_viewInterfaces) {
                     inputs = interface->handleInputs(inputs);
                     }
 
@@ -46,7 +45,7 @@ namespace BattleRoom {
 
                     // get any settings that need to be applied to windows
                     ResourceDescriptor settings;
-                    for (ViewInterface *interface : m_viewInterfaces) {
+                    for (const auto& interface : m_viewInterfaces) {
                     settings.addSubResources(interface->getNewSettings());
                     }
                     for (UniqueDisplayWindow &window : m_windows) {
@@ -54,7 +53,7 @@ namespace BattleRoom {
                     }
 
                     // Prepare objects for display
-                    for (ViewInterface *interface : m_viewInterfaces) {
+                    for (const auto& interface : m_viewInterfaces) {
 
                         UniqueId associatedView = interface->getAssociatedView();
                         std::vector<DrawableObject> objects = interface->getDrawableObjects();
@@ -115,7 +114,7 @@ namespace BattleRoom {
             addResource(window);
         }
 
-        for (ResourceDescriptor sub : settings.getSubResources("GameInterface")) {
+        for (ResourceDescriptor sub : settings.getSubResources("Interface")) {
             addResource(sub);
         }
  
@@ -172,26 +171,19 @@ namespace BattleRoom {
         // TODO add an interface factory
         if (keyMatch("Window", settings.getKey())) {
             m_windows.push_back(createDisplayWindow(settings));
-        } else if (keyMatch("GameInterface", settings.getKey())) {
+        } else if (keyMatch("Interface", settings.getKey())) {
 
             ResourceDescriptor sub = settings.getSubResource("Window");
             DisplayWindow* window = findWindow(m_windows, sub.getValue());
             if (window) {
-                m_viewInterfaces.push_back(new GameInterface(settings, window->addView(settings)));
+                m_viewInterfaces.push_back(InterfaceFactory::createInterface(settings, window->addView(settings)));
             }
-
-        } else if (keyMatch("MenuInterface", settings.getKey())) {
-            ResourceDescriptor sub = settings.getSubResource("Window");
-            DisplayWindow* window = findWindow(m_windows, sub.getValue());
-            if (window) {
-                m_viewInterfaces.push_back(new MenuInterface(settings, window->addView(settings)));
-            }
-        }
+        } 
     }
 
     void Application::modifyResource(UniqueId target, ResourceDescriptor settings) {
 
-        Resource* resource = findIn(m_viewInterfaces, target);
+        Resource* resource = findUniqueIn(m_viewInterfaces, target);
 
         if (!resource) {
             resource = findUniqueIn(m_windows, target);
@@ -210,9 +202,8 @@ namespace BattleRoom {
     void Application::removeResource(UniqueId target) {
 
         auto res = std::find_if(m_viewInterfaces.begin(), m_viewInterfaces.end(), 
-             [target](const ViewInterface* v) -> bool { return v->getUniqueId() == target; });
+             [target](const UniqueInterface& v) -> bool { return v->getUniqueId() == target; });
         if (res != m_viewInterfaces.end()) {
-            delete *res;
             m_viewInterfaces.erase(res);
         }
 

@@ -8,4 +8,5 @@ add_library(UserInterface
         button.cpp
         game_interface.cpp
         menu_interface.cpp
+        interface_factory.cpp
         )

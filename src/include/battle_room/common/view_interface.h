@@ -8,6 +8,7 @@
 #include "battle_room/common/drawable_text.h"
 #include "battle_room/common/drawable_menu.h"
 
+#include <memory>
 #include <vector>
 
 namespace BattleRoom {
@@ -72,5 +73,8 @@ namespace BattleRoom {
         UniqueId m_uniqueId;
 
     }; // ViewInterface class
+
+    typedef std::unique_ptr<ViewInterface> UniqueInterface;
+
 } // BattleRoom namespace
 #endif // VIEW_INTERFACE_H

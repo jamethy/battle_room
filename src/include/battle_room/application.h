@@ -28,7 +28,7 @@ namespace BattleRoom {
 
         UniqueWorldUpdater m_worldUpdater;
         std::vector<UniqueDisplayWindow> m_windows;
-        std::vector<ViewInterface *> m_viewInterfaces;
+        std::vector<UniqueInterface> m_viewInterfaces;
 
     }; // GameInterface class
 } // BattleRoom namespace
