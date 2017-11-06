@@ -11,6 +11,12 @@ namespace BattleRoom {
     vector<ApplicationMessage> m_messageStack;
     std::mutex m_appMsgStackLock;
 
+    void ApplicationMessageReceiver::addMessage(const ApplicationMessage &message) {
+        m_appMsgStackLock.lock();
+        m_messageStack.push_back(message);
+        m_appMsgStackLock.unlock();
+    }
+
     void ApplicationMessageReceiver::addMessages(const vector<ApplicationMessage> &messages) {
 
         m_appMsgStackLock.lock();

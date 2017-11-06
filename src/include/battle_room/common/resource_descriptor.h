@@ -59,6 +59,14 @@ namespace BattleRoom {
          */
         static ResourceDescriptor readFile(std::string filePath);
 
+        /**
+         * \brief Gets the resource Descriptor from the resource file
+         *
+         * \param resourcePath File path to the text file relative to res dir
+         * \return Resource descriptor filled by the file
+         */
+        static ResourceDescriptor readResource(std::string resourcePath);
+
         // Getters and Setters
 
         std::string getKey() const;

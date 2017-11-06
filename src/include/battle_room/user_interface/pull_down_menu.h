@@ -2,6 +2,7 @@
 #define PULL_DOWN_MENU_H
 
 #include "battle_room/user_interface/menu.h"
+#include "battle_room/common/application_message.h"
 
 namespace BattleRoom {
 
@@ -11,6 +12,11 @@ namespace BattleRoom {
 
             PullDownMenu();
 
+            //getters and setters
+            std::vector<ApplicationMessage> getOnClick() const;
+            void setOnClick(std::vector<ApplicationMessage> messages);
+
+            // inherited
             std::vector<DrawableText> getDrawableTexts() override;
             std::vector<DrawableMenu> getDrawableMenus() override;
             bool handleInput(Input input, RelPixel point) override;
@@ -19,6 +25,7 @@ namespace BattleRoom {
             void applySettings(ResourceDescriptor settings) override;
 
         private:
+            std::vector<ApplicationMessage> m_onClick;
             DrawableMenu m_pullDown;
 
     }; // Menu Class

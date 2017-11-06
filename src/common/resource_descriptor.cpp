@@ -154,21 +154,22 @@ namespace BattleRoom {
             // check for Resource sub
             for (ResourceDescriptor subResource : getSubResources("Resource")) {
 
-                if (isNotEmpty(subResource.getValue())) {
-
-                    string file = getResourcePath() + "/"
-                                  + subResource.getValue() + DESCRIPTOR_EXTENSION;
-
-                    vector<ResourceDescriptor> newSubs = readFile(file).getSubResources();
-                    m_subResources.insert(m_subResources.end(), newSubs.begin(), newSubs.end());
-                }
+                vector<ResourceDescriptor> newSubs = readResource(subResource.getValue()).getSubResources();
+                m_subResources.insert(m_subResources.end(), newSubs.begin(), newSubs.end());
             }
 
         }
     }
 
-    ResourceDescriptor ResourceDescriptor::readFile(string filePath) {
+    ResourceDescriptor ResourceDescriptor::readResource(string resourcePath) {
+        if (isNotEmpty(resourcePath)) {
+            return readFile(getResourcePath() + "/" + resourcePath + DESCRIPTOR_EXTENSION);
+        } else {
+            return ResourceDescriptor();
+        }
+    }
 
+    ResourceDescriptor ResourceDescriptor::readFile(string filePath) {
 
         vector<string> resourceFile = readEntireResourceFile(filePath);
 

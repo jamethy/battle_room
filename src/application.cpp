@@ -9,6 +9,7 @@
 
 #include <thread>
 #include <algorithm>
+#include <iostream>
 
 namespace BattleRoom {
 
@@ -163,6 +164,8 @@ namespace BattleRoom {
     }
 
     void Application::addResource(ResourceDescriptor settings) {
+
+        std::cout << "Adding resource: " << settings.getKey() << " " << settings.getValue() << std::endl;
         
         if (keyMatch("Window", settings.getKey())) {
             m_windows.push_back(createDisplayWindow(settings));
@@ -173,6 +176,8 @@ namespace BattleRoom {
             if (window) {
                 m_viewInterfaces.push_back(InterfaceFactory::createInterface(settings, window->addView(settings)));
             }
+        } else if (keyMatch("WorldUpdater", settings.getKey())) {
+            m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings);
         } 
     }
 
@@ -200,6 +205,9 @@ namespace BattleRoom {
              [target](const UniqueInterface& v) -> bool { return v->getUniqueId() == target; });
         if (res != m_viewInterfaces.end()) {
             m_viewInterfaces.erase(res);
+            for (const auto& window : m_windows) {
+                window->deleteView(target);
+            }
         }
 
         auto win = std::find_if(m_windows.begin(), m_windows.end(), 

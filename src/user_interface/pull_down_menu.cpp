@@ -11,6 +11,17 @@ namespace BattleRoom {
 
     void PullDownMenu::applySettings(ResourceDescriptor settings) {
         m_pullDown.applySettings(settings);
+
+        ResourceDescriptor sub = settings.getSubResource("OnClick");
+        if (isNotEmpty(sub.getValue())) {
+            ResourceDescriptor resource = ResourceDescriptor::readResource(sub.getValue());
+            std::vector<ApplicationMessage> messages;
+            messages.clear();
+            for (const auto& resSub : resource.getSubResources()) {
+                messages.push_back(ApplicationMessage::add(resSub));
+            }
+            setOnClick(messages);
+        }
     }
 
     PullDownMenu::PullDownMenu() {
@@ -21,9 +32,8 @@ namespace BattleRoom {
 
     bool PullDownMenu::handleInput(Input input, RelPixel point) {
         if (objectBoundaryContains(m_pullDown, point)) {
-            if (input.isKeyDown(Key::LeftClick)) {
-                std::cout << "here.\n";
-            } else if (input.isKeyUp(Key::LeftClick)) {
+            if (input.isKeyUp(Key::LeftClick)) {
+                ApplicationMessageReceiver::addMessages(getOnClick());
             }
 
             return true;
@@ -43,4 +53,12 @@ namespace BattleRoom {
         return { m_pullDown };
     }
 
+    // getters and setters
+    std::vector<ApplicationMessage> PullDownMenu::getOnClick() const {
+        return m_onClick;
+    }
+
+    void PullDownMenu::setOnClick(std::vector<ApplicationMessage> messages) {
+        m_onClick = messages;
+    }
 } // BattleRoom namespace

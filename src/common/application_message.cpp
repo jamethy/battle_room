@@ -2,6 +2,8 @@
 #include "battle_room/common/application_message.h"
 
 namespace BattleRoom {
+    ApplicationMessage::ApplicationMessage() :
+        m_type(Type::Remove), m_target(UniqueId::generateInvalidId()) {}
 
     ApplicationMessage::ApplicationMessage(Type type, UniqueId target, ResourceDescriptor settings) :
         m_type(type), m_target(target), m_settings(settings) {}

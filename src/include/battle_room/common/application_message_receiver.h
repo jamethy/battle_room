@@ -9,6 +9,8 @@ namespace BattleRoom {
 
     public:
 
+        static void addMessage(const ApplicationMessage &message);
+
         static void addMessages(const std::vector<ApplicationMessage> &messages);
 
         static std::vector<ApplicationMessage> getAndClearMessages();

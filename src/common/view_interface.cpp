@@ -4,7 +4,7 @@ namespace BattleRoom {
 
     ViewInterface::ViewInterface(UniqueId associatedView) : 
         m_associatedView(associatedView),
-        m_uniqueId(UniqueId::generateNewLocalId()) {}
+        m_uniqueId(associatedView) {}
 
     void ViewInterface::applySettings(ResourceDescriptor settings) {
         (void)settings;
