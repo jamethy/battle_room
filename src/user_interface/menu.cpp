@@ -2,8 +2,8 @@
 
 namespace BattleRoom {
 
-    Menu::Menu() : 
-        m_uniqueId(UniqueId::generateNewLocalId()) 
+    Menu::Menu(UniqueId menuId) : 
+        m_uniqueId(menuId) 
     {}
 
     bool Menu::objectBoundaryContains(const DrawableMenu& obj, RelPixel point) {

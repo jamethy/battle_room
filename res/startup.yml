@@ -8,15 +8,7 @@ Interface: Game
     Layer: 10
     Camera: Pyramid
 
-Interface: Menu
-    Menu: PullDown
-        OnClick: menus/popup
-    Window: mainWindow
-    Position: Relative
-        ScreenAnchor: TopLeft
-        Anchor: 0, 100
-        Scale: 50
-        Ratio: 1
+Resource: menus/pull_down
 
 WorldUpdater: Local
     Resource: worlds/test_world

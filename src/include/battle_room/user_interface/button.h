@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include "battle_room/user_interface/menu.h"
+#include "battle_room/common/application_message.h"
 
 namespace BattleRoom {
 
@@ -9,7 +10,11 @@ namespace BattleRoom {
 
         public:
 
-            Button();
+            Button(UniqueId menuId);
+
+            //getters and setters
+            std::vector<ApplicationMessage> getOnClick() const;
+            void setOnClick(std::vector<ApplicationMessage> messages);
 
             std::vector<DrawableText> getDrawableTexts() override;
             std::vector<DrawableMenu> getDrawableMenus() override;
@@ -20,6 +25,7 @@ namespace BattleRoom {
         private:
 
             DrawableMenu m_button;
+            std::vector<ApplicationMessage> m_onClick;
 
     }; // Menu Class
 } // BattleRoom namespace

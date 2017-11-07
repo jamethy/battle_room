@@ -20,6 +20,10 @@ namespace BattleRoom {
         return ApplicationMessage(Type::Remove, target, ResourceDescriptor());
     }
 
+    ApplicationMessage ApplicationMessage::quit() {
+        return ApplicationMessage(Type::Quit, UniqueId::generateInvalidId(), ResourceDescriptor());
+    }
+
     ApplicationMessage::Type ApplicationMessage::getType() {
         return m_type;
     }

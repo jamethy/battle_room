@@ -10,12 +10,13 @@ namespace BattleRoom {
 
         public:
 
-            enum Type { Add, Modify, Remove };
+            enum Type { Add, Modify, Remove, Quit };
             ApplicationMessage();
             ApplicationMessage(Type type, UniqueId target, ResourceDescriptor settings);
             static ApplicationMessage add(ResourceDescriptor settings);
             static ApplicationMessage modify(UniqueId target, ResourceDescriptor settings);
             static ApplicationMessage remove(UniqueId target);
+            static ApplicationMessage quit();
 
             Type getType();
             UniqueId getTarget();

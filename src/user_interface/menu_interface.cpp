@@ -23,9 +23,9 @@ namespace BattleRoom {
             Menu* m = nullptr;
 
             if (keyMatch("PullDown", objDesc.getValue())) {
-                m = new PullDownMenu();
+                m = new PullDownMenu(getUniqueId());
             } else if (keyMatch("Button", objDesc.getValue())) {
-                m = new Button();
+                m = new Button(getUniqueId());
             }
 
             if (m) {

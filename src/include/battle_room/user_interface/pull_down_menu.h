@@ -10,7 +10,7 @@ namespace BattleRoom {
 
         public:
 
-            PullDownMenu();
+            PullDownMenu(UniqueId menuId);
 
             //getters and setters
             std::vector<ApplicationMessage> getOnClick() const;

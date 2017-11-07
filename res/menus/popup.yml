@@ -1,8 +1,14 @@
-
 Interface: Menu
     Menu: Button
+        Text: Close
+        OnClick: menus/pull_down
+        BottomRight: 0.5, 1
+    Menu: Button
+        Text: Quit
+        OnClick: quit
+        TopLeft: 0.5, 0
     Window: mainWindow
     Position: Relative
         ScreenAnchor: Center
         Scale: 400
-        Ratio: 4
+        Ratio: 2

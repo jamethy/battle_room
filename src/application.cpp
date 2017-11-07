@@ -9,7 +9,6 @@
 
 #include <thread>
 #include <algorithm>
-#include <iostream>
 
 namespace BattleRoom {
 
@@ -164,8 +163,6 @@ namespace BattleRoom {
     }
 
     void Application::addResource(ResourceDescriptor settings) {
-
-        std::cout << "Adding resource: " << settings.getKey() << " " << settings.getValue() << std::endl;
         
         if (keyMatch("Window", settings.getKey())) {
             m_windows.push_back(createDisplayWindow(settings));
@@ -231,7 +228,8 @@ namespace BattleRoom {
 
         } else if (ApplicationMessage::Type::Remove == message.getType()) {
             removeResource(message.getTarget());
-
+        } else if (ApplicationMessage::Type::Quit == message.getType()) {
+            ApplicationMessageReceiver::addQuitEvent();
         }
     }
 

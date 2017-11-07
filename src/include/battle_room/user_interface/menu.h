@@ -12,7 +12,7 @@ namespace BattleRoom {
 
         public:
 
-            Menu();
+            Menu(UniqueId menuId);
 
             virtual bool handleInput(Input input, RelPixel point) = 0;
 

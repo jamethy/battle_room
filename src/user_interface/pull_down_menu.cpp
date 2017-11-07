@@ -1,6 +1,5 @@
 #include "battle_room/user_interface/pull_down_menu.h"
 #include "battle_room/common/animation_handler.h"
-#include "battle_room/common/application_message.h"
 #include "battle_room/common/application_message_receiver.h"
 
 #include <iostream>
@@ -20,11 +19,14 @@ namespace BattleRoom {
             for (const auto& resSub : resource.getSubResources()) {
                 messages.push_back(ApplicationMessage::add(resSub));
             }
+            messages.push_back(ApplicationMessage::remove(getUniqueId()));
             setOnClick(messages);
         }
     }
 
-    PullDownMenu::PullDownMenu() {
+    PullDownMenu::PullDownMenu(UniqueId menuId) :
+        Menu(menuId)
+    {
         m_pullDown.setAnimation(AnimationHandler::getAnimation("menus/pull_down"));
         m_pullDown.setTopLeft(RelPixel(-0.5, 0));
         m_pullDown.setBottomRight(RelPixel(0.5, 1));

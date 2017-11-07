@@ -1,7 +1,6 @@
 #include "battle_room/user_interface/button.h"
 #include "battle_room/common/animation_handler.h"
-
-#include <iostream>
+#include "battle_room/common/application_message_receiver.h"
 
 using InputKey::Key;
 
@@ -9,21 +8,40 @@ namespace BattleRoom {
 
     void Button::applySettings(ResourceDescriptor settings) {
         m_button.applySettings(settings);
+
+        ResourceDescriptor sub = settings.getSubResource("OnClick");
+        if (isNotEmpty(sub.getValue())) {
+            std::vector<ApplicationMessage> messages;
+            messages.clear();
+
+            if (keyMatch("quit", sub.getValue())) {
+                messages.push_back(ApplicationMessage::quit());
+            } else {
+                ResourceDescriptor resource = ResourceDescriptor::readResource(sub.getValue());
+                for (const auto& resSub : resource.getSubResources()) {
+                    messages.push_back(ApplicationMessage::add(resSub));
+                }
+                messages.push_back(ApplicationMessage::remove(getUniqueId()));
+            }
+            setOnClick(messages);
+        }
     }
 
-    Button::Button() {
+    Button::Button(UniqueId menuId) :
+        Menu(menuId)
+    {
         m_button.setAnimation(AnimationHandler::getAnimation("menus/button_up"));
         //m_button.setLocation(Vector2D(0.5, 0.5));
     }
 
     bool Button::handleInput(Input input, RelPixel point) {
         if (objectBoundaryContains(m_button, point)) {
-            std::cout << "here.\n";
 
             if (input.isKeyDown(Key::LeftClick)) {
                 m_button.setAnimation(AnimationHandler::getAnimation("menus/button_down"));
             } else if (input.isKeyUp(Key::LeftClick)) {
                 m_button.setAnimation(AnimationHandler::getAnimation("menus/button_up"));
+                ApplicationMessageReceiver::addMessages(getOnClick());
             }
 
             return true;
@@ -41,6 +59,15 @@ namespace BattleRoom {
 
     std::vector<DrawableMenu> Button::getDrawableMenus() {
         return { m_button };
+    }
+
+    // getters and setters
+    std::vector<ApplicationMessage> Button::getOnClick() const {
+        return m_onClick;
+    }
+
+    void Button::setOnClick(std::vector<ApplicationMessage> messages) {
+        m_onClick = messages;
     }
 
 } // BattleRoom namespace
