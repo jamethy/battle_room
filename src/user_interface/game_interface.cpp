@@ -62,6 +62,10 @@ namespace BattleRoom {
         return vector<DrawableMenu>();
     }
 
+    void GameInterface::updateAnimations(seconds timestep) {
+        // TODO update m_spatialElements
+    }
+
     bool objectBoundaryContains(GameObject* obj, Vector2D point) {
 
         Vector2D relP = point

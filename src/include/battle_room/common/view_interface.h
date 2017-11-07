@@ -55,6 +55,8 @@ namespace BattleRoom {
          */
         virtual std::vector<ResourceDescriptor> getNewSettings() = 0;
 
+        virtual void updateAnimations(seconds timestep) = 0;
+
         // getters and setters
 
         UniqueId getAssociatedView() const;

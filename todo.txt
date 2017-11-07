@@ -8,6 +8,7 @@ For full program
         jump charge
         gun charge
     camera
+        move to game interface?
         move on edges
     gameinterface
         select my player

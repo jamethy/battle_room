@@ -9,6 +9,11 @@
 
 #include <thread>
 #include <algorithm>
+#include <chrono>
+
+using std::chrono::steady_clock;
+using std::chrono::duration;
+using std::chrono::duration_cast;
 
 namespace BattleRoom {
 
@@ -24,7 +29,14 @@ namespace BattleRoom {
 
     void Application::runApplicationLoop() {
 
+        steady_clock::time_point lastTime = steady_clock::now();
+
         while (!ApplicationMessageReceiver::containsQuitEvent()) {
+
+            // get loop delta
+            steady_clock::time_point now = steady_clock::now();
+            seconds timestep = duration_cast<duration<double>>(now - lastTime).count();
+            lastTime = now;
 
             // get inputs from last frame
             for (UniqueDisplayWindow &window : m_windows) {
@@ -33,7 +45,7 @@ namespace BattleRoom {
             Inputs inputs = InputGatherer::getAndClearInputs();
 
             ///// start game interface thread
-            std::thread interfaceThread([this, &inputs]() {
+            std::thread interfaceThread([this, &inputs, &timestep]() {
 
                     // Handle inputs view interfaces
                     for (const auto& interface : m_viewInterfaces) {
@@ -54,6 +66,8 @@ namespace BattleRoom {
 
                     // Prepare objects for display
                     for (const auto& interface : m_viewInterfaces) {
+
+                        interface->updateAnimations(timestep);
 
                         UniqueId associatedView = interface->getAssociatedView();
                         std::vector<DrawableObject> objects = interface->getDrawableObjects();
@@ -232,36 +246,5 @@ namespace BattleRoom {
             ApplicationMessageReceiver::addQuitEvent();
         }
     }
-
-//    void sortByViewLayer(std::vector<ViewInterface *> &interfaces, ResourceDescriptor settings) {
-//
-//        // create a map of view names to view layers
-//        std::unordered_map<std::string, int> viewLayerMap;
-//        for (ResourceDescriptor window : settings.getSubResources("Window")) {
-//            for (ResourceDescriptor view : window.getSubResources("View")) {
-//                int viewLayer = 0;
-//                if (isNotEmpty(view.getSubResource("Layer").getValue())) {
-//                    viewLayer = std::stoi(view.getSubResource("Layer").getValue());
-//                }
-//
-//                viewLayerMap.insert(std::make_pair(view.getValue(), viewLayer));
-//            }
-//        }
-//
-//        // sort by created map
-//        std::sort(interfaces.begin(), interfaces.end(),
-//                [&viewLayerMap](ViewInterface *a, ViewInterface *b) {
-//
-//                int aLayer = 0, bLayer = 0;
-//                if (viewLayerMap.count(a->getAssociatedView()) > 0) {
-//                aLayer = viewLayerMap.at(a->getAssociatedView());
-//                }
-//                if (viewLayerMap.count(b->getAssociatedView()) > 0) {
-//                bLayer = viewLayerMap.at(b->getAssociatedView());
-//                }
-//                return aLayer < bLayer;
-//                }
-//                );
-//    }
 
 } // BattleRoom namespace

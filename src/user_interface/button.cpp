@@ -2,6 +2,7 @@
 #include "battle_room/common/animation_handler.h"
 #include "battle_room/common/application_message_receiver.h"
 
+#include <iostream>
 using InputKey::Key;
 
 namespace BattleRoom {
@@ -28,28 +29,36 @@ namespace BattleRoom {
     }
 
     Button::Button(UniqueId menuId) :
-        Menu(menuId)
+        Menu(menuId),
+        m_buttonDown(false)
     {
         m_button.setAnimation(AnimationHandler::getAnimation("menus/button_up"));
-        //m_button.setLocation(Vector2D(0.5, 0.5));
     }
 
     bool Button::handleInput(Input input, RelPixel point) {
         if (objectBoundaryContains(m_button, point)) {
 
             if (input.isKeyDown(Key::LeftClick)) {
+                m_buttonDown = true;
                 m_button.setAnimation(AnimationHandler::getAnimation("menus/button_down"));
             } else if (input.isKeyUp(Key::LeftClick)) {
+                m_buttonDown = false;
                 m_button.setAnimation(AnimationHandler::getAnimation("menus/button_up"));
                 ApplicationMessageReceiver::addMessages(getOnClick());
             }
 
             return true;
         }
+        m_buttonDown = false;
         return false;
     }
 
     void Button::updateAnimation(seconds timestep) {
+        if (m_buttonDown) {
+            m_button.setAnimation(AnimationHandler::getAnimation("menus/button_down"));
+        } else {
+            m_button.setAnimation(AnimationHandler::getAnimation("menus/button_up"));
+        }
         m_button.updateAnimation(timestep);
     }
 

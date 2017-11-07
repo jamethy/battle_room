@@ -26,6 +26,7 @@ namespace BattleRoom {
 
             DrawableMenu m_button;
             std::vector<ApplicationMessage> m_onClick;
+            bool m_buttonDown;
 
     }; // Menu Class
 } // BattleRoom namespace
