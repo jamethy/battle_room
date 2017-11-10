@@ -1,0 +1,118 @@
+ImageFile: spatial/charging_gun.png
+NextAnimation: spatial/charged_gun
+
+Frame:
+    EndTime: 0.043472
+    TopLeft: 0, 0
+    BottomRight: 49, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.086956
+    TopLeft: 50, 0
+    BottomRight: 99, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.130434
+    TopLeft: 100, 0
+    BottomRight: 149, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.173912
+    TopLeft: 150, 0
+    BottomRight: 199, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.21739
+    TopLeft: 200, 0
+    BottomRight: 249, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.260868
+    TopLeft: 250, 0
+    BottomRight: 299, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.304346
+    TopLeft: 300, 0
+    BottomRight: 349, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.347824
+    TopLeft: 350, 0
+    BottomRight: 399, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.391302
+    TopLeft: 400, 0
+    BottomRight: 449, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.43478
+    TopLeft: 450, 0
+    BottomRight: 499, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.478258
+    TopLeft: 500, 0
+    BottomRight: 549, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.521736
+    TopLeft: 550, 0
+    BottomRight: 599, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.565214
+    TopLeft: 600, 0
+    BottomRight: 649, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.608692
+    TopLeft: 650, 0
+    BottomRight: 699, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.65217
+    TopLeft: 700, 0
+    BottomRight: 749, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.695648
+    TopLeft: 750, 0
+    BottomRight: 799, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.739126
+    TopLeft: 800, 0
+    BottomRight: 849, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.782604
+    TopLeft: 850, 0
+    BottomRight: 899, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.826082
+    TopLeft: 900, 0
+    BottomRight: 949, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.86956
+    TopLeft: 950, 0
+    BottomRight: 999, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.913038
+    TopLeft: 1000, 0
+    BottomRight: 1049, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.956516
+    TopLeft: 1050, 0
+    BottomRight: 1099, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 1
+    TopLeft: 1100, 0
+    BottomRight: 1149, 239
+    Scale: 0.00625

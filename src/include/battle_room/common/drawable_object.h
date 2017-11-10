@@ -6,6 +6,8 @@
 #include "battle_room/common/quaternion.h"
 #include "battle_room/common/animation.h"
 
+#include <memory>
+
 namespace BattleRoom {
 
 /**
@@ -47,5 +49,8 @@ namespace BattleRoom {
         Quaternion m_orientation; ///< Orientationof the object in 3D space
 
     }; // DrawableObject class
+
+    typedef std::unique_ptr<DrawableObject> UniqueDrawableObject;
+
 } // BattleRoom namespace
 #endif // DRAWABLE_OBJECT_H

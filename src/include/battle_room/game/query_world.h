@@ -26,7 +26,11 @@ namespace BattleRoom {
          */
         static std::vector<GameObject *> getAllGameObjects();
 
+        static GameObject* getGameObject(UniqueId id);
+
         static std::vector<DrawableObject *> getBackgroundObjects();
+
+        static GameObject* findIntersectingObject(Vector2D point);
 
     }; // QueryWorld class
 } // BattleRoom namespace

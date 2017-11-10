@@ -37,7 +37,7 @@ namespace BattleRoom {
     {
         m_gameObjects.clear();
         for (GameObject* obj : other.m_gameObjects) {
-            m_gameObjects.push_back(new GameObject(*obj));
+            m_gameObjects.push_back(obj->clone());
         }
         m_backgroundObjects.clear();
         for (DrawableObject* obj : other.m_backgroundObjects) {
@@ -54,8 +54,39 @@ namespace BattleRoom {
         return m_gameObjects;
     }
 
+    GameObject* World::getGameObject(UniqueId id) {
+        for (GameObject* obj : m_gameObjects) {
+            if (obj->getUniqueId() == id) {
+                return obj;
+            }
+        }
+        return nullptr;
+    }
+
     vector<DrawableObject *> World::getBackgroundObjects() {
         return m_backgroundObjects;
+    }
+
+    bool objectBoundaryContains(GameObject* obj, Vector2D point) {
+
+        Vector2D relP = point
+            .minus(obj->getPosition())
+            .getRotated(obj->getRotation());
+
+        return obj->getAnimation()
+            .getFrame(obj->getAnimationState())
+            .getBoundarySet()
+            .contains(relP);
+    }
+
+
+    GameObject* World::findIntersectingObject(Vector2D point) {
+        for (GameObject* obj : m_gameObjects) {
+            if (objectBoundaryContains(obj, point)) {
+                return obj; 
+            }
+        }
+        return nullptr;
     }
 
     seconds World::getGameTime() {

@@ -26,7 +26,11 @@ namespace BattleRoom {
 
         virtual std::vector<GameObject*> getAddedObjects();
 
+        virtual GameObject* clone();
+
         void setUp(Vector2D up);
+
+        Projection1D projectOnto(Vector2D vec);
 
         // getters and setters
 

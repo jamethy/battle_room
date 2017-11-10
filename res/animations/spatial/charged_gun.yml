@@ -1,0 +1,38 @@
+ImageFile: spatial/charging_gun.png
+NextAnimation: spatial/charged_gun
+
+Frame:
+    EndTime: 0.125
+    TopLeft: 1100, 0
+    BottomRight: 1149, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.25
+    TopLeft: 1150, 0
+    BottomRight: 1199, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.625
+    TopLeft: 1200, 0
+    BottomRight: 1249, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.75
+    TopLeft: 1250, 0
+    BottomRight: 1299, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 0.875
+    TopLeft: 1200, 0
+    BottomRight: 1249, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 1
+    TopLeft: 1150, 0
+    BottomRight: 1199, 239
+    Scale: 0.00625
+Frame:
+    EndTime: 1.125
+    TopLeft: 1100, 0
+    BottomRight: 1149, 239
+    Scale: 0.00625

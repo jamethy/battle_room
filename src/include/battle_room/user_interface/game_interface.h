@@ -30,8 +30,14 @@ namespace BattleRoom {
     private:
 
         UniqueId m_idToTrack; ///< Tracks the given unique id
-        UniqueId m_selectedObject; ///< Selected game object
-        std::vector<SpatialElement*> m_spatialElements;
+
+        // figure out better way to store this stuff
+        // player spatial elements
+        UniqueId m_playerId;
+        UniqueDrawableObject m_selectedBackground;
+        UniqueDrawableObject m_chargingGun;
+        UniqueDrawableObject m_chargingJump;
+
 
     }; // GameInterface class
 } // BattleRoom namespace

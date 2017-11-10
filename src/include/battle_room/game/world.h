@@ -22,7 +22,9 @@ namespace BattleRoom {
         World(ResourceDescriptor settings);
 
         std::vector<GameObject *> getAllGameObjects(); // TEMP
+        GameObject* getGameObject(UniqueId id);
         std::vector<DrawableObject *> getBackgroundObjects();
+        GameObject* findIntersectingObject(Vector2D point);
 
         // getters
         seconds getGameTime();

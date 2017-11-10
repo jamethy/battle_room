@@ -20,6 +20,8 @@ namespace BattleRoom {
 
         void updateAnimation(seconds timestep) override;
 
+        GameObject* clone() override;
+
     private:
 
         /**

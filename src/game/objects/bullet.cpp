@@ -46,4 +46,8 @@ namespace BattleRoom {
         }
     }
 
+    GameObject* Bullet::clone() {
+        return new Bullet(*this);
+    }
+
 } // BattleRoom namespace

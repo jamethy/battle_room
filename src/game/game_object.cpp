@@ -70,7 +70,7 @@ namespace BattleRoom {
             setAnimationState(newState - animation.getLength());
 
             // find the new animation
-            animation = AnimationHandler::getAnimation(animation.getNextAnimation());
+            setAnimation(AnimationHandler::getAnimation(animation.getNextAnimation()));
         } else {
 
             // iterate object->animation
@@ -83,6 +83,10 @@ namespace BattleRoom {
         (void)timestep; // not used
     }
 
+    GameObject* GameObject::clone() {
+        return new GameObject(*this);
+    }
+
     void GameObject::setUp(Vector2D up) {
         setRotation(atan2(-up.x(), up.y()));
     }
@@ -93,6 +97,11 @@ namespace BattleRoom {
 
     std::vector<GameObject*> GameObject::getAddedObjects() {
         return std::vector<GameObject*>();
+    }
+
+    Projection1D GameObject::projectOnto(Vector2D vec) {
+        const Frame& frame = getAnimation().getFrame(getAnimationState());
+        return frame.getBoundarySet().projectOnto(vec.getRotated(-getRotation()));
     }
 
 // getters and setters

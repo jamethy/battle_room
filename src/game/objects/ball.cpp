@@ -54,6 +54,9 @@ namespace BattleRoom {
         }
     }
 
+    GameObject* Ball::clone() {
+        return new Ball(*this);
+    }
 } // BattleRoom namespace
 
 

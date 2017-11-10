@@ -16,9 +16,14 @@ namespace BattleRoom {
     // constructors
     Player::Player(UniqueId id)
             : GameObject(id, ObjectType::Player),
-            m_state(PlayerState::Flying) {
-                setAnimation(AnimationHandler::getAnimation("man_0"));
-            }
+            m_state(PlayerState::Flying),
+            m_chargingGun(false),
+            m_gunCharge(0),
+            m_chargingJump(false),
+            m_jumpCharge(0)
+    {
+        setAnimation(AnimationHandler::getAnimation("man_0"));
+    }
 
     // other functions
     void Player::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
@@ -40,8 +45,9 @@ namespace BattleRoom {
 
             // move to wall after rotating
             const Frame& frame = getAnimation().getFrame(getAnimationState());
-            Projection1D rotated = frame.getBoundarySet().projectOnto(intersectionNormal.getRotated(-getRotation()));
             Projection1D upright = frame.getBoundarySet().projectOnto(Vector2D(0, 1));
+
+            Projection1D rotated = projectOnto(intersectionNormal);
             meters delta = rotated.getMin() - upright.getMin();
             setPosition(getPosition().plus(intersectionNormal.times(delta)));
 
@@ -188,6 +194,27 @@ namespace BattleRoom {
         std::vector<GameObject*> objects = m_addedObjects;
         m_addedObjects.clear();
         return objects;
+    }
+
+    GameObject* Player::clone() {
+        return new Player(*this);
+    }
+
+    // getters
+    bool Player::isChargingGun() const {
+        return m_chargingGun;
+    }
+
+    bool Player::isChargingJump() const {
+        return m_chargingJump;
+    }
+
+    double Player::getGunCharge() const {
+        return m_gunCharge;
+    }
+
+    double Player::getJumCharge() const {
+        return m_jumpCharge;
     }
 
 } // BattleRoom namespace

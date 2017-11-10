@@ -24,8 +24,16 @@ namespace BattleRoom {
         return m_queryWorld.getAllGameObjects();
     }
 
+    GameObject* QueryWorld::getGameObject(UniqueId id) {
+        return m_queryWorld.getGameObject(id);
+    }
+
     std::vector<DrawableObject *> QueryWorld::getBackgroundObjects() {
         return m_queryWorld.getBackgroundObjects();
+    }
+
+    GameObject* QueryWorld::findIntersectingObject(Vector2D point) {
+        return m_queryWorld.findIntersectingObject(point);
     }
 
 } // BattleRoom namespace

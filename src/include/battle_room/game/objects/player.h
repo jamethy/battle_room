@@ -19,6 +19,11 @@ namespace BattleRoom {
 
         void jump(Vector2D aim);
 
+        bool isChargingGun() const;
+        bool isChargingJump() const;
+        double getGunCharge() const;
+        double getJumCharge() const;
+
         // inherited
         void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) override;
 
@@ -29,6 +34,8 @@ namespace BattleRoom {
         bool interpretCommand(const Command& cmd) override;
 
         std::vector<GameObject*> getAddedObjects() override;
+
+        GameObject* clone() override;
 
         static ObjectType type();
 
@@ -48,11 +55,11 @@ namespace BattleRoom {
         Vector2D m_aim; // point aiming att
         std::vector<GameObject*> m_addedObjects;
 
-        bool m_chargingGun = false;
-        double m_gunCharge = 0;
+        bool m_chargingGun;
+        double m_gunCharge;
 
-        bool m_chargingJump = false;
-        double m_jumpCharge = 0;
+        bool m_chargingJump;
+        double m_jumpCharge;
 
     }; // Player class
 } // BattleRoom namespace

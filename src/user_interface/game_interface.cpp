@@ -4,6 +4,11 @@
 #include "battle_room/game/query_world.h"
 #include "battle_room/game/command_receiver.h"
 
+#include "battle_room/common/animation_handler.h"
+
+// probably will move
+#include "battle_room/game/objects/player.h"
+
 using std::vector;
 using InputKey::Key;
 using InputKey::Motion;
@@ -24,9 +29,8 @@ namespace BattleRoom {
     GameInterface::GameInterface(ResourceDescriptor settings, UniqueId viewId) : 
         ViewInterface(viewId),
         m_idToTrack(UniqueId::generateInvalidId()),
-        m_selectedObject(UniqueId::generateInvalidId())
+        m_playerId(UniqueId::generateInvalidId())
     {
-            m_spatialElements.clear();
             applySettings(settings);
     }
 
@@ -41,14 +45,18 @@ namespace BattleRoom {
             objects.push_back(DrawableObject(*obj));
         }
 
-        std::vector<GameObject*> gameObjects = QueryWorld::getAllGameObjects();
-        for (GameObject *obj : gameObjects) {
+        for (GameObject *obj : QueryWorld::getAllGameObjects()) {
             objects.push_back(DrawableObject(*obj));
         }
 
-        for (SpatialElement* sptl : m_spatialElements) {
-            sptl->update(gameObjects);
-            objects.push_back(DrawableObject(*sptl));
+        if (m_selectedBackground.get()) {
+            objects.push_back(DrawableObject(*m_selectedBackground));
+        }
+        if (m_chargingGun.get()) {
+            objects.push_back(DrawableObject(*m_chargingGun));
+        }
+        if (m_chargingJump.get()) {
+            objects.push_back(DrawableObject(*m_chargingJump));
         }
 
         return objects;
@@ -63,45 +71,57 @@ namespace BattleRoom {
     }
 
     void GameInterface::updateAnimations(seconds timestep) {
-        // TODO update m_spatialElements
-    }
+        if (m_playerId.isValid()) {
+            Player* player = (Player*)QueryWorld::getGameObject(m_playerId);
+            if (player) {
+                Vector3D loc = player->getLocation();
+                if (m_selectedBackground) {
+                    m_selectedBackground->setLocation(Vector3D(loc.x(), loc.y(), -0.1));
+                }
 
-    bool objectBoundaryContains(GameObject* obj, Vector2D point) {
+                if (player->isChargingGun() && !m_chargingGun) {
+                    m_chargingGun = UniqueDrawableObject(new DrawableObject());
+                    m_chargingGun->setAnimation(AnimationHandler::getAnimation("spatial/charging_gun"));
+                }
 
-        Vector2D relP = point
-            .minus(obj->getPosition())
-            .getRotated(obj->getRotation());
+                if (m_chargingGun) {
+                    if (player->isChargingGun()) {
+                        m_chargingGun->setLocation(Vector3D(loc.x(), loc.y() - 1.25), 0.1));
+                        if (player->getGunCharge() > 0.999) {
 
-        return obj->getAnimation()
-            .getFrame(obj->getAnimationState())
-            .getBoundarySet()
-            .contains(relP);
-    }
+                            Animation &animation = m_chargingGun->getAnimation();
+                            seconds newState = m_chargingGun->getAnimationState() + timestep;
 
-    GameObject* findIntersectingObject(std::vector<GameObject*>& objects, Vector2D point) {
-        for (GameObject* obj : objects) {
-            if (objectBoundaryContains(obj, point)) {
-                return obj; 
+                            if (newState > animation.getLength()) {
+
+                                // find the new animation
+                                m_chargingGun->setAnimation(AnimationHandler::getAnimation(animation.getNextAnimation()));
+
+                                // set the new state (time elapsed since end of last animation)
+                                m_chargingGun->setAnimationState(newState - animation.getLength());
+                            } else {
+
+                                // iterate object->animation
+                                m_chargingGun->setAnimationState(newState);
+                            }
+                        } else {
+                            m_chargingGun->setAnimationState(player->getGunCharge());
+                        }
+                    } else {
+                        m_chargingGun = nullptr;
+                    }
+                }
+
+                if (m_chargingJump) {
+                }
             }
         }
-        return nullptr;
-    }
-
-    GameObject* getPlayerId() {
-        for (GameObject *obj : QueryWorld::getAllGameObjects()) {
-            if (obj->getName().compare("man") == 0) {
-                return obj;
-            }
-        }
-        return nullptr;
     }
 
     Inputs GameInterface::handleInputs(Inputs inputs) {
 
         Inputs remainingInputs;
         vector<Command> commands;
-
-        std::vector<GameObject*> gameObjects = QueryWorld::getAllGameObjects();
 
         for (Input input : inputs) {
 
@@ -111,29 +131,29 @@ namespace BattleRoom {
                 Vector3D viewInt = input.getViewIntersection(getAssociatedView());
                 Vector2D point = Vector2D(viewInt.x(), viewInt.y());
 
-                if (m_selectedObject.isValid()) {
+                if (m_playerId.isValid()) {
 
                     if (Key::MouseOnly == input.getKey() 
                             && Motion::None == input.getMotion() 
                             && Modifier::Plain == input.getModifier()) {
-                        cmd = Command(CommandType::Aim, m_selectedObject, point);
+                        cmd = Command(CommandType::Aim, m_playerId, point);
 
                     } else if (input.isKeyDown(Key::RightClick)) {
-                        cmd = Command(CommandType::ShootCharge, m_selectedObject, point);
+                        cmd = Command(CommandType::ShootCharge, m_playerId, point);
 
                     } else if (input.isKeyUp(Key::RightClick)) {
-                        cmd = Command(CommandType::ShootRelease, m_selectedObject, point);
+                        cmd = Command(CommandType::ShootRelease, m_playerId, point);
 
                     } else if (input.isKeyDown(Key::Space)) {
-                        cmd = Command(CommandType::JumpCharge, m_selectedObject, point);
+                        cmd = Command(CommandType::JumpCharge, m_playerId, point);
 
                     } else if (input.isKeyUp(Key::Space)) {
-                        cmd = Command(CommandType::JumpRelease, m_selectedObject, point);
+                        cmd = Command(CommandType::JumpRelease, m_playerId, point);
 
                     } else if (input.isKeyDown(Key::K)) {
-                        cmd = Command(CommandType::Freeze, m_selectedObject, point);
+                        cmd = Command(CommandType::Freeze, m_playerId, point);
                     } else if (input.isModKeyDown(Modifier::Shift, Key::K)) {
-                        cmd = Command(CommandType::Unfreeze, m_selectedObject, point);
+                        cmd = Command(CommandType::Unfreeze, m_playerId, point);
                     }
                 }
 
@@ -141,14 +161,18 @@ namespace BattleRoom {
 
                     // check spatial components
                     // check game objects
-                    GameObject* obj = findIntersectingObject(gameObjects, point);
-                    if (obj != nullptr) {
-                        m_spatialElements.clear();
-                        m_selectedObject = obj->getUniqueId();
-                        m_spatialElements.push_back(new SpatialElement(m_selectedObject));
+                    GameObject* obj = QueryWorld::findIntersectingObject(point);
+                    if (obj != nullptr && ObjectType::Player == obj->getType()) {
+                        m_playerId = obj->getUniqueId();
+                        m_selectedBackground = UniqueDrawableObject(new DrawableObject());
+                        m_selectedBackground->setAnimation(AnimationHandler::getAnimation("spatial/selected"));
+                        m_chargingGun = nullptr;
+                        m_chargingJump = nullptr;
                     } else {
-                        m_spatialElements.clear();
-                        m_selectedObject = UniqueId::generateInvalidId();
+                        m_playerId = UniqueId::generateInvalidId();
+                        m_selectedBackground = nullptr;
+                        m_chargingGun = nullptr;
+                        m_chargingJump = nullptr;
                     }
                 } 
             }
