@@ -5,14 +5,8 @@ Look into blender or other program
 
 For full program
 
-    right now:
-        add getObject by id in query world - maybe templated
-        move intersecting object into query world
-        continue doing the spatial elements
-
     add overlays
         jump charge
-        gun charge
     camera
         move to game interface?
         move on edges
