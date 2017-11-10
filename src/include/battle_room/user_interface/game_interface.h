@@ -2,7 +2,6 @@
 #define GAME_INTERFACE_H
 
 #include "battle_room/common/view_interface.h"
-#include "battle_room/user_interface/spatial_element.h"
 
 namespace BattleRoom {
 
