@@ -17,6 +17,7 @@ namespace BattleRoom {
 
         // constructor
         DrawableMenu();
+        ~DrawableMenu() {}
 
         // getters and setters
 

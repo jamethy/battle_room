@@ -34,13 +34,13 @@ namespace BattleRoom {
             }
         }
 
-        ViewInterface::applySettings(settings);
+        View::applySettings(settings);
     }
 
 // constructors
 
-    MenuInterface::MenuInterface(ResourceDescriptor settings, UniqueId viewId) :
-        ViewInterface(viewId)
+    MenuInterface::MenuInterface(ResourceDescriptor settings, int windowWidth, int windowHeight) :
+        View(settings, windowWidth, windowHeight)
     {
         m_menus.clear();
         applySettings(settings);
@@ -98,9 +98,9 @@ namespace BattleRoom {
                 }
             }
 
-            if (input.containsView(getAssociatedView())) {
+            if (input.containsView(getUniqueId())) {
 
-                RelPixel point = input.getViewRelIntersection(getAssociatedView());
+                RelPixel point = input.getViewRelIntersection(getUniqueId());
 
                 for (auto& menu : m_menus) {
                     if (menu->handleInput(input, point)) {

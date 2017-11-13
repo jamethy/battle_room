@@ -1,7 +1,8 @@
-#include "battle_room/graphics/view.h"
-#include "battle_room/graphics/camera_factory.h"
+#include "battle_room/user_interface/view.h"
+#include "battle_room/user_interface/camera/camera_factory.h"
 
 #include <cmath>
+#include <iostream>
 
 namespace BattleRoom {
 
@@ -36,8 +37,8 @@ namespace BattleRoom {
 // constructors
     View::View(ResourceDescriptor settings, int windowWidth, int windowHeight) :
         m_uniqueId(UniqueId::generateNewLocalId()),
-        m_camera(CameraFactory::createMotionlessCamera()),
-        m_position(ViewPosition(settings.getSubResource("Position"), windowWidth, windowHeight))
+        m_position(ViewPosition(settings.getSubResource("Position"), windowWidth, windowHeight)),
+        m_camera(CameraFactory::createMotionlessCamera())
     {
         applySettings(settings);
     }

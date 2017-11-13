@@ -12,7 +12,7 @@ namespace BattleRoom {
 
     public:
 
-        static UniqueInterface createInterface(ResourceDescriptor settings, UniqueId viewId);
+        static UniqueInterface createInterface(ResourceDescriptor settings, int windowWidth, int windowHeight);
 
     }; // InterfaceFactory class
 } // BattleRoom namespace

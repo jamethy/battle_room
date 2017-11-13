@@ -15,6 +15,7 @@ namespace BattleRoom {
 
         // constructor
         GameObject(UniqueId uniqueId, ObjectType type);
+        virtual ~GameObject() {}
 
         virtual void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal);
 

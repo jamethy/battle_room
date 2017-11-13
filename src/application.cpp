@@ -40,7 +40,7 @@ namespace BattleRoom {
 
             // get inputs from last frame
             for (UniqueDisplayWindow &window : m_windows) {
-                window->gatherInputs();
+                window->gatherInputs(m_viewInterfaces);
             }
             Inputs inputs = InputGatherer::getAndClearInputs();
 
@@ -69,21 +69,9 @@ namespace BattleRoom {
 
                         interface->updateAnimations(timestep);
 
-                        UniqueId associatedView = interface->getAssociatedView();
-                        std::vector<DrawableObject> objects = interface->getDrawableObjects();
-                        std::vector<DrawableText> texts = interface->getDrawableTexts();
-                        std::vector<DrawableMenu> menus = interface->getDrawableMenus();
-
                         for (UniqueDisplayWindow &window : m_windows) {
-                            window->addViewObjects(objects, associatedView);
-                            window->addViewTexts(texts, associatedView);
-                            window->addViewMenus(menus, associatedView);
+                            window->addViewDrawables(interface.get());
                         }
-                    }
-
-                    // Handle inputs for windows
-                    for (UniqueDisplayWindow &window : m_windows) {
-                        inputs = window->handleInputs(inputs);
                     }
 
                     // prevents the CPU from railing
@@ -185,7 +173,8 @@ namespace BattleRoom {
             ResourceDescriptor sub = settings.getSubResource("Window");
             DisplayWindow* window = findWindow(m_windows, sub.getValue());
             if (window) {
-                m_viewInterfaces.push_back(InterfaceFactory::createInterface(settings, window->addView(settings)));
+                m_viewInterfaces.push_back(InterfaceFactory::createInterface(settings, 
+                            window->getWidth(), window->getHeight()));
             }
         } else if (keyMatch("WorldUpdater", settings.getKey())) {
             m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings);
@@ -216,9 +205,6 @@ namespace BattleRoom {
              [target](const UniqueInterface& v) -> bool { return v->getUniqueId() == target; });
         if (res != m_viewInterfaces.end()) {
             m_viewInterfaces.erase(res);
-            for (const auto& window : m_windows) {
-                window->deleteView(target);
-            }
         }
 
         auto win = std::find_if(m_windows.begin(), m_windows.end(), 

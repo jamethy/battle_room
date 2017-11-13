@@ -1,15 +1,15 @@
 #ifndef GAME_INTERFACE_H
 #define GAME_INTERFACE_H
 
-#include "battle_room/common/view_interface.h"
+#include "battle_room/user_interface/view.h"
 
 namespace BattleRoom {
 
-    class GameInterface : public ViewInterface {
+    class GameInterface : public View {
 
     public:
 
-        GameInterface(ResourceDescriptor settings, UniqueId viewId);
+        GameInterface(ResourceDescriptor settings, int windowWidth, int windowHeight);
 
         // inherited
         std::vector<DrawableObject> getDrawableObjects() override;

@@ -55,3 +55,5 @@ if (test)
     #add_subdirectory(tests)
 
 endif(test)
+
+set( CMAKE_EXPORT_COMPILE_COMMANDS ON )

@@ -1,4 +1,4 @@
-#include "battle_room/graphics/moving_camera.h"
+#include "battle_room/user_interface/camera/moving_camera.h"
 
 #include <cmath>
 

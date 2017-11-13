@@ -1,7 +1,7 @@
 #ifndef PYRAMID_CAMERA_H
 #define PYRAMID_CAMERA_H
 
-#include "battle_room/graphics/moving_camera.h"
+#include "battle_room/user_interface/camera/moving_camera.h"
 
 namespace BattleRoom {
 

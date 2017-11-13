@@ -7,6 +7,7 @@
 #include "battle_room/common/drawable_menu.h"
 #include "battle_room/common/inputs.h"
 #include "battle_room/common/resource.h"
+#include "battle_room/common/view_interface.h"
 
 #include <vector>
 #include <memory>
@@ -29,11 +30,11 @@ namespace BattleRoom {
          * \breif Collects window inputs to the InputGatherer
          * This should be called after every window as been drawn
          */
-        virtual void gatherInputs() = 0;
+        virtual void gatherInputs(const std::vector<UniqueInterface>& views) = 0;
 
-        virtual UniqueId addView(ResourceDescriptor settings) = 0;
+        //virtual UniqueId addView(ResourceDescriptor settings) = 0;
 
-        virtual void deleteView(UniqueId viewId) = 0;
+        //virtual void deleteView(UniqueId viewId) = 0;
 
         /*!
          * \brief Sets the objects that need to be rendered
@@ -41,7 +42,8 @@ namespace BattleRoom {
          * \param objects Objects that will be drawn on the view
          * \param viewName Key to find view to draw on
          */
-        virtual void addViewObjects(const std::vector<DrawableObject> &objects, UniqueId viewId) = 0;
+        virtual void addViewDrawables(ViewInterface* view) = 0;
+        //virtual void addViewObjects(ViewInterface* view) = 0;
 
         /*!
          * \brief Sets the drawable text to the view to be rendered
@@ -49,7 +51,7 @@ namespace BattleRoom {
          * \param texts List of texts to be drawn on the view
          * \param viewName Key to find view to draw on
          */
-        virtual void addViewTexts(const std::vector<DrawableText> &texts, UniqueId viewId) = 0;
+        //virtual void addViewTexts(const std::vector<DrawableText> &texts, UniqueId viewId) = 0;
 
         /*!
          * \brief Sets the drawable menu to the view to be rendered
@@ -57,7 +59,7 @@ namespace BattleRoom {
          * \param texts List of menus to be drawn on the view
          * \param viewName Key to find view to draw on
          */
-        virtual void addViewMenus(const std::vector<DrawableMenu> menus, UniqueId viewId) = 0;
+        //virtual void addViewMenus(const std::vector<DrawableMenu> menus, UniqueId viewId) = 0;
 
         /*!
          * \brief Draws the world, UI, and then menu objects
@@ -76,12 +78,15 @@ namespace BattleRoom {
          * \param inputs Inputs to handle
          * \return Any inputs remaining after using the param
          */
-        virtual Inputs handleInputs(Inputs inputs) = 0;
+        //virtual Inputs handleInputs(Inputs inputs) = 0;
 
 
         virtual const UniqueId getUniqueId() const = 0;
 
         virtual std::string getName() const = 0;
+
+        virtual int getWidth() const = 0;
+        virtual int getHeight() const = 0;
 
     }; // DisplayWindow class
 

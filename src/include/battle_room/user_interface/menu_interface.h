@@ -1,16 +1,16 @@
 #ifndef MENU_INTERFACE_H
 #define MENU_INTERFACE_H
 
-#include "battle_room/common/view_interface.h"
+#include "battle_room/user_interface/view.h"
 #include "battle_room/user_interface/menu.h"
 
 namespace BattleRoom {
 
-    class MenuInterface : public ViewInterface {
+    class MenuInterface : public View {
 
         public:
 
-            MenuInterface(ResourceDescriptor settings, UniqueId viewId);
+            MenuInterface(ResourceDescriptor settings, int windowWidth, int windowHeight);
 
             // inherited
             std::vector<DrawableObject> getDrawableObjects() override;

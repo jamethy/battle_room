@@ -3,7 +3,7 @@
 
 #include "battle_room/common/resource.h"
 #include "battle_room/common/pixel.h"
-#include "battle_room/graphics/screen_anchor.h"
+#include "battle_room/user_interface/screen_anchor.h"
 
 namespace BattleRoom {
 

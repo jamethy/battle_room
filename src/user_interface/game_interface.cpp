@@ -19,15 +19,13 @@ namespace BattleRoom {
 // apply settings
 
     void GameInterface::applySettings(ResourceDescriptor settings) {
-
-        ViewInterface::applySettings(settings);
-
+        View::applySettings(settings);
     }
 
 // constructors
 
-    GameInterface::GameInterface(ResourceDescriptor settings, UniqueId viewId) : 
-        ViewInterface(viewId),
+    GameInterface::GameInterface(ResourceDescriptor settings, int windowWidth, int windowHeight) : 
+        View(settings, windowWidth, windowHeight),
         m_idToTrack(UniqueId::generateInvalidId()),
         m_playerId(UniqueId::generateInvalidId())
     {
@@ -110,6 +108,8 @@ namespace BattleRoom {
                     } else {
                         m_chargingGun = nullptr;
                     }
+                } else {
+                    m_chargingGun = nullptr;
                 }
 
                 if (m_chargingJump) {
@@ -126,9 +126,9 @@ namespace BattleRoom {
         for (Input input : inputs) {
 
             Command cmd;
-            if (input.containsView(getAssociatedView())) {
+            if (input.containsView(getUniqueId())) {
 
-                Vector3D viewInt = input.getViewIntersection(getAssociatedView());
+                Vector3D viewInt = input.getViewIntersection(getUniqueId());
                 Vector2D point = Vector2D(viewInt.x(), viewInt.y());
 
                 if (m_playerId.isValid()) {
@@ -186,7 +186,7 @@ namespace BattleRoom {
 
         CommandReceiver::addCommands(commands);
 
-        return remainingInputs;
+        return View::handleInputs(remainingInputs);
     }
 
     vector<ResourceDescriptor> GameInterface::getNewSettings() {
@@ -197,7 +197,7 @@ namespace BattleRoom {
                 if (object->getUniqueId() == m_idToTrack) {
                     Vector3D loc = object->getLocation();
                     ResourceDescriptor descriptor({
-                            "View: " + getAssociatedView().toString(),
+                            "View: " + getUniqueId().toString(),
                             "    Camera:",
                             "        Location: "
                             + std::to_string(loc.x()) + ","

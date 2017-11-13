@@ -1,4 +1,4 @@
-#include "battle_room/graphics/view_position.h"
+#include "battle_room/user_interface/view_position.h"
 
 namespace BattleRoom {
 

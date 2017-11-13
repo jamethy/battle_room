@@ -57,22 +57,20 @@ namespace BattleRoom {
 
         virtual void updateAnimations(seconds timestep) = 0;
 
-        // getters and setters
+        virtual void adjustForResize(int width, int height, int oldWidth, int oldHeight) = 0;
 
-        UniqueId getAssociatedView() const;
-        const UniqueId getUniqueId() const;
+        virtual RelPixel fromLocation(Vector3D point) = 0;
 
-        // inherited
-        virtual void applySettings(ResourceDescriptor settings) override;
+        virtual Vector3D zeroPlaneIntersection(Pixel point) const = 0;
 
-    protected:
+        virtual Pixel getTopLeft() const = 0;
 
-        ViewInterface(UniqueId associatedView);
+        virtual Pixel getBottomRight() const = 0;
 
-    private:
+        virtual int getLayer() const = 0;
 
-        UniqueId m_associatedView; ///< View being interfaced with
-        UniqueId m_uniqueId;
+        virtual UniqueId getUniqueId() const = 0;
+
 
     }; // ViewInterface class
 

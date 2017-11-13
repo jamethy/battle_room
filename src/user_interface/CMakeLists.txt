@@ -8,4 +8,12 @@ add_library(UserInterface
         game_interface.cpp
         menu_interface.cpp
         interface_factory.cpp
+        camera/camera.cpp
+        camera/moving_camera.cpp
+        camera/z_max_camera.cpp
+        camera/pyramid_camera.cpp
+        camera/camera_factory.cpp
+        screen_anchor.cpp
+        view_position.cpp
+        view.cpp
         )

@@ -1,4 +1,4 @@
-#include "battle_room/graphics/camera.h"
+#include "battle_room/user_interface/camera/camera.h"
 
 #include <cmath>
 

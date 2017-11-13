@@ -1,4 +1,4 @@
-#include "battle_room/graphics/pyramid_camera.h"
+#include "battle_room/user_interface/camera/pyramid_camera.h"
 
 #include <cmath>
 

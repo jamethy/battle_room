@@ -2,7 +2,6 @@
 #define SDL_DISPLAY_WINDOW
 
 #include "battle_room/graphics/display_window.h"
-#include "battle_room/graphics/view.h"
 #include "sdl_texture_manager.h"
 #include "sdl_drawable.h"
 
@@ -30,27 +29,20 @@ namespace BattleRoom {
         // inherited
         void applySettings(ResourceDescriptor settings) override;
 
-        void gatherInputs() override;
+        void gatherInputs(const std::vector<UniqueInterface>& views) override;
 
-        UniqueId addView(ResourceDescriptor settings) override;
-
-        void deleteView(UniqueId viewId) override;
-
-        void addViewObjects(const std::vector<DrawableObject> &objects, UniqueId viewId) override;
-
-        void addViewTexts(const std::vector<DrawableText> &texts, UniqueId viewId) override;
-
-        void addViewMenus(const std::vector<DrawableMenu> menus, UniqueId viewId) override;
+        void addViewDrawables(ViewInterface* view) override;
 
         void drawScreen() override;
 
         void switchBuffers() override;
 
-        Inputs handleInputs(Inputs inputs) override;
-
         const UniqueId getUniqueId() const override;
 
         std::string getName() const override;
+
+        int getWidth() const override;
+        int getHeight() const override;
 
     private:
 
@@ -59,14 +51,12 @@ namespace BattleRoom {
          * \param oldWidth New width of window
          * \param oldHeight New height of window
          */
-        void resizeViews(int oldWidth, int oldHeight);
+        void resizeViews(int oldWidth, int oldHeight, const std::vector<UniqueInterface>& views);
 
         SdlTextureManager m_sdlTextureManager; ///< Manages textures using the SDL Renderer
         SDL_Renderer *m_renderer; ///< Reads in textures and draws everything
         SDL_Window *m_window; ///< SDL Window Pointer
         std::string m_windowName; ///< Name and title of window
-
-        std::unordered_map<UniqueId, View> m_views; ///< Container for views
 
         bool m_drawingA = true; ///< Switches between drawables for multithreading
         std::vector<UniqueDrawable> m_drawablesA; ///< Container for drawables

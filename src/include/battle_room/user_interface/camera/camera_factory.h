@@ -1,7 +1,7 @@
 #ifndef CAMERA_FACTORY_H
 #define CAMERA_FACTORY_H
 
-#include "battle_room/graphics/camera.h"
+#include "battle_room/user_interface/camera/camera.h"
 
 namespace BattleRoom {
 

@@ -1,7 +1,7 @@
 #ifndef MOVING_CAMERA_H
 #define MOVING_CAMERA_H
 
-#include "battle_room/graphics/camera.h"
+#include "battle_room/user_interface/camera/camera.h"
 
 namespace BattleRoom {
 

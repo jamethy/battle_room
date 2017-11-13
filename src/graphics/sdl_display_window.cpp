@@ -51,12 +51,12 @@ namespace BattleRoom {
                 changed = true;
             }
 
-            if (changed && m_windowWidth > 0 && m_windowHeight > 0) {
-                int oldWidth = 0, oldHeight = 0;
-                SDL_GetWindowSize(m_window, &oldWidth, &oldHeight);
-                SDL_SetWindowSize(m_window, m_windowWidth, m_windowHeight);
-                resizeViews(oldWidth, oldHeight);
-            }
+           // if (changed && m_windowWidth > 0 && m_windowHeight > 0) {
+           //     int oldWidth = 0, oldHeight = 0;
+           //     SDL_GetWindowSize(m_window, &oldWidth, &oldHeight);
+           //     SDL_SetWindowSize(m_window, m_windowWidth, m_windowHeight);
+           //     resizeViews(oldWidth, oldHeight);
+           // }
         }
     }
 
@@ -69,7 +69,6 @@ namespace BattleRoom {
     SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings) : 
         m_uniqueId(UniqueId::generateNewLocalId())
     {
-        m_views.clear();
         m_sdlEvents.clear();
         m_drawablesA.clear();
         m_drawablesB.clear();
@@ -133,21 +132,21 @@ namespace BattleRoom {
  * \param viewMap Map of views to sort
  * \return Names of sorted values
  */
-    vector<UniqueId> getSortedViews(const std::unordered_map<UniqueId, View> &viewMap) {
-
-        vector<UniqueId> sortedViews;
-        sortedViews.clear();
-        for (const auto &p : viewMap) {
-            sortedViews.push_back(p.first);
-        }
-
-        std::sort(sortedViews.begin(), sortedViews.end(),
-                  [&viewMap](UniqueId a, UniqueId b) {
-                      return viewMap.at(a).getLayer() < viewMap.at(b).getLayer();
-                  }
-        );
-        return sortedViews;
-    }
+//    vector<UniqueId> getSortedViews(const std::unordered_map<UniqueId, View> &viewMap) {
+//
+//        vector<UniqueId> sortedViews;
+//        sortedViews.clear();
+//        for (const auto &p : viewMap) {
+//            sortedViews.push_back(p.first);
+//        }
+//
+//        std::sort(sortedViews.begin(), sortedViews.end(),
+//                  [&viewMap](UniqueId a, UniqueId b) {
+//                      return viewMap.at(a).getLayer() < viewMap.at(b).getLayer();
+//                  }
+//        );
+//        return sortedViews;
+//    }
 
 // other functions
 
@@ -158,7 +157,7 @@ namespace BattleRoom {
                 );
     }
 
-    void SdlDisplayWindow::gatherInputs() {
+    void SdlDisplayWindow::gatherInputs(const std::vector<UniqueInterface>& views) {
 
         // For each SDL_Event that pertains to this window, create an Input
         for (vector<SDL_Event>::iterator it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
@@ -240,29 +239,28 @@ namespace BattleRoom {
                     break;
                 case SDL_WINDOWEVENT:
                     if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                        resizeViews(m_windowWidth, m_windowHeight);
+                        resizeViews(m_windowWidth, m_windowHeight, views);
                     }
                     break;
             }
 
             // Set view intersections
-            for (UniqueId &viewId : getSortedViews(m_views)) {
-                const View &view = m_views.at(viewId);
+            for (auto& view : views) {
 
                 // If it intersects the view, calculate the zero-plane intersection
-                if (m_mousePos.isBetween(view.getTopLeft(), view.getBottomRight())) {
+                if (m_mousePos.isBetween(view->getTopLeft(), view->getBottomRight())) {
 
                     // Calculate the intersection point
-                    Vector3D zeroPoint = view.zeroPlaneIntersection(m_mousePos);
+                    Vector3D zeroPoint = view->zeroPlaneIntersection(m_mousePos);
 
                     // Add intersection to input's view list
-                    input.addViewIntersection(viewId, zeroPoint);
-                    px width = view.getBottomRight().getCol() - view.getTopLeft().getCol();
-                    px height = view.getBottomRight().getRow() - view.getTopLeft().getRow();
+                    input.addViewIntersection(view->getUniqueId(), zeroPoint);
+                    px width = view->getBottomRight().getCol() - view->getTopLeft().getCol();
+                    px height = view->getBottomRight().getRow() - view->getTopLeft().getRow();
 
-                    relpx col = (m_mousePos.getCol() - view.getTopLeft().getCol())/width;
-                    relpx row = (m_mousePos.getRow() - view.getTopLeft().getRow())/height;
-                    input.addViewIntersection(viewId, RelPixel(row, col));
+                    relpx col = (m_mousePos.getCol() - view->getTopLeft().getCol())/width;
+                    relpx row = (m_mousePos.getRow() - view->getTopLeft().getRow())/height;
+                    input.addViewIntersection(view->getUniqueId(), RelPixel(row, col));
                 }
             }
 
@@ -277,28 +275,6 @@ namespace BattleRoom {
         }
     }
 
-    Inputs SdlDisplayWindow::handleInputs(Inputs inputs) {
-
-        // Send inputs to each view to handle
-        for (UniqueId &viewId : getSortedViews(m_views)) {
-            View &view = m_views.at(viewId);
-            inputs = view.handleInputs(inputs);
-        }
-
-        return inputs;
-    }
-
-    UniqueId SdlDisplayWindow::addView(ResourceDescriptor settings) {
-        View newView = View(settings, m_windowWidth, m_windowHeight);
-        m_views.insert(std::make_pair(newView.getUniqueId(), newView));
-        return newView.getUniqueId();
-    }
-
-    void SdlDisplayWindow::deleteView(UniqueId viewId) {
-        m_views.erase(viewId);
-    }
-
-
     const UniqueId SdlDisplayWindow::getUniqueId() const {
         return m_uniqueId;
     }
@@ -307,45 +283,21 @@ namespace BattleRoom {
         return m_windowName;
     }
 
-    void SdlDisplayWindow::addViewObjects(const vector<DrawableObject> &objects, UniqueId viewId) {
+    void SdlDisplayWindow::addViewDrawables(ViewInterface* view) {
 
-        // Check if view is in this window
-        if (m_views.count(viewId) > 0) {
+        vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
-            View &view = m_views.at(viewId);
-            vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
-
-            for (const DrawableObject &object : objects) {
-                drawables.push_back(getSdlDrawableFrom(object, view));
-            }
+        for (const DrawableObject &object : view->getDrawableObjects()) {
+            drawables.push_back(getSdlDrawableFrom(object, view));
         }
-    }
 
-    void SdlDisplayWindow::addViewTexts(const std::vector<DrawableText> &texts, UniqueId viewId) {
-
-        if (m_views.count(viewId) > 0) {
-
-            View &view = m_views.at(viewId);
-            vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
-
-            for (const DrawableText &text : texts) {
-                drawables.push_back(getSdlDrawableFrom(text, view));
-            }
+        for (const DrawableText &text : view->getDrawableTexts()) {
+            drawables.push_back(getSdlDrawableFrom(text, view));
         }
-    }
-
-    void SdlDisplayWindow::addViewMenus(const std::vector<DrawableMenu> menus, UniqueId viewId) {
-
-        if (m_views.count(viewId) > 0) {
-
-            View &view = m_views.at(viewId);
-            vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
-
-            for (const DrawableMenu &menu : menus) {
-                drawables.push_back(getSdlDrawableFrom(menu, view));
-                if (menu.getText().length() > 0) {
-                    drawables.push_back(getSdlDrawableTextFrom(menu, view));
-                }
+        for (const DrawableMenu &menu : view->getDrawableMenus()) {
+            drawables.push_back(getSdlDrawableFrom(menu, view));
+            if (menu.getText().length() > 0) {
+                drawables.push_back(getSdlDrawableTextFrom(menu, view));
             }
         }
     }
@@ -418,7 +370,7 @@ namespace BattleRoom {
         }
     }
 
-    void SdlDisplayWindow::resizeViews(int oldWidth, int oldHeight) {
+    void SdlDisplayWindow::resizeViews(int oldWidth, int oldHeight, const std::vector<UniqueInterface>& views) {
 
         int width = 0, height = 0;
         SDL_GetWindowSize(m_window, &width, &height);
@@ -429,10 +381,16 @@ namespace BattleRoom {
         m_windowWidth = width;
         m_windowHeight = height;
 
-        for (UniqueId &viewId : getSortedViews(m_views)) {
-            View &view = m_views.at(viewId);
-            view.adjustForResize(width, height, oldWidth, oldHeight);
+        for (const auto& view : views) {
+            view->adjustForResize(width, height, oldWidth, oldHeight);
         }
     }
 
+    int SdlDisplayWindow::getWidth() const {
+        return m_windowWidth;
+    }
+
+    int SdlDisplayWindow::getHeight() const {
+        return m_windowHeight;
+    }
 } // BattleRoom namespace

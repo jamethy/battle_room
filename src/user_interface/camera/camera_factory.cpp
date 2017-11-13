@@ -1,6 +1,6 @@
-#include "battle_room/graphics/camera_factory.h"
-#include "battle_room/graphics/z_max_camera.h"
-#include "battle_room/graphics/pyramid_camera.h"
+#include "battle_room/user_interface/camera/camera_factory.h"
+#include "battle_room/user_interface/camera/z_max_camera.h"
+#include "battle_room/user_interface/camera/pyramid_camera.h"
 
 namespace BattleRoom {
 

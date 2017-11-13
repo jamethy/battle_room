@@ -19,6 +19,7 @@ namespace BattleRoom {
 
         // constructor
         DrawableObject();
+        ~DrawableObject() {}
 
         // getters and setters
 

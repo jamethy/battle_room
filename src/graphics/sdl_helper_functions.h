@@ -10,7 +10,7 @@
 #include "battle_room/common/drawable_object.h"
 #include "battle_room/common/drawable_text.h"
 #include "battle_room/common/drawable_menu.h"
-#include "battle_room/graphics/view.h"
+#include "battle_room/common/view_interface.h"
 
 #include "SDL_image.h"
 #include "SDL_ttf.h"
@@ -76,7 +76,7 @@ namespace BattleRoom {
      * \param view View that the object will be drawn on
      * \return Unique Pointer of SdlDrawable base class
      */
-    UniqueDrawable getSdlDrawableFrom(const DrawableObject &object, View &view);
+    UniqueDrawable getSdlDrawableFrom(const DrawableObject &object, ViewInterface* view);
 
     /**
      * \brief Creates an instance drawable in SDL
@@ -84,7 +84,7 @@ namespace BattleRoom {
      * \param view View that the text will be drawn on
      * \return Unique Pointer of SdlDrawable base class
      */
-    UniqueDrawable getSdlDrawableFrom(const DrawableText &text, View &view);
+    UniqueDrawable getSdlDrawableFrom(const DrawableText &text, ViewInterface* view);
 
     /**
      * \brief Creates an instance drawable in SDL
@@ -92,7 +92,7 @@ namespace BattleRoom {
      * \param view View that the text will be drawn on
      * \return Unique Pointer of SdlDrawable base class
      */
-    UniqueDrawable getSdlDrawableFrom(const DrawableMenu &menu, View &view);
+    UniqueDrawable getSdlDrawableFrom(const DrawableMenu &menu, ViewInterface* view);
 
     /**
      * \brief Creates an instance drawable in SDL
@@ -100,7 +100,7 @@ namespace BattleRoom {
      * \param view View that the text will be drawn on
      * \return Unique Pointer of SdlDrawable base class
      */
-    UniqueDrawable getSdlDrawableTextFrom(const DrawableMenu &menu, View &view);
+    UniqueDrawable getSdlDrawableTextFrom(const DrawableMenu &menu, ViewInterface* view);
 
 } // BattleRoom namespace
 #endif // SDL_HELPER_FUNCTIONS_H

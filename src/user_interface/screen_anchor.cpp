@@ -1,4 +1,4 @@
-#include "battle_room/graphics/screen_anchor.h"
+#include "battle_room/user_interface/screen_anchor.h"
 #include "battle_room/common/string_utils.h"
 
 namespace BattleRoom {

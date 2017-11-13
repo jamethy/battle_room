@@ -5,8 +5,9 @@
 #include "battle_room/common/pixel.h"
 #include "battle_room/common/resource.h"
 #include "battle_room/common/inputs.h"
-#include "battle_room/graphics/camera.h"
-#include "battle_room/graphics/view_position.h"
+#include "battle_room/common/view_interface.h"
+#include "battle_room/user_interface/camera/camera.h"
+#include "battle_room/user_interface/view_position.h"
 
 namespace BattleRoom {
 
@@ -16,7 +17,7 @@ namespace BattleRoom {
  * Objects to display are assigned to a view, e.g. the menu objects will be put on a menue view
  * and game objects will be put in a world view or a minimap or something
  */
-    class View : public Resource {
+    class View : public ViewInterface {
 
     public:
 
@@ -33,7 +34,7 @@ namespace BattleRoom {
          * \param point Position in space to calculate
          * \return Location on the view of the point
          */
-        RelPixel fromLocation(Vector3D point);
+        RelPixel fromLocation(Vector3D point) override;
 
         /**
          * \brief Calculates the point in space from the point on the SCREEN
@@ -51,19 +52,19 @@ namespace BattleRoom {
          */
         Inputs handleInputs(Inputs inputs);
 
-        void adjustForResize(int width, int height, int oldWidth, int oldHeight);
+        void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
 
         // getters and setters
 
-        UniqueId getUniqueId() const;
+        UniqueId getUniqueId() const override;
 
         std::string getName() const;
 
-        int getLayer() const;
+        int getLayer() const override;
 
-        Pixel getTopLeft() const;
+        Pixel getTopLeft() const override;
 
-        Pixel getBottomRight() const;
+        Pixel getBottomRight() const override;
 
         void setName(std::string name);
 

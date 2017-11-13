@@ -1,4 +1,4 @@
-#include "battle_room/graphics/z_max_camera.h"
+#include "battle_room/user_interface/camera/z_max_camera.h"
 
 #include <cmath>
 
