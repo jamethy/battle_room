@@ -225,6 +225,16 @@ namespace BattleRoom {
         }
     }
 
+    std::vector<UniqueInterface>::iterator getViewPos(std::vector<UniqueInterface>& vec, int layer) {
+        std::vector<UniqueInterface>::iterator itr;
+        for (itr = vec.begin(); itr != vec.end(); ++itr) {
+            if (layer <= (*itr)->getLayer()) {
+                break;
+            }
+        }
+        return itr;
+    }
+
     void Application::addViewTo(UniqueId windowId, ResourceDescriptor settings) {
         if (windowId.isValid()) {
             DisplayWindow* window = findUniqueIn(m_windows, windowId);
@@ -233,8 +243,9 @@ namespace BattleRoom {
                 auto interface = InterfaceFactory::createInterface(settings, 
                         window->getWidth(), window->getHeight());
 
-                // TODO insert in order
-                m_viewMap.at(windowId).push_back(std::move(interface));
+                auto& vec = m_viewMap.at(windowId);
+                auto itr = getViewPos(vec, interface->getLayer());
+                vec.insert(itr, std::move(interface));
             }
         }
     }

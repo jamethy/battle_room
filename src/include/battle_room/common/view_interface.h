@@ -13,10 +13,13 @@
 
 namespace BattleRoom {
 
-
-/**
- *
- */
+    /**
+     * \brief Interface for views
+     *
+     * Views are portions of the screen that can produce drawables
+     * and handle inputs
+     *
+     */
     class ViewInterface : public Resource {
 
     public:
@@ -49,22 +52,53 @@ namespace BattleRoom {
          */
         virtual std::vector<DrawableMenu> getDrawableMenus() = 0;
 
+        /**
+         * \brief Update the view's animations, camera, etc
+         * \param timestep real world seconds that have passed since last update
+         */
         virtual void update(seconds timestep) = 0;
 
+        /**
+         * \brief Adjust the view for resizing of the window
+         * \param width New width in pixels of the window
+         * \param height New height in pixels of the window
+         * \param oldWidth Old width in pixels of the window
+         * \param oldHeight Old height in pixels of the window
+         */
         virtual void adjustForResize(int width, int height, int oldWidth, int oldHeight) = 0;
 
+        /**
+         * \brief From the point in the 3D game world, calculate the relative pixel of the view
+         * \return where on the view in relative pixel coordinates is point displayed
+         */
         virtual RelPixel fromLocation(Vector3D point) = 0;
 
+        /**
+         * \brief From the absolute screen pixel point, calculate the ray from the view's camera 
+         * to the point on the screen and return the intersection of that ray with the z = 0 plane
+         * \return where in the game world the pixel intersects and z = 0
+         */
         virtual Vector3D zeroPlaneIntersection(Pixel point) const = 0;
 
+        /**
+         * \return most top-left row and column of the view
+         */
         virtual Pixel getTopLeft() const = 0;
 
+        /**
+         * \return most bottom-right row and column of the view
+         */
         virtual Pixel getBottomRight() const = 0;
 
+        /**
+         * \return the z-layer of the view, used for rendering and input handling
+         */
         virtual int getLayer() const = 0;
 
+        /**
+         * \return the unique identifier of the view
+         */
         virtual UniqueId getUniqueId() const = 0;
-
 
     }; // ViewInterface class
 
