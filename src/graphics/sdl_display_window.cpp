@@ -38,25 +38,15 @@ namespace BattleRoom {
 
             // TODO figure out what a SDL_DisplayMode is
 
-            bool changed = false;
             ResourceDescriptor sub = settings.getSubResource("Width");
             if (isNotEmpty(sub.getValue())) {
                 m_windowWidth = stoi(sub.getValue());
-                changed = true;
             }
 
             sub = settings.getSubResource("Height");
             if (isNotEmpty(sub.getValue())) {
                 m_windowHeight = stoi(sub.getValue());
-                changed = true;
             }
-
-           // if (changed && m_windowWidth > 0 && m_windowHeight > 0) {
-           //     int oldWidth = 0, oldHeight = 0;
-           //     SDL_GetWindowSize(m_window, &oldWidth, &oldHeight);
-           //     SDL_SetWindowSize(m_window, m_windowWidth, m_windowHeight);
-           //     resizeViews(oldWidth, oldHeight);
-           // }
         }
     }
 
@@ -123,30 +113,6 @@ namespace BattleRoom {
         }
     }
 
-
-// utilitiy funcitons
-
-/**
- * \brief Sorts views by layer (ascending)
- * As a reminder, higher layers are rendered first and then covered by lower layers
- * \param viewMap Map of views to sort
- * \return Names of sorted values
- */
-//    vector<UniqueId> getSortedViews(const std::unordered_map<UniqueId, View> &viewMap) {
-//
-//        vector<UniqueId> sortedViews;
-//        sortedViews.clear();
-//        for (const auto &p : viewMap) {
-//            sortedViews.push_back(p.first);
-//        }
-//
-//        std::sort(sortedViews.begin(), sortedViews.end(),
-//                  [&viewMap](UniqueId a, UniqueId b) {
-//                      return viewMap.at(a).getLayer() < viewMap.at(b).getLayer();
-//                  }
-//        );
-//        return sortedViews;
-//    }
 
 // other functions
 

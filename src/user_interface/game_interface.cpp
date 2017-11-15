@@ -68,7 +68,18 @@ namespace BattleRoom {
         return vector<DrawableMenu>();
     }
 
-    void GameInterface::updateAnimations(seconds timestep) {
+    void moveCameraToCenter(Camera* camera, UniqueId uniqueId) {
+
+        if (uniqueId.isValid()) {
+            GameObject* obj = QueryWorld::getGameObject(uniqueId);
+            if (obj) {
+                Vector3D loc = obj->getLocation();
+                camera->setLocation(Vector3D(loc.x(), loc.y(), camera->getLocation().z()));
+            }
+        }
+    }
+
+    void GameInterface::update(seconds timestep) {
         if (m_playerId.isValid()) {
             Player* player = (Player*)QueryWorld::getGameObject(m_playerId);
             if (player) {
@@ -116,6 +127,8 @@ namespace BattleRoom {
                 }
             }
         }
+
+        moveCameraToCenter(m_camera.get(), m_idToTrack);
     }
 
     Inputs GameInterface::handleInputs(Inputs inputs) {
@@ -150,6 +163,12 @@ namespace BattleRoom {
                     } else if (input.isKeyUp(Key::Space)) {
                         cmd = Command(CommandType::JumpRelease, m_playerId, point);
 
+                    } else if (input.isKeyDown(Key::T)) {
+                        m_idToTrack = m_idToTrack.isValid() ? UniqueId::generateInvalidId() : m_playerId;
+
+                    } else if (input.isKeyDown(Key::C)) {
+                        moveCameraToCenter(m_camera.get(), m_playerId);
+
                     } else if (input.isKeyDown(Key::K)) {
                         cmd = Command(CommandType::Freeze, m_playerId, point);
                     } else if (input.isModKeyDown(Modifier::Shift, Key::K)) {
@@ -170,6 +189,7 @@ namespace BattleRoom {
                         m_chargingJump = nullptr;
                     } else {
                         m_playerId = UniqueId::generateInvalidId();
+                        m_idToTrack = UniqueId::generateInvalidId();
                         m_selectedBackground = nullptr;
                         m_chargingGun = nullptr;
                         m_chargingJump = nullptr;
@@ -187,28 +207,6 @@ namespace BattleRoom {
         CommandReceiver::addCommands(commands);
 
         return View::handleInputs(remainingInputs);
-    }
-
-    vector<ResourceDescriptor> GameInterface::getNewSettings() {
-        vector<ResourceDescriptor> settings;
-
-        if (m_idToTrack.isValid()) {
-            for (GameObject *object : QueryWorld::getAllGameObjects()) {
-                if (object->getUniqueId() == m_idToTrack) {
-                    Vector3D loc = object->getLocation();
-                    ResourceDescriptor descriptor({
-                            "View: " + getUniqueId().toString(),
-                            "    Camera:",
-                            "        Location: "
-                            + std::to_string(loc.x()) + ","
-                            + std::to_string(loc.y())
-                            });
-                    settings.push_back(descriptor);
-                    break;
-                }
-            }
-        }
-        return settings;
     }
 
 } // BattleRoom namespace

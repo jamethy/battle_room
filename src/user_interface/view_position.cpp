@@ -39,9 +39,9 @@ namespace BattleRoom {
 
     // constructor
     ViewPosition::ViewPosition(ResourceDescriptor settings, int windowWidth, int windowHeight) :
+        m_anchor(ScreenAnchor::TopLeft),
         m_windowWidth(windowWidth),
-        m_windowHeight(windowHeight),
-        m_anchor(ScreenAnchor::TopLeft)
+        m_windowHeight(windowHeight)
     {
         applySettings(settings);
     }

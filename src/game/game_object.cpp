@@ -44,14 +44,14 @@ namespace BattleRoom {
 
 // constructors
 
-    GameObject::GameObject(UniqueId uniqueId, ObjectType type)
-            : m_uniqueId(uniqueId),
-              m_position(Vector2D(0,0)),
-              m_rotation(0),
-              m_angularVelocity(0.0),
-              m_isStatic(false),
-              m_destroy(false),
-              m_type(type) {}
+    GameObject::GameObject(UniqueId uniqueId, ObjectType type) : 
+        m_position(Vector2D(0,0)),
+        m_rotation(0),
+        m_uniqueId(uniqueId),
+        m_angularVelocity(0.0),
+        m_isStatic(false),
+        m_destroy(false),
+        m_type(type) {}
 
 // other functinos
     void GameObject::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {

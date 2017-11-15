@@ -36,10 +36,10 @@ namespace BattleRoom {
     DrawableMenu::DrawableMenu() :
             m_currentAnimation(&AnimationHandler::getAnimation(MISSING_ANIMATION)),
             m_animationState(0.0),
+            m_zLayer(0.0),
             m_topLeft(RelPixel(0,0)),
             m_bottomRight(RelPixel(1,1)),
-            m_text(""),
-            m_zLayer(0.0)
+            m_text("")
     {}
 
 // other functions

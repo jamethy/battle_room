@@ -1,4 +1,7 @@
-right now
+Right now
+-----------------------------------
+sort views when adding or altering a view
+
 
 Running ToDo List
 -----------------------------------

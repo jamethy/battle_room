@@ -19,11 +19,9 @@ namespace BattleRoom {
 
             std::vector<DrawableMenu> getDrawableMenus() override;
 
-            void updateAnimations(seconds timestep) override;
+            void update(seconds timestep) override;
 
             Inputs handleInputs(Inputs inputs) override;
-
-            std::vector<ResourceDescriptor> getNewSettings() override;
 
             void applySettings(ResourceDescriptor settings) override;
 

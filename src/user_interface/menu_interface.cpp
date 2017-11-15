@@ -77,7 +77,7 @@ namespace BattleRoom {
         return drawables;
     }
 
-    void MenuInterface::updateAnimations(seconds timestep) {
+    void MenuInterface::update(seconds timestep) {
         for (auto& menu : m_menus) {
             menu->updateAnimation(timestep);
         }
@@ -116,10 +116,6 @@ namespace BattleRoom {
         }
 
         return remainingInputs;
-    }
-
-    vector<ResourceDescriptor> MenuInterface::getNewSettings() {
-        return vector<ResourceDescriptor>();
     }
 
 } // BattleRoom namespace

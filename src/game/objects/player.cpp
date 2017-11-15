@@ -158,6 +158,8 @@ namespace BattleRoom {
                     case CommandType::Unfreeze:
                         m_state = PlayerState::Flying;
                         break;
+                    default:
+                        break;
                 }
                 return true;
             }

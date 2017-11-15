@@ -49,13 +49,7 @@ namespace BattleRoom {
          */
         virtual std::vector<DrawableMenu> getDrawableMenus() = 0;
 
-        /**
-         * \brief Gets any new settings for other objects as inputted by the user
-         * \return List of settings for other objects
-         */
-        virtual std::vector<ResourceDescriptor> getNewSettings() = 0;
-
-        virtual void updateAnimations(seconds timestep) = 0;
+        virtual void update(seconds timestep) = 0;
 
         virtual void adjustForResize(int width, int height, int oldWidth, int oldHeight) = 0;
 

@@ -55,19 +55,10 @@ namespace BattleRoom {
                     // Update world for client
                     QueryWorld::updateBuffer();
 
-                    // get any settings that need to be applied to windows
-                    ResourceDescriptor settings;
-                    for (const auto& interface : m_viewInterfaces) {
-                    settings.addSubResources(interface->getNewSettings());
-                    }
-                    for (UniqueDisplayWindow &window : m_windows) {
-                    window->applySettings(settings);
-                    }
-
                     // Prepare objects for display
                     for (const auto& interface : m_viewInterfaces) {
 
-                        interface->updateAnimations(timestep);
+                        interface->update(timestep);
 
                         for (UniqueDisplayWindow &window : m_windows) {
                             window->addViewDrawables(interface.get());

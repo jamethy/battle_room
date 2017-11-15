@@ -56,22 +56,23 @@ namespace BattleRoom {
 
         // getters and setters
 
-        UniqueId getUniqueId() const override;
-
         std::string getName() const;
-
-        int getLayer() const override;
-
-        Pixel getTopLeft() const override;
-
-        Pixel getBottomRight() const override;
 
         void setName(std::string name);
 
         void setLayer(int layer);
 
         // inherited
+
+        UniqueId getUniqueId() const override;
+        int getLayer() const override;
+        Pixel getTopLeft() const override;
+        Pixel getBottomRight() const override;
         void applySettings(ResourceDescriptor settings);
+
+    protected:
+
+        UniqueCamera m_camera;
 
     private:
 
@@ -84,7 +85,6 @@ namespace BattleRoom {
         std::string m_name; ///< Name and key of view
         int m_layer = 0; //< higher numbers are rendered first (therefore then covered up)
         ViewPosition m_position;
-        UniqueCamera m_camera;
 
     }; // View class
 } // BattleRoom namespace

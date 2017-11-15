@@ -36,19 +36,20 @@ namespace BattleRoom {
 
 // constructors
     View::View(ResourceDescriptor settings, int windowWidth, int windowHeight) :
+        m_camera(CameraFactory::createMotionlessCamera()),
         m_uniqueId(UniqueId::generateNewLocalId()),
-        m_position(ViewPosition(settings.getSubResource("Position"), windowWidth, windowHeight)),
-        m_camera(CameraFactory::createMotionlessCamera())
+        m_position(ViewPosition(settings.getSubResource("Position"), windowWidth, windowHeight))
     {
         applySettings(settings);
     }
 
     View::View(const View &original) : 
+        m_camera(UniqueCamera(original.m_camera->clone())),
         m_uniqueId(original.m_uniqueId),
         m_name(original.m_name),
         m_layer(original.m_layer),
-        m_position(original.m_position),
-        m_camera(UniqueCamera(original.m_camera->clone())) {}
+        m_position(original.m_position)
+    {}
 
 
     View &View::operator=(const View &original) {
