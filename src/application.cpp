@@ -17,9 +17,6 @@ using std::chrono::duration_cast;
 
 namespace BattleRoom {
 
-    void sortByViewLayer(std::vector<ViewInterface *> &interfaces, ResourceDescriptor settings);
-    template <typename R> R* findUniqueIn(std::vector<std::unique_ptr<R>>& vec, UniqueId target);
-
     Application::Application(ResourceDescriptor settings) {
 
         m_windows.clear();

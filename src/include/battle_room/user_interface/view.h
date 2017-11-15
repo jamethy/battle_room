@@ -11,64 +11,32 @@
 
 namespace BattleRoom {
 
-/**
- * \brief Area on the display window 
- * Describes a section of the display window using pixel coordinates
- * Objects to display are assigned to a view, e.g. the menu objects will be put on a menue view
- * and game objects will be put in a world view or a minimap or something
- */
+    /**
+     * \brief base class for a view - common impl
+     */
     class View : public ViewInterface {
 
     public:
 
-        // constructor
+        // constructors
         View(ResourceDescriptor settings, int windowWidth, int windowHeight);
-
         View(const View &original);
-
         View &operator=(const View &original);
-
-        /**
-         * \brief Calculates the point on the view from the point in space
-         * Additionally adjusts the camera's bounds using the point
-         * \param point Position in space to calculate
-         * \return Location on the view of the point
-         */
-        RelPixel fromLocation(Vector3D point) override;
-
-        /**
-         * \brief Calculates the point in space from the point on the SCREEN
-         * That's right, it does all the view calcs for you
-         * \param point Pixel coordinates on the screen
-         * \return Position on the z = 0 plane of point
-         */
-        Vector3D zeroPlaneIntersection(Pixel point) const;
-
-        /**
-         * \brief Handles any inputs for the view and returns remaining
-         * Mainly used for camera controls
-         * \param inptus Collection of inputs to look through
-         * \return Remaining inputs that weren't used
-         */
-        Inputs handleInputs(Inputs inputs);
-
-        void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
+        virtual ~View() {}
 
         // getters and setters
-
-        std::string getName() const;
-
-        void setName(std::string name);
-
         void setLayer(int layer);
 
         // inherited
-
-        UniqueId getUniqueId() const override;
-        int getLayer() const override;
+        Inputs handleInputs(Inputs inputs) override;
+        void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
+        RelPixel fromLocation(Vector3D point) override;
+        Vector3D zeroPlaneIntersection(Pixel point) const override;
         Pixel getTopLeft() const override;
         Pixel getBottomRight() const override;
-        void applySettings(ResourceDescriptor settings);
+        int getLayer() const override;
+        UniqueId getUniqueId() const override;
+        void applySettings(ResourceDescriptor settings) override;
 
     protected:
 
@@ -82,7 +50,6 @@ namespace BattleRoom {
         void recalculateVerticalFov();
 
         UniqueId m_uniqueId;
-        std::string m_name; ///< Name and key of view
         int m_layer = 0; //< higher numbers are rendered first (therefore then covered up)
         ViewPosition m_position;
 

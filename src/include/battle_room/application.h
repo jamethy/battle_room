@@ -11,33 +11,64 @@
 
 namespace BattleRoom {
 
+    /**
+     * \brief Main class the application runs from. Internally accepts
+     * application messages and runs application loop.
+     */
     class Application : Resource {
 
-    public:
+        public:
 
-        Application(ResourceDescriptor settings);
+            // constructor
+            Application(ResourceDescriptor settings);
 
-        void runApplicationLoop();
+            /**
+             * \brief main application loop
+             *
+             * Does the following until an application message quit event is received
+             *  - gathers inputs from windows
+             *  - views handle inputs
+             *  - update query world buffer
+             *  - copy drawables from views to windows
+             *  - draw screen
+             *  - handle application messages
+             */
+            void runApplicationLoop();
 
-        void applySettings(ResourceDescriptor settings) override;
+            // inherited
+            void applySettings(ResourceDescriptor settings) override;
 
-    private:
+        private:
 
-        void addResource(ResourceDescriptor settings);
-        void modifyResource(UniqueId target, ResourceDescriptor settings);
-        void removeResource(UniqueId target);
-        void applyMessage(ApplicationMessage message);
+            // adds a resource from settings
+            void addResource(ResourceDescriptor settings);
 
-        void addWindow(ResourceDescriptor settings);
-        void addViewTo(UniqueId windowId, ResourceDescriptor settings);
-        bool removeWindow(UniqueId windowId);
-        bool removeView(UniqueId viewId);
+            // modifies a resource with uniqueId target by using settings
+            void modifyResource(UniqueId target, ResourceDescriptor settings);
 
-        std::map<UniqueId, std::vector<UniqueInterface>> m_viewMap;
-        std::vector<UniqueDisplayWindow> m_windows;
-        //std::vector<UniqueInterface> m_viewInterfaces;
+            // removes a resource with uniqueId target
+            void removeResource(UniqueId target);
 
-        UniqueWorldUpdater m_worldUpdater;
+            // apply application message to application
+            void applyMessage(ApplicationMessage message);
+
+
+            // add window using settings - and adds to m_viewMap
+            void addWindow(ResourceDescriptor settings);
+
+            // add view using settings to the window with given uniqueId
+            void addViewTo(UniqueId windowId, ResourceDescriptor settings);
+
+            // remove the window with the given id
+            bool removeWindow(UniqueId windowId);
+
+            // remove the view with the given id
+            bool removeView(UniqueId viewId);
+
+            std::vector<UniqueDisplayWindow> m_windows; ///< app windows
+            std::map<UniqueId, std::vector<UniqueInterface>> m_viewMap; ///< map of window Id to list of views
+
+            UniqueWorldUpdater m_worldUpdater; ///< query world updater
 
     }; // GameInterface class
 } // BattleRoom namespace

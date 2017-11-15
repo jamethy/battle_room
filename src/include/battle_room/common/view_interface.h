@@ -19,6 +19,8 @@ namespace BattleRoom {
      * Views are portions of the screen that can produce drawables
      * and handle inputs
      *
+     * Views should be created using the InterfaceFactory
+     *
      */
     class ViewInterface : public Resource {
 
@@ -91,6 +93,7 @@ namespace BattleRoom {
         virtual Pixel getBottomRight() const = 0;
 
         /**
+         * \brief higher numbers are rendered first (therefore then covered up)
          * \return the z-layer of the view, used for rendering and input handling
          */
         virtual int getLayer() const = 0;

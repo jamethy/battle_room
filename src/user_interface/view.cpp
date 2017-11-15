@@ -8,10 +8,6 @@ namespace BattleRoom {
 
     void View::applySettings(ResourceDescriptor settings) {
 
-        if (isNotEmpty(settings.getValue())) {
-            setName(settings.getValue());
-        }
-
         m_position.applySettings(settings.getSubResource("Position"));
 
         ResourceDescriptor sub = settings.getSubResource("Layer");
@@ -46,14 +42,12 @@ namespace BattleRoom {
     View::View(const View &original) : 
         m_camera(UniqueCamera(original.m_camera->clone())),
         m_uniqueId(original.m_uniqueId),
-        m_name(original.m_name),
         m_layer(original.m_layer),
         m_position(original.m_position)
     {}
 
 
     View &View::operator=(const View &original) {
-        m_name = original.m_name;
         m_layer = original.m_layer;
         m_position = original.m_position;
         m_camera = UniqueCamera(original.m_camera->clone());
@@ -100,16 +94,8 @@ namespace BattleRoom {
         return m_uniqueId;
     }
 
-    void View::setName(std::string name) {
-        m_name = name;
-    }
-
     void View::setLayer(int layer) {
         m_layer = layer;
-    }
-
-    std::string View::getName() const {
-        return m_name;
     }
 
     int View::getLayer() const {
