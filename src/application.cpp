@@ -18,11 +18,12 @@ using std::chrono::duration_cast;
 namespace BattleRoom {
 
     void sortByViewLayer(std::vector<ViewInterface *> &interfaces, ResourceDescriptor settings);
+    template <typename R> R* findUniqueIn(std::vector<std::unique_ptr<R>>& vec, UniqueId target);
 
     Application::Application(ResourceDescriptor settings) {
 
         m_windows.clear();
-        m_viewInterfaces.clear();
+        m_viewMap.clear();
 
         applySettings(settings);
     }
@@ -39,8 +40,8 @@ namespace BattleRoom {
             lastTime = now;
 
             // get inputs from last frame
-            for (UniqueDisplayWindow &window : m_windows) {
-                window->gatherInputs(m_viewInterfaces);
+            for (const UniqueDisplayWindow &window : m_windows) {
+                window->gatherInputs(m_viewMap.at(window->getUniqueId()));
             }
             Inputs inputs = InputGatherer::getAndClearInputs();
 
@@ -48,19 +49,20 @@ namespace BattleRoom {
             std::thread interfaceThread([this, &inputs, &timestep]() {
 
                     // Handle inputs view interfaces
-                    for (const auto& interface : m_viewInterfaces) {
-                    inputs = interface->handleInputs(inputs);
+                    for (const UniqueDisplayWindow &window : m_windows) {
+                        for (const auto& interface : m_viewMap.at(window->getUniqueId())) {
+                            inputs = interface->handleInputs(inputs);
+                        }
                     }
 
                     // Update world for client
                     QueryWorld::updateBuffer();
 
                     // Prepare objects for display
-                    for (const auto& interface : m_viewInterfaces) {
+                    for (const UniqueDisplayWindow &window : m_windows) {
+                        for (const auto& interface : m_viewMap.at(window->getUniqueId())) {
 
-                        interface->update(timestep);
-
-                        for (UniqueDisplayWindow &window : m_windows) {
+                            interface->update(timestep);
                             window->addViewDrawables(interface.get());
                         }
                     }
@@ -110,7 +112,6 @@ namespace BattleRoom {
         for (ResourceDescriptor sub : settings.getSubResources("Interface")) {
             addResource(sub);
         }
-        //sortByViewLayer(m_viewInterfaces, settings);
     }
 
     template <typename T> T findIn(std::vector<T>& vec, UniqueId target) {
@@ -158,14 +159,13 @@ namespace BattleRoom {
     void Application::addResource(ResourceDescriptor settings) {
         
         if (keyMatch("Window", settings.getKey())) {
-            m_windows.push_back(createDisplayWindow(settings));
+            addWindow(settings);
         } else if (keyMatch("Interface", settings.getKey())) {
 
             ResourceDescriptor sub = settings.getSubResource("Window");
             DisplayWindow* window = findWindow(m_windows, sub.getValue());
             if (window) {
-                m_viewInterfaces.push_back(InterfaceFactory::createInterface(settings, 
-                            window->getWidth(), window->getHeight()));
+                addViewTo(window->getUniqueId(), settings);
             }
         } else if (keyMatch("WorldUpdater", settings.getKey())) {
             m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings);
@@ -174,10 +174,15 @@ namespace BattleRoom {
 
     void Application::modifyResource(UniqueId target, ResourceDescriptor settings) {
 
-        Resource* resource = findUniqueIn(m_viewInterfaces, target);
+        Resource* resource = findUniqueIn(m_windows, target);
 
         if (!resource) {
-            resource = findUniqueIn(m_windows, target);
+            for (const auto& window : m_windows) {
+                resource = findUniqueIn(m_viewMap.at(window->getUniqueId()), target);
+                if (resource) {
+                    break;
+                }
+            }
         }
 
         if (!resource && m_worldUpdater && m_worldUpdater->getUniqueId() == target) {
@@ -192,16 +197,12 @@ namespace BattleRoom {
 
     void Application::removeResource(UniqueId target) {
 
-        auto res = std::find_if(m_viewInterfaces.begin(), m_viewInterfaces.end(), 
-             [target](const UniqueInterface& v) -> bool { return v->getUniqueId() == target; });
-        if (res != m_viewInterfaces.end()) {
-            m_viewInterfaces.erase(res);
+        if (removeWindow(target)) {
+            return;
         }
 
-        auto win = std::find_if(m_windows.begin(), m_windows.end(), 
-             [target](const UniqueDisplayWindow& v) -> bool { return v->getUniqueId() == target; });
-        if (win != m_windows.end()) {
-            m_windows.erase(win);
+        if (removeView(target)) {
+            return;
         }
 
         if (m_worldUpdater && m_worldUpdater->getUniqueId() == target) {
@@ -222,6 +223,52 @@ namespace BattleRoom {
         } else if (ApplicationMessage::Type::Quit == message.getType()) {
             ApplicationMessageReceiver::addQuitEvent();
         }
+    }
+
+    void Application::addViewTo(UniqueId windowId, ResourceDescriptor settings) {
+        if (windowId.isValid()) {
+            DisplayWindow* window = findUniqueIn(m_windows, windowId);
+            if (window) {
+
+                auto interface = InterfaceFactory::createInterface(settings, 
+                        window->getWidth(), window->getHeight());
+
+                // TODO insert in order
+                m_viewMap.at(windowId).push_back(std::move(interface));
+            }
+        }
+    }
+
+    bool Application::removeView(UniqueId viewId) {
+
+        for (auto& windowViews : m_viewMap) {
+            auto& vec = windowViews.second;
+            auto res = std::find_if(vec.begin(), vec.end(), 
+                    [viewId](const UniqueInterface& v) -> bool { return v->getUniqueId() == viewId; });
+            if (res != vec.end()) {
+                vec.erase(res);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void Application::addWindow(ResourceDescriptor settings) {
+        auto window = createDisplayWindow(settings);
+        m_viewMap.emplace(window->getUniqueId(), std::vector<UniqueInterface>());
+        m_windows.push_back(std::move(window));
+    }
+
+    bool Application::removeWindow(UniqueId windowId) {
+
+        auto win = std::find_if(m_windows.begin(), m_windows.end(), 
+             [windowId](const UniqueDisplayWindow& v) -> bool { return v->getUniqueId() == windowId; });
+        if (win != m_windows.end()) {
+            m_windows.erase(win);
+            m_viewMap.erase(windowId);
+            return true;
+        }
+        return false;
     }
 
 } // BattleRoom namespace

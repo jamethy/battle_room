@@ -7,6 +7,8 @@
 #include "battle_room/game/query_world_updater.h"
 #include "battle_room/graphics/display_window.h"
 
+#include <map>
+
 namespace BattleRoom {
 
     class Application : Resource {
@@ -26,9 +28,16 @@ namespace BattleRoom {
         void removeResource(UniqueId target);
         void applyMessage(ApplicationMessage message);
 
-        UniqueWorldUpdater m_worldUpdater;
+        void addWindow(ResourceDescriptor settings);
+        void addViewTo(UniqueId windowId, ResourceDescriptor settings);
+        bool removeWindow(UniqueId windowId);
+        bool removeView(UniqueId viewId);
+
+        std::map<UniqueId, std::vector<UniqueInterface>> m_viewMap;
         std::vector<UniqueDisplayWindow> m_windows;
-        std::vector<UniqueInterface> m_viewInterfaces;
+        //std::vector<UniqueInterface> m_viewInterfaces;
+
+        UniqueWorldUpdater m_worldUpdater;
 
     }; // GameInterface class
 } // BattleRoom namespace
