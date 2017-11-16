@@ -1,18 +1,13 @@
 Right now
 -----------------------------------
-sort views when adding or altering a view
-
 
 Running ToDo List
 -----------------------------------
-Look into blender or other program
-
 For full program
 
     add overlays
         jump charge
     camera
-        move to game interface?
         move on edges
     gameinterface
         select my player
@@ -22,13 +17,11 @@ For full program
 
     add clone to game object for templates
 
-    add modifier keys
     Add speed to animations
     Move object intersection to testable code
     Add networking code to networking...
     create messages
     Create an exception scheme
-    create menus
     Add saving configs
     path tracing for high speed intersection
 
@@ -43,6 +36,8 @@ Maybe for fun
     Fix circle intersection
     use menus to spawn objects (map creator)
 
+Look into blender or other program
+
 Persistent to do
     Look for // TODO in the code
     document everything
@@ -53,3 +48,4 @@ Persistent to do
 Ways to crash the game
     Create an animation with no frames
     Create a recursive resource file
+
