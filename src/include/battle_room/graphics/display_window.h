@@ -14,11 +14,11 @@
 
 namespace BattleRoom {
 
-/**
- * \brief Window that displays graphics
- * Has views that represent portions of the screen and objects within the views
- * that are drawable
- */
+    /**
+     * \brief Window that displays graphics
+     * Has views that represent portions of the screen and objects within the views
+     * that are drawable
+     */
     class DisplayWindow : public Resource {
 
     public:
@@ -29,37 +29,15 @@ namespace BattleRoom {
         /*!
          * \breif Collects window inputs to the InputGatherer
          * This should be called after every window as been drawn
+         * \param views List of views associated with the window
          */
         virtual void gatherInputs(const std::vector<UniqueInterface>& views) = 0;
 
-        //virtual UniqueId addView(ResourceDescriptor settings) = 0;
-
-        //virtual void deleteView(UniqueId viewId) = 0;
-
         /*!
          * \brief Sets the objects that need to be rendered
-         * If view not found, nothing is done
-         * \param objects Objects that will be drawn on the view
-         * \param viewName Key to find view to draw on
+         * \param view used to call all the drawable getters for the view
          */
         virtual void addViewDrawables(ViewInterface* view) = 0;
-        //virtual void addViewObjects(ViewInterface* view) = 0;
-
-        /*!
-         * \brief Sets the drawable text to the view to be rendered
-         * If view not found, nothing is done
-         * \param texts List of texts to be drawn on the view
-         * \param viewName Key to find view to draw on
-         */
-        //virtual void addViewTexts(const std::vector<DrawableText> &texts, UniqueId viewId) = 0;
-
-        /*!
-         * \brief Sets the drawable menu to the view to be rendered
-         * If view not found, nothing is done
-         * \param texts List of menus to be drawn on the view
-         * \param viewName Key to find view to draw on
-         */
-        //virtual void addViewMenus(const std::vector<DrawableMenu> menus, UniqueId viewId) = 0;
 
         /*!
          * \brief Draws the world, UI, and then menu objects
@@ -73,31 +51,37 @@ namespace BattleRoom {
          */
         virtual void switchBuffers() = 0;
 
+
         /**
-         * \brief Handles inputs - such as for cameras
-         * \param inputs Inputs to handle
-         * \return Any inputs remaining after using the param
+         * Gets the unique Id of the window
          */
-        //virtual Inputs handleInputs(Inputs inputs) = 0;
-
-
         virtual const UniqueId getUniqueId() const = 0;
 
+        /**
+         * Gets the name of the window
+         */
         virtual std::string getName() const = 0;
 
+        /**
+         * Gets the width in pixels of the window
+         */
         virtual int getWidth() const = 0;
+
+        /**
+         * Gets the height in pixels of the window
+         */
         virtual int getHeight() const = 0;
 
     }; // DisplayWindow class
 
-// Window Pointer that will delete itself
+    // Window Pointer that will delete itself
     typedef std::unique_ptr<DisplayWindow> UniqueDisplayWindow;
 
-/*!
- * \brief Creates a display window
- * \param Resource descriptor describing the window to be created
- * \return Unique Pointer to the window that was created
- */
+    /*!
+     * \brief Creates a display window
+     * \param Resource descriptor describing the window to be created
+     * \return Unique Pointer to the window that was created
+     */
     UniqueDisplayWindow createDisplayWindow(ResourceDescriptor descriptor);
 
 } // BattleRoom namespace

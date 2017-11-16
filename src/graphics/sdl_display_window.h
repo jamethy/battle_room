@@ -9,38 +9,28 @@
 
 namespace BattleRoom {
 
-/**
- * \brief SDL implementation of the DisplayWindow class
- * Initializes SDL, destroys the window, and quits SDL
- * Also manages SDL for multiple windows
- *
- */
+    /**
+     * \brief SDL implementation of the DisplayWindow class
+     * Initializes SDL, destroys the window, and quits SDL
+     * Also manages SDL for multiple windows
+     *
+     */
     class SdlDisplayWindow : public DisplayWindow {
 
     public:
 
         // constructors
-
         SdlDisplayWindow(ResourceDescriptor settings);
-
         ~SdlDisplayWindow();
-
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
-
         void gatherInputs(const std::vector<UniqueInterface>& views) override;
-
         void addViewDrawables(ViewInterface* view) override;
-
         void drawScreen() override;
-
         void switchBuffers() override;
-
         const UniqueId getUniqueId() const override;
-
         std::string getName() const override;
-
         int getWidth() const override;
         int getHeight() const override;
 
