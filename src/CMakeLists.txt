@@ -26,6 +26,7 @@ target_link_libraries(battleroom
         ${SDL2_IMAGE_LIBRARY}
         ${SDL2_gfx_LIBRARY}
         ${SDL2_TTF_LIBRARY}
+        ${SDL2_NET_LIBRARIES}
         )
 
 # DEDICATED SERVER
@@ -38,4 +39,6 @@ target_link_libraries(battleroom_dedicated_server
         Networking
         ${END_GROUP}
         ${LINUX_LIBS}
+        ${SDL2_LIBRARY}
+        ${SDL2_NET_LIBRARIES}
         )
