@@ -30,4 +30,5 @@ add_library(Common
         sat_intersection.cpp
         application_message.cpp
         application_message_receiver.cpp
+        binary_stream.cpp
         )
