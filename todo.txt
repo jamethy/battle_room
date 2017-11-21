@@ -1,5 +1,6 @@
 Right now
 -----------------------------------
+finish seralizing game object
 
 Running ToDo List
 -----------------------------------

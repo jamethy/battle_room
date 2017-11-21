@@ -53,6 +53,9 @@ namespace BattleRoom {
         m_destroy(false),
         m_type(type) {}
 
+    GameObject::GameObject() : GameObject(UniqueId::generateInvalidId(), ObjectType::None)
+    { }
+
 // other functinos
     void GameObject::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
         (void) intersectionNormal; // unused
@@ -180,5 +183,36 @@ namespace BattleRoom {
 
     void GameObject::setName(std::string name) {
         m_name = name;
+    }
+
+    void GameObject::serialize(BinaryStream& bs) const {
+
+        bs.writeInt((int)m_type);
+        m_position.serialize(bs);
+        bs.writeRadians(m_rotation);
+        m_uniqueId.serialize(bs);
+        m_velocity.serialize(bs);
+        bs.writeDouble(m_angularVelocity); // nn
+        bs.writeBool(m_isStatic); // nn?
+        bs.writeBool(m_destroy); // nn
+        bs.writeKilograms(m_mass);
+        bs.writeString(m_name);
+    }
+
+    GameObject GameObject::deserialize(BinaryStream& bs) {
+        GameObject obj;
+
+        obj.m_type = (ObjectType)bs.readInt();
+        obj.m_position = Vector2D::deserialize(bs);
+        obj.m_rotation = bs.readRadians();
+        obj.m_uniqueId = UniqueId::deserialize(bs);
+        obj.m_velocity = Vector2D::deserialize(bs);
+        obj.m_angularVelocity = bs.readDouble();
+        obj.m_isStatic = bs.readBool();
+        obj.m_destroy = bs.readBool();
+        obj.m_mass = bs.readKilograms();
+        obj.m_name = bs.readString();
+
+        return obj;
     }
 } // BattleRoom namespace

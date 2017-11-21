@@ -1,6 +1,8 @@
 #ifndef UNIQUE_ID_H
 #define UNIQUE_ID_H
 
+#include "battle_room/common/binary_stream.h"
+
 #include <string>
 
 namespace BattleRoom {
@@ -63,12 +65,15 @@ namespace BattleRoom {
 
         std::size_t hash() const;
 
+        void serialize(BinaryStream& bs) const;
+        static UniqueId deserialize(BinaryStream& bs);
+
     private:
 
         // private constructor
-        UniqueId(long long id);
+        UniqueId(int id);
 
-        long long m_id; ///< Id impl
+        int m_id; ///< Id impl
 
     }; // UniqueId class
 } // BattleRoom namespace

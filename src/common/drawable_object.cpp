@@ -83,7 +83,7 @@ namespace BattleRoom {
 
     DrawableObject DrawableObject::deserialize(BinaryStream& bs) {
         DrawableObject obj;
-        std::string animation = bs.readString();
+        obj.m_currentAnimation = &AnimationHandler::getAnimation(bs.readString());
         obj.m_animationState = bs.readSeconds();
         obj.m_location = Vector3D::deserialize(bs);
         obj.m_orientation = Quaternion::deserialize(bs);

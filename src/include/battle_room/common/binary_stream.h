@@ -7,6 +7,8 @@ namespace BattleRoom {
 
     /**
      * Class for writing and reading binary streams
+     *
+     * // TODO throw exception when reading past limit
      */
     class BinaryStream {
 
@@ -20,6 +22,7 @@ namespace BattleRoom {
             void writeInt(int val);
             void writeDouble(double val);
             void writeString(std::string str);
+            void writeBool(bool val);
 
             // unit writing functions
             void writeSeconds(seconds val);
@@ -32,6 +35,7 @@ namespace BattleRoom {
             int readInt();
             double readDouble();
             std::string readString();
+            bool readBool();
 
             // unit reading functions
             seconds readSeconds();
@@ -39,6 +43,12 @@ namespace BattleRoom {
             radians readRadians();
             degrees readDegrees();
             kilograms readKilograms();
+
+            // peeking functions
+            int peekInt();
+            double peekDouble();
+            std::string peekString();
+            bool peekBool();
 
             /**
              * Reset the position marker to the beginning.

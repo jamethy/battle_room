@@ -41,7 +41,7 @@ namespace BattleRoom {
 
         // inherited
         virtual void applySettings(ResourceDescriptor settings) override;
-        void serialize(BinaryStream& bs) const;
+        virtual void serialize(BinaryStream& bs) const;
         static DrawableObject deserialize(BinaryStream& bs);
 
     private:

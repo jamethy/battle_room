@@ -74,6 +74,8 @@ namespace BattleRoom {
         // inherited
 
         virtual void applySettings(ResourceDescriptor settings) override;
+        virtual void serialize(BinaryStream& bs) const override;
+        static GameObject deserialize(BinaryStream& bs);
 
     private:
 
@@ -88,6 +90,8 @@ namespace BattleRoom {
         kilograms m_mass; ///< mass in kilograms of the object
         std::string m_name; ///< label used for debugging
         ObjectType m_type; ///< Type of object
+
+        GameObject();
 
     }; // GameObject class
 

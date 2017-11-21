@@ -8,7 +8,7 @@ namespace BattleRoom {
      */
     enum class ObjectType {
 
-        None,
+        None = 0,
         Ball,
         Wall,
         Bullet,

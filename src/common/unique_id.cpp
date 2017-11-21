@@ -3,16 +3,16 @@
 
 namespace BattleRoom {
 
-    UniqueId::UniqueId(long long id)
+    UniqueId::UniqueId(int id)
             : m_id(id) {}
 
     UniqueId UniqueId::generateNewNetworkId() {
-        static long long current_id = 1;
+        static int current_id = 1;
         return UniqueId(++current_id);
     }
 
     UniqueId UniqueId::generateNewLocalId() {
-        static long long current_id = -1;
+        static int current_id = -1;
         return UniqueId(--current_id);
     }
 
@@ -45,7 +45,14 @@ namespace BattleRoom {
     }
 
     std::size_t UniqueId::hash() const {
-        return std::hash<long long>()(m_id);
+        return std::hash<int>()(m_id);
+    }
+
+    void UniqueId::serialize(BinaryStream& bs) const {
+        bs.writeInt(m_id);
+    }
+    UniqueId UniqueId::deserialize(BinaryStream& bs) {
+        return UniqueId(bs.readInt());
     }
 
 } // BattleRoom namespace

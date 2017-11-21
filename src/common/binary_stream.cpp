@@ -41,6 +41,11 @@ namespace BattleRoom {
         memcpy(m_buffer + m_loc - str.length(), str.data(), str.length());
     }
 
+    void BinaryStream::writeBool(bool val) {
+        incrementLoc(sizeof(bool));
+        memcpy(m_buffer + m_loc - sizeof(bool), &val, sizeof(bool));
+    }
+
     int BinaryStream::readInt() {
         int retVal = 0;
         incrementLoc(sizeof(int));
@@ -60,6 +65,38 @@ namespace BattleRoom {
         incrementLoc(size);
         std::string retVal(size, '\0');
         memcpy((void*)retVal.data(), m_buffer + m_loc - size, size);
+        return retVal;
+    }
+
+    bool BinaryStream::readBool() {
+        bool retVal = 0;
+        incrementLoc(sizeof(bool));
+        memcpy(&retVal, m_buffer + m_loc - sizeof(bool), sizeof(bool));
+        return retVal;
+    }
+
+    int BinaryStream::peekInt() {
+        int retVal = 0;
+        memcpy(&retVal, m_buffer + m_loc, sizeof(int));
+        return retVal;
+    }
+
+    double BinaryStream::peekDouble() {
+        double retVal = 0;
+        memcpy(&retVal, m_buffer + m_loc, sizeof(double));
+        return retVal;
+    }
+
+    std::string BinaryStream::peekString() {
+        int size = peekInt();
+        std::string retVal(size, '\0');
+        memcpy((void*)retVal.data() , m_buffer + m_loc + sizeof(int), size);
+        return retVal;
+    }
+
+    bool BinaryStream::peekBool() {
+        bool retVal = 0;
+        memcpy(&retVal, m_buffer + m_loc, sizeof(bool));
         return retVal;
     }
 
