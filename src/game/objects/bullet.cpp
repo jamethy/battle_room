@@ -46,7 +46,7 @@ namespace BattleRoom {
         }
     }
 
-    GameObject* Bullet::clone() {
+    GameObject* Bullet::clone() const {
         return new Bullet(*this);
     }
 

@@ -54,7 +54,7 @@ namespace BattleRoom {
         }
     }
 
-    GameObject* Ball::clone() {
+    GameObject* Ball::clone() const {
         return new Ball(*this);
     }
 } // BattleRoom namespace

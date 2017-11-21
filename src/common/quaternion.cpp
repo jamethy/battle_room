@@ -127,4 +127,19 @@ namespace BattleRoom {
         return m_k;
     }
 
+    void Quaternion::serialize(BinaryStream& bs) const {
+        bs.writeDouble(m_w);
+        bs.writeDouble(m_i);
+        bs.writeDouble(m_j);
+        bs.writeDouble(m_k);
+    }
+
+    Quaternion Quaternion::deserialize(BinaryStream& bs) {
+        return Quaternion(
+                bs.readDouble(),
+                bs.readDouble(),
+                bs.readDouble(),
+                bs.readDouble());
+    }
+
 } // BattleRoom namespace

@@ -296,7 +296,7 @@ namespace BattleRoom {
         return intersection;
     }
 
-    std::vector<ObjectIntersection> ObjectIntersection::getIntersections(std::vector<GameObject *> objects) {
+    std::vector<ObjectIntersection> ObjectIntersection::getIntersections(const std::vector<GameObject*>& objects) {
 
         std::vector<ObjectIntersection> intersections;
 

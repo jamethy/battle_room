@@ -17,7 +17,7 @@ namespace BattleRoom {
          */
         ObjectIntersection(GameObject *objA, GameObject *objB, SatIntersection sat);
 
-        static std::vector<ObjectIntersection> getIntersections(std::vector<GameObject*> objects);
+        static std::vector<ObjectIntersection> getIntersections(const std::vector<GameObject*>& objects);
 
         /**
          *

@@ -27,7 +27,7 @@ namespace BattleRoom {
 
         virtual std::vector<GameObject*> getAddedObjects();
 
-        virtual GameObject* clone();
+        virtual GameObject* clone() const;
 
         void setUp(Vector2D up);
 

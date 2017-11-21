@@ -118,6 +118,17 @@ namespace BattleRoom {
         }
     }
 
+    void Vector3D::serialize(BinaryStream& bs) const {
+        bs.writeMeters(m_x);
+        bs.writeMeters(m_y);
+        bs.writeMeters(m_z);
+    }
+
+    Vector3D Vector3D::deserialize(BinaryStream& bs) {
+        return Vector3D(bs.readMeters(), bs.readMeters(), bs.readMeters());
+    }
+
+
 // others
 
     std::string Vector3D::toString() const {

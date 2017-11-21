@@ -18,28 +18,28 @@ namespace BattleRoom {
 
             // constructors
             World();
-            World(const World& other);
-
             World(ResourceDescriptor settings);
+
+            World clone() const;
 
             void serialize(BinaryStream& bs) const;
             static World deserialize(BinaryStream& bs);
 
-            std::vector<GameObject *> getAllGameObjects(); // TEMP
-            GameObject* getGameObject(UniqueId id);
-            std::vector<DrawableObject *> getBackgroundObjects();
-            GameObject* findIntersectingObject(Vector2D point);
+            const std::vector<UniqueGameObject>& getAllGameObjects() const; // TEMP
+            const GameObject* getGameObject(UniqueId id) const;
+            const std::vector<UniqueDrawableObject>& getBackgroundObjects() const;
+            const GameObject* findIntersectingObject(Vector2D point) const;
 
             // getters
-            seconds getGameTime();
+            seconds getGameTime() const;
 
             // inherited
             virtual void applySettings(ResourceDescriptor settings) override;
 
         protected:
 
-            std::vector<GameObject *> m_gameObjects; // walls, stars, etc
-            std::vector<DrawableObject *> m_backgroundObjects; // background
+            std::vector<UniqueGameObject> m_gameObjects; // walls, stars, etc
+            std::vector<UniqueDrawableObject> m_backgroundObjects; // background
             seconds m_gameTime; // Time in game
 
     }; // World class

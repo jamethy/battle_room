@@ -6,9 +6,9 @@
 
 namespace BattleRoom {
 
-/**
- * Game world - includes all the objects, the time, and meta data
- */
+    /**
+     * Game world - includes all the objects, the time, and meta data
+     */
     class LocalUpdatingWorld : public World {
 
     public:

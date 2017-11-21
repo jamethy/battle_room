@@ -10,29 +10,29 @@ namespace BattleRoom {
 
     void QueryWorld::updateBuffer() {
         m_copyWorldLock.lock();
-        m_queryWorld = m_copyWorld;
+        m_queryWorld = m_copyWorld.clone();
         m_copyWorldLock.unlock();
     }
 
     void QueryWorld::updateCopyWorld(const World &world) {
         m_copyWorldLock.lock();
-        m_copyWorld = World(world);
+        m_copyWorld = world.clone();
         m_copyWorldLock.unlock();
     }
 
-    std::vector<GameObject *> QueryWorld::getAllGameObjects() {
+    const std::vector<UniqueGameObject>& QueryWorld::getAllGameObjects() {
         return m_queryWorld.getAllGameObjects();
     }
 
-    GameObject* QueryWorld::getGameObject(UniqueId id) {
+    const GameObject* QueryWorld::getGameObject(UniqueId id) {
         return m_queryWorld.getGameObject(id);
     }
 
-    std::vector<DrawableObject *> QueryWorld::getBackgroundObjects() {
+    const std::vector<UniqueDrawableObject>& QueryWorld::getBackgroundObjects() {
         return m_queryWorld.getBackgroundObjects();
     }
 
-    GameObject* QueryWorld::findIntersectingObject(Vector2D point) {
+    const GameObject* QueryWorld::findIntersectingObject(Vector2D point) {
         return m_queryWorld.findIntersectingObject(point);
     }
 

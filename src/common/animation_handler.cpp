@@ -16,6 +16,7 @@ namespace BattleRoom {
                                    + animationName + DESCRIPTOR_EXTENSION;
 
         ResourceDescriptor descriptor = ResourceDescriptor::readFile(animationFilePath);
+        descriptor.setValue(animationName);
         return Animation(descriptor);
     }
 

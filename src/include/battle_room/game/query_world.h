@@ -24,13 +24,13 @@ namespace BattleRoom {
         /**
          * Likely a temp function that returns all the game objects in the world
          */
-        static std::vector<GameObject *> getAllGameObjects();
+        static const std::vector<UniqueGameObject>& getAllGameObjects();
 
-        static GameObject* getGameObject(UniqueId id);
+        static const GameObject* getGameObject(UniqueId id);
 
-        static std::vector<DrawableObject *> getBackgroundObjects();
+        static const std::vector<UniqueDrawableObject>& getBackgroundObjects();
 
-        static GameObject* findIntersectingObject(Vector2D point);
+        static const GameObject* findIntersectingObject(Vector2D point);
 
     }; // QueryWorld class
 } // BattleRoom namespace

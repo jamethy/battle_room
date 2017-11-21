@@ -35,7 +35,7 @@ namespace BattleRoom {
 
         std::vector<GameObject*> getAddedObjects() override;
 
-        GameObject* clone() override;
+        GameObject* clone() const override;
 
         static ObjectType type();
 

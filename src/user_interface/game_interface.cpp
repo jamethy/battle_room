@@ -39,11 +39,11 @@ namespace BattleRoom {
         vector<DrawableObject> objects;
         objects.clear();
 
-        for (DrawableObject *obj : QueryWorld::getBackgroundObjects()) {
+        for (const auto& obj : QueryWorld::getBackgroundObjects()) {
             objects.push_back(DrawableObject(*obj));
         }
 
-        for (GameObject *obj : QueryWorld::getAllGameObjects()) {
+        for (const auto& obj : QueryWorld::getAllGameObjects()) {
             objects.push_back(DrawableObject(*obj));
         }
 
@@ -71,7 +71,7 @@ namespace BattleRoom {
     void moveCameraToCenter(Camera* camera, UniqueId uniqueId) {
 
         if (uniqueId.isValid()) {
-            GameObject* obj = QueryWorld::getGameObject(uniqueId);
+            const GameObject* obj = QueryWorld::getGameObject(uniqueId);
             if (obj) {
                 Vector3D loc = obj->getLocation();
                 camera->setLocation(Vector3D(loc.x(), loc.y(), camera->getLocation().z()));
@@ -81,7 +81,7 @@ namespace BattleRoom {
 
     void GameInterface::update(seconds timestep) {
         if (m_playerId.isValid()) {
-            Player* player = (Player*)QueryWorld::getGameObject(m_playerId);
+            const Player* player = (const Player*)QueryWorld::getGameObject(m_playerId);
             if (player) {
                 Vector3D loc = player->getLocation();
                 if (m_selectedBackground) {
@@ -180,7 +180,7 @@ namespace BattleRoom {
 
                     // check spatial components
                     // check game objects
-                    GameObject* obj = QueryWorld::findIntersectingObject(point);
+                    const GameObject* obj = QueryWorld::findIntersectingObject(point);
                     if (obj != nullptr && ObjectType::Player == obj->getType()) {
                         m_playerId = obj->getUniqueId();
                         m_selectedBackground = UniqueDrawableObject(new DrawableObject());

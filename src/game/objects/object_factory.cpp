@@ -34,7 +34,7 @@ namespace BattleRoom {
         }
     }
 
-    GameObject* createTemplateObject(ResourceDescriptor settings) {
+    UniqueGameObject createTemplateObject(ResourceDescriptor settings) {
 
         GameObject* obj = nullptr;
 
@@ -49,31 +49,31 @@ namespace BattleRoom {
         }
 
         obj->applySettings(settings);
-        return obj;
+        return UniqueGameObject(obj);
     }
 
-    std::vector<GameObject*> ObjectFactory::getGameObjects(ResourceDescriptor settings) {
-        std::vector<GameObject*> objects;
+    std::vector<UniqueGameObject> ObjectFactory::getGameObjects(ResourceDescriptor settings) {
+        std::vector<UniqueGameObject> objects;
 
         for (const auto& objTemplate : OBJECT_TEMPLATES) {
             for (const ResourceDescriptor& objDesc : settings.getSubResources(objTemplate.second.getKey())) {
-                GameObject* obj = createTemplateObject(objTemplate.second);
+                auto obj = createTemplateObject(objTemplate.second);
                 obj->applySettings(objDesc);
-                objects.push_back(obj);
+                objects.push_back(std::move(obj));
             }
         }
         return objects;
     }
 
-    GameObject* ObjectFactory::createObjectOfDescription(ResourceDescriptor settings) {
+    UniqueGameObject ObjectFactory::createObjectOfDescription(ResourceDescriptor settings) {
 
         const ObjectType type = keyToType(settings.getKey());
-        GameObject* obj =  createObjectOfType(type);
+        UniqueGameObject obj = createObjectOfType(type);
         obj->applySettings(settings);
         return obj;
     }
 
-    GameObject* ObjectFactory::createObjectOfType(ObjectType type) {
+    UniqueGameObject ObjectFactory::createObjectOfType(ObjectType type) {
         auto objectTeplate = OBJECT_TEMPLATES.find(type);
         if (objectTeplate != OBJECT_TEMPLATES.end()) {
             return createTemplateObject(objectTeplate->second);

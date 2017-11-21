@@ -10,6 +10,7 @@
 #include <thread>
 #include <algorithm>
 #include <chrono>
+#include <iostream>
 
 using std::chrono::steady_clock;
 using std::chrono::duration;

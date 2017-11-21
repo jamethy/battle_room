@@ -83,7 +83,7 @@ namespace BattleRoom {
         (void)timestep; // not used
     }
 
-    GameObject* GameObject::clone() {
+    GameObject* GameObject::clone() const {
         return new GameObject(*this);
     }
 

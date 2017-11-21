@@ -74,4 +74,21 @@ namespace BattleRoom {
         m_orientation = orientation;
     }
 
+    void DrawableObject::serialize(BinaryStream& bs) const {
+        bs.writeString(m_currentAnimation->getName());
+        bs.writeSeconds(m_animationState);
+        m_location.serialize(bs);
+        m_orientation.serialize(bs);
+    }
+
+    DrawableObject DrawableObject::deserialize(BinaryStream& bs) {
+        DrawableObject obj;
+        std::string animation = bs.readString();
+        obj.m_animationState = bs.readSeconds();
+        obj.m_location = Vector3D::deserialize(bs);
+        obj.m_orientation = Quaternion::deserialize(bs);
+        return obj;
+    }
+
+
 } // BattleRoom namespace

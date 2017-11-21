@@ -1,7 +1,7 @@
 #ifndef BINARY_STREAM_H
 #define BINARY_STREAM_H
 
-#include <string>
+#include "battle_room/common/units.h"
 
 namespace BattleRoom {
 
@@ -16,15 +16,29 @@ namespace BattleRoom {
             BinaryStream(size_t maxSize);
             ~BinaryStream();
 
-            // writing functions
+            // generic writing functions
             void writeInt(int val);
             void writeDouble(double val);
             void writeString(std::string str);
 
-            // reading functions
+            // unit writing functions
+            void writeSeconds(seconds val);
+            void writeMeters(meters val);
+            void writeRadians(radians val);
+            void writeDegrees(degrees val);
+            void writeKilograms(kilograms val);
+
+            // generic reading functions
             int readInt();
             double readDouble();
             std::string readString();
+
+            // unit reading functions
+            seconds readSeconds();
+            meters readMeters();
+            radians readRadians();
+            degrees readDegrees();
+            kilograms readKilograms();
 
             /**
              * Reset the position marker to the beginning.

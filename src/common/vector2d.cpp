@@ -91,6 +91,16 @@ namespace BattleRoom {
         return Vector2D(x, y);
     }
 
+    void Vector2D::serialize(BinaryStream& bs) const {
+        bs.writeMeters(m_x);
+        bs.writeMeters(m_y);
+    }
+
+    Vector2D Vector2D::deserialize(BinaryStream& bs) {
+        return Vector2D(bs.readMeters(), bs.readMeters());
+    }
+
+
 // others
 
     std::string Vector2D::toString() const {

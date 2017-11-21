@@ -12,11 +12,11 @@ namespace BattleRoom {
 
     public:
 
-        static std::vector<GameObject*> getGameObjects(ResourceDescriptor settings);
+        static std::vector<UniqueGameObject> getGameObjects(ResourceDescriptor settings);
 
-        static GameObject* createObjectOfDescription(ResourceDescriptor settings);
+        static UniqueGameObject createObjectOfDescription(ResourceDescriptor settings);
 
-        static GameObject* createObjectOfType(ObjectType type);
+        static UniqueGameObject createObjectOfType(ObjectType type);
 
         static void applySettings(ResourceDescriptor settings);
 

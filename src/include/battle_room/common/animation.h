@@ -32,22 +32,26 @@ namespace BattleRoom {
          * \praram animationState Number of seconds into the animation
          * \return Reference to the desired frame
          */
-        const Frame &getFrame(seconds animationState);
+        const Frame &getFrame(seconds animationState) const;
 
-        seconds getLength();
+        seconds getLength() const;
 
         // getters
+        
+        const std::string &getName() const;
 
-        const std::string &getImageFile();
+        const std::string &getImageFile() const;
 
-        const std::string &getNextAnimation();
+        const std::string &getNextAnimation() const;
 
-        const std::vector<Frame> &getFrames();
+        const std::vector<Frame> &getFrames() const;
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
 
     private:
+
+        std::string m_name; ///< Name of animation
 
         std::string m_imageFile; ///< Full path to image relative to resource path
 

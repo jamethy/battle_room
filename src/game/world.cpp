@@ -13,9 +13,9 @@ namespace BattleRoom {
     void World::applySettings(ResourceDescriptor settings) {
 
         for (ResourceDescriptor &objDesc : settings.getSubResources("Background")) {
-            DrawableObject *obj = new DrawableObject();
+            DrawableObject* obj = new DrawableObject();
             obj->applySettings(objDesc);
-            m_backgroundObjects.push_back(obj);
+            m_backgroundObjects.push_back(UniqueDrawableObject(obj));
         }
 
         ResourceDescriptor sub = settings.getSubResource("Time");
@@ -32,17 +32,20 @@ namespace BattleRoom {
         m_backgroundObjects.clear();
     }
 
-    World::World(const World& other)
-            : m_gameTime(other.m_gameTime)
-    {
-        m_gameObjects.clear();
-        for (GameObject* obj : other.m_gameObjects) {
-            m_gameObjects.push_back(obj->clone());
+    World World::clone() const {
+        World world;
+        world.m_gameObjects = std::vector<UniqueGameObject>(m_gameObjects.size());
+        world.m_gameObjects.clear();
+        for (const auto& obj : m_gameObjects) {
+            world.m_gameObjects.push_back(UniqueGameObject(obj->clone()));
         }
-        m_backgroundObjects.clear();
-        for (DrawableObject* obj : other.m_backgroundObjects) {
-            m_backgroundObjects.push_back(new DrawableObject(*obj));
+        world.m_backgroundObjects = std::vector<UniqueDrawableObject>(m_backgroundObjects.size());
+        world.m_backgroundObjects.clear();
+        for (const auto& obj : m_backgroundObjects) {
+            world.m_backgroundObjects.push_back(UniqueDrawableObject(new DrawableObject(*obj)));
         }
+
+        return world;
     }
 
     World::World(ResourceDescriptor settings)
@@ -51,31 +54,29 @@ namespace BattleRoom {
     }
 
     void World::serialize(BinaryStream& bs) const {
-        bs.writeDouble(m_gameTime);
+        bs.writeSeconds(m_gameTime);
     }
 
     World World::deserialize(BinaryStream& bs) {
         World world;
-        world.m_gameTime = bs.readDouble();
+        world.m_gameTime = bs.readSeconds();
         return world;
-            //std::vector<GameObject *> m_gameObjects; // walls, stars, etc
-            ////std::vector<DrawableObject *> m_backgroundObjects; // background
     }
 
-    vector<GameObject *> World::getAllGameObjects() {
+    const vector<UniqueGameObject>& World::getAllGameObjects() const {
         return m_gameObjects;
     }
 
-    GameObject* World::getGameObject(UniqueId id) {
-        for (GameObject* obj : m_gameObjects) {
+    const GameObject* World::getGameObject(UniqueId id) const {
+        for (const auto& obj : m_gameObjects) {
             if (obj->getUniqueId() == id) {
-                return obj;
+                return obj.get();
             }
         }
         return nullptr;
     }
 
-    vector<DrawableObject *> World::getBackgroundObjects() {
+    const vector<UniqueDrawableObject>& World::getBackgroundObjects() const {
         return m_backgroundObjects;
     }
 
@@ -92,16 +93,16 @@ namespace BattleRoom {
     }
 
 
-    GameObject* World::findIntersectingObject(Vector2D point) {
-        for (GameObject* obj : m_gameObjects) {
-            if (objectBoundaryContains(obj, point)) {
-                return obj; 
+    const GameObject* World::findIntersectingObject(Vector2D point) const {
+        for (const auto& obj : m_gameObjects) {
+            if (objectBoundaryContains(obj.get(), point)) {
+                return obj.get(); 
             }
         }
         return nullptr;
     }
 
-    seconds World::getGameTime() {
+    seconds World::getGameTime() const {
         return m_gameTime;
     }
 

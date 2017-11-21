@@ -88,6 +88,8 @@ namespace BattleRoom {
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
+        void serialize(BinaryStream& bs) const;
+        static Quaternion deserialize(BinaryStream& bs);
 
     private:
 

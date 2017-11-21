@@ -53,25 +53,29 @@ namespace BattleRoom {
 
 // getters
 
-    const string &Animation::getImageFile() {
+    const string &Animation::getName() const {
+        return m_name;
+    }
+
+    const string &Animation::getImageFile() const {
         return m_imageFile;
     }
 
-    const string &Animation::getNextAnimation() {
+    const string &Animation::getNextAnimation() const {
         return m_nextAnimation;
     }
 
-    const vector<Frame> &Animation::getFrames() {
+    const vector<Frame> &Animation::getFrames() const {
         return m_frames;
     }
 
 // other functions
 
-    seconds Animation::getLength() {
+    seconds Animation::getLength() const {
         return m_frames.back().getEndTime();
     }
 
-    const Frame &Animation::getFrame(seconds animationState) {
+    const Frame &Animation::getFrame(seconds animationState) const {
 
         for (const Frame &frame : m_frames) {
             if (animationState < frame.getEndTime()) {

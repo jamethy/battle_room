@@ -73,4 +73,18 @@ namespace BattleRoom {
         m_loc += by;
     }
 
+
+    // unit versions
+
+    void BinaryStream::writeSeconds(seconds val) { writeDouble(val); }
+    void BinaryStream::writeMeters(meters val) { writeDouble(val); }
+    void BinaryStream::writeRadians(radians val) { writeDouble(val); }
+    void BinaryStream::writeDegrees(degrees val) { writeDouble(val); }
+    void BinaryStream::writeKilograms(kilograms val) { writeDouble(val); }
+    seconds BinaryStream::readSeconds() { return readDouble(); }
+    meters BinaryStream::readMeters() { return readDouble(); }
+    radians BinaryStream::readRadians() { return readDouble(); }
+    degrees BinaryStream::readDegrees() { return readDouble(); }
+    kilograms BinaryStream::readKilograms() { return readDouble(); }
+
 } // BattleRoom namespace

@@ -2,6 +2,7 @@
 #define VECTOR3D_H
 
 #include "battle_room/common/resource.h"
+#include "battle_room/common/binary_stream.h"
 
 namespace BattleRoom {
 
@@ -86,6 +87,8 @@ namespace BattleRoom {
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
+        void serialize(BinaryStream& bs) const;
+        static Vector3D deserialize(BinaryStream& bs);
 
         ResourceDescriptor writeToSetting(std::string key);
 

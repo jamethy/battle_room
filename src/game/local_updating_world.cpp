@@ -75,10 +75,10 @@ namespace BattleRoom {
         object->setRotation(object->getRotation() + timestep*object->getAngularVelocity());
     }
 
-    void moveSetOfObjects(std::vector<GameObject *> gameObjects, seconds timestep) {
+    void moveSetOfObjects(const std::vector<GameObject*>& gameObjects, seconds timestep) {
 
         // move all objects
-        for (GameObject *object : gameObjects) {
+        for (const auto& object : gameObjects) {
             moveObject(object, timestep);
         }
 
@@ -127,7 +127,7 @@ namespace BattleRoom {
                     double tempTime = 0;
                     while (tempTime < timestep) {
                         tempTime += miniStep;
-                        moveSetOfObjects(vector<GameObject *>(multiObjects.begin(), multiObjects.end()), miniStep);
+                        moveSetOfObjects(vector<GameObject*>(multiObjects.begin(), multiObjects.end()), miniStep);
                     }
                 }
             }
@@ -146,25 +146,13 @@ namespace BattleRoom {
         }
     }
 
-    std::vector<GameObject*> deleteDestroyed(std::vector<GameObject*> gameObjects) {
-        std::vector<GameObject*> filtered;
-        for (GameObject* obj : gameObjects) {
-            if (obj->destroy()) {
-                delete obj;
-            } else {
-                filtered.push_back(obj);
-            }
-        }
-        return filtered;
-    }
-
     void LocalUpdatingWorld::update() {
 
         std::vector<GameObject*> addedObjects;
 
         // get user/ai input
         for (auto& cmd : CommandReceiver::getAndClearCommands()) {
-            for (GameObject* obj : m_gameObjects) {
+            for (const auto& obj : m_gameObjects) {
                 if (obj->interpretCommand(cmd)) {
                     std::vector<GameObject*> objects = obj->getAddedObjects();
                     addedObjects.insert(addedObjects.end(), objects.begin(), objects.end());
@@ -179,10 +167,15 @@ namespace BattleRoom {
         seconds timestep = m_timeController.getDelta();
 
         // move objects, check for collisions, react to collisions
-        moveSetOfObjects(m_gameObjects, timestep);
+        std::vector<GameObject*> rawPointers(m_gameObjects.size());
+        rawPointers.clear();
+        for (const auto& obj : m_gameObjects) {
+            rawPointers.push_back(obj.get());
+        }
+        moveSetOfObjects(rawPointers, timestep);
 
         // update animations
-        for (GameObject *object : m_gameObjects) {
+        for (const auto& object : m_gameObjects) {
             object->updateAnimation(timestep);
             object->updateForNext(timestep);
 
@@ -190,15 +183,26 @@ namespace BattleRoom {
 
         // check boundary
         if (m_boundary != nullptr) {
-            for (GameObject *object : m_gameObjects) {
+            for (const auto& object : m_gameObjects) {
                 if (!m_boundary->contains(object->getPosition())) {
                     object->setToDestroy(true);
                 }
             } 
         } 
 
-        m_gameObjects = deleteDestroyed(m_gameObjects);
-        m_gameObjects.insert(m_gameObjects.end(), addedObjects.begin(), addedObjects.end());
+        // delete destroyed
+        for (vector<UniqueGameObject>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end();) {
+            if ((*it)->destroy()) {
+                it = m_gameObjects.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
+        // add added
+        for (const auto& addedObj : addedObjects) {
+            m_gameObjects.push_back(UniqueGameObject(addedObj));
+        }
 
         // fake load
         std::this_thread::sleep_for(std::chrono::milliseconds(25));

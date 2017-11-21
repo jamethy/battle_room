@@ -113,7 +113,7 @@ namespace BattleRoom {
 
     void Player::shootBullet(Vector2D aim) {
         m_aim = aim;
-        Bullet *bullet = (Bullet*)ObjectFactory::createObjectOfType(ObjectType::Bullet);
+        Bullet *bullet = (Bullet*)(ObjectFactory::createObjectOfType(ObjectType::Bullet).release());
         Vector2D bulletVelUnit = m_aim.minus(getPosition()).getUnit();
 
         const Frame& frame = getAnimation().getFrame(getAnimationState());
@@ -194,11 +194,11 @@ namespace BattleRoom {
 
     std::vector<GameObject*> Player::getAddedObjects() {
         std::vector<GameObject*> objects = m_addedObjects;
-        m_addedObjects.clear();
+        m_addedObjects.clear(); // TODO FIX THIS BAD MEM LEAK
         return objects;
     }
 
-    GameObject* Player::clone() {
+    GameObject* Player::clone() const {
         return new Player(*this);
     }
 
