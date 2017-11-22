@@ -18,6 +18,8 @@ namespace BattleRoom {
 
         static UniqueGameObject createObjectOfType(ObjectType type);
 
+        static UniqueGameObject deserializeObject(BinaryStream& bs);
+
         static void applySettings(ResourceDescriptor settings);
 
     }; // ObjectFactory class

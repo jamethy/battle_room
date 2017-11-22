@@ -82,4 +82,20 @@ namespace BattleRoom {
         }
     }
 
+    UniqueGameObject ObjectFactory::deserializeObject(BinaryStream& bs) {
+        const ObjectType type = (ObjectType)bs.peekInt();
+        switch (type) {
+            case ObjectType::Ball:
+                return UniqueGameObject(new Ball(Ball::deserialize(bs)));
+            case ObjectType::Bullet:
+                return UniqueGameObject(new Bullet(Bullet::deserialize(bs)));
+            case ObjectType::Player:
+                return UniqueGameObject(new Player(Player::deserialize(bs)));
+            case ObjectType::Wall:
+            case ObjectType::None:
+            default:
+                return UniqueGameObject(new GameObject(GameObject::deserialize(bs)));
+        }
+    }
+
 } // BattleRoom namespace

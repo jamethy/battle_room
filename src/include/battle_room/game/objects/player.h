@@ -39,6 +39,9 @@ namespace BattleRoom {
 
         static ObjectType type();
 
+        virtual void serialize(BinaryStream& bs) const override;
+        static Player deserialize(BinaryStream& bs);
+
     private:
 
         /**
@@ -60,6 +63,8 @@ namespace BattleRoom {
 
         bool m_chargingJump;
         double m_jumpCharge;
+
+        Player(const GameObject& obj);
 
     }; // Player class
 } // BattleRoom namespace

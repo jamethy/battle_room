@@ -6,7 +6,7 @@
 
 namespace BattleRoom {
 
-// apply settings
+    // apply settings
     void NetworkWorldUpdater::applySettings(ResourceDescriptor settings) {
 
         // apply network settings

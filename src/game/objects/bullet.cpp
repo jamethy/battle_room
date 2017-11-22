@@ -11,6 +11,11 @@ namespace BattleRoom {
             setAnimation(AnimationHandler::getAnimation("bullet"));
         }
 
+    Bullet::Bullet(const GameObject& obj) :
+        GameObject(obj),
+        m_state(BulletState::Normal)
+    { }
+
     // other functions
     void Bullet::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
         (void)velocityResult; // unused
@@ -48,6 +53,17 @@ namespace BattleRoom {
 
     GameObject* Bullet::clone() const {
         return new Bullet(*this);
+    }
+
+    void Bullet::serialize(BinaryStream& bs) const {
+        GameObject::serialize(bs);
+        bs.writeInt((int)m_state);
+    }
+
+    Bullet Bullet::deserialize(BinaryStream& bs) {
+        Bullet bullet(GameObject::deserialize(bs));
+        bullet.m_state = (BulletState)bs.readInt();
+        return bullet;
     }
 
 } // BattleRoom namespace

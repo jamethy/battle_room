@@ -91,7 +91,7 @@ namespace BattleRoom {
         std::string m_name; ///< label used for debugging
         ObjectType m_type; ///< Type of object
 
-        GameObject();
+        GameObject(const DrawableObject& base);
 
     }; // GameObject class
 

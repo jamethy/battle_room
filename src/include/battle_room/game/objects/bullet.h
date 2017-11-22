@@ -22,17 +22,23 @@ namespace BattleRoom {
 
         GameObject* clone() const override;
 
+        virtual void serialize(BinaryStream& bs) const override;
+        static Bullet deserialize(BinaryStream& bs);
+
     private:
 
         /**
          * State of ball object
          */
         enum class BulletState {
-            Normal,
+            Normal = 0,
             Hit
         };
 
         BulletState m_state; /// Current state of the ball object
+
+        Bullet(const GameObject& obj);
+
     }; // Bullet class
 } // BattleRoom namespace
 #endif //BATTLE_ROOM_BULLET_H

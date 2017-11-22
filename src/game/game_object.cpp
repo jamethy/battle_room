@@ -53,8 +53,15 @@ namespace BattleRoom {
         m_destroy(false),
         m_type(type) {}
 
-    GameObject::GameObject() : GameObject(UniqueId::generateInvalidId(), ObjectType::None)
-    { }
+    GameObject::GameObject(const DrawableObject& obj) : 
+        DrawableObject(obj),
+        m_position(Vector2D(0,0)),
+        m_rotation(0),
+        m_uniqueId(UniqueId::generateInvalidId()),
+        m_angularVelocity(0.0),
+        m_isStatic(false),
+        m_destroy(false),
+        m_type(ObjectType::None) {}
 
 // other functinos
     void GameObject::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
@@ -188,6 +195,7 @@ namespace BattleRoom {
     void GameObject::serialize(BinaryStream& bs) const {
 
         bs.writeInt((int)m_type);
+        DrawableObject::serialize(bs);
         m_position.serialize(bs);
         bs.writeRadians(m_rotation);
         m_uniqueId.serialize(bs);
@@ -200,9 +208,11 @@ namespace BattleRoom {
     }
 
     GameObject GameObject::deserialize(BinaryStream& bs) {
-        GameObject obj;
 
-        obj.m_type = (ObjectType)bs.readInt();
+        ObjectType type = (ObjectType)bs.readInt();
+        GameObject obj(DrawableObject::deserialize(bs));
+
+        obj.m_type = type;
         obj.m_position = Vector2D::deserialize(bs);
         obj.m_rotation = bs.readRadians();
         obj.m_uniqueId = UniqueId::deserialize(bs);

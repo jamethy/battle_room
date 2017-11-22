@@ -8,6 +8,11 @@ namespace BattleRoom {
             : GameObject(id, ObjectType::Ball),
               m_state(BallState::Normal) {}
 
+    Ball::Ball(const GameObject& obj) :
+        GameObject(obj),
+        m_state(BallState::Normal) 
+    {}
+
     // other functions
     void Ball::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
 
@@ -57,6 +62,20 @@ namespace BattleRoom {
     GameObject* Ball::clone() const {
         return new Ball(*this);
     }
+
+    void Ball::serialize(BinaryStream& bs) const {
+        GameObject::serialize(bs);
+        m_storedVelocity.serialize(bs);
+        bs.writeInt((int)m_state);
+    }
+
+    Ball Ball::deserialize(BinaryStream& bs) {
+        Ball ball(GameObject::deserialize(bs));
+        ball.m_storedVelocity = Vector2D::deserialize(bs);
+        ball.m_state = (BallState)bs.readInt();
+        return ball;
+    }
+
 } // BattleRoom namespace
 
 

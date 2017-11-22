@@ -14,16 +14,26 @@ const double MIN_JUMP_SPEED = 2; // meters per second
 namespace BattleRoom {
 
     // constructors
-    Player::Player(UniqueId id)
-            : GameObject(id, ObjectType::Player),
-            m_state(PlayerState::Flying),
-            m_chargingGun(false),
-            m_gunCharge(0),
-            m_chargingJump(false),
-            m_jumpCharge(0)
+    Player::Player(UniqueId id) : 
+        GameObject(id, ObjectType::Player),
+        m_state(PlayerState::Flying),
+        m_chargingGun(false),
+        m_gunCharge(0),
+        m_chargingJump(false),
+        m_jumpCharge(0)
     {
         setAnimation(AnimationHandler::getAnimation("man_0"));
     }
+
+    Player::Player(const GameObject& obj) :
+        GameObject(obj),
+        m_state(PlayerState::Flying),
+        m_chargingGun(false),
+        m_gunCharge(0),
+        m_chargingJump(false),
+        m_jumpCharge(0)
+    { }
+
 
     // other functions
     void Player::reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) {
@@ -217,6 +227,30 @@ namespace BattleRoom {
 
     double Player::getJumCharge() const {
         return m_jumpCharge;
+    }
+
+    void Player::serialize(BinaryStream& bs) const {
+        GameObject::serialize(bs);
+        bs.writeInt((int)m_state);
+        m_aim.serialize(bs);
+        bs.writeBool(m_chargingGun);
+        bs.writeDouble(m_gunCharge);
+        bs.writeBool(m_chargingJump);
+        bs.writeDouble(m_jumpCharge);
+    }
+
+    Player Player::deserialize(BinaryStream& bs) {
+
+        Player player(GameObject::deserialize(bs));
+
+        player.m_state = (PlayerState)bs.readInt();
+        player.m_aim = Vector2D::deserialize(bs);
+        player.m_chargingGun = bs.readBool();
+        player.m_gunCharge = bs.readDouble();
+        player.m_chargingJump = bs.readBool();
+        player.m_jumpCharge = bs.readDouble();
+
+        return player;
     }
 
 } // BattleRoom namespace

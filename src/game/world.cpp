@@ -53,16 +53,6 @@ namespace BattleRoom {
         applySettings(settings);
     }
 
-    void World::serialize(BinaryStream& bs) const {
-        bs.writeSeconds(m_gameTime);
-    }
-
-    World World::deserialize(BinaryStream& bs) {
-        World world;
-        world.m_gameTime = bs.readSeconds();
-        return world;
-    }
-
     const vector<UniqueGameObject>& World::getAllGameObjects() const {
         return m_gameObjects;
     }
@@ -104,6 +94,37 @@ namespace BattleRoom {
 
     seconds World::getGameTime() const {
         return m_gameTime;
+    }
+
+    void World::serialize(BinaryStream& bs) const {
+        bs.writeSeconds(m_gameTime);
+        bs.writeInt(m_backgroundObjects.size());
+        for (const auto& obj : m_backgroundObjects) {
+            obj->serialize(bs);
+        }
+        bs.writeInt(m_gameObjects.size());
+        for (const auto& obj : m_gameObjects) {
+            obj->serialize(bs);
+        }
+    }
+
+    World World::deserialize(BinaryStream& bs) {
+        World world;
+        world.m_gameTime = bs.readSeconds();
+
+        int numBackgrounds = bs.readInt();
+        world.m_backgroundObjects = vector<UniqueDrawableObject>(numBackgrounds);;
+        for (int i = 0; i < numBackgrounds; ++i) {
+            world.m_backgroundObjects[i] = UniqueDrawableObject(new DrawableObject(DrawableObject::deserialize(bs)));
+        }
+
+        int numGameObjects = bs.readInt();
+        world.m_gameObjects = vector<UniqueGameObject>(numGameObjects);
+        for (int i = 0; i < numGameObjects; ++i) {
+            world.m_gameObjects[i] = ObjectFactory::deserializeObject(bs);
+        }
+
+        return world;
     }
 
 } // BattleRoom namespace

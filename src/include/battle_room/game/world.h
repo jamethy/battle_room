@@ -22,9 +22,6 @@ namespace BattleRoom {
 
             World clone() const;
 
-            void serialize(BinaryStream& bs) const;
-            static World deserialize(BinaryStream& bs);
-
             const std::vector<UniqueGameObject>& getAllGameObjects() const; // TEMP
             const GameObject* getGameObject(UniqueId id) const;
             const std::vector<UniqueDrawableObject>& getBackgroundObjects() const;
@@ -35,6 +32,8 @@ namespace BattleRoom {
 
             // inherited
             virtual void applySettings(ResourceDescriptor settings) override;
+            void serialize(BinaryStream& bs) const;
+            static World deserialize(BinaryStream& bs);
 
         protected:
 
