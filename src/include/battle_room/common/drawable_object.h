@@ -5,6 +5,7 @@
 #include "battle_room/common/vector3d.h"
 #include "battle_room/common/quaternion.h"
 #include "battle_room/common/animation.h"
+#include "battle_room/common/binary_stream.h"
 
 #include <memory>
 

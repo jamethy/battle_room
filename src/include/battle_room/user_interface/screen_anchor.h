@@ -9,7 +9,5 @@ namespace BattleRoom {
         TopLeft, TopRight, BottomLeft, BottomRight, Center
     }; // ScreenAnchor enum
 
-    ScreenAnchor anchorFromStr(std::string str);
-
 } // BattleRoom namespace
 #endif // SCREEN_ANCHOR_H

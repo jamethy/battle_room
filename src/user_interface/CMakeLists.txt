@@ -13,7 +13,6 @@ add_library(UserInterface
         camera/z_max_camera.cpp
         camera/pyramid_camera.cpp
         camera/camera_factory.cpp
-        screen_anchor.cpp
         view_position.cpp
         view.cpp
         )

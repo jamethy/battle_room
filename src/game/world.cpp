@@ -50,6 +50,18 @@ namespace BattleRoom {
         applySettings(settings);
     }
 
+    void World::serialize(BinaryStream& bs) const {
+        bs.writeDouble(m_gameTime);
+    }
+
+    World World::deserialize(BinaryStream& bs) {
+        World world;
+        world.m_gameTime = bs.readDouble();
+        return world;
+            //std::vector<GameObject *> m_gameObjects; // walls, stars, etc
+            ////std::vector<DrawableObject *> m_backgroundObjects; // background
+    }
+
     vector<GameObject *> World::getAllGameObjects() {
         return m_gameObjects;
     }

@@ -1,7 +1,6 @@
 #include "battle_room/common/binary_stream.h"
 
 #include <cstring>
-#include <stdexcept>
 
 namespace BattleRoom {
 
@@ -65,10 +64,13 @@ namespace BattleRoom {
     }
 
     void BinaryStream::incrementLoc(size_t by) {
-        m_loc += by;
-        if (m_loc > m_maxSize) {
-            throw std::runtime_error("you've gone too far.\n");
+        if (m_loc + by > m_maxSize) {
+            char* old = m_buffer;
+            m_buffer = new char[2*m_maxSize]();
+            memcpy(m_buffer, old, m_loc);
+            delete[] old;
         }
+        m_loc += by;
     }
 
-}; // BattleRoom namespace
+} // BattleRoom namespace
