@@ -48,6 +48,7 @@ namespace BattleRoom {
         msg.setMessageId(UniqueId::deserialize(bs));
         msg.setMessageType((MessageType)bs.readInt());
         msg.setDataSize((size_t)bs.readInt());
+        return msg;
     }
 
 } // BattleRoom namespace

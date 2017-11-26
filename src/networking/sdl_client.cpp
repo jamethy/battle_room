@@ -31,7 +31,7 @@ namespace BattleRoom {
                 int bytesRead = SDLNet_TCP_Recv(socket, messageStream.getBuffer(), Message::Size);
                 // haederStream -> setBytesRead
 
-                if (bytesRead < Message::Size) {
+                if (bytesRead < (int)Message::Size) {
                     std::cerr << "Did not receive full header\n";
                     // server probably down
                     break;
@@ -43,7 +43,7 @@ namespace BattleRoom {
                     dataStream.setDataLength(message.getDataSize());
                     bytesRead = SDLNet_TCP_Recv(socket, dataStream.getBuffer(), message.getDataSize());
 
-                    if (bytesRead < message.getDataSize()) {
+                    if (bytesRead < (int)message.getDataSize()) {
                         std::cerr << "Did not receive full body\n";
                         continue;
                     }
@@ -100,11 +100,12 @@ namespace BattleRoom {
             return false;
         }
 
-
         m_updateThread = std::thread(listenLoop,
                 std::ref(m_socket),
                 std::ref(m_keepUpdating)
                 );
+
+        return true;
     }
 
     void SdlClient::sendMessage(Message& message, BinaryStream& bs) {
@@ -112,14 +113,14 @@ namespace BattleRoom {
         BinaryStream messageStream(Message::Size);
         message.serialize(messageStream);
         int bytesWritten = SDLNet_TCP_Send(m_socket, messageStream.getBuffer(), messageStream.getLength());
-        if (bytesWritten < Message::Size) {
+        if (bytesWritten < (int)Message::Size) {
             //freak out
             std::cerr << "Did not send full header\n";
             return;
         }
 
         bytesWritten = SDLNet_TCP_Send(m_socket, bs.getBuffer(), bs.getLength());
-        if (bytesWritten < bs.getLength()) {
+        if (bytesWritten < (int)bs.getLength()) {
             //freak out
             std::cerr << "Did not send full body\n";
             return;

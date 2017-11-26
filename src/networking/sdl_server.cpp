@@ -52,7 +52,7 @@ namespace BattleRoom {
                     int bytesRead = SDLNet_TCP_Recv(clientSocket, messageStream.getBuffer(), Message::Size);
                     // haederStream -> setBytesRead
 
-                    if (bytesRead < Message::Size) {
+                    if (bytesRead < (int)Message::Size) {
                         std::cerr << "Did not receive full header\n";
                         // server probably down
                         break;
@@ -64,7 +64,7 @@ namespace BattleRoom {
                         dataStream.setDataLength(message.getDataSize());
                         bytesRead = SDLNet_TCP_Recv(clientSocket, dataStream.getBuffer(), message.getDataSize());
 
-                        if (bytesRead < message.getDataSize()) {
+                        if (bytesRead < (int)message.getDataSize()) {
                             std::cerr << "Did not receive full body\n";
                             continue;
                         }
@@ -143,6 +143,8 @@ namespace BattleRoom {
                 std::ref(m_listenLock),
                 std::ref(m_keepUpdating)
                 );
+
+        return true;
     }
 
     void SdlServer::sendMessage(Message& message, BinaryStream& data, UniqueId clientId) {
@@ -158,7 +160,7 @@ namespace BattleRoom {
         BinaryStream headerStream(Message::Size);
         message.serialize(headerStream);
         int bytesWritten = SDLNet_TCP_Send(socket, headerStream.getBuffer(), headerStream.getLength());
-        if (bytesWritten < headerStream.getLength()) {
+        if (bytesWritten < (int)headerStream.getLength()) {
             //freak out
             std::cerr << "Did not send full header\n";
             m_writingLock.unlock();
@@ -166,7 +168,7 @@ namespace BattleRoom {
         }
 
         bytesWritten = SDLNet_TCP_Send(socket, data.getBuffer(), data.getLength());
-        if (bytesWritten < data.getLength()) {
+        if (bytesWritten < (int)data.getLength()) {
             //freak out
             std::cerr << "Did not send full body\n";
             m_writingLock.unlock();
