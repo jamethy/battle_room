@@ -1,4 +1,4 @@
-#include "battle_room/networking/message_header.h"
+#include "battle_room/networking/message.h"
 
 namespace BattleRoom {
 
@@ -8,7 +8,7 @@ namespace BattleRoom {
     void handlePostCommand(BinaryStream& bs) {
     }
 
-    void MessageHeader::handle(BinaryStream& bs) {
+    void Message::handle(BinaryStream& bs) {
         switch (m_type) {
             case GetWorld:
                 handleGeWorld(bs);

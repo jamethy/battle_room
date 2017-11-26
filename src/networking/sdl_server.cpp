@@ -9,7 +9,11 @@ namespace BattleRoom {
         return UniqueServerConnection(new SdlServer());
     }
 
-    void listenLoop(TCPsocket& socket, bool &keepUpdating) {
+    void listenLoop(TCPsocket& serverSocket, 
+            std::unordered_map<UniqueId, TCPsocket>& clientSockets, 
+            SDLNet_SocketSet& socketSet, 
+            std::mutex& listenLock, 
+            bool &keepUpdating) {
 
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(100);
@@ -35,7 +39,7 @@ namespace BattleRoom {
                 continue;
             }
 
-            for (const auto& entry : m_clientSockets) {
+            for (const auto& entry : clientSockets) {
                 TCPsocket clientSocket = entry.second;
                 if (SDLNet_SocketReady(clientSocket)) {
 
@@ -45,7 +49,7 @@ namespace BattleRoom {
                     dataStream.reset();
 
                     messageStream.setDataLength(Message::Size);
-                    int bytesRead = SDLNet_TCP_Recv(socket, messageStream.getBuffer(), Message::Size);
+                    int bytesRead = SDLNet_TCP_Recv(clientSocket, messageStream.getBuffer(), Message::Size);
                     // haederStream -> setBytesRead
 
                     if (bytesRead < Message::Size) {
@@ -58,7 +62,7 @@ namespace BattleRoom {
 
                     if (message.hasBody()) {
                         dataStream.setDataLength(message.getDataSize());
-                        bytesRead = SDLNet_TCP_Recv(socket, dataStream.getBuffer(), message.getDataSize());
+                        bytesRead = SDLNet_TCP_Recv(clientSocket, dataStream.getBuffer(), message.getDataSize());
 
                         if (bytesRead < message.getDataSize()) {
                             std::cerr << "Did not receive full body\n";
@@ -93,7 +97,7 @@ namespace BattleRoom {
         }
     }
 
-    bool SdlServer::start(int port) override {
+    bool SdlServer::start(int port) {
 
         // connect and stuff
 
@@ -118,7 +122,7 @@ namespace BattleRoom {
             return false;
         }
 
-        m_serverSocket = SDLNet_TCP_Open(&ip);
+        m_serverSocket = SDLNet_TCP_Open(&serverIp);
         if(!m_serverSocket)
         {
             std::cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
@@ -134,11 +138,14 @@ namespace BattleRoom {
 
         m_updateThread = std::thread(listenLoop,
                 std::ref(m_serverSocket),
+                std::ref(m_clientSockets),
+                std::ref(m_socketSet),
+                std::ref(m_listenLock),
                 std::ref(m_keepUpdating)
                 );
     }
 
-    void SdlServer::sendMessage(Message& message, BinaryStream& data, UniqueId clientId) override {
+    void SdlServer::sendMessage(Message& message, BinaryStream& data, UniqueId clientId) {
 
         if (m_clientSockets.count(clientId) <= 0) {
             std::cerr << "No client of that ID is connected.\n";
@@ -146,20 +153,20 @@ namespace BattleRoom {
         }
 
         m_writingLock.lock();
-        TCPsocket socket = m_clientSockets.get(clientId);
+        TCPsocket socket = m_clientSockets.at(clientId);
 
         BinaryStream headerStream(Message::Size);
         message.serialize(headerStream);
-        int bytesWritten = SDLNet_TCP_Send(socket, headerStream.getBuffer(), headerStream.getDataSize());
-        if (bytesWritten < headerStream.getDataSize()) {
+        int bytesWritten = SDLNet_TCP_Send(socket, headerStream.getBuffer(), headerStream.getLength());
+        if (bytesWritten < headerStream.getLength()) {
             //freak out
             std::cerr << "Did not send full header\n";
             m_writingLock.unlock();
             return;
         }
 
-        bytesWritten = SDLNet_TCP_Send(socket, data.getBuffer(), data.getDataSize());
-        if (bytesWritten < data.getDataSize()) {
+        bytesWritten = SDLNet_TCP_Send(socket, data.getBuffer(), data.getLength());
+        if (bytesWritten < data.getLength()) {
             //freak out
             std::cerr << "Did not send full body\n";
             m_writingLock.unlock();

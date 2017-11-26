@@ -1,6 +1,6 @@
 Right now
 -----------------------------------
-finish seralizing game object
+accept new client
 
 Running ToDo List
 -----------------------------------

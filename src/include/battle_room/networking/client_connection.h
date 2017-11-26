@@ -3,6 +3,8 @@
 
 #include "battle_room/networking/message.h"
 
+#include <memory>
+
 namespace BattleRoom {
 
     /**

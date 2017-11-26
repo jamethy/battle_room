@@ -2,6 +2,12 @@
 
 namespace BattleRoom {
 
+    Message::Message() :
+        m_messageId(UniqueId::generateInvalidId()),
+        m_type(MessageType::Invalid),
+        m_dataSize(0)
+    { }
+
     void Message::setMessageId(UniqueId id) {
         m_messageId = id;
     }
@@ -37,7 +43,7 @@ namespace BattleRoom {
         bs.writeInt((int)m_dataSize);
     }
 
-    static Message Message::deserialize(BinaryStream& bs) {
+    Message Message::deserialize(BinaryStream& bs) {
         Message msg;
         msg.setMessageId(UniqueId::deserialize(bs));
         msg.setMessageType((MessageType)bs.readInt());

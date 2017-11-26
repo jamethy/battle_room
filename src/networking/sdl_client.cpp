@@ -68,7 +68,7 @@ namespace BattleRoom {
         }
     }
 
-    bool SdlClient::connectToServer(std::string host, int port) override {
+    bool SdlClient::connectToServer(std::string host, int port) {
 
         // connect and stuff
 
@@ -93,7 +93,7 @@ namespace BattleRoom {
             return false;
         }
 
-        m_socket = SDLNet_TCP_Open(&ip);
+        m_socket = SDLNet_TCP_Open(&serverIp);
         if(!m_socket)
         {
             std::cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
@@ -107,19 +107,19 @@ namespace BattleRoom {
                 );
     }
 
-    void SdlClient::sendMessage(Message& message, BinaryStream& bs) override {
+    void SdlClient::sendMessage(Message& message, BinaryStream& bs) {
 
         BinaryStream messageStream(Message::Size);
         message.serialize(messageStream);
-        int bytesWritten = SDLNet_TCP_Send(m_socket, messageStream.getBuffer(), messageStream.getDataSize());
+        int bytesWritten = SDLNet_TCP_Send(m_socket, messageStream.getBuffer(), messageStream.getLength());
         if (bytesWritten < Message::Size) {
             //freak out
             std::cerr << "Did not send full header\n";
             return;
         }
 
-        bytesWritten = SDLNet_TCP_Send(m_socket, bs.getBuffer(), bs.getDataSize());
-        if (bytesWritten < bs.getDataSize()) {
+        bytesWritten = SDLNet_TCP_Send(m_socket, bs.getBuffer(), bs.getLength());
+        if (bytesWritten < bs.getLength()) {
             //freak out
             std::cerr << "Did not send full body\n";
             return;
