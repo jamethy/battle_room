@@ -12,6 +12,8 @@ namespace BattleRoom {
 
     void Animation::applySettings(ResourceDescriptor settings) {
 
+        m_name = settings.getValue();
+
         ResourceDescriptor sub = settings.getSubResource("ImageFile");
         if (isNotEmpty(sub.getValue())) {
             m_imageFile = sub.getValue();

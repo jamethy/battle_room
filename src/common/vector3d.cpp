@@ -125,7 +125,10 @@ namespace BattleRoom {
     }
 
     Vector3D Vector3D::deserialize(BinaryStream& bs) {
-        return Vector3D(bs.readMeters(), bs.readMeters(), bs.readMeters());
+        meters x = bs.readMeters();
+        meters y = bs.readMeters();
+        meters z = bs.readMeters();
+        return Vector3D(x, y, z);
     }
 
 

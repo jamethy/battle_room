@@ -4,7 +4,8 @@
 namespace BattleRoom {
 
     enum MessageType {
-        Test
+        GetWorld,
+        PostCommand
     }; // MessageType enum
 } // BattleRoom namespace
 #endif // MESSAGE_TYPE_H

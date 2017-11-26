@@ -51,11 +51,11 @@ namespace BattleRoom {
         return ResourceDescriptor();
     }
 
-/**
- * \brief Utility function to get the resource's value from a line
- * \param line String with white space, key, ': ', and the value
- * \return The matched Value
- */
+    /**
+     * \brief Utility function to get the resource's value from a line
+     * \param line String with white space, key, ': ', and the value
+     * \return The matched Value
+     */
     string parseOutValue(std::string line) {
 
         string value = "";
@@ -73,11 +73,11 @@ namespace BattleRoom {
         return value;
     }
 
-/**
- * \brief Utility function to get the resource's key from a line
- * \param line String with white space, key, ': ', and the value
- * \return The matched Key
- */
+    /**
+     * \brief Utility function to get the resource's key from a line
+     * \param line String with white space, key, ': ', and the value
+     * \return The matched Key
+     */
     string parseOutKey(string line) {
 
         string key = "";
@@ -94,14 +94,14 @@ namespace BattleRoom {
         return key;
     }
 
-/**
- * \brief Utility function to count the number of tabs before the key
- *
- * A tab is considered 4 spaces (and 4 spaces a tab) and the result is rounded half
- *
- * \param line containing key-value pair
- * \return Number of tabs before the key
- */
+    /**
+     * \brief Utility function to count the number of tabs before the key
+     *
+     * A tab is considered 4 spaces (and 4 spaces a tab) and the result is rounded half
+     *
+     * \param line containing key-value pair
+     * \return Number of tabs before the key
+     */
     int getLevel(string line) {
 
         // \\t A tab character

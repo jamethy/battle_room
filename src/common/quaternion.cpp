@@ -135,11 +135,12 @@ namespace BattleRoom {
     }
 
     Quaternion Quaternion::deserialize(BinaryStream& bs) {
-        return Quaternion(
-                bs.readDouble(),
-                bs.readDouble(),
-                bs.readDouble(),
-                bs.readDouble());
+        double w = bs.readDouble();
+        double i = bs.readDouble();
+        double j = bs.readDouble();
+        double k = bs.readDouble();
+        
+        return Quaternion(w, i, j, k);
     }
 
 } // BattleRoom namespace

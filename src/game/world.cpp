@@ -8,7 +8,7 @@ using std::vector;
 
 namespace BattleRoom {
 
-// apply settings
+    // apply settings
 
     void World::applySettings(ResourceDescriptor settings) {
 
@@ -26,8 +26,10 @@ namespace BattleRoom {
         m_gameObjects = ObjectFactory::getGameObjects(settings);
     }
 
-// constructors
-    World::World() {
+    // constructors
+    World::World() :
+        m_gameTime(0.0)
+    {
         m_gameObjects.clear();
         m_backgroundObjects.clear();
     }

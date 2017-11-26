@@ -42,3 +42,16 @@ target_link_libraries(battleroom_dedicated_server
         ${SDL2_LIBRARY}
         ${SDL2_NET_LIBRARIES}
         )
+
+add_executable(test_client
+        test_client.cpp)
+target_link_libraries(test_client
+        ${START_GROUP}
+        Common
+        Game
+        Networking
+        ${END_GROUP}
+        ${LINUX_LIBS}
+        ${SDL2_LIBRARY}
+        ${SDL2_NET_LIBRARIES}
+        )

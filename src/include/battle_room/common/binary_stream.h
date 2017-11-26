@@ -15,7 +15,7 @@ namespace BattleRoom {
         public: 
 
             // constructor
-            BinaryStream(size_t maxSize);
+            BinaryStream(size_t bufferSize);
             ~BinaryStream();
 
             // generic writing functions
@@ -56,21 +56,38 @@ namespace BattleRoom {
             void reset();
 
             /**
+             * Set the valid data length
+             */
+            void setDataLength(size_t length);
+            
+            /**
+             * Sets the location marker position
+             */
+            void setPosition(size_t pos);
+
+            /**
              * Get the raw pointer to the buffer
              */
             char* getBuffer();
 
             /**
-             * Get the current length of data written to the buffer
+             * Get the current length of valid data written to the buffer
              */
             size_t getLength() const;
+
+            /**
+             * Get the current position of stream in buffer
+             */
+            size_t getPosition() const;
 
         private:
 
             // increment m_loc by by
-            void incrementLoc(size_t by);
+            void incrementWriteLoc(size_t by);
+            void incrementReadLoc(size_t by);
 
-            size_t m_maxSize;
+            size_t m_bufferSize;
+            size_t m_dataLength;
             char* m_buffer;
             size_t m_loc;
 

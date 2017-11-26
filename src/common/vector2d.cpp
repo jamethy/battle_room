@@ -97,7 +97,9 @@ namespace BattleRoom {
     }
 
     Vector2D Vector2D::deserialize(BinaryStream& bs) {
-        return Vector2D(bs.readMeters(), bs.readMeters());
+        meters x = bs.readMeters();
+        meters y = bs.readMeters();
+        return Vector2D(x, y);
     }
 
 
