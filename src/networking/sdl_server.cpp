@@ -9,37 +9,42 @@ namespace BattleRoom {
         return UniqueServerConnection(new SdlServer());
     }
 
-    void listenLoop(TCPsocket& serverSocket, 
-            std::unordered_map<UniqueId, TCPsocket>& clientSockets, 
-            SDLNet_SocketSet& socketSet, 
-            std::mutex& listenLock, 
-            bool &keepUpdating) {
+    void listenLoop(SdlServer& server) {
 
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(100);
+        server.m_keepUpdating = true;
+        while (server.m_keepUpdating) {
 
-        while (keepUpdating) {
-
-            listenLock.lock();
-            int socketsWithData = SDLNet_CheckSockets(socketSet, 500);
+            server.m_listenLock.lock();
+            int socketsWithData = SDLNet_CheckSockets(server.m_socketSet, 500);
 
             if(socketsWithData <= 0) {
+                server.m_listenLock.unlock();
                 continue;
             }
 
-            if (SDLNet_SocketReady(serverSocket)) {
+            if (SDLNet_SocketReady(server.m_serverSocket)) {
                 --socketsWithData;
-                TCPsocket socket = SDLNet_TCP_Accept(serverSocket);
+                TCPsocket socket = SDLNet_TCP_Accept(server.m_serverSocket);
                 if (socket) {
-                    // add to map
+
+                    UniqueId newClientId = UniqueId::generateNewNetworkId();
+                    server.m_writingLock.lock();
+                    server.m_clientSockets.emplace(newClientId, socket);
+                    server.adjustSocketSet();
+                    server.m_writingLock.unlock();
+
+                    // tell app
                 }
             }
 
             if(socketsWithData <= 0) {
+                server.m_listenLock.unlock();
                 continue;
             }
 
-            for (const auto& entry : clientSockets) {
+            for (const auto& entry : server.m_clientSockets) {
                 TCPsocket clientSocket = entry.second;
                 if (SDLNet_SocketReady(clientSocket)) {
 
@@ -50,12 +55,17 @@ namespace BattleRoom {
 
                     messageStream.setDataLength(Message::Size);
                     int bytesRead = SDLNet_TCP_Recv(clientSocket, messageStream.getBuffer(), Message::Size);
-                    // haederStream -> setBytesRead
 
                     if (bytesRead < (int)Message::Size) {
-                        std::cerr << "Did not receive full header\n";
-                        // server probably down
-                        break;
+                        std::cout << "Did not receive full header - disconnecting client\n";
+                        // client probabs disconnect
+                        UniqueId clientId = entry.first;
+                        server.m_writingLock.lock();
+                        server.m_clientSockets.erase(clientId);
+                        server.adjustSocketSet();
+                        server.m_writingLock.unlock();
+
+                        // tell app
                     }
 
                     Message message = Message::deserialize(messageStream);
@@ -77,7 +87,7 @@ namespace BattleRoom {
                     }
                 }
             }
-            listenLock.unlock();
+            server.m_listenLock.unlock();
         }
     }
 
@@ -136,13 +146,7 @@ namespace BattleRoom {
             return false;
         }
 
-        m_updateThread = std::thread(listenLoop,
-                std::ref(m_serverSocket),
-                std::ref(m_clientSockets),
-                std::ref(m_socketSet),
-                std::ref(m_listenLock),
-                std::ref(m_keepUpdating)
-                );
+        m_updateThread = std::thread(listenLoop, std::ref(*this));
 
         return true;
     }
@@ -192,27 +196,5 @@ namespace BattleRoom {
                 std::cerr << "SDLNet_TCP_AddSocket: " << SDL_GetError() << std::endl;
             }
         } 
-    }
-
-    void SdlServer::addClient(UniqueId id, TCPsocket socket) {
-        m_writingLock.lock();
-        m_listenLock.lock();
-
-        m_clientSockets.emplace(id, socket);
-        adjustSocketSet();
-
-        m_writingLock.unlock();
-        m_listenLock.unlock();
-    }
-
-    void SdlServer::removeClient(UniqueId id) {
-        m_writingLock.lock();
-        m_listenLock.lock();
-
-        m_clientSockets.erase(id);
-        adjustSocketSet();
-
-        m_writingLock.unlock();
-        m_listenLock.unlock();
     }
 } // BattleRoom namespace

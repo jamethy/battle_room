@@ -23,15 +23,11 @@ namespace BattleRoom {
         SdlServer();
         ~SdlServer();
 
-        bool start(int port) override;
-
-        void sendMessage(Message& message, BinaryStream& data, UniqueId clientId) override;
-
-    private:
-
-        void addClient(UniqueId id, TCPsocket socket);
-        void removeClient(UniqueId id);
         void adjustSocketSet();
+
+        // inherited
+        bool start(int port) override;
+        void sendMessage(Message& message, BinaryStream& data, UniqueId clientId) override;
 
         std::thread m_updateThread; ///< Thread to update world on
         bool m_keepUpdating; ///< Set to false when ready to destroy

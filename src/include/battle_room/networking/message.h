@@ -32,7 +32,7 @@ namespace BattleRoom {
         void serialize(BinaryStream& bs) const;
         static Message deserialize(BinaryStream& bs);
 
-        static const size_t Size = sizeof(int) + sizeof(int) + sizeof(size_t);
+        static const size_t Size = sizeof(int) + sizeof(int) + sizeof(int);
 
     private:
 
