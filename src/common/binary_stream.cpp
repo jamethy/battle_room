@@ -153,6 +153,13 @@ namespace BattleRoom {
         m_loc += by;
     }
 
+    int BinaryStream::hash() const {
+        int val = 0;
+        for (size_t i = 0; i < m_dataLength; ++i) {
+            val += m_buffer[i];
+        }
+        return val;
+    }
 
     // unit versions
 

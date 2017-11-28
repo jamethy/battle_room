@@ -80,6 +80,8 @@ namespace BattleRoom {
              */
             size_t getPosition() const;
 
+            int hash() const;
+
         private:
 
             // increment m_loc by by

@@ -41,12 +41,23 @@ namespace BattleRoom {
 
                 Message message = Message::deserialize(messageStream);
 
+                if (message.getHeaderHash() != message.hash()) {
+                    std::cerr << "Header hash did not meet calculations\n";
+                    continue;
+                }
+
                 if (message.hasBody()) {
                     dataStream.setDataLength(message.getDataSize());
                     bytesRead = SDLNet_TCP_Recv(client.m_socket, dataStream.getBuffer(), message.getDataSize());
 
                     if (bytesRead < (int)message.getDataSize()) {
                         std::cerr << "Did not receive full body\n";
+                        continue;
+                    }
+
+                    if (message.getBodyHash() != dataStream.hash()) {
+                        std::cerr << "Body hash did not meet calculations\n";
+                        std::cerr << "header: " << message.getBodyHash() << " bs: " << dataStream.hash() << std::endl;
                         continue;
                     }
                 }
@@ -115,8 +126,11 @@ namespace BattleRoom {
                 std::cerr << "Socket has not been connected\n";
         } else {
 
+            message.setBodyHash(bs.hash());
+
             BinaryStream messageStream(Message::Size);
             message.serialize(messageStream);
+
             int bytesWritten = SDLNet_TCP_Send(m_socket, messageStream.getBuffer(), messageStream.getLength());
             if (bytesWritten < (int)Message::Size) {
                 //freak out
@@ -125,7 +139,6 @@ namespace BattleRoom {
             }
 
             if (message.hasBody()) {
-                std::cout << "Sending body\n";
                 bytesWritten = SDLNet_TCP_Send(m_socket, bs.getBuffer(), bs.getLength());
                 if (bytesWritten < (int)bs.getLength()) {
                     //freak out

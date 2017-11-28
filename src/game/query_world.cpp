@@ -7,11 +7,14 @@ namespace BattleRoom {
     World m_copyWorld; ///< World to constantly update
     World m_queryWorld; ///< World to get info from
     std::mutex m_copyWorldLock; ///< Lock for m_gameWorld reading/writing
+    std::mutex m_queryWorldLock; ///< Lock for m_gameWorld reading/writing
 
     void QueryWorld::updateBuffer() {
         m_copyWorldLock.lock();
+        m_queryWorldLock.lock();
         m_queryWorld = m_copyWorld.clone();
         m_copyWorldLock.unlock();
+        m_queryWorldLock.unlock();
     }
 
     void QueryWorld::updateCopyWorld(const World &world) {
@@ -37,7 +40,9 @@ namespace BattleRoom {
     }
 
     void QueryWorld::serialize(BinaryStream& bs) {
+        m_queryWorldLock.lock();
         m_queryWorld.serialize(bs);
+        m_queryWorldLock.unlock();
     }
 
 } // BattleRoom namespace
