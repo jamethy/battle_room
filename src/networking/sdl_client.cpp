@@ -9,26 +9,28 @@ namespace BattleRoom {
         return UniqueClientConnection(new SdlClient());
     }
 
-    void listenLoop(TCPsocket& socket, bool &keepUpdating) {
+    void listenLoop(SdlClient& client) {
 
         SDLNet_SocketSet socketSet = SDLNet_AllocSocketSet(1);
-        if(SDLNet_TCP_AddSocket(socketSet, socket) == -1)
+        if(SDLNet_TCP_AddSocket(socketSet, client.m_socket) == -1)
         {
             std::cerr << "SDLNet_TCP_AddSocket: " << SDL_GetError() << std::endl;
             return;
         }
 
+        std::cout << "Listening for server\n";
+
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(10000);
 
-        while (keepUpdating) {
-            if(SDLNet_CheckSockets(socketSet, 500) > 0 && SDLNet_SocketReady(socket)) {
+        while (client.m_keepUpdating) {
+            if(SDLNet_CheckSockets(socketSet, 500) > 0 && SDLNet_SocketReady(client.m_socket)) {
 
                 messageStream.reset();
                 dataStream.reset();
 
                 messageStream.setDataLength(Message::Size);
-                int bytesRead = SDLNet_TCP_Recv(socket, messageStream.getBuffer(), Message::Size);
+                int bytesRead = SDLNet_TCP_Recv(client.m_socket, messageStream.getBuffer(), Message::Size);
                 // haederStream -> setBytesRead
 
                 if (bytesRead < (int)Message::Size) {
@@ -41,7 +43,7 @@ namespace BattleRoom {
 
                 if (message.hasBody()) {
                     dataStream.setDataLength(message.getDataSize());
-                    bytesRead = SDLNet_TCP_Recv(socket, dataStream.getBuffer(), message.getDataSize());
+                    bytesRead = SDLNet_TCP_Recv(client.m_socket, dataStream.getBuffer(), message.getDataSize());
 
                     if (bytesRead < (int)message.getDataSize()) {
                         std::cerr << "Did not receive full body\n";
@@ -49,7 +51,7 @@ namespace BattleRoom {
                     }
                 }
 
-                message.handle(dataStream);
+                client.handleMessage(message, dataStream);
             }
         }
     }
@@ -100,10 +102,9 @@ namespace BattleRoom {
             return false;
         }
 
-        m_updateThread = std::thread(listenLoop,
-                std::ref(m_socket),
-                std::ref(m_keepUpdating)
-                );
+        m_keepUpdating = true;
+        m_updateThread = std::thread(listenLoop, std::ref(*this));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         return true;
     }
@@ -124,6 +125,7 @@ namespace BattleRoom {
             }
 
             if (message.hasBody()) {
+                std::cout << "Sending body\n";
                 bytesWritten = SDLNet_TCP_Send(m_socket, bs.getBuffer(), bs.getLength());
                 if (bytesWritten < (int)bs.getLength()) {
                     //freak out

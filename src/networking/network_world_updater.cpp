@@ -1,33 +1,33 @@
 #include "battle_room/networking/network_world_updater.h"
+#include "battle_room/networking/client_connection.h"
 #include "battle_room/game/query_world.h"
 #include "battle_room/game/command_receiver.h"
 
 #include <chrono>
+#include <iostream>
 
 namespace BattleRoom {
 
     // apply settings
     void NetworkWorldUpdater::applySettings(ResourceDescriptor settings) {
-
-        // apply network settings
-        // ip address
-        // port
+        (void)settings;
     }
 
-    void worldUpdaterFunction(World &world, bool &keepUpdating) {
+    void worldUpdaterFunction(bool &keepUpdating) {
+
+        Message worldUpdateRequest;
+        worldUpdateRequest.setMessageType(MessageType::GetWorldRequest);
 
         while (keepUpdating) {
 
             std::vector<Command> commands = CommandReceiver::getAndClearCommands();
             // send commands to server
-
-            // request world updates?
-            // receive udp messages?
+            
+            // request world update
+            ClientConnection::send(worldUpdateRequest);
 
             // fake load
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-            QueryWorld::updateCopyWorld(world);
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
         }
     }
 
@@ -36,9 +36,7 @@ namespace BattleRoom {
             : m_keepUpdating(true) {
         applySettings(settings);
 
-        m_worldThread = std::thread(worldUpdaterFunction,
-                                    std::ref(m_world),
-                                    std::ref(m_keepUpdating)
+        m_worldThread = std::thread(worldUpdaterFunction, std::ref(m_keepUpdating)
         );
     }
 

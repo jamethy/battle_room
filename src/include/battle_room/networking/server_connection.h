@@ -18,6 +18,13 @@ namespace BattleRoom {
 
         virtual void sendMessage(Message& message, BinaryStream& data, UniqueId clientId) = 0;
 
+        void handleMessage(Message& message, BinaryStream& data, UniqueId clientId);
+
+        static void startServer(int port);
+        static void stopServer();
+        static void send(Message& message, UniqueId clientId);
+        static void send(Message& message, BinaryStream& bs, UniqueId clientId);
+
     }; // ServerConnection class
 
     typedef std::unique_ptr<ServerConnection> UniqueServerConnection;

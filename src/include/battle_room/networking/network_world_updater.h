@@ -2,7 +2,6 @@
 #define NETWORK_WORLD_UPDATER_H
 
 #include "battle_room/game/query_world_updater.h"
-#include "battle_room/game/world.h"
 
 #include <thread>
 
@@ -21,7 +20,6 @@ namespace BattleRoom {
 
     private:
 
-        World m_world;
         std::thread m_worldThread;
         bool m_keepUpdating;
 

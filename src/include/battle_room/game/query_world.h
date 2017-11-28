@@ -32,6 +32,8 @@ namespace BattleRoom {
 
         static const GameObject* findIntersectingObject(Vector2D point);
 
+        static void serialize(BinaryStream& bs);
+
     }; // QueryWorld class
 } // BattleRoom namespace
 #endif // QUERY_WORLD_H

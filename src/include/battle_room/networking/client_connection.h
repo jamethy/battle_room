@@ -18,6 +18,13 @@ namespace BattleRoom {
 
         virtual void sendMessage(Message& message, BinaryStream& bs) = 0;
 
+        void handleMessage(Message& message, BinaryStream& body);
+
+        static void connect(std::string host, int port);
+        static void disconnect();
+        static void send(Message& message);
+        static void send(Message& message, BinaryStream& bs);
+
     private:
 
     }; // Client class

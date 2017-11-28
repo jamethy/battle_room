@@ -8,6 +8,7 @@ add_library(Networking
         sdl_client.cpp
         sdl_server.cpp
         message.cpp
-        message_handlers.cpp
+        server_connection.cpp
+        client_connection.cpp
         )
 

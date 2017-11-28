@@ -25,9 +25,6 @@ namespace BattleRoom {
 
         void sendMessage(Message& message, BinaryStream& bs) override;
 
-
-    private:
-
         std::thread m_updateThread; ///< Thread to update world on
         bool m_keepUpdating; ///< Set to false when ready to destroy
 

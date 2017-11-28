@@ -17,14 +17,12 @@ namespace BattleRoom {
         // constructors
         Message();
 
-        void handle(BinaryStream& bs);
-
         // getters and setters
-        void setMessageId(UniqueId id);
+        void setSourceId(UniqueId id);
         void setMessageType(MessageType type);
         void setDataSize(size_t dataSize);
 
-        UniqueId getMessageId() const;
+        UniqueId getSourceId() const;
         MessageType getMessageType() const;
         size_t getDataSize() const;
         bool hasBody() const;
@@ -32,11 +30,11 @@ namespace BattleRoom {
         void serialize(BinaryStream& bs) const;
         static Message deserialize(BinaryStream& bs);
 
-        static const size_t Size = sizeof(int) + sizeof(int) + sizeof(int);
+        static const size_t Size = 3*sizeof(int);
 
     private:
 
-        UniqueId m_messageId;
+        UniqueId m_sourceId;
         // auth
         MessageType m_type;
         size_t m_dataSize;

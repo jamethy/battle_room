@@ -6,6 +6,7 @@
 #include "battle_room/common/application_message.h"
 #include "battle_room/game/query_world_updater.h"
 #include "battle_room/graphics/display_window.h"
+#include "battle_room/networking/server_connection.h"
 
 #include <map>
 
@@ -21,6 +22,7 @@ namespace BattleRoom {
 
             // constructor
             Application(ResourceDescriptor settings);
+            ~Application();
 
             /**
              * \brief main application loop
@@ -69,6 +71,8 @@ namespace BattleRoom {
             std::map<UniqueId, std::vector<UniqueInterface>> m_viewMap; ///< map of window Id to list of views
 
             UniqueWorldUpdater m_worldUpdater; ///< query world updater
+
+            UniqueServerConnection m_serverConnection;
 
     }; // GameInterface class
 } // BattleRoom namespace

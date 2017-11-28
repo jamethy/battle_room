@@ -36,4 +36,8 @@ namespace BattleRoom {
         return m_queryWorld.findIntersectingObject(point);
     }
 
+    void QueryWorld::serialize(BinaryStream& bs) {
+        m_queryWorld.serialize(bs);
+    }
+
 } // BattleRoom namespace

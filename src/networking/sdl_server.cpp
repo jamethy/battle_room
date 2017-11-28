@@ -13,6 +13,8 @@ namespace BattleRoom {
 
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(100);
+
+        std::cout << "Server listening\n";
         server.m_keepUpdating = true;
         while (server.m_keepUpdating) {
 
@@ -29,6 +31,7 @@ namespace BattleRoom {
                 TCPsocket socket = SDLNet_TCP_Accept(server.m_serverSocket);
                 if (socket) {
 
+                    std::cout << "Adding new Client\n";
                     UniqueId newClientId = UniqueId::generateNewNetworkId();
                     server.m_writingLock.lock();
                     server.m_clientSockets.emplace(newClientId, socket);
@@ -80,7 +83,7 @@ namespace BattleRoom {
                         }
                     }
 
-                    message.handle(dataStream);
+                    server.handleMessage(message, dataStream, entry.first);
 
                     if (--socketsWithData == 0) {
                         break;

@@ -6,6 +6,8 @@
 #include "battle_room/game/objects/object_factory.h"
 #include "battle_room/user_interface/interface_factory.h"
 #include "battle_room/networking/world_updater_factory.h"
+#include "battle_room/networking/client_connection.h"
+#include "battle_room/networking/server_connection.h"
 
 #include <thread>
 #include <algorithm>
@@ -24,6 +26,11 @@ namespace BattleRoom {
         m_viewMap.clear();
 
         applySettings(settings);
+    }
+
+    Application::~Application() {
+        ClientConnection::disconnect();
+        ServerConnection::stopServer();
     }
 
     void Application::runApplicationLoop() {
@@ -93,9 +100,30 @@ namespace BattleRoom {
         }
     }
 
+    void applyClientConnection(ResourceDescriptor settings) {
+        ResourceDescriptor hostSub = settings.getSubResource("Host");
+        ResourceDescriptor portSub = settings.getSubResource("Port");
+
+        if (isNotEmpty(hostSub.getValue()) && isNotEmpty(portSub.getValue())) {
+            ClientConnection::connect(hostSub.getValue(), stoi(portSub.getValue()));
+        }
+    }
+
+    void applyServerConnection(ResourceDescriptor settings) {
+        ResourceDescriptor portSub = settings.getSubResource("Port");
+
+        if (isNotEmpty(portSub.getValue())) {
+            ServerConnection::startServer(stoi(portSub.getValue()));
+        }
+    }
+
+
     void Application::applySettings(ResourceDescriptor settings) {
 
         ObjectFactory::applySettings(settings.getSubResource("ObjectTemplates"));
+
+        applyClientConnection(settings.getSubResource("Client"));
+        applyServerConnection(settings.getSubResource("Server"));
 
         // Create the world updater - empty if startup menu, or a server connection,
         // or a local updater
@@ -107,8 +135,8 @@ namespace BattleRoom {
             addResource(window);
         }
 
-        for (ResourceDescriptor sub : settings.getSubResources("Interface")) {
-            addResource(sub);
+        for (ResourceDescriptor interface : settings.getSubResources("Interface")) {
+            addResource(interface);
         }
     }
 

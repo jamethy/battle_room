@@ -4,9 +4,10 @@
 namespace BattleRoom {
 
     enum MessageType {
-        Invalid = 0,
-        GetWorld,
-        PostCommand
+        InvalidRequest = 0,
+        GetWorldRequest,
+        GetWorldResponse,
+        PostCommandRequest
     }; // MessageType enum
 } // BattleRoom namespace
 #endif // MESSAGE_TYPE_H

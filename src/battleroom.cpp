@@ -63,6 +63,8 @@ std::string getStartupScriptFromArgs(int argc, char **argv) {
                 }
             }
         }
+
+        std::cout << "Startup script: " << startupScript << "\n";
         setResourcePathFromStartupScript(startupScript);
     }
 

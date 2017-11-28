@@ -1,6 +1,8 @@
 Right now
 -----------------------------------
-accept new client
+find seg fault
+verify message body
+clients have players
 
 Running ToDo List
 -----------------------------------
@@ -8,6 +10,7 @@ For full program
 
     add overlays
         jump charge
+        shoot overlay needs to be one down via camera
     camera
         move on edges
     gameinterface
@@ -18,6 +21,8 @@ For full program
 
     add clone to game object for templates
 
+    smart camera
+    grapling hook
     Add speed to animations
     Move object intersection to testable code
     Add networking code to networking...

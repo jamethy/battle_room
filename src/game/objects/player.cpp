@@ -8,7 +8,7 @@
 const double MAX_ANGULAR_VEL = 1; // radians per second
 const double MAX_BULLET_SPEED = 60; // meters per second
 const double MIN_BULLET_SPEED = 20; // meters per second
-const double MAX_JUMP_SPEED = 6; // meters per second
+const double MAX_JUMP_SPEED = 10; // meters per second
 const double MIN_JUMP_SPEED = 2; // meters per second
 
 namespace BattleRoom {

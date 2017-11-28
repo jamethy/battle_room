@@ -3,13 +3,13 @@
 namespace BattleRoom {
 
     Message::Message() :
-        m_messageId(UniqueId::generateInvalidId()),
-        m_type(MessageType::Invalid),
+        m_sourceId(UniqueId::generateInvalidId()),
+        m_type(MessageType::InvalidRequest),
         m_dataSize(0)
     { }
 
-    void Message::setMessageId(UniqueId id) {
-        m_messageId = id;
+    void Message::setSourceId(UniqueId id) {
+        m_sourceId = id;
     }
 
     void Message::setMessageType(MessageType type) {
@@ -21,8 +21,8 @@ namespace BattleRoom {
     }
 
 
-    UniqueId Message::getMessageId() const {
-        return m_messageId;
+    UniqueId Message::getSourceId() const {
+        return m_sourceId;
     }
 
     MessageType Message::getMessageType() const {
@@ -38,14 +38,14 @@ namespace BattleRoom {
     }
 
     void Message::serialize(BinaryStream& bs) const {
-        m_messageId.serialize(bs);
+        m_sourceId.serialize(bs);
         bs.writeInt((int)m_type);
         bs.writeInt((int)m_dataSize);
     }
 
     Message Message::deserialize(BinaryStream& bs) {
         Message msg;
-        msg.setMessageId(UniqueId::deserialize(bs));
+        msg.setSourceId(UniqueId::deserialize(bs));
         msg.setMessageType((MessageType)bs.readInt());
         msg.setDataSize((size_t)bs.readInt());
         return msg;
