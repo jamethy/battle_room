@@ -28,30 +28,3 @@ target_link_libraries(battleroom
         ${SDL2_TTF_LIBRARY}
         ${SDL2_NET_LIBRARIES}
         )
-
-# DEDICATED SERVER
-add_executable(battleroom_dedicated_server
-        battleroom_dedicated_server.cpp)
-target_link_libraries(battleroom_dedicated_server
-        ${START_GROUP}
-        Common
-        Game
-        Networking
-        ${END_GROUP}
-        ${LINUX_LIBS}
-        ${SDL2_LIBRARY}
-        ${SDL2_NET_LIBRARIES}
-        )
-
-add_executable(test_client
-        test_client.cpp)
-target_link_libraries(test_client
-        ${START_GROUP}
-        Common
-        Game
-        Networking
-        ${END_GROUP}
-        ${LINUX_LIBS}
-        ${SDL2_LIBRARY}
-        ${SDL2_NET_LIBRARIES}
-        )
