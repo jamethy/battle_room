@@ -17,9 +17,14 @@ namespace BattleRoom {
 
         /*
          * \brief Copies the parameter into the query world
-         * \param world World to copy into the query world
+         * \param world World to copy into the query worldt
          */
         static void updateCopyWorld(const World &world);
+
+        static void serialize(BinaryStream& bs);
+
+
+        // functions that need to be on on game interface thread
 
         /**
          * Likely a temp function that returns all the game objects in the world
@@ -31,8 +36,6 @@ namespace BattleRoom {
         static const std::vector<UniqueDrawableObject>& getBackgroundObjects();
 
         static const GameObject* findIntersectingObject(Vector2D point);
-
-        static void serialize(BinaryStream& bs);
 
     }; // QueryWorld class
 } // BattleRoom namespace

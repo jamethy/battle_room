@@ -13,21 +13,42 @@ namespace BattleRoom {
         (void)settings;
     }
 
+    void sendCommandsToServer(BinaryStream& commandStream) {
+
+        const auto commands = CommandReceiver::getAndClearCommands();
+
+        if (commands.size() > 0) {
+
+            commandStream.reset();
+            commandStream.writeInt(commands.size());
+
+            for (const auto& cmd : commands) {
+                cmd.serialize(commandStream);
+            }
+
+            Message msg;
+            msg.setMessageType(MessageType::PostCommandsRequest);
+
+            ClientConnection::send(msg, commandStream);
+        }
+    }
+
     void worldUpdaterFunction(bool &keepUpdating) {
 
         Message worldUpdateRequest;
         worldUpdateRequest.setMessageType(MessageType::GetWorldRequest);
 
+        BinaryStream commandStream(1000);
+
         while (keepUpdating) {
 
-            std::vector<Command> commands = CommandReceiver::getAndClearCommands();
-            // send commands to server
+            sendCommandsToServer(commandStream);
             
             // request world update
             ClientConnection::send(worldUpdateRequest);
 
             // fake load
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
 

@@ -24,6 +24,9 @@ namespace BattleRoom {
             void setTarget(UniqueId target);
             void setPoint(Vector2D point);
 
+            void serialize(BinaryStream& bs) const;
+            static Command deserialize(BinaryStream& bs);
+
         private:
 
             CommandType m_type;

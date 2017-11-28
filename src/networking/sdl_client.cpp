@@ -126,6 +126,7 @@ namespace BattleRoom {
                 std::cerr << "Socket has not been connected\n";
         } else {
 
+            message.setDataSize(bs.getLength());
             message.setBodyHash(bs.hash());
 
             BinaryStream messageStream(Message::Size);

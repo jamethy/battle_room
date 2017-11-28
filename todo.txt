@@ -1,7 +1,5 @@
 Right now
 -----------------------------------
-find seg fault
-verify message body
 clients have players
 
 Running ToDo List

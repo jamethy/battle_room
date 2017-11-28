@@ -7,7 +7,7 @@ namespace BattleRoom {
         InvalidRequest = 0,
         GetWorldRequest,
         GetWorldResponse,
-        PostCommandRequest
+        PostCommandsRequest
     }; // MessageType enum
 } // BattleRoom namespace
 #endif // MESSAGE_TYPE_H

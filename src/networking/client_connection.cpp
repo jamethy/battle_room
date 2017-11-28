@@ -14,7 +14,7 @@ namespace BattleRoom {
                 QueryWorld::updateCopyWorld(World::deserialize(body));
                 break;
 
-            case PostCommandRequest:
+            case PostCommandsRequest:
             case GetWorldRequest:
                 break;
 

@@ -171,6 +171,7 @@ namespace BattleRoom {
             return;
         }
 
+        message.setDataSize(data.getLength());
         message.setBodyHash(data.hash());
 
         BinaryStream headerStream(Message::Size);
