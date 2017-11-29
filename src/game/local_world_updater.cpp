@@ -9,11 +9,12 @@ namespace BattleRoom {
         m_world.applySettings(settings.getSubResource("World"));
     }
 
-    void worldUpdaterFunction(LocalUpdatingWorld &world, bool &keepUpdating) {
+    void worldUpdaterFunction(LocalUpdatingWorld &world, bool &keepUpdating, LocalWorldUpdater& updater) {
 
         while (keepUpdating) {
             world.update();
             QueryWorld::updateCopyWorld(world);
+            updater.afterUpdate();
         }
     }
 
@@ -24,7 +25,8 @@ namespace BattleRoom {
 
         m_worldThread = std::thread(worldUpdaterFunction,
                                     std::ref(m_world),
-                                    std::ref(m_keepUpdating)
+                                    std::ref(m_keepUpdating),
+                                    std::ref(*this)
         );
     }
 
@@ -33,6 +35,9 @@ namespace BattleRoom {
         if (m_worldThread.joinable()) {
             m_worldThread.join();
         }
+    }
+
+    void LocalWorldUpdater::afterUpdate() {
     }
 
 } // BattleRoom namespace

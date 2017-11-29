@@ -5,10 +5,6 @@
 
 namespace BattleRoom {
 
-    UniqueClientConnection createClientConnection() {
-        return UniqueClientConnection(new SdlClient());
-    }
-
     void listenLoop(SdlClient& client) {
 
         SDLNet_SocketSet socketSet = SDLNet_AllocSocketSet(1);
@@ -23,7 +19,7 @@ namespace BattleRoom {
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(10000);
 
-        while (client.m_keepUpdating) {
+        while (client.m_keepReceiving) {
             if(SDLNet_CheckSockets(socketSet, 500) > 0 && SDLNet_SocketReady(client.m_socket)) {
 
                 messageStream.reset();
@@ -68,15 +64,17 @@ namespace BattleRoom {
     }
 
 // constructors
-    SdlClient::SdlClient() : 
-        m_keepUpdating(false) 
-    { }
+    SdlClient::SdlClient(ResourceDescriptor settings) : 
+        m_keepReceiving(false) 
+    {
+        applySettings(settings);
+    }
 
     SdlClient::~SdlClient() {
-        if (m_keepUpdating) {
-            m_keepUpdating = false; 
-            if (m_updateThread.joinable()) {
-                m_updateThread.join();
+        if (m_keepReceiving) {
+            m_keepReceiving = false; 
+            if (m_receivingThread.joinable()) {
+                m_receivingThread.join();
             }
         }
     }
@@ -113,8 +111,8 @@ namespace BattleRoom {
             return false;
         }
 
-        m_keepUpdating = true;
-        m_updateThread = std::thread(listenLoop, std::ref(*this));
+        m_keepReceiving = true;
+        m_receivingThread = std::thread(listenLoop, std::ref(*this));
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         return true;
@@ -150,5 +148,13 @@ namespace BattleRoom {
         }
     }
 
+    void SdlClient::applySettings(ResourceDescriptor settings) {
+        ResourceDescriptor hostSub = settings.getSubResource("Host");
+        ResourceDescriptor portSub = settings.getSubResource("Port");
+
+        if (isNotEmpty(hostSub.getValue()) && isNotEmpty(portSub.getValue())) {
+            connectToServer(hostSub.getValue(), stoi(portSub.getValue()));
+        }
+    }
 
 } // BattleRoom namespace

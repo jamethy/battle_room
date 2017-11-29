@@ -1,12 +1,16 @@
 #include "battle_room/networking/client_connection.h"
 #include "battle_room/game/query_world.h"
+#include "battle_room/game/command_receiver.h"
 
 #include <iostream>
 
 namespace BattleRoom {
 
+    ClientConnection::ClientConnection() :
+        m_commandStream(BinaryStream(400))
+    {}
+
     void ClientConnection::handleMessage(Message& message, BinaryStream& body) {
-        BinaryStream resBody(8000);
         Message response;
         switch (message.getMessageType()) {
 
@@ -25,31 +29,23 @@ namespace BattleRoom {
 
     }
 
-    static UniqueClientConnection m_connection = nullptr;
+    void ClientConnection::clientUpdate() {
 
-    static BinaryStream m_emptyStream(1);
+        const auto commands = CommandReceiver::getAndClearCommands();
 
-    void ClientConnection::connect(std::string host, int port) {
-        m_connection = createClientConnection();
-        m_connection->connectToServer(host, port);
-    }
+        if (commands.size() > 0) {
 
-    void ClientConnection::disconnect() {
-        m_connection = nullptr;
-    }
+            m_commandStream.reset();
+            m_commandStream.writeInt(commands.size());
 
-    void ClientConnection::send(Message& message) {
-        if (m_connection) {
-            m_connection->sendMessage(message, m_emptyStream);
+            for (const auto& cmd : commands) {
+                cmd.serialize(m_commandStream);
+            }
+
+            Message msg;
+            msg.setMessageType(MessageType::PostCommandsRequest);
+
+            sendMessage(msg, m_commandStream);
         }
     }
-
-    void ClientConnection::send(Message& message, BinaryStream& bs) {
-        if (m_connection) {
-            m_connection->sendMessage(message, bs);
-        }
-    }
-
-
 } // BattleRoom namespace
-

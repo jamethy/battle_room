@@ -1,6 +1,7 @@
 #ifndef CLIENT_CONNECTION_H
 #define CLIENT_CONNECTION_H
 
+#include "battle_room/game/query_world_updater.h"
 #include "battle_room/networking/message.h"
 
 #include <memory>
@@ -10,9 +11,13 @@ namespace BattleRoom {
     /**
      * 
      */
-    class ClientConnection {
+    class ClientConnection : public QueryWorldUpdater {
 
     public:
+
+        // constructor
+        ClientConnection();
+        virtual ~ClientConnection() {};
 
         virtual bool connectToServer(std::string host, int port) = 0;
 
@@ -20,18 +25,13 @@ namespace BattleRoom {
 
         void handleMessage(Message& message, BinaryStream& body);
 
-        static void connect(std::string host, int port);
-        static void disconnect();
-        static void send(Message& message);
-        static void send(Message& message, BinaryStream& bs);
+        // inherited
+        void clientUpdate() override;
 
     private:
 
+        BinaryStream m_commandStream;
+
     }; // Client class
-
-    typedef std::unique_ptr<ClientConnection> UniqueClientConnection;
-
-    UniqueClientConnection createClientConnection();
-
 } // BattleRoom namespace
 #endif // CLIENT_CONNECTION_H

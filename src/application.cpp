@@ -28,11 +28,6 @@ namespace BattleRoom {
         applySettings(settings);
     }
 
-    Application::~Application() {
-        ClientConnection::disconnect();
-        ServerConnection::stopServer();
-    }
-
     void Application::runApplicationLoop() {
 
         steady_clock::time_point lastTime = steady_clock::now();
@@ -72,6 +67,8 @@ namespace BattleRoom {
                         }
                     }
 
+                    m_worldUpdater->clientUpdate();
+
                     // prevents the CPU from railing
                     std::this_thread::sleep_for(std::chrono::milliseconds(25));
 
@@ -100,30 +97,10 @@ namespace BattleRoom {
         }
     }
 
-    void applyClientConnection(ResourceDescriptor settings) {
-        ResourceDescriptor hostSub = settings.getSubResource("Host");
-        ResourceDescriptor portSub = settings.getSubResource("Port");
-
-        if (isNotEmpty(hostSub.getValue()) && isNotEmpty(portSub.getValue())) {
-            ClientConnection::connect(hostSub.getValue(), stoi(portSub.getValue()));
-        }
-    }
-
-    void applyServerConnection(ResourceDescriptor settings) {
-        ResourceDescriptor portSub = settings.getSubResource("Port");
-
-        if (isNotEmpty(portSub.getValue())) {
-            ServerConnection::startServer(stoi(portSub.getValue()));
-        }
-    }
-
 
     void Application::applySettings(ResourceDescriptor settings) {
 
         ObjectFactory::applySettings(settings.getSubResource("ObjectTemplates"));
-
-        applyClientConnection(settings.getSubResource("Client"));
-        applyServerConnection(settings.getSubResource("Server"));
 
         // Create the world updater - empty if startup menu, or a server connection,
         // or a local updater

@@ -18,15 +18,17 @@ namespace BattleRoom {
     public:
 
         // constructors
-        SdlClient();
+        SdlClient(ResourceDescriptor settings);
         ~SdlClient();
 
         bool connectToServer(std::string host, int port) override;
 
         void sendMessage(Message& message, BinaryStream& bs) override;
 
-        std::thread m_updateThread; ///< Thread to update world on
-        bool m_keepUpdating; ///< Set to false when ready to destroy
+        void applySettings(ResourceDescriptor settings) override;
+
+        std::thread m_receivingThread; ///< Thread to update world on
+        bool m_keepReceiving; ///< Set to false when ready to destroy
 
         TCPsocket m_socket;
 

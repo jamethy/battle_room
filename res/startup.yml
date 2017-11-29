@@ -1,6 +1,3 @@
-Server:
-    Port: 8080
-
 Window: mainWindow
     Width: 1500
     Height: 1000
@@ -12,7 +9,8 @@ Interface: Game
 
 Resource: menus/pull_down
 
-WorldUpdater: Local
+WorldUpdater: Server
+    Port: 8080
     Resource: worlds/test_world
 
 ObjectTemplates:

@@ -22,7 +22,6 @@ namespace BattleRoom {
 
             // constructor
             Application(ResourceDescriptor settings);
-            ~Application();
 
             /**
              * \brief main application loop
@@ -71,8 +70,6 @@ namespace BattleRoom {
             std::map<UniqueId, std::vector<UniqueInterface>> m_viewMap; ///< map of window Id to list of views
 
             UniqueWorldUpdater m_worldUpdater; ///< query world updater
-
-            UniqueServerConnection m_serverConnection;
 
     }; // GameInterface class
 } // BattleRoom namespace

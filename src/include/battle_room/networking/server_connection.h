@@ -1,6 +1,7 @@
 #ifndef SERVER_CONNECTION_H
 #define SERVER_CONNECTION_H
 
+#include "battle_room/game/local_world_updater.h"
 #include "battle_room/networking/message.h"
 
 #include <memory>
@@ -10,9 +11,12 @@ namespace BattleRoom {
     /**
      * 
      */
-    class ServerConnection {
+    class ServerConnection : public LocalWorldUpdater { 
 
     public:
+
+        ServerConnection(ResourceDescriptor settings);
+        virtual ~ServerConnection();
 
         virtual bool start(int port) = 0;
 
@@ -20,15 +24,10 @@ namespace BattleRoom {
 
         void handleMessage(Message& message, BinaryStream& data, UniqueId clientId);
 
-        static void startServer(int port);
-        static void stopServer();
-        static void send(Message& message, UniqueId clientId);
-        static void send(Message& message, BinaryStream& bs, UniqueId clientId);
+    private:
+        // list of clients
+            // subscribed to
 
     }; // ServerConnection class
-
-    typedef std::unique_ptr<ServerConnection> UniqueServerConnection;
-
-    UniqueServerConnection createServerConnection();
 } // BattleRoom namespace
 #endif // SERVER_CONNECTION_H

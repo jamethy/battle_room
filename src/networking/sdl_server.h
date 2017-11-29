@@ -20,7 +20,7 @@ namespace BattleRoom {
     public:
 
         // constructors
-        SdlServer();
+        SdlServer(ResourceDescriptor settings);
         ~SdlServer();
 
         void adjustSocketSet();
@@ -28,9 +28,11 @@ namespace BattleRoom {
         // inherited
         bool start(int port) override;
         void sendMessage(Message& message, BinaryStream& data, UniqueId clientId) override;
+        void applySettings(ResourceDescriptor settings) override;
+        void afterUpdate() override;
 
-        std::thread m_updateThread; ///< Thread to update world on
-        bool m_keepUpdating; ///< Set to false when ready to destroy
+        std::thread m_receivingThread; ///< Thread to update world on
+        bool m_keepReceiving; ///< Set to false when ready to destroy
 
         TCPsocket m_serverSocket;
         std::unordered_map<UniqueId, TCPsocket> m_clientSockets;

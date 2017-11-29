@@ -1,7 +1,3 @@
-Client:
-    Host: localhost
-    Port: 8080
-
 Window: mainWindow
     Width: 1500
     Height: 1000
@@ -13,7 +9,9 @@ Interface: Game
 
 Resource: menus/pull_down
 
-WorldUpdater: Network
+WorldUpdater: Client
+    Host: localhost
+    Port: 8080
 
 ObjectTemplates:
     Resource: worlds/object_templates

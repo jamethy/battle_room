@@ -1,13 +1,12 @@
 
 #include "./sdl_server.h"
 
+// temp
+#include "battle_room/game/query_world.h"
+
 #include <iostream>
 
 namespace BattleRoom {
-
-    UniqueServerConnection createServerConnection() {
-        return UniqueServerConnection(new SdlServer());
-    }
 
     void listenLoop(SdlServer& server) {
 
@@ -15,8 +14,8 @@ namespace BattleRoom {
         BinaryStream dataStream(100);
 
         std::cout << "Server listening\n";
-        server.m_keepUpdating = true;
-        while (server.m_keepUpdating) {
+        server.m_keepReceiving = true;
+        while (server.m_keepReceiving) {
 
             server.m_listenLock.lock();
             int socketsWithData = SDLNet_CheckSockets(server.m_socketSet, 500);
@@ -105,17 +104,19 @@ namespace BattleRoom {
     }
 
 // constructors
-    SdlServer::SdlServer() : 
-        m_keepUpdating(false) 
+    SdlServer::SdlServer(ResourceDescriptor settings) : 
+        ServerConnection(settings),
+        m_keepReceiving(false) 
     { 
         m_clientSockets.clear();
+        applySettings(settings);
     }
 
     SdlServer::~SdlServer() {
-        if (m_keepUpdating) {
-            m_keepUpdating = false; 
-            if (m_updateThread.joinable()) {
-                m_updateThread.join();
+        if (m_keepReceiving) {
+            m_keepReceiving = false; 
+            if (m_receivingThread.joinable()) {
+                m_receivingThread.join();
             }
         }
     }
@@ -159,7 +160,7 @@ namespace BattleRoom {
             return false;
         }
 
-        m_updateThread = std::thread(listenLoop, std::ref(*this));
+        m_receivingThread = std::thread(listenLoop, std::ref(*this));
 
         return true;
     }
@@ -213,4 +214,26 @@ namespace BattleRoom {
             }
         } 
     }
+
+    void SdlServer::applySettings(ResourceDescriptor settings) {
+        ResourceDescriptor portSub = settings.getSubResource("Port");
+
+        if (isNotEmpty(portSub.getValue())) {
+            start(stoi(portSub.getValue()));
+        }
+    }
+
+
+    // temp move to server conn
+    void SdlServer::afterUpdate() {
+
+        BinaryStream resBody(8000);
+        Message response;
+        response.setMessageType(GetWorldResponse);
+        QueryWorld::serialize(resBody);
+        for (const auto& client : m_clientSockets) {
+            sendMessage(response, resBody, client.first);
+        }
+    }
+
 } // BattleRoom namespace

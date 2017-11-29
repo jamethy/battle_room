@@ -12,7 +12,11 @@ namespace BattleRoom {
 
     public:
 
+        // destructor
         virtual ~QueryWorldUpdater() {}
+
+        virtual void clientUpdate() {}
+
         const UniqueId getUniqueId() const {
             return m_uniqueId;
         }
