@@ -27,6 +27,7 @@ namespace BattleRoom {
 
         // inherited
         void clientUpdate() override;
+        void registerUser(User user) override;
 
     private:
 

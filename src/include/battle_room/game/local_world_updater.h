@@ -22,11 +22,15 @@ namespace BattleRoom {
         virtual ~LocalWorldUpdater();
 
         virtual void afterUpdate();
+        virtual void registerUser(User user) override;
+        virtual void unregisterUser(UniqueId userId) override;
 
         // inherited
         virtual void applySettings(ResourceDescriptor settings) override;
 
     private:
+
+        std::vector<User> m_users;
 
         LocalUpdatingWorld m_world; ///< World that updates itself
         std::thread m_worldThread; ///< Thread to update world on

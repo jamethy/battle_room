@@ -25,8 +25,8 @@ namespace BattleRoom {
         void handleMessage(Message& message, BinaryStream& data, UniqueId clientId);
 
     private:
-        // list of clients
-            // subscribed to
+
+        BinaryStream m_responseStream;
 
     }; // ServerConnection class
 } // BattleRoom namespace

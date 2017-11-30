@@ -8,6 +8,7 @@ namespace BattleRoom {
     World m_queryWorld; ///< World to get info from
     std::mutex m_copyWorldLock; ///< Lock for m_gameWorld reading/writing
     std::mutex m_queryWorldLock; ///< Lock for m_gameWorld reading/writing
+    UniqueId m_clientId = UniqueId::generateInvalidId();
 
     void QueryWorld::updateBuffer() {
         m_copyWorldLock.lock();
@@ -43,6 +44,14 @@ namespace BattleRoom {
         m_queryWorldLock.lock();
         m_queryWorld.serialize(bs);
         m_queryWorldLock.unlock();
+    }
+
+    void QueryWorld::setClientId(UniqueId id) {
+        m_clientId = id;
+    }
+
+    const UniqueId QueryWorld::getClientId() {
+        return m_clientId;
     }
 
 } // BattleRoom namespace

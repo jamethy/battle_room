@@ -12,6 +12,7 @@ Resource: menus/pull_down
 WorldUpdater: Server
     Port: 8080
     Resource: worlds/test_world
+    User: JamesServer
 
 ObjectTemplates:
     Resource: worlds/object_templates

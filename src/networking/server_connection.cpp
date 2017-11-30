@@ -8,7 +8,8 @@ namespace BattleRoom {
 
 
     ServerConnection::ServerConnection(ResourceDescriptor settings) :
-        LocalWorldUpdater(settings)
+        LocalWorldUpdater(settings),
+        m_responseStream(BinaryStream(8000))
     { }
 
     ServerConnection::~ServerConnection() { }
@@ -23,25 +24,33 @@ namespace BattleRoom {
     }
 
     void ServerConnection::handleMessage(Message& message, BinaryStream& body, UniqueId clientId) {
-        BinaryStream resBody(8000);
         Message response;
-        switch (message.getMessageType()) {
+        m_responseStream.reset();
 
-            case GetWorldRequest:
-                QueryWorld::serialize(resBody);
-                response.setMessageType(GetWorldResponse);
-                sendMessage(response, resBody, clientId);
-                break;
+        MessageType requestType = message.getMessageType();
 
-            case PostCommandsRequest:
-                handleCommandsRequest(body);
-                break;
+        if (MessageType::GetWorldRequest == requestType) {
 
-            case GetWorldResponse:
-            default:
-                // unrecognized
-                break;
+            QueryWorld::serialize(m_responseStream);
+            response.setMessageType(GetWorldResponse);
+            sendMessage(response, m_responseStream, clientId);
+
+        } else if (MessageType::PostCommandsRequest == requestType) {
+            
+            handleCommandsRequest(body);
+
+        } else if (MessageType::RegisterUserRequest == requestType) {
+            // handle
+            User user = User::deserialize(body);
+            user.setUniqueId(clientId);
+            registerUser(user);
+
+            // respnose
+            Message message(MessageType::RegisterUserResponse);
+            user.serialize(m_responseStream);
+            sendMessage(message, m_responseStream, clientId);
         }
+        // else unrecognized
 
     }
 } // BattleRoom namespace

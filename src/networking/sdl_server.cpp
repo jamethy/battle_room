@@ -63,6 +63,7 @@ namespace BattleRoom {
                         // client probabs disconnect
                         UniqueId clientId = entry.first;
                         server.m_writingLock.lock();
+                        server.unregisterUser(clientId);
                         server.m_clientSockets.erase(clientId);
                         server.adjustSocketSet();
                         server.m_writingLock.unlock();
@@ -226,6 +227,8 @@ namespace BattleRoom {
 
     // temp move to server conn
     void SdlServer::afterUpdate() {
+
+        LocalWorldUpdater::afterUpdate();
 
         BinaryStream resBody(8000);
         Message response;

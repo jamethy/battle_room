@@ -10,6 +10,11 @@ namespace BattleRoom {
         m_headerHash(0)
     { }
 
+    Message::Message(MessageType type) : Message()
+    { 
+        m_type = type;
+    }
+
     int Message::hash() const {
         return m_sourceId.hash() + m_type + m_dataSize + m_bodyHash;
     }

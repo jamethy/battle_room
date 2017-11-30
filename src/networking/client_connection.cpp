@@ -11,20 +11,16 @@ namespace BattleRoom {
     {}
 
     void ClientConnection::handleMessage(Message& message, BinaryStream& body) {
-        Message response;
-        switch (message.getMessageType()) {
 
-            case GetWorldResponse:
-                QueryWorld::updateCopyWorld(World::deserialize(body));
-                break;
+        MessageType requestType = message.getMessageType();
 
-            case PostCommandsRequest:
-            case GetWorldRequest:
-                break;
+        if (MessageType::GetWorldResponse == requestType) {
 
-            default:
-                // unrecognized
-                break;
+            QueryWorld::updateCopyWorld(World::deserialize(body));
+
+        } else if (MessageType::RegisterUserResponse == requestType) {
+            User user = User::deserialize(body);
+            QueryWorld::setClientId(user.getUniqueId());
         }
 
     }
@@ -48,4 +44,12 @@ namespace BattleRoom {
             sendMessage(msg, m_commandStream);
         }
     }
+
+    void ClientConnection::registerUser(User user) {
+        Message message(MessageType::RegisterUserRequest);
+        m_commandStream.reset();
+        user.serialize(m_commandStream);
+        sendMessage(message, m_commandStream);
+    }
+
 } // BattleRoom namespace

@@ -106,7 +106,6 @@ namespace BattleRoom {
         // or a local updater
         m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings.getSubResource("WorldUpdater"));
 
-
         // Create the windows for displaying - including view/camera setup in each
         for (ResourceDescriptor window : settings.getSubResources("Window")) {
             addResource(window);

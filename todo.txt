@@ -1,6 +1,7 @@
 Right now
 -----------------------------------
 clients have players
+    follow register path
 
 Running ToDo List
 -----------------------------------

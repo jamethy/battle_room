@@ -3,6 +3,7 @@
 
 #include "battle_room/common/resource.h"
 #include "battle_room/common/unique_id.h"
+#include "battle_room/game/user.h"
 
 #include <memory>
 
@@ -13,13 +14,17 @@ namespace BattleRoom {
     public:
 
         // destructor
-        virtual ~QueryWorldUpdater() {}
+        virtual ~QueryWorldUpdater();
 
-        virtual void clientUpdate() {}
+        virtual void clientUpdate();
 
-        const UniqueId getUniqueId() const {
-            return m_uniqueId;
-        }
+        virtual void registerUser(User user);
+        virtual void unregisterUser(UniqueId userId);
+
+        const UniqueId getUniqueId() const;
+
+        // inherited
+        virtual void applySettings(ResourceDescriptor settings) override;
 
     private:
 

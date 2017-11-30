@@ -23,7 +23,6 @@ namespace BattleRoom {
 
         static void serialize(BinaryStream& bs);
 
-
         // functions that need to be on on game interface thread
 
         /**
@@ -36,6 +35,9 @@ namespace BattleRoom {
         static const std::vector<UniqueDrawableObject>& getBackgroundObjects();
 
         static const GameObject* findIntersectingObject(Vector2D point);
+
+        static void setClientId(UniqueId id);
+        static const UniqueId getClientId();
 
     }; // QueryWorld class
 } // BattleRoom namespace

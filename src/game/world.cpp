@@ -4,6 +4,8 @@
 #include "battle_room/common/animation_handler.h"
 #include "battle_room/game/objects/object_factory.h"
 
+#include <algorithm>
+
 using std::vector;
 
 namespace BattleRoom {
@@ -23,7 +25,8 @@ namespace BattleRoom {
             m_gameTime = toSeconds(sub.getValue());
         }
 
-        m_gameObjects = ObjectFactory::getGameObjects(settings);
+         auto objects = ObjectFactory::getGameObjects(settings);
+         std::move(objects.begin(), objects.end(), std::back_inserter(m_gameObjects));
     }
 
     // constructors
