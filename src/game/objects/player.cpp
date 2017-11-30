@@ -13,9 +13,19 @@ const double MIN_JUMP_SPEED = 2; // meters per second
 
 namespace BattleRoom {
 
+    void Player::applySettings(ResourceDescriptor settings) {
+        GameObject::applySettings(settings);
+
+        ResourceDescriptor sub = settings.getSubResource("Client");
+        if (isNotEmpty(sub.getValue())) {
+            m_client = UniqueId::fromString(sub.getValue());
+        }
+    }
+
     // constructors
     Player::Player(UniqueId id) : 
         GameObject(id, ObjectType::Player),
+        m_client(UniqueId::generateInvalidId()),
         m_state(PlayerState::Flying),
         m_chargingGun(false),
         m_gunCharge(0),
@@ -27,6 +37,7 @@ namespace BattleRoom {
 
     Player::Player(const GameObject& obj) :
         GameObject(obj),
+        m_client(UniqueId::generateInvalidId()),
         m_state(PlayerState::Flying),
         m_chargingGun(false),
         m_gunCharge(0),
@@ -163,6 +174,10 @@ namespace BattleRoom {
     bool Player::interpretCommand(const Command& cmd) {
         if (GameObject::interpretCommand(cmd)) {
 
+            if (m_client != cmd.getCommander()) {
+                return true;
+            }
+
             if (m_state == PlayerState::Frozen) {
                 switch (cmd.getType()) {
                     case CommandType::Unfreeze:
@@ -229,8 +244,13 @@ namespace BattleRoom {
         return m_jumpCharge;
     }
 
+    UniqueId Player::getClient() const {
+        return m_client;
+    }
+
     void Player::serialize(BinaryStream& bs) const {
         GameObject::serialize(bs);
+        m_client.serialize(bs);
         bs.writeInt((int)m_state);
         m_aim.serialize(bs);
         bs.writeBool(m_chargingGun);
@@ -243,6 +263,7 @@ namespace BattleRoom {
 
         Player player(GameObject::deserialize(bs));
 
+        player.m_client = UniqueId::deserialize(bs);
         player.m_state = (PlayerState)bs.readInt();
         player.m_aim = Vector2D::deserialize(bs);
         player.m_chargingGun = bs.readBool();

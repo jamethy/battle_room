@@ -7,7 +7,7 @@ const double ELASTICITY = 0.95;
 
 namespace BattleRoom {
 
-    Command FREEZE = Command(CommandType::Freeze, UniqueId::generateInvalidId(), Vector2D(0, 0));
+    Command FREEZE = Command(CommandType::Freeze, UniqueId::generateInvalidId(), UniqueId::generateInvalidId(), Vector2D(0, 0));
 
     // constructor
 
@@ -109,7 +109,7 @@ namespace BattleRoom {
                     bullet->setVelocity(bulletVel);
                 }
                 bullet->reactToCollision(Vector2D(0, 0), minTransUnit.times(-1));
-                other->interpretCommand(Command(CommandType::Freeze, other->getUniqueId(), Vector2D(0, 0)));
+                other->interpretCommand(Command(CommandType::Freeze, other->getUniqueId(), bullet->getUniqueId(), Vector2D(0, 0)));
                 break;
         }
 
@@ -178,7 +178,7 @@ namespace BattleRoom {
                 break;
             case ObjectType::Bullet:
                 other->reactToCollision(Vector2D(0, 0), minTransUnit.times(-1));
-                player->interpretCommand(Command(CommandType::Freeze, player->getUniqueId(), Vector2D(0, 0)));
+                player->interpretCommand(Command(CommandType::Freeze, player->getUniqueId(), other->getUniqueId(), Vector2D(0, 0)));
                 break;
         }
 

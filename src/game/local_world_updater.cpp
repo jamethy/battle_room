@@ -2,7 +2,6 @@
 #include "battle_room/game/query_world.h"
 
 #include <algorithm>
-#include <iostream>
 
 namespace BattleRoom {
 
@@ -51,16 +50,28 @@ namespace BattleRoom {
     }
 
     void LocalWorldUpdater::afterUpdate() {
+        m_world.applySettings(m_worldUpdates);
+        m_worldUpdates = ResourceDescriptor();
     }
 
     void LocalWorldUpdater::registerUser(User user) {
-        unregisterUser(user.getUniqueId());
+        const UniqueId userId = user.getUniqueId();
+
+        unregisterUser(userId);
         m_users.push_back(user);
+
         if (user.getUniqueId().isLocal()) {
-            QueryWorld::setClientId(user.getUniqueId());
+            QueryWorld::setClientId(userId);
         }
 
         // give user player
+        ResourceDescriptor player("Player", "player");
+        player.addSubResources({
+                ResourceDescriptor("Client", userId.toString()),
+                ResourceDescriptor("Location", "-15, 15"),
+                ResourceDescriptor("Velocity", "5, 0"),
+                });
+        m_worldUpdates.addSubResources({ player });
     }
 
     std::vector<User>::iterator findIn(std::vector<User>& users, UniqueId id) {

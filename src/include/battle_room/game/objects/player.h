@@ -37,12 +37,17 @@ namespace BattleRoom {
 
         GameObject* clone() const override;
 
+        UniqueId getClient() const;
+
         static ObjectType type();
 
+        virtual void applySettings(ResourceDescriptor settings) override;
         virtual void serialize(BinaryStream& bs) const override;
         static Player deserialize(BinaryStream& bs);
 
     private:
+
+        UniqueId m_client;
 
         /**
          * State of player object

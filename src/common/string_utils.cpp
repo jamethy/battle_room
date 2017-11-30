@@ -68,7 +68,7 @@ namespace BattleRoom {
             return false;
         }
 
-        std::regex rgx_char("^\\s*\\d+\\s*$");
+        std::regex rgx_char("^\\s*-?\\d+\\s*$");
         std::smatch sm;
         return std::regex_search(str, sm, rgx_char);
     }

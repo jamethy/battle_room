@@ -35,6 +35,7 @@ namespace BattleRoom {
     protected:
 
         std::vector<User> m_users;
+        ResourceDescriptor m_worldUpdates;
 
     private:
 

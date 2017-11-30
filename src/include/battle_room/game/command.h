@@ -13,15 +13,17 @@ namespace BattleRoom {
 
             // constructors
             Command();
-            Command(CommandType type, UniqueId target, Vector2D point);
+            Command(CommandType type, UniqueId target, UniqueId commander, Vector2D point);
 
             // getters and setters
             CommandType getType() const;
             UniqueId getTarget() const;
+            UniqueId getCommander() const;
             Vector2D getPoint() const;
 
             void setType(CommandType type);
             void setTarget(UniqueId target);
+            void setCommander(UniqueId commander);
             void setPoint(Vector2D point);
 
             void serialize(BinaryStream& bs) const;
@@ -31,6 +33,7 @@ namespace BattleRoom {
 
             CommandType m_type;
             UniqueId m_target;
+            UniqueId m_commander;
             Vector2D m_point;
 
     }; // Command class

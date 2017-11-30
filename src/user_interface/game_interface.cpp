@@ -136,6 +136,14 @@ namespace BattleRoom {
         Inputs remainingInputs;
         vector<Command> commands;
 
+        // TODO figure out better way
+        UniqueId playerClientId = UniqueId::generateInvalidId();
+        const Player* player = (const Player*)QueryWorld::getGameObject(m_playerId);
+        if (player) {
+            playerClientId = player->getClient();
+        }
+        UniqueId client = QueryWorld::getClientId();
+
         for (Input input : inputs) {
 
             Command cmd;
@@ -144,24 +152,24 @@ namespace BattleRoom {
                 Vector3D viewInt = input.getViewIntersection(getUniqueId());
                 Vector2D point = Vector2D(viewInt.x(), viewInt.y());
 
-                if (m_playerId.isValid()) {
+                if (m_playerId.isValid() && playerClientId == client) {
 
                     if (Key::MouseOnly == input.getKey() 
                             && Motion::None == input.getMotion() 
                             && Modifier::Plain == input.getModifier()) {
-                        cmd = Command(CommandType::Aim, m_playerId, point);
+                        cmd = Command(CommandType::Aim, m_playerId, client, point);
 
                     } else if (input.isKeyDown(Key::RightClick)) {
-                        cmd = Command(CommandType::ShootCharge, m_playerId, point);
+                        cmd = Command(CommandType::ShootCharge, m_playerId, client, point);
 
                     } else if (input.isKeyUp(Key::RightClick)) {
-                        cmd = Command(CommandType::ShootRelease, m_playerId, point);
+                        cmd = Command(CommandType::ShootRelease, m_playerId, client, point);
 
                     } else if (input.isKeyDown(Key::Space)) {
-                        cmd = Command(CommandType::JumpCharge, m_playerId, point);
+                        cmd = Command(CommandType::JumpCharge, m_playerId, client, point);
 
                     } else if (input.isKeyUp(Key::Space)) {
-                        cmd = Command(CommandType::JumpRelease, m_playerId, point);
+                        cmd = Command(CommandType::JumpRelease, m_playerId, client, point);
 
                     } else if (input.isKeyDown(Key::T)) {
                         m_idToTrack = m_idToTrack.isValid() ? UniqueId::generateInvalidId() : m_playerId;
@@ -170,9 +178,9 @@ namespace BattleRoom {
                         moveCameraToCenter(m_camera.get(), m_playerId);
 
                     } else if (input.isKeyDown(Key::K)) {
-                        cmd = Command(CommandType::Freeze, m_playerId, point);
+                        cmd = Command(CommandType::Freeze, m_playerId, client, point);
                     } else if (input.isModKeyDown(Modifier::Shift, Key::K)) {
-                        cmd = Command(CommandType::Unfreeze, m_playerId, point);
+                        cmd = Command(CommandType::Unfreeze, m_playerId, client, point);
                     }
                 }
 

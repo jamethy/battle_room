@@ -21,8 +21,8 @@ namespace BattleRoom {
     }
 
     UniqueId UniqueId::fromString(std::string str) {
-        return isNumber(str) ? UniqueId(stoll(str)) : generateInvalidId();
-    }
+        return isNumber(str) ? UniqueId(stoi(str)) : generateInvalidId();
+   }
 
     bool UniqueId::isValid() const {
         return m_id != 0;
