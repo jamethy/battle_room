@@ -6,7 +6,8 @@ namespace BattleRoom {
 
 
     ServerConnection::ServerConnection() :
-        m_responseStream(BinaryStream(8000))
+        m_responseStream(8000),
+        m_worldStream(16000)
     { }
 
     ServerConnection::~ServerConnection() { }
@@ -50,4 +51,18 @@ namespace BattleRoom {
     void ServerConnection::applySettings(ResourceDescriptor settings) {
         LocalWorldUpdater::applySettings(settings);
     }
+
+    void ServerConnection::afterUpdate() {
+
+        LocalWorldUpdater::afterUpdate();
+
+        Message msg(GetWorldResponse);
+        m_worldStream.reset();
+        QueryWorld::serialize(m_worldStream);
+
+        for (const auto& user : m_users) {
+            sendMessage(msg, m_worldStream, user.getUniqueId());
+        }
+    }
+
 } // BattleRoom namespace

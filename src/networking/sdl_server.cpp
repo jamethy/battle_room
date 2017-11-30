@@ -36,8 +36,6 @@ namespace BattleRoom {
                     server.m_clientSockets.emplace(newClientId, socket);
                     server.adjustSocketSet();
                     server.m_writingLock.unlock();
-
-                    // tell app
                 }
             }
 
@@ -67,8 +65,7 @@ namespace BattleRoom {
                         server.m_clientSockets.erase(clientId);
                         server.adjustSocketSet();
                         server.m_writingLock.unlock();
-
-                        // tell app
+                        continue;
                     }
 
                     Message message = Message::deserialize(messageStream);
@@ -168,6 +165,10 @@ namespace BattleRoom {
 
     void SdlServer::sendMessage(Message& message, BinaryStream& data, UniqueId clientId) {
 
+        if (!clientId.isNetwork()) {
+            return;
+        }
+
         if (m_clientSockets.count(clientId) <= 0) {
             std::cerr << "No client of that ID is connected.\n";
             return;
@@ -225,20 +226,4 @@ namespace BattleRoom {
 
         ServerConnection::applySettings(settings);
     }
-
-
-    // temp move to server conn
-    void SdlServer::afterUpdate() {
-
-        LocalWorldUpdater::afterUpdate();
-
-        BinaryStream resBody(16000);
-        Message response;
-        response.setMessageType(GetWorldResponse);
-        QueryWorld::serialize(resBody);
-        for (const auto& client : m_clientSockets) {
-            sendMessage(response, resBody, client.first);
-        }
-    }
-
 } // BattleRoom namespace

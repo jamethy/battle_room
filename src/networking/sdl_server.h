@@ -29,7 +29,6 @@ namespace BattleRoom {
         bool start(int port) override;
         void sendMessage(Message& message, BinaryStream& data, UniqueId clientId) override;
         void applySettings(ResourceDescriptor settings) override;
-        void afterUpdate() override;
 
         std::thread m_receivingThread; ///< Thread to update world on
         bool m_keepReceiving; ///< Set to false when ready to destroy

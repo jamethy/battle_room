@@ -2,6 +2,7 @@
 #include "battle_room/game/query_world.h"
 
 #include <algorithm>
+#include <iostream>
 
 namespace BattleRoom {
 
@@ -58,12 +59,25 @@ namespace BattleRoom {
         if (user.getUniqueId().isLocal()) {
             QueryWorld::setClientId(user.getUniqueId());
         }
+
+        // give user player
+    }
+
+    std::vector<User>::iterator findIn(std::vector<User>& users, UniqueId id) {
+        std::vector<User>::iterator itr;
+        for (itr = users.begin(); itr != users.end(); ++itr) {
+            if ((*itr).getUniqueId() == id) {
+                return itr;
+            }
+        }
+        return users.end();
     }
 
     void LocalWorldUpdater::unregisterUser(UniqueId userId) {
-        std::remove_if(m_users.begin(), m_users.end(), 
-                [&userId](const User& user) { return user.getUniqueId() == userId; }
-                );
+        auto itr = findIn(m_users, userId);
+        if (itr != m_users.end()) {
+            m_users.erase(itr);
+        }
     }
 
 } // BattleRoom namespace

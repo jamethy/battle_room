@@ -25,10 +25,12 @@ namespace BattleRoom {
         void handleMessage(Message& message, BinaryStream& data, UniqueId clientId);
 
         virtual void applySettings(ResourceDescriptor settings) override;
+        virtual void afterUpdate() override;
 
     private:
 
         BinaryStream m_responseStream;
+        BinaryStream m_worldStream;
 
     }; // ServerConnection class
 } // BattleRoom namespace

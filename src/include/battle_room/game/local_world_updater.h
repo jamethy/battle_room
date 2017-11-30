@@ -32,9 +32,11 @@ namespace BattleRoom {
         // inherited
         virtual void applySettings(ResourceDescriptor settings) override;
 
-    private:
+    protected:
 
         std::vector<User> m_users;
+
+    private:
 
         LocalUpdatingWorld m_world; ///< World that updates itself
         std::thread m_worldThread; ///< Thread to update world on
