@@ -45,8 +45,16 @@ namespace BattleRoom {
             }
 
             for (const auto& entry : server.m_clientSockets) {
+
+                if (socketsWithData == 0) {
+                    break;
+                }
+
                 TCPsocket clientSocket = entry.second;
+
                 if (SDLNet_SocketReady(clientSocket)) {
+
+                    --socketsWithData;
 
                     // get message
                     // if length is zero, probs a disconnect
@@ -91,10 +99,6 @@ namespace BattleRoom {
                     }
 
                     server.handleMessage(message, dataStream, entry.first);
-
-                    if (--socketsWithData == 0) {
-                        break;
-                    }
                 }
             }
             server.m_listenLock.unlock();

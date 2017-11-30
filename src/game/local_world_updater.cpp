@@ -1,5 +1,8 @@
 #include "battle_room/game/local_world_updater.h"
 #include "battle_room/game/query_world.h"
+#include "battle_room/game/alter_world.h"
+#include "battle_room/game/objects/object_factory.h"
+#include "battle_room/game/objects/player.h"
 
 #include <algorithm>
 
@@ -52,6 +55,8 @@ namespace BattleRoom {
     void LocalWorldUpdater::afterUpdate() {
         m_world.applySettings(m_worldUpdates);
         m_worldUpdates = ResourceDescriptor();
+
+        AlterWorld::update(m_world);
     }
 
     void LocalWorldUpdater::registerUser(User user) {
@@ -64,14 +69,15 @@ namespace BattleRoom {
             QueryWorld::setClientId(userId);
         }
 
-        // give user player
-        ResourceDescriptor player("Player", "player");
-        player.addSubResources({
-                ResourceDescriptor("Client", userId.toString()),
-                ResourceDescriptor("Location", "-15, 15"),
-                ResourceDescriptor("Velocity", "5, 0"),
-                });
-        m_worldUpdates.addSubResources({ player });
+        UniqueGameObject obj = ObjectFactory::createObjectOfType(ObjectType::Player);
+        Player* player = (Player*)obj.get();
+        player->setClient(userId);
+
+        // TODO create spawning rules
+        player->setPosition(Vector2D(-15, 15));
+        player->setVelocity(Vector2D(5, 0));
+
+        AlterWorld::addObject(std::move(obj));
     }
 
     std::vector<User>::iterator findIn(std::vector<User>& users, UniqueId id) {

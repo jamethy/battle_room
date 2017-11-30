@@ -11,6 +11,7 @@ add_library(Game
         local_updating_world.cpp
         query_world_updater.cpp
         local_world_updater.cpp
+        alter_world.cpp
         user.cpp
         objects/ball.cpp
         objects/bullet.cpp

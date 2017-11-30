@@ -38,6 +38,7 @@ namespace BattleRoom {
         GameObject* clone() const override;
 
         UniqueId getClient() const;
+        void setClient(UniqueId id);
 
         static ObjectType type();
 

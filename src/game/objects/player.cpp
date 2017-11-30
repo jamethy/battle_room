@@ -174,7 +174,7 @@ namespace BattleRoom {
     bool Player::interpretCommand(const Command& cmd) {
         if (GameObject::interpretCommand(cmd)) {
 
-            if (m_client != cmd.getCommander()) {
+            if (m_client != cmd.getCommander() && CommandType::Freeze != cmd.getType()) {
                 return true;
             }
 
@@ -182,6 +182,7 @@ namespace BattleRoom {
                 switch (cmd.getType()) {
                     case CommandType::Unfreeze:
                         m_state = PlayerState::Flying;
+                        setIsStatic(false);
                         break;
                     default:
                         break;
@@ -246,6 +247,10 @@ namespace BattleRoom {
 
     UniqueId Player::getClient() const {
         return m_client;
+    }
+
+    void Player::setClient(UniqueId id) {
+        m_client = id;
     }
 
     void Player::serialize(BinaryStream& bs) const {

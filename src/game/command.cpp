@@ -48,6 +48,7 @@ namespace BattleRoom {
     void Command::serialize(BinaryStream& bs) const {
         bs.writeInt((int)m_type);
         m_target.serialize(bs);
+        m_commander.serialize(bs);
         m_point.serialize(bs);
     }
 
@@ -55,6 +56,7 @@ namespace BattleRoom {
         Command cmd;
         cmd.m_type = (CommandType)bs.readInt();
         cmd.m_target = UniqueId::deserialize(bs);
+        cmd.m_commander = UniqueId::deserialize(bs);
         cmd.m_point = Vector2D::deserialize(bs);
         return cmd;
     }

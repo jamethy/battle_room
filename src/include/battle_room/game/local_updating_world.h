@@ -6,6 +6,8 @@
 
 namespace BattleRoom {
 
+    class AlterWorld;
+
     /**
      * Game world - includes all the objects, the time, and meta data
      */
@@ -31,6 +33,8 @@ namespace BattleRoom {
 
         GameTime m_timeController; // Game time object
         UniqueBoundary m_boundary = nullptr; // limits of the world
+
+        friend class AlterWorld;
 
     }; // LocalUpdatingWorld class
 } // BattleRoom namespace
