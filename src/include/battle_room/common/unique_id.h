@@ -48,6 +48,18 @@ namespace BattleRoom {
         bool isValid() const;
 
         /**
+         * Checks if the given unique id is local
+         * \return True if is local unique id
+         */
+        bool isLocal() const;
+
+        /**
+         * Checks if the given unique id is network
+         * \return True if is network unique id
+         */
+        bool isNetwork() const;
+
+        /**
          * \return String version of id
          */
         std::string toString() const;

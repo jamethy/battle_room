@@ -12,6 +12,7 @@ namespace BattleRoom {
         public:
 
             User();
+            User(ResourceDescriptor settings);
 
             // setters and getters
             void setUniqueId(UniqueId id);

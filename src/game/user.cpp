@@ -3,9 +3,14 @@
 namespace BattleRoom {
 
     User::User() :
-        m_uniqueId(UniqueId::generateInvalidId()),
+        m_uniqueId(UniqueId::generateNewLocalId()),
         m_name("name")
     { }
+
+    User::User(ResourceDescriptor settings) : User() 
+    {
+        applySettings(settings);
+    }
 
     UniqueId User::getUniqueId() const {
         return m_uniqueId;

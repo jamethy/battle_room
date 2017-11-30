@@ -2,8 +2,6 @@
 #include "battle_room/game/query_world.h"
 #include "battle_room/game/command_receiver.h"
 
-#include <iostream>
-
 namespace BattleRoom {
 
     ClientConnection::ClientConnection() :
@@ -50,6 +48,10 @@ namespace BattleRoom {
         m_commandStream.reset();
         user.serialize(m_commandStream);
         sendMessage(message, m_commandStream);
+    }
+
+    void ClientConnection::applySettings(ResourceDescriptor settings) {
+        QueryWorldUpdater::applySettings(settings);
     }
 
 } // BattleRoom namespace

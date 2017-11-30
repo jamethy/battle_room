@@ -26,6 +26,7 @@ namespace BattleRoom {
         void handleMessage(Message& message, BinaryStream& body);
 
         // inherited
+        virtual void applySettings(ResourceDescriptor settings) override;
         void clientUpdate() override;
         void registerUser(User user) override;
 

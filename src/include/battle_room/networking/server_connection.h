@@ -15,7 +15,7 @@ namespace BattleRoom {
 
     public:
 
-        ServerConnection(ResourceDescriptor settings);
+        ServerConnection();
         virtual ~ServerConnection();
 
         virtual bool start(int port) = 0;
@@ -23,6 +23,8 @@ namespace BattleRoom {
         virtual void sendMessage(Message& message, BinaryStream& data, UniqueId clientId) = 0;
 
         void handleMessage(Message& message, BinaryStream& data, UniqueId clientId);
+
+        virtual void applySettings(ResourceDescriptor settings) override;
 
     private:
 

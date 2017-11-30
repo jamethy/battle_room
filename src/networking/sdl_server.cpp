@@ -106,11 +106,11 @@ namespace BattleRoom {
 
 // constructors
     SdlServer::SdlServer(ResourceDescriptor settings) : 
-        ServerConnection(settings),
         m_keepReceiving(false) 
     { 
         m_clientSockets.clear();
         applySettings(settings);
+        LocalWorldUpdater::start();
     }
 
     SdlServer::~SdlServer() {
@@ -222,6 +222,8 @@ namespace BattleRoom {
         if (isNotEmpty(portSub.getValue())) {
             start(stoi(portSub.getValue()));
         }
+
+        ServerConnection::applySettings(settings);
     }
 
 
@@ -230,7 +232,7 @@ namespace BattleRoom {
 
         LocalWorldUpdater::afterUpdate();
 
-        BinaryStream resBody(8000);
+        BinaryStream resBody(16000);
         Message response;
         response.setMessageType(GetWorldResponse);
         QueryWorld::serialize(resBody);

@@ -18,7 +18,11 @@ namespace BattleRoom {
     public:
 
         // constructors
+        LocalWorldUpdater();
         LocalWorldUpdater(ResourceDescriptor settings);
+
+        void start();
+
         virtual ~LocalWorldUpdater();
 
         virtual void afterUpdate();

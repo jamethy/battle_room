@@ -28,6 +28,14 @@ namespace BattleRoom {
         return m_id != 0;
     }
 
+    bool UniqueId::isLocal() const {
+        return m_id < 0;
+    }
+
+    bool UniqueId::isNetwork() const {
+        return m_id > 0;
+    }
+
     std::string UniqueId::toString() const {
         return std::to_string(m_id);
     }

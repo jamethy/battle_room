@@ -155,6 +155,8 @@ namespace BattleRoom {
         if (isNotEmpty(hostSub.getValue()) && isNotEmpty(portSub.getValue())) {
             connectToServer(hostSub.getValue(), stoi(portSub.getValue()));
         }
+
+        ClientConnection::applySettings(settings);
     }
 
 } // BattleRoom namespace

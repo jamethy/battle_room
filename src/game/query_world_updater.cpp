@@ -5,9 +5,7 @@ namespace BattleRoom {
     void QueryWorldUpdater::applySettings(ResourceDescriptor settings) { 
         ResourceDescriptor sub = settings.getSubResource("User");
         if (isNotEmpty(sub.getValue())) {
-            User user;
-            user.applySettings(sub);
-            registerUser(user);
+            registerUser(User(sub));
         }
     }
 
