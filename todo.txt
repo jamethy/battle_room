@@ -17,6 +17,7 @@ For full program
 
     add clone to game object for templates
 
+    fix background bounds
     smart camera
     grapling hook
     Add speed to animations

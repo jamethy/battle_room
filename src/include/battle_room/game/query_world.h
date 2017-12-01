@@ -31,6 +31,7 @@ namespace BattleRoom {
         static const std::vector<UniqueGameObject>& getAllGameObjects();
 
         static const GameObject* getGameObject(UniqueId id);
+        static const GameObject* getClientPlayer();
 
         static const std::vector<UniqueDrawableObject>& getBackgroundObjects();
 

@@ -177,12 +177,6 @@ namespace BattleRoom {
                     } else if (input.isKeyUp(Key::Space)) {
                         cmd = Command(CommandType::JumpRelease, m_playerId, client, point);
 
-                    } else if (input.isKeyDown(Key::T)) {
-                        m_idToTrack = m_idToTrack.isValid() ? UniqueId::generateInvalidId() : m_playerId;
-
-                    } else if (input.isKeyDown(Key::C)) {
-                        moveCameraToCenter(m_camera.get(), m_playerId);
-
                     } else if (input.isKeyDown(Key::K)) {
                         cmd = Command(CommandType::Freeze, m_playerId, client, point);
                     } else if (input.isModKeyDown(Modifier::Shift, Key::K)) {
@@ -190,7 +184,30 @@ namespace BattleRoom {
                     }
                 }
 
-                if (input.isKeyDown(Key::LeftClick)) {
+                if (input.isKeyDown(Key::C)) {
+                    const GameObject* clientPlayer = QueryWorld::getClientPlayer();
+                    if (clientPlayer) {
+                        m_playerId = clientPlayer->getUniqueId();
+                        m_selectedBackground = UniqueDrawableObject(new DrawableObject());
+                        m_selectedBackground->setAnimation(AnimationHandler::getAnimation("spatial/selected"));
+                        moveCameraToCenter(m_camera.get(), m_playerId);
+                    }
+
+                } else if (input.isKeyDown(Key::T)) {
+                    if (m_idToTrack.isValid()) {
+                        m_idToTrack = UniqueId::generateInvalidId();
+                    } else {
+                        const GameObject* clientPlayer = QueryWorld::getClientPlayer();
+                        if (clientPlayer) {
+                            m_playerId = clientPlayer->getUniqueId();
+                            m_selectedBackground = UniqueDrawableObject(new DrawableObject());
+                            m_selectedBackground->setAnimation(AnimationHandler::getAnimation("spatial/selected"));
+                            moveCameraToCenter(m_camera.get(), m_playerId);
+                            m_idToTrack = m_playerId;
+                        }
+                    }
+
+                } else if (input.isKeyDown(Key::LeftClick)) {
 
                     // check spatial components
                     // check game objects

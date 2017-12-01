@@ -1,4 +1,5 @@
 #include "battle_room/game/query_world.h"
+#include "battle_room/game/objects/player.h"
 
 #include <mutex>
 
@@ -30,6 +31,18 @@ namespace BattleRoom {
 
     const GameObject* QueryWorld::getGameObject(UniqueId id) {
         return m_queryWorld.getGameObject(id);
+    }
+
+    const GameObject* QueryWorld::getClientPlayer() {
+        for (const auto& obj : m_queryWorld.getAllGameObjects()) {
+            if (ObjectType::Player == obj->getType()) {
+                Player* player = (Player*)obj.get();
+                if (player->getClient() == m_clientId) {
+                    return player;
+                }
+            }
+        }
+        return nullptr;
     }
 
     const std::vector<UniqueDrawableObject>& QueryWorld::getBackgroundObjects() {
