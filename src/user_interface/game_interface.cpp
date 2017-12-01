@@ -95,7 +95,13 @@ namespace BattleRoom {
 
                 if (m_chargingGun) {
                     if (player->isChargingGun()) {
-                        m_chargingGun->setLocation(Vector3D(loc.x(), loc.y() - 1.25, 0.1));
+
+                        // orient gun charge bar
+                        Vector3D diff(0, -1.25, 0);
+                        diff = m_camera->getOrientation().getRotated(diff);
+                        m_chargingGun->setLocation(Vector3D(loc.x(), loc.y(), 0.1).plus(diff));
+                        m_chargingGun->setOrientation(m_camera->getOrientation());
+
                         if (player->getGunCharge() > 0.999) {
 
                             Animation &animation = m_chargingGun->getAnimation();

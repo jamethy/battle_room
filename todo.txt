@@ -1,7 +1,5 @@
 Right now
 -----------------------------------
-clients have players
-    follow register path
 
 Running ToDo List
 -----------------------------------
@@ -9,7 +7,6 @@ For full program
 
     add overlays
         jump charge
-        shoot overlay needs to be one down via camera
     camera
         move on edges
     gameinterface
