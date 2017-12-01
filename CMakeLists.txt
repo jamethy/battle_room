@@ -32,7 +32,6 @@ endif()
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_gfx REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_net REQUIRED)
 
@@ -40,7 +39,6 @@ include_directories(
 		${CMAKE_SOURCE_DIR}/
 		${CMAKE_SOURCE_DIR}/include
 		${SDL2_TTF_INCLUDE_DIR}
-		${SDL2_gfx_INCLUDE_DIR}
 		${SDL2_image_INCLUDE_DIR}
         ${SDL2_NET_INCLUDE_DIRS}
 		)

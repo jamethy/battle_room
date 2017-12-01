@@ -15,7 +15,7 @@ This will make
 The packages required in Ubuntu include:
 
 ```shell
-cmake build libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-gfx-dev libsdl2-net-dev
+cmake libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-net-dev
 ```
 
 # Controls
