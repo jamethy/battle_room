@@ -24,7 +24,7 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 	endif()
 endif()
 
-if (UNIX AND NOT APPLE)
+if (NOT APPLE)
     set(START_GROUP "-Wl,--start-group")
     set(END_GROUP "-Wl,--end-group")
     set(LINUX_LIBS "pthread")

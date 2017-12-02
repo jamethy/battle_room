@@ -1,5 +1,6 @@
 
 #include "./sdl_server.h"
+#include "./sdl_network_helper.h"
 
 // temp
 #include "battle_room/game/query_world.h"
@@ -56,16 +57,11 @@ namespace BattleRoom {
 
                     --socketsWithData;
 
-                    // get message
-                    // if length is zero, probs a disconnect
-                    messageStream.reset();
-                    dataStream.reset();
+                    Message message;
+                    int res = sdlReceiveMessage(message, messageStream, dataStream, clientSocket);
+                    if (res <= 0) {
 
-                    messageStream.setDataLength(Message::Size);
-                    int bytesRead = SDLNet_TCP_Recv(clientSocket, messageStream.getBuffer(), Message::Size);
-
-                    if (bytesRead < (int)Message::Size) {
-                        std::cout << "Did not receive full header - disconnecting client\n";
+                        std::cout << "Disconnecting client\n";
                         // client probabs disconnect
                         UniqueId clientId = entry.first;
                         server.m_writingLock.lock();
@@ -73,32 +69,10 @@ namespace BattleRoom {
                         server.m_clientSockets.erase(clientId);
                         server.adjustSocketSet();
                         server.m_writingLock.unlock();
-                        continue;
+
+                    } else {
+                        server.handleMessage(message, dataStream, entry.first);
                     }
-
-                    Message message = Message::deserialize(messageStream);
-
-                    if (message.getHeaderHash() != message.hash()) {
-                        std::cerr << "Header hash did not meet calculations\n";
-                        continue;
-                    }
-
-                    if (message.hasBody()) {
-                        dataStream.setDataLength(message.getDataSize());
-                        bytesRead = SDLNet_TCP_Recv(clientSocket, dataStream.getBuffer(), message.getDataSize());
-
-                        if (bytesRead < (int)message.getDataSize()) {
-                            std::cerr << "Did not receive full body\n";
-                            continue;
-                        }
-
-                        if (message.getBodyHash() != dataStream.hash()) {
-                            std::cerr << "Body hash did not meet calculations\n";
-                            continue;
-                        }
-                    }
-
-                    server.handleMessage(message, dataStream, entry.first);
                 }
             }
             server.m_listenLock.unlock();
@@ -177,30 +151,11 @@ namespace BattleRoom {
             std::cerr << "No client of that ID is connected.\n";
             return;
         }
-
-        message.setDataSize(data.getLength());
-        message.setBodyHash(data.hash());
-
+        
         BinaryStream headerStream(Message::Size);
-        message.serialize(headerStream);
 
         m_writingLock.lock();
-        TCPsocket socket = m_clientSockets.at(clientId);
-        int bytesWritten = SDLNet_TCP_Send(socket, headerStream.getBuffer(), headerStream.getLength());
-        if (bytesWritten < (int)headerStream.getLength()) {
-            //freak out
-            std::cerr << "Did not send full header\n";
-            m_writingLock.unlock();
-            return;
-        }
-
-        bytesWritten = SDLNet_TCP_Send(socket, data.getBuffer(), data.getLength());
-        if (bytesWritten < (int)data.getLength()) {
-            //freak out
-            std::cerr << "Did not send full body\n";
-            m_writingLock.unlock();
-            return;
-        }
+        sdlSendMessage(message, headerStream, data, m_clientSockets.at(clientId));
         m_writingLock.unlock();
     }
 
