@@ -32,7 +32,7 @@ cmake libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-net-dev
 | Scroll Up       | Zoom view in towards cursor                                                                  |
 | Q               | Quit game                                                                                    |
 | K               | Freeze character                                                                             |
-| Shift-K          | Unfreeze character                                                                           |
+| Shift-K         | Unfreeze character                                                                           |
 
 # Server/Client
 
