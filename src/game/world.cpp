@@ -39,6 +39,8 @@ namespace BattleRoom {
 
     World World::clone() const {
         World world;
+        world.m_gameTime = m_gameTime;
+
         world.m_gameObjects = std::vector<UniqueGameObject>(m_gameObjects.size());
         world.m_gameObjects.clear();
         for (const auto& obj : m_gameObjects) {
