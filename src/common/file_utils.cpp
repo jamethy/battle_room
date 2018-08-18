@@ -1,3 +1,7 @@
+#include <utility>
+
+#include <utility>
+
 #include "battle_room/common/file_utils.h"
 
 #include <regex>
@@ -33,13 +37,13 @@ namespace BattleRoom {
 
     string getFileName(string fullFilePath) {
 
-        string filename = "";
+        string filename;
 
         // .*\\/ file path and the last forward slash
         // (.*) the filename (group 1)
         // \\.[\\w]+ the dot and at least one word character designating the extension
         // $ end of line
-        std::regex rgx_name(".*\\/(.*)\\.[\\w]+$");
+        std::regex rgx_name(R"(.*\/(.*)\.[\w]+$)");
         std::smatch sm;
         if (std::regex_search(fullFilePath, sm, rgx_name)) {
             filename = sm[1].str();
@@ -88,13 +92,13 @@ namespace BattleRoom {
 
     void setResourcePathFromExe(std::string exeFilePath) {
 
-        std::string exePath = getFilePath(exeFilePath);
-        m_resourcePath = exePath + "../res/";
+        std::string exePath = getFilePath(std::move(exeFilePath));
+        m_resourcePath = exePath + "res/";
     }
 
     void setResourcePathFromStartupScript(std::string startupFilePath) {
 
-        std::string startupPath = getFilePath(startupFilePath);
+        std::string startupPath = getFilePath(std::move(startupFilePath));
         m_resourcePath = startupPath;
     }
 

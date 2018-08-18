@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 
 } // end main
 
-bool fileExists(std::string filename) {
+bool fileExists(const std::string &filename) {
     std::ifstream inFile;
     inFile.open(filename);
 

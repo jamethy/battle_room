@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "battle_room/common/vector2d.h"
 #include "battle_room/common/string_utils.h"
 
@@ -29,7 +31,7 @@ namespace BattleRoom {
     }
 
     ResourceDescriptor Vector2D::writeToSetting(string key) {
-        return ResourceDescriptor(key, toString());
+        return ResourceDescriptor(std::move(key), toString());
     }
 
 // constructors
@@ -91,12 +93,12 @@ namespace BattleRoom {
         return Vector2D(x, y);
     }
 
-    void Vector2D::serialize(BinaryStream& bs) const {
+    void Vector2D::serialize(BinaryStream &bs) const {
         bs.writeMeters(m_x);
         bs.writeMeters(m_y);
     }
 
-    Vector2D Vector2D::deserialize(BinaryStream& bs) {
+    Vector2D Vector2D::deserialize(BinaryStream &bs) {
         meters x = bs.readMeters();
         meters y = bs.readMeters();
         return Vector2D(x, y);

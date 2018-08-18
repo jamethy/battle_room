@@ -21,7 +21,7 @@ namespace BattleRoom {
         public:
 
             // constructor
-            Application(ResourceDescriptor settings);
+            explicit Application(ResourceDescriptor settings);
 
             /**
              * \brief main application loop

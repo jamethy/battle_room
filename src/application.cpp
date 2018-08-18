@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "battle_room/application.h"
 
 #include "battle_room/common/input_gatherer.h"
@@ -25,7 +27,7 @@ namespace BattleRoom {
         m_windows.clear();
         m_viewMap.clear();
 
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
     void Application::runApplicationLoop() {

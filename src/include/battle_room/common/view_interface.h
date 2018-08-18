@@ -27,7 +27,7 @@ namespace BattleRoom {
     public:
 
         // destructor
-        virtual ~ViewInterface() {}
+        ~ViewInterface() override = default;
 
         /**
          * \brief Handle inputs and return any remaining
