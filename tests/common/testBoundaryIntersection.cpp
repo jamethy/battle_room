@@ -1,4 +1,4 @@
-#include "battle_room/common/boundary_set.h"
+#include "boundary_set.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

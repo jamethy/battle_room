@@ -1,15 +1,15 @@
 #include <utility>
 
-#include "battle_room/application.h"
+#include "application.h"
 
-#include "battle_room/common/input_gatherer.h"
-#include "battle_room/common/application_message_receiver.h"
-#include "battle_room/game/query_world.h"
-#include "battle_room/game/objects/object_factory.h"
-#include "battle_room/user_interface/interface_factory.h"
-#include "battle_room/networking/world_updater_factory.h"
-#include "battle_room/networking/client_connection.h"
-#include "battle_room/networking/server_connection.h"
+#include "input_gatherer.h"
+#include "application_message_receiver.h"
+#include "query_world.h"
+#include "object_factory.h"
+#include "interface_factory.h"
+#include "world_updater_factory.h"
+#include "client_connection.h"
+#include "server_connection.h"
 
 #include <thread>
 #include <algorithm>

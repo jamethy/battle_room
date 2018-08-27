@@ -1,4 +1,4 @@
-#include "battle_room/common/input_gatherer.h"
+#include "input_gatherer.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

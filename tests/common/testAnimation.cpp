@@ -1,8 +1,8 @@
 
-#include "battle_room/common/frame.h"
-#include "battle_room/common/animation.h"
-#include "battle_room/common/animation_handler.h"
-#include "battle_room/common/file_utils.h"
+#include "frame.h"
+#include "animation.h"
+#include "animation_handler.h"
+#include "file_utils.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

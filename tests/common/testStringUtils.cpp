@@ -1,5 +1,5 @@
 
-#include "battle_room/common/string_utils.h"
+#include "string_utils.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

@@ -1,0 +1,14 @@
+//
+// Created by james on 8/27/18.
+//
+
+#ifndef PROJECT_DEATHBLADE_WEBBROWSERCLIENT_H
+#define PROJECT_DEATHBLADE_WEBBROWSERCLIENT_H
+
+
+class WebBrowserClient {
+
+};
+
+
+#endif //PROJECT_DEATHBLADE_WEBBROWSERCLIENT_H

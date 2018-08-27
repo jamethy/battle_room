@@ -1,4 +1,4 @@
-#include "battle_room/graphics/camera.h"
+#include "camera.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

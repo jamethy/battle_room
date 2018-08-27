@@ -1,6 +1,6 @@
 
-#include "battle_room/common/resource_descriptor.h"
-#include "battle_room/common/file_utils.h"
+#include "resource_descriptor.h"
+#include "file_utils.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"

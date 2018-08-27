@@ -1,6 +1,6 @@
-#include "battle_room/common/resource_descriptor.h"
-#include "battle_room/common/file_utils.h"
-#include "battle_room/application.h"
+#include "resource_descriptor.h"
+#include "file_utils.h"
+#include "application.h"
 
 #include <iostream>
 #include <fstream>

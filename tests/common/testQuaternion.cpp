@@ -1,5 +1,5 @@
 
-#include "battle_room/common/quaternion.h"
+#include "quaternion.h"
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
