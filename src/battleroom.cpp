@@ -13,6 +13,12 @@ int main(int argc, char **argv) {
 
     std::cout << "Hello World!\n";
 
+    // if called for web rendering process, return code
+    auto renderProcessCode = Application::initializeWeb(argc, argv);
+    if (renderProcessCode >= 0) {
+        return renderProcessCode;
+    }
+
     // Read in the startup script settings file
     std::string settings_file = getStartupScriptFromArgs(argc, argv);
     ResourceDescriptor rd = ResourceDescriptor::readFile(settings_file);

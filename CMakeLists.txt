@@ -29,8 +29,6 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 endif()
 
 if (NOT APPLE)
-    set(START_GROUP "-Wl,--start-group")
-    set(END_GROUP "-Wl,--end-group")
     set(LINUX_LIBS "pthread")
 endif()
 
@@ -156,12 +154,5 @@ link_directories(
 		)
 
 add_subdirectory(src)
-
-if (test)
-
-    #enable_testing()
-    #add_subdirectory(tests)
-
-endif(test)
 
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )

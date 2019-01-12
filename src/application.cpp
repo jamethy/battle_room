@@ -10,6 +10,9 @@
 #include "world_updater_factory.h"
 #include "client_connection.h"
 #include "server_connection.h"
+#include "web_app.h"
+
+#include "include/internal/cef_ptr.h"
 
 #include <thread>
 #include <algorithm>
@@ -22,12 +25,18 @@ using std::chrono::duration_cast;
 
 namespace BattleRoom {
 
+    static CefRefPtr<WebApp> webApp = nullptr; // NOLINT(cert-err58-cpp)
+
     Application::Application(ResourceDescriptor settings) {
 
         m_windows.clear();
         m_viewMap.clear();
 
         applySettings(std::move(settings));
+    }
+
+    Application::~Application() {
+        CefShutdown();
     }
 
     void Application::runApplicationLoop() {
@@ -84,6 +93,8 @@ namespace BattleRoom {
             }
             //// End drawing "thread"
 
+            webApp->doWebBrowserWork();
+
             interfaceThread.join();
 
             // Switch buffers that view objects and texts are written to
@@ -99,6 +110,28 @@ namespace BattleRoom {
         }
     }
 
+    int Application::initializeWeb(int argc, char **argv) {
+
+        webApp = new WebApp();
+
+        // This block of code is called first because CEF will call this executable
+        // to start separate processes. So anything above this point would be called multiple times.
+        CefMainArgs args(argc, argv);
+        auto retCode = CefExecuteProcess(args, webApp, nullptr);
+        if (retCode >= 0) {
+            return retCode;
+        }
+
+        // Initialize Chromium Embedded Framework
+        CefSettings cefSettings;
+        cefSettings.windowless_rendering_enabled = true;
+        cefSettings.multi_threaded_message_loop = false;
+        cefSettings.external_message_pump = true;
+        if (!CefInitialize(args, cefSettings, webApp, nullptr)) {
+            std::cerr << "CEF could not initialize!\n";
+            throw "CEF Could not initialize";
+        }
+    }
 
     void Application::applySettings(ResourceDescriptor settings) {
 

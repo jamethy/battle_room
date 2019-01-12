@@ -367,15 +367,15 @@ namespace BattleRoom {
         return true;
     }
 
-/**
- * \brief Fills the fields of SdlDrawable common to all drawables
- * \param out drawable NonNull pointer reference of drawable to fill
- * \param objCenter Location of object in 3D space
- * \param orientation Orientation vector of object
- * \param objWidth Width of object in space
- * \param objHeight Height of object in space:w
- */
-    void fillBaseDrawable(SdlDrawable *drawable, ViewInterface* view,
+    /**
+     * \brief Fills the fields of SdlDrawable common to all drawables
+     * \param out drawable NonNull pointer reference of drawable to fill
+     * \param objCenter Location of object in 3D space
+     * \param orientation Orientation vector of object
+     * \param objWidth Width of object in space
+     * \param objHeight Height of object in space:w
+     */
+    void fillBaseDrawable(SdlDrawable *drawable, ViewInterface *view,
                           Vector3D objCenter, Quaternion orientation, meters objWidth, meters objHeight) {
 
         Vector3D xOffset = orientation.getRotated(Vector3D(objWidth / 2.0, 0, 0));
@@ -412,9 +412,9 @@ namespace BattleRoom {
             // Get pixel coordinates of texture
             RelPixel centerRel = view->fromLocation(objCenter);
             Pixel center(
-                    view->getTopLeft().getRow() + centerRel.getRow() * viewHeight, 
+                    view->getTopLeft().getRow() + centerRel.getRow() * viewHeight,
                     view->getTopLeft().getCol() + centerRel.getCol() * viewWidth
-                    );
+            );
             Pixel unrotatedDelta(
                     drawn.x() * std::sin(-angle) + drawn.y() * std::cos(-angle),
                     drawn.x() * std::cos(-angle) - drawn.y() * std::sin(-angle)
@@ -440,7 +440,7 @@ namespace BattleRoom {
         }
     }
 
-    UniqueDrawable getSdlDrawableFrom(const DrawableText &text, ViewInterface* view) {
+    UniqueDrawable getSdlDrawableFrom(const DrawableText &text, ViewInterface *view) {
 
         SdlDrawableText *drawable = new SdlDrawableText();
 
@@ -459,7 +459,7 @@ namespace BattleRoom {
     }
 
 
-    UniqueDrawable getSdlDrawableFrom(const DrawableObject &object, ViewInterface* view) {
+    UniqueDrawable getSdlDrawableFrom(const DrawableObject &object, ViewInterface *view) {
 
         SdlDrawableImage *drawable = new SdlDrawableImage();
 
@@ -480,15 +480,15 @@ namespace BattleRoom {
         } else if (keyMatch(frame.getFlip(), "vertical")) {
             drawable->setFlip(SDL_FLIP_VERTICAL);
         } else if (keyMatch(frame.getFlip(), "both")) {
-            drawable->setFlip((SDL_RendererFlip)(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL));
+            drawable->setFlip((SDL_RendererFlip) (SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL));
         }
 
         return UniqueDrawable(drawable);
 
-    } 
+    }
 
 
-    UniqueDrawable getSdlDrawableFrom(const DrawableMenu &menu, ViewInterface* view) {
+    UniqueDrawable getSdlDrawableFrom(const DrawableMenu &menu, ViewInterface *view) {
 
         SdlDrawableImage *drawable = new SdlDrawableImage();
 
@@ -498,10 +498,10 @@ namespace BattleRoom {
         px viewHeight = view->getBottomRight().getRowInt() - view->getTopLeft().getRowInt();
         px viewWidth = view->getBottomRight().getColInt() - view->getTopLeft().getColInt();
 
-        px topLeftCol = view->getTopLeft().getCol() + menu.getTopLeft().getCol()*viewWidth;
-        px topLeftRow = view->getTopLeft().getRow() + menu.getTopLeft().getRow()*viewHeight;
-        px botRightCol = view->getTopLeft().getCol() + menu.getBottomRight().getCol()*viewWidth;
-        px botRightRow = view->getTopLeft().getRow() + menu.getBottomRight().getRow()*viewHeight;
+        px topLeftCol = view->getTopLeft().getCol() + menu.getTopLeft().getCol() * viewWidth;
+        px topLeftRow = view->getTopLeft().getRow() + menu.getTopLeft().getRow() * viewHeight;
+        px botRightCol = view->getTopLeft().getCol() + menu.getBottomRight().getCol() * viewWidth;
+        px botRightRow = view->getTopLeft().getRow() + menu.getBottomRight().getRow() * viewHeight;
 
         Pixel topLeft(topLeftRow, topLeftCol);
         Pixel botRight(botRightRow, botRightCol);
@@ -522,28 +522,29 @@ namespace BattleRoom {
         } else if (keyMatch(frame.getFlip(), "vertical")) {
             drawable->setFlip(SDL_FLIP_VERTICAL);
         } else if (keyMatch(frame.getFlip(), "both")) {
-            drawable->setFlip((SDL_RendererFlip)(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL));
+            drawable->setFlip((SDL_RendererFlip) (SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL));
         }
 
         return UniqueDrawable(drawable);
 
-    } 
+    }
 
     const double BUFF = 0.25;
 
-    UniqueDrawable getSdlDrawableTextFrom(const DrawableMenu &menu, ViewInterface* view) {
+    UniqueDrawable getSdlDrawableTextFrom(const DrawableMenu &menu, ViewInterface *view) {
         SdlDrawableText *drawable = new SdlDrawableText();
 
         px viewHeight = view->getBottomRight().getRowInt() - view->getTopLeft().getRowInt();
         px viewWidth = view->getBottomRight().getColInt() - view->getTopLeft().getColInt();
 
-        px menuHeight = viewHeight*(menu.getBottomRight().getRow() - menu.getTopLeft().getRow());
-        px menuWidth = viewWidth*(menu.getBottomRight().getCol() - menu.getTopLeft().getCol());
+        px menuHeight = viewHeight * (menu.getBottomRight().getRow() - menu.getTopLeft().getRow());
+        px menuWidth = viewWidth * (menu.getBottomRight().getCol() - menu.getTopLeft().getCol());
 
-        px topLeftCol = (view->getTopLeft().getCol() + menu.getTopLeft().getCol()*viewWidth) + BUFF*menuWidth;
-        px topLeftRow = (view->getTopLeft().getRow() + menu.getTopLeft().getRow()*viewHeight) + BUFF*menuHeight;
-        px botRightCol = (view->getTopLeft().getCol() + menu.getBottomRight().getCol()*viewWidth) - BUFF*menuWidth;
-        px botRightRow = (view->getTopLeft().getRow() + menu.getBottomRight().getRow()*viewHeight) - BUFF*menuHeight;
+        px topLeftCol = (view->getTopLeft().getCol() + menu.getTopLeft().getCol() * viewWidth) + BUFF * menuWidth;
+        px topLeftRow = (view->getTopLeft().getRow() + menu.getTopLeft().getRow() * viewHeight) + BUFF * menuHeight;
+        px botRightCol = (view->getTopLeft().getCol() + menu.getBottomRight().getCol() * viewWidth) - BUFF * menuWidth;
+        px botRightRow =
+                (view->getTopLeft().getRow() + menu.getBottomRight().getRow() * viewHeight) - BUFF * menuHeight;
 
         Pixel topLeft(topLeftRow, topLeftCol);
         Pixel botRight(botRightRow, botRightCol);

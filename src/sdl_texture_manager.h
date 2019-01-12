@@ -16,6 +16,18 @@ namespace BattleRoom {
 
     public:
 
+        typedef enum {
+            UnknownTextureType,
+            StaticTextureType,
+            StreamingTextureType
+        } TextureType;
+
+        typedef struct {
+            std::string textureKey;
+            TextureType textureType;
+            SDL_Texture* sdlTexture;
+        } Texture;
+
         // constructors
         SdlTextureManager();
 
@@ -26,7 +38,13 @@ namespace BattleRoom {
          * \para textureKey Key to texture (filepath relative to resource directory)
          * \return Pointer to the texture
          */
-        SDL_Texture *getTexture(std::string textureKey);
+        Texture getTextureForDrawing(std::string textureKey);
+
+        void unlockTexture(Texture& texture);
+
+        void paintOnTexture(std::string textureKey, const void *buffer, int w, int h);
+
+        std::string createStreamingTexture(int w, int h);
 
         /**
          * \brief Destroys all the textures that have been loaded
@@ -41,8 +59,11 @@ namespace BattleRoom {
 
     private:
 
+        class StreamingTexture;
+
         SDL_Renderer *m_renderer; ///< Renderer used to read textures
         std::unordered_map<std::string, SDL_Texture *> m_textureMap; ///< Container of loaded textures
+        std::unordered_map<std::string, StreamingTexture *> m_streamingTextureMap; ///< Container of loaded textures
 
     }; // SdlTextureManager class
 } // BattleRoom namespace

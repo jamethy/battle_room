@@ -40,21 +40,21 @@ namespace BattleRoom {
         objects.clear();
 
         for (const auto& obj : QueryWorld::getBackgroundObjects()) {
-            objects.push_back(DrawableObject(*obj));
+            objects.emplace_back(*obj);
         }
 
         for (const auto& obj : QueryWorld::getAllGameObjects()) {
-            objects.push_back(DrawableObject(*obj));
+            objects.emplace_back(*obj);
         }
 
         if (m_selectedBackground.get()) {
-            objects.push_back(DrawableObject(*m_selectedBackground));
+            objects.emplace_back(*m_selectedBackground);
         }
         if (m_chargingGun.get()) {
-            objects.push_back(DrawableObject(*m_chargingGun));
+            objects.emplace_back(*m_chargingGun);
         }
         if (m_chargingJump.get()) {
-            objects.push_back(DrawableObject(*m_chargingJump));
+            objects.emplace_back(*m_chargingJump);
         }
 
         return objects;
@@ -81,7 +81,7 @@ namespace BattleRoom {
 
     void GameInterface::update(seconds timestep) {
         if (m_playerId.isValid()) {
-            const Player* player = (const Player*)QueryWorld::getGameObject(m_playerId);
+            const auto * player = (const Player*)QueryWorld::getGameObject(m_playerId);
             if (player) {
                 Vector3D loc = player->getLocation();
                 if (m_selectedBackground) {
@@ -144,7 +144,7 @@ namespace BattleRoom {
 
         // TODO figure out better way
         UniqueId playerClientId = UniqueId::generateInvalidId();
-        const Player* player = (const Player*)QueryWorld::getGameObject(m_playerId);
+        const auto * player = (const Player*)QueryWorld::getGameObject(m_playerId);
         if (player) {
             playerClientId = player->getClient();
         }

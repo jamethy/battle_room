@@ -73,6 +73,4 @@ namespace BattleRoom {
     CefRefPtr<CefBrowserProcessHandler> WebApp::GetBrowserProcessHandler() {
         return browserProcessHandler;
     }
-
-
 } //BattleRoom namespace

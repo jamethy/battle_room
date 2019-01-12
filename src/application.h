@@ -22,6 +22,7 @@ namespace BattleRoom {
 
             // constructor
             explicit Application(ResourceDescriptor settings);
+            ~Application();
 
             /**
              * \brief main application loop
@@ -35,6 +36,8 @@ namespace BattleRoom {
              *  - handle application messages
              */
             void runApplicationLoop();
+
+            static int initializeWeb(int argc, char **argv);
 
             // inherited
             void applySettings(ResourceDescriptor settings) override;
