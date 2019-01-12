@@ -430,7 +430,6 @@ namespace BattleRoom {
                     center.getCol() + unrotatedDelta.getCol() / 2.0
             );
 
-
             // Fill SdlDrawable
             drawable->setIsInFrame(true);
             drawable->setViewLayer(view->getLayer());
@@ -457,7 +456,6 @@ namespace BattleRoom {
 
         return UniqueDrawable(drawable);
     }
-
 
     UniqueDrawable getSdlDrawableFrom(const DrawableObject &object, ViewInterface *view) {
 

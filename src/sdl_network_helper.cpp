@@ -1,6 +1,7 @@
 #include "./sdl_network_helper.h"
+#include "Logger.h"
 
-#include <iostream>
+#include <sstream>
 
 namespace BattleRoom {
 
@@ -50,13 +51,13 @@ namespace BattleRoom {
         int bytesWritten = SDLNet_TCP_Send(socket, messageStream.getBuffer(), messageStream.getLength());
 
         if (bytesWritten == 0) {
-            std::cerr << "Wrote zero bytes in header\n";
+            Log::error("Wrote zero bytes in header");
             return 0;
         }
 
         if (bytesWritten < (int)Message::Size) {
             //freak out
-            std::cerr << "Did not send full header\n";
+            Log::error("Did not send full header");
             return -1;
         }
 
@@ -64,12 +65,12 @@ namespace BattleRoom {
             bytesWritten = SDLNet_TCP_Send(socket, body.getBuffer(), body.getLength());
 
             if (bytesWritten == 0) {
-                std::cerr << "Wrote zero bytes in body\n";
+                Log::error("Wrote zero bytes in body");
                 return 0;
             }
             if (bytesWritten < (int)body.getLength()) {
                 //freak out
-                std::cerr << "Did not send full body\n";
+                Log::error("Did not send full body");
                 return -1;
             }
         }
@@ -86,19 +87,21 @@ namespace BattleRoom {
         int bytesRead = sdlReceive(socket, messageStream, Message::Size);
 
         if (bytesRead == 0) {
-            std::cerr << "Read zero bytes in header\n";
+            Log::error("Read zero bytes in header");
             return 0;
         }
 
         if (bytesRead < (int)Message::Size) {
-            std::cerr << "Did not receive full header: " << bytesRead << "\n";
+            std::stringstream ss;
+            ss << "Did not receive full header: " << bytesRead;
+            Log::error(ss.str());
             return -1;
         }
 
         message = Message::deserialize(messageStream);
 
         if (message.getHeaderHash() != message.hash()) {
-            std::cerr << "Header hash did not meet calculations\n";
+            Log::error("Header hash did not meet calculations");
             return -1;
         }
 
@@ -107,18 +110,19 @@ namespace BattleRoom {
             bytesRead = sdlReceive(socket, dataStream, message.getDataSize());
 
             if (bytesRead == 0) {
-                std::cerr << "Read zero bytes in body\n";
+                Log::error("Read zero bytes in body");
                 return 0;
             }
 
             if (bytesRead < (int)message.getDataSize()) {
-                std::cerr << "Did not receive full body\n";
+                Log::error("Did not receive full body");
                 return -1;
             }
 
             if (message.getBodyHash() != dataStream.hash()) {
-                std::cerr << "Body hash did not meet calculations\n";
-                std::cerr << "header: " << message.getBodyHash() << " bs: " << dataStream.hash() << std::endl;
+                std::stringstream ss;
+                ss << "Body hash did not meet calculations: header: " << message.getBodyHash() << " bs: " << dataStream.hash();
+                Log::error(ss.str());
                 return -1;
             }
         }

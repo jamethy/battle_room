@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "file_utils.h"
+#include "Logger.h"
 
 #include <regex>
 #include <fstream>
@@ -84,7 +85,7 @@ namespace BattleRoom {
                 lines.push_back("\t" + line);
             }
         } else {
-            std::cerr << "Unable to open file " << fullFilePath << std::endl;
+            Log::error("Unable to open file " + fullFilePath);
         }
 
         return lines;

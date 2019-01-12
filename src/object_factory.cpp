@@ -2,6 +2,7 @@
 #include "player.h"
 #include "bullet.h"
 #include "ball.h"
+#include "Logger.h"
 
 #include <map>
 
@@ -26,11 +27,27 @@ namespace BattleRoom {
         }
     }
 
+    std::string typeToKey(const ObjectType& type) {
+        switch (type) {
+            case ObjectType::None:
+                return "None";
+            case ObjectType::Ball:
+                return "Ball";
+            case ObjectType::Wall:
+                return "Wall";
+            case ObjectType::Bullet:
+                return "Bullet";
+            case ObjectType::Player:
+                return "Player";
+        }
+    }
+
     void ObjectFactory::applySettings(ResourceDescriptor settings) {
 
         for (const ResourceDescriptor& sub : settings.getSubResources()) {
             ObjectType type = keyToType(sub.getKey());
             OBJECT_TEMPLATES.at(type) = sub;
+            Log::info("Read in object template for " + sub.getKey() + " to " + typeToKey(type));
         }
     }
 

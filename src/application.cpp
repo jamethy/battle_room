@@ -13,6 +13,7 @@
 #include "web_app.h"
 
 #include "include/internal/cef_ptr.h"
+#include "Logger.h"
 
 #include <thread>
 #include <algorithm>
@@ -112,6 +113,8 @@ namespace BattleRoom {
 
     int Application::initializeWeb(int argc, char **argv) {
 
+        Log::info("Initializing web thread handlers...");
+
         webApp = new WebApp();
 
         // This block of code is called first because CEF will call this executable
@@ -127,8 +130,10 @@ namespace BattleRoom {
         cefSettings.windowless_rendering_enabled = true;
         cefSettings.multi_threaded_message_loop = false;
         cefSettings.external_message_pump = true;
+
+        Log::info("Initializing CEF");
         if (!CefInitialize(args, cefSettings, webApp, nullptr)) {
-            std::cerr << "CEF could not initialize!\n";
+            Log::error("CEF could not initialize!");
             throw "CEF Could not initialize";
         }
     }
@@ -152,8 +157,8 @@ namespace BattleRoom {
     }
 
     template <typename T> T findIn(std::vector<T>& vec, UniqueId target) {
-        
-        auto res = std::find_if(vec.begin(), vec.end(), 
+
+        auto res = std::find_if(vec.begin(), vec.end(),
              [target](const T v) -> bool { return v->getUniqueId() == target; });
 
         return res != vec.end() ? *res : nullptr;
@@ -194,7 +199,7 @@ namespace BattleRoom {
     }
 
     void Application::addResource(ResourceDescriptor settings) {
-        
+
         if (keyMatch("Window", settings.getKey())) {
             addWindow(settings);
         } else if (keyMatch("Interface", settings.getKey())) {
@@ -206,7 +211,7 @@ namespace BattleRoom {
             }
         } else if (keyMatch("WorldUpdater", settings.getKey())) {
             m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings);
-        } 
+        }
     }
 
     void Application::modifyResource(UniqueId target, ResourceDescriptor settings) {
@@ -277,7 +282,7 @@ namespace BattleRoom {
             DisplayWindow* window = findUniqueIn(m_windows, windowId);
             if (window) {
 
-                auto interface = InterfaceFactory::createInterface(settings, 
+                auto interface = InterfaceFactory::createInterface(settings,
                         window->getWidth(), window->getHeight());
 
                 auto& vec = m_viewMap.at(windowId);
@@ -291,7 +296,7 @@ namespace BattleRoom {
 
         for (auto& windowViews : m_viewMap) {
             auto& vec = windowViews.second;
-            auto res = std::find_if(vec.begin(), vec.end(), 
+            auto res = std::find_if(vec.begin(), vec.end(),
                     [viewId](const UniqueInterface& v) -> bool { return v->getUniqueId() == viewId; });
             if (res != vec.end()) {
                 vec.erase(res);

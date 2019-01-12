@@ -11,6 +11,7 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "SDL.h"
+#include "Logger.h"
 
 #include <cmath>
 #include <string>
@@ -67,7 +68,7 @@ namespace BattleRoom {
             m_windowName = settings.getValue();
         } else {
             m_windowName = "PROVIDE WINDOW DURING CONSTRUCTION.\n";
-            std::cerr << "Must give a name during window construction.\n";
+            Log::error("Must give a name during window construction.");
         }
 
         // TODO throw exceptions instead of cerr

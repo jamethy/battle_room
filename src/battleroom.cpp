@@ -1,8 +1,8 @@
 #include "resource_descriptor.h"
 #include "file_utils.h"
 #include "application.h"
+#include "Logger.h"
 
-#include <iostream>
 #include <fstream>
 
 using namespace BattleRoom;
@@ -11,11 +11,12 @@ std::string getStartupScriptFromArgs(int argc, char **argv);
 
 int main(int argc, char **argv) {
 
-    std::cout << "Hello World!\n";
+    Log::debug("Hello World!");
 
     // if called for web rendering process, return code
     auto renderProcessCode = Application::initializeWeb(argc, argv);
     if (renderProcessCode >= 0) {
+        Log::info("Received positive web response: ", renderProcessCode);
         return renderProcessCode;
     }
 
@@ -23,6 +24,7 @@ int main(int argc, char **argv) {
     std::string settings_file = getStartupScriptFromArgs(argc, argv);
     ResourceDescriptor rd = ResourceDescriptor::readFile(settings_file);
 
+    Log::info("Instantiating the application");
     Application application(rd);
     application.runApplicationLoop();
 
@@ -70,7 +72,7 @@ std::string getStartupScriptFromArgs(int argc, char **argv) {
             }
         }
 
-        std::cout << "Startup script: " << startupScript << "\n";
+        Log::info("Startup script: " + startupScript);
         setResourcePathFromStartupScript(startupScript);
     }
 

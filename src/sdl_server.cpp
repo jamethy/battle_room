@@ -1,11 +1,11 @@
 
+#include <iostream>
 #include "./sdl_server.h"
 #include "./sdl_network_helper.h"
 
 // temp
 #include "query_world.h"
-
-#include <iostream>
+#include "Logger.h"
 
 namespace BattleRoom {
 
@@ -14,7 +14,7 @@ namespace BattleRoom {
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(100);
 
-        std::cout << "Server listening\n";
+        Log::info("Server listening");
         server.m_keepReceiving = true;
         while (server.m_keepReceiving) {
 
@@ -31,7 +31,7 @@ namespace BattleRoom {
                 TCPsocket socket = SDLNet_TCP_Accept(server.m_serverSocket);
                 if (socket) {
 
-                    std::cout << "Adding new Client\n";
+                    Log::info("Adding new Client");
                     UniqueId newClientId = UniqueId::generateNewNetworkId();
                     server.m_writingLock.lock();
                     server.m_clientSockets.emplace(newClientId, socket);
@@ -61,7 +61,7 @@ namespace BattleRoom {
                     int res = sdlReceiveMessage(message, messageStream, dataStream, clientSocket);
                     if (res <= 0) {
 
-                        std::cout << "Disconnecting client\n";
+                        Log::info("Disconnecting client");
                         // client probabs disconnect
                         UniqueId clientId = entry.first;
                         server.m_writingLock.lock();

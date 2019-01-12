@@ -1,8 +1,9 @@
 #include "binary_stream.h"
+#include "Logger.h"
 
 #include <cstring>
-#include <iostream>
 #include <stdexcept>
+#include <sstream>
 
 namespace BattleRoom {
 
@@ -25,7 +26,9 @@ namespace BattleRoom {
 
         if (length > m_bufferSize) {
 
-            std::cout << "Increasing buffer size from " << m_bufferSize << " to " << length << std::endl;
+            std::stringstream ss;
+            ss << "Increasing buffer size from " << m_bufferSize << " to " << length;
+            Log::debug(ss.str());
 
             char* old = m_buffer;
             m_bufferSize = length;
@@ -132,7 +135,9 @@ namespace BattleRoom {
     void BinaryStream::incrementWriteLoc(size_t by) {
         if (m_loc + by > m_bufferSize) {
 
-            std::cout << "Doubling buffer size from " << m_bufferSize << " to " << 2*m_bufferSize << std::endl;
+            std::stringstream ss;
+            ss << "Doubling buffer size from " << m_bufferSize << " to " << 2*m_bufferSize;
+            Log::debug(ss.str());
 
             char* old = m_buffer;
             m_bufferSize = 2*m_bufferSize;

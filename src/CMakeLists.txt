@@ -161,7 +161,10 @@ add_executable(battleroom
         world_updater_factory.h
         z_max_camera.cpp
         z_max_camera.h
-        WebBrowserClient.cpp WebBrowserClient.h WebRenderer.cpp WebRenderer.h DynamicTexture.cpp DynamicTexture.h)
+        WebBrowserClient.cpp
+        WebBrowserClient.h
+        WebRenderer.cpp
+        WebRenderer.h Logger.cpp Logger.h)
 
 # CEF properties
 include_directories(${CEF_INCLUDE_PATH})
