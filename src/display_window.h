@@ -8,6 +8,7 @@
 #include "inputs.h"
 #include "resource.h"
 #include "view_interface.h"
+#include "TextureManager.h"
 
 #include <vector>
 #include <memory>
@@ -71,6 +72,8 @@ namespace BattleRoom {
          * Gets the height in pixels of the window
          */
         virtual int getHeight() const = 0;
+        
+        virtual TextureManager* getTextureManager() = 0;
 
     }; // DisplayWindow class
 

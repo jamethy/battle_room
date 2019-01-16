@@ -1,9 +1,8 @@
 #include "menu_interface.h"
-#include "pull_down_menu.h"
-#include "button.h"
 
 #include "input_gatherer.h"
 #include "application_message_receiver.h"
+#include "Logger.h"
 
 using std::vector;
 using InputKey::Key;
@@ -16,69 +15,52 @@ namespace BattleRoom {
 
     void MenuInterface::applySettings(ResourceDescriptor settings) {
 
-        for (ResourceDescriptor &objDesc : settings.getSubResources("Menu")) {
-
-            Menu* m = nullptr;
-
-            if (keyMatch("PullDown", objDesc.getValue())) {
-                m = new PullDownMenu(getUniqueId());
-            } else if (keyMatch("Button", objDesc.getValue())) {
-                m = new Button(getUniqueId());
-            }
-
-            if (m) {
-                m->applySettings(objDesc);
-                m_menus.push_back(UniqueMenu(m));
-            }
-        }
-
+        //m_drawableMenu.applySettings(settings);
         View::applySettings(settings);
     }
 
 // constructors
 
-    MenuInterface::MenuInterface(ResourceDescriptor settings, int windowWidth, int windowHeight) :
-        View(settings, windowWidth, windowHeight)
-    {
-        m_menus.clear();
+    MenuInterface::MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth,
+                                 int windowHeight) :
+            View(settings, windowWidth, windowHeight) {
+        Log::debug("Creating menu interface");
+        m_webRenderer = new WebRenderer(textureManager, windowWidth, windowHeight);
+        m_webBrowserClient = new WebBrowserClient(m_webRenderer);
+
+        // some browser settings
+        CefWindowInfo window_info;
+        window_info.SetAsWindowless(kNullWindowHandle);
+
+        CefBrowserSettings browserSettings;
+        browserSettings.windowless_frame_rate = 60;
+        browserSettings.background_color = 0; // allows for transparency
+
+        // Create the browser object to interpret the HTML
+        std::string htmlFile = "file://" + std::string(SDL_GetBasePath()) + "sdl_cef_html.html";
+        m_webBrowser = CefBrowserHost::CreateBrowserSync(window_info,
+                                                         m_webBrowserClient,
+                                                         htmlFile,
+                                                         browserSettings,
+                                                         nullptr);
         applySettings(settings);
     }
 
 // other functions
 
     vector<DrawableObject> MenuInterface::getDrawableObjects() {
-        vector<DrawableObject> objects;
-        objects.clear();
-        return objects;
+        return {};
     }
 
     vector<DrawableText> MenuInterface::getDrawableTexts() {
-        vector<DrawableText> texts;
-        texts.clear();
-        for (auto& menu : m_menus) {
-            vector<DrawableText> menuDrawables = menu->getDrawableTexts();
-            texts.insert(texts.end(), menuDrawables.begin(), menuDrawables.end());
-        }
-
-        return texts;
+        return {};
     }
 
     vector<DrawableMenu> MenuInterface::getDrawableMenus() {
-        vector<DrawableMenu> drawables;
-        drawables.clear();
-
-        for (auto& menu : m_menus) {
-            vector<DrawableMenu> menuDrawables = menu->getDrawableMenus();
-            drawables.insert(drawables.end(), menuDrawables.begin(), menuDrawables.end());
-        }
-
-        return drawables;
+        return {m_drawableMenu};
     }
 
     void MenuInterface::update(seconds timestep) {
-        for (auto& menu : m_menus) {
-            menu->updateAnimation(timestep);
-        }
     }
 
     Inputs MenuInterface::handleInputs(Inputs inputs) {
@@ -99,13 +81,7 @@ namespace BattleRoom {
             if (input.containsView(getUniqueId())) {
 
                 RelPixel point = input.getViewRelIntersection(getUniqueId());
-
-                for (auto& menu : m_menus) {
-                    if (menu->handleInput(input, point)) {
-                        inputHandled = true;
-                    }
-                }
-                //if (input.isKeyDown(Key::LeftClick) || input.isKeyDown(Key::DoubleClick)) {
+                //browser send key events, etc
             }
 
             if (!inputHandled) {
@@ -114,6 +90,10 @@ namespace BattleRoom {
         }
 
         return remainingInputs;
+    }
+
+    void MenuInterface::onResize() {
+        m_webBrowser->GetHost()->WasResized();
     }
 
 } // BattleRoom namespace

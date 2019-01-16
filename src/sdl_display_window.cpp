@@ -263,9 +263,6 @@ namespace BattleRoom {
         }
         for (const DrawableMenu &menu : view->getDrawableMenus()) {
             drawables.push_back(getSdlDrawableFrom(menu, view));
-            if (menu.getText().length() > 0) {
-                drawables.push_back(getSdlDrawableTextFrom(menu, view));
-            }
         }
     }
 
@@ -359,5 +356,9 @@ namespace BattleRoom {
 
     int SdlDisplayWindow::getHeight() const {
         return m_windowHeight;
+    }
+
+    TextureManager *SdlDisplayWindow::getTextureManager() {
+        return &m_sdlTextureManager;
     }
 } // BattleRoom namespace

@@ -33,26 +33,26 @@ namespace BattleRoom {
             SDL_Rect *sourceRect = &m_sourceRect;
             SDL_Rect destinationRect = getDestinationRect();
 
-            SdlTextureManager::Texture texture = textureManager.getTextureForDrawing(m_imageFile);
+            TextureContainer* texture = textureManager.getTexture(m_imageFile);
 
-            if (texture.textureType == SdlTextureManager::UnknownTextureType) {
+            if (texture->getSdlTexture() == nullptr) {
                 // get missing animation texture
                 Animation &missing_animation = AnimationHandler::getAnimation(MISSING_ANIMATION);
-                texture = textureManager.getTextureForDrawing(missing_animation.getImageFile());
+                texture = textureManager.getTexture(missing_animation.getImageFile());
                 sourceRect = NULL;
             }
 
             // Draw the image on the screen
-            if (texture.sdlTexture) {
-                SDL_RenderCopyEx(textureManager.getRenderer(), texture.sdlTexture,
+            if (texture->getSdlTexture()) {
+                texture->drawingLock();
+                SDL_RenderCopyEx(textureManager.getRenderer(), texture->getSdlTexture(),
                                  sourceRect, &destinationRect,
                                  toDegrees(getAngle()),
                                  NULL, getFlip()
                 );
+                texture->drawingUnlock();
+                // TODO try/catch/finally?
             }
-
-            textureManager.unlockTexture(texture);
         }
     }
-
 } // namespace BattleRoom

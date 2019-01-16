@@ -3,30 +3,21 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
+#include "TextureContainer.h"
+#include "TextureManager.h"
 
 #include <string>
 #include <unordered_map>
+#include <mutex>
 
 namespace BattleRoom {
 
 /**
  * Creates and destroys SDL_Textures
  */
-    class SdlTextureManager {
+    class SdlTextureManager : public TextureManager {
 
     public:
-
-        typedef enum {
-            UnknownTextureType,
-            StaticTextureType,
-            StreamingTextureType
-        } TextureType;
-
-        typedef struct {
-            std::string textureKey;
-            TextureType textureType;
-            SDL_Texture* sdlTexture;
-        } Texture;
 
         // constructors
         SdlTextureManager();
@@ -38,13 +29,14 @@ namespace BattleRoom {
          * \para textureKey Key to texture (filepath relative to resource directory)
          * \return Pointer to the texture
          */
-        Texture getTextureForDrawing(std::string textureKey);
+        TextureContainer *getTexture(std::string textureKey);
 
-        void unlockTexture(Texture& texture);
-
-        void paintOnTexture(std::string textureKey, const void *buffer, int w, int h);
-
-        std::string createStreamingTexture(int w, int h);
+        // TextureManager functions
+        std::string createTexture(int width, int height);
+        void deleteTexture(const std::string& textureKey);
+        void getTextureDimensions(const std::string &textureKey, int &width, int &height) override;
+        void resizeTexture(const std::string &textureKey, int width, int height) override;
+        void writeBufferToTexture(const std::string &textureKey, const void *buffer, int width, int height) override;
 
         /**
          * \brief Destroys all the textures that have been loaded
@@ -59,11 +51,10 @@ namespace BattleRoom {
 
     private:
 
-        class StreamingTexture;
+        void resize(TextureContainer* container, int width, int height);
 
         SDL_Renderer *m_renderer; ///< Renderer used to read textures
-        std::unordered_map<std::string, SDL_Texture *> m_textureMap; ///< Container of loaded textures
-        std::unordered_map<std::string, StreamingTexture *> m_streamingTextureMap; ///< Container of loaded textures
+        std::unordered_map<std::string, TextureContainer *> m_textureMap; ///< Container of loaded textures
 
     }; // SdlTextureManager class
 } // BattleRoom namespace

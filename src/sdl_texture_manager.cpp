@@ -2,6 +2,9 @@
 #include "sdl_texture_manager.h"
 
 #include "file_utils.h"
+#include "WebRenderer.h"
+#include "WebBrowserClient.h"
+#include "Logger.h"
 
 #include <iostream>
 #include <mutex>
@@ -10,146 +13,34 @@ using std::string;
 
 namespace BattleRoom {
 
-    class SdlTextureManager::StreamingTexture {
-    public:
-
-        StreamingTexture(int width, int height, SDL_Renderer* renderer) {
-            resize(width, height, renderer);
-        }
-
-        ~StreamingTexture() {
-            m_drawingMutex.lock();
-            m_paintingMutex.lock();
-            if (m_texture) {
-                SDL_DestroyTexture(m_texture);
-            }
-        }
-
-        SDL_Texture *getTexture() {
-            return m_texture;
-        }
-
-        void resize(int w, int h, SDL_Renderer *renderer) {
-
-            m_paintingMutex.lock();
-            drawingLock();
-            if (m_texture) {
-                SDL_DestroyTexture(m_texture);
-            }
-
-            m_width = w;
-            m_height = h;
-
-            m_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
-            SDL_SetTextureBlendMode(m_texture, SDL_BLENDMODE_BLEND);
-
-            m_paintingMutex.unlock();
-            drawingUnlock();
-        }
-
-        void paint(const void *buffer, int w, int h, SDL_Renderer* renderer) {
-
-            if (w != m_width || h != m_height) {
-                resize(w, h, renderer);
-            }
-
-            unsigned char *texture_data = nullptr;
-            int texture_pitch = 0;
-            size_t bufferSize = static_cast<size_t>(w) * static_cast<size_t>(h) * 4;
-
-            m_paintingMutex.lock();
-            SDL_LockTexture(m_texture, nullptr, (void **) &texture_data, &texture_pitch);
-            memcpy(texture_data, buffer, bufferSize);
-            SDL_UnlockTexture(m_texture);
-            m_paintingMutex.unlock();
-        }
-
-        void drawingLock() {
-            m_drawingMutex.lock();
-        }
-
-        void drawingUnlock() {
-            m_drawingMutex.unlock();
-        }
-
-        static std::string generateKey() {
-            static int counter = 0;
-            return std::to_string(++counter);
-        }
-
-    private:
-        int m_width;
-        int m_height;
-        SDL_Texture *m_texture;
-        std::mutex m_paintingMutex;
-        std::mutex m_drawingMutex;
-    };
-
 // constructors
 
-    SdlTextureManager::SdlTextureManager() {}
+    SdlTextureManager::SdlTextureManager() = default;
 
     SdlTextureManager::~SdlTextureManager() {
         clear(); // attempt to clear but should already be clear
     }
 
-    SdlTextureManager::Texture SdlTextureManager::getTextureForDrawing(string textureKey) {
+    TextureContainer *SdlTextureManager::getTexture(string textureKey) {
 
-        Texture texture;
-        texture.textureKey = textureKey;
-
-        if (m_streamingTextureMap.count(textureKey) > 0) {
-            StreamingTexture *streamingTexture = m_streamingTextureMap[textureKey];
-            streamingTexture->drawingLock();
-
-            texture.sdlTexture = streamingTexture->getTexture();
-            texture.textureType = StreamingTextureType;
-
-        } else {
-
-            // try to load static if not found
-            if (m_textureMap.count(textureKey) == 0) {
-                string texture_path = getResourcePath() + "/animations/" + textureKey;
-                m_textureMap[textureKey] = IMG_LoadTexture(m_renderer, texture_path.c_str());
-            }
-
-            texture.sdlTexture = m_textureMap[textureKey];
-            texture.textureType = texture.sdlTexture != nullptr ? StaticTextureType : UnknownTextureType;
+        // try to load static if not found
+        if (m_textureMap.count(textureKey) == 0) {
+            string texture_path = getResourcePath() + "/animations/" + textureKey;
+            m_textureMap[textureKey] = new TextureContainer(IMG_LoadTexture(m_renderer, texture_path.c_str()));
         }
 
-        return texture;
-    }
-
-    void SdlTextureManager::unlockTexture(SdlTextureManager::Texture &texture) {
-        if (texture.textureType == StreamingTextureType) {
-            StreamingTexture *streamingTexture = m_streamingTextureMap[texture.textureKey];
-            streamingTexture->drawingUnlock();
-        }
-    }
-
-    void SdlTextureManager::paintOnTexture(std::string textureKey, const void *buffer, int w, int h) {
-        if (m_streamingTextureMap.count(textureKey) > 0) {
-            m_streamingTextureMap[textureKey]->paint(buffer, w, h, m_renderer);
-        }
-    }
-
-    std::string SdlTextureManager::createStreamingTexture(int w, int h) {
-        std::string key = SdlTextureManager::StreamingTexture::generateKey();
-        m_streamingTextureMap[key] = new SdlTextureManager::StreamingTexture(w, h, m_renderer);
-        return key;
+        return m_textureMap.at(textureKey);
     }
 
     void SdlTextureManager::clear() {
 
         for (auto &texture : m_textureMap) {
-            SDL_DestroyTexture(texture.second);
+            SDL_Texture* sdlTexture = texture.second->getSdlTexture();
+            if (sdlTexture) {
+                SDL_DestroyTexture(sdlTexture);
+            }
         }
         m_textureMap.clear();
-
-        for (auto& texture : m_streamingTextureMap) {
-            delete texture.second;
-        }
-        m_streamingTextureMap.clear();
     }
 
 // getters and setters
@@ -160,5 +51,99 @@ namespace BattleRoom {
 
     SDL_Renderer *SdlTextureManager::getRenderer() {
         return m_renderer;
+    }
+
+    void SdlTextureManager::getTextureDimensions(const std::string &textureKey, int &width, int &height) {
+        if (m_textureMap.count(textureKey) > 0) {
+            const auto &texture = m_textureMap[textureKey];
+            width = texture->getWidth();
+            height = texture->getHeight();
+        }
+    }
+
+    void SdlTextureManager::resizeTexture(const std::string &textureKey, int width, int height) {
+        if (m_textureMap.count(textureKey) == 0) {
+            Log::error("No texture found to resize ", textureKey);
+            return;
+        }
+        resize(m_textureMap[textureKey], width, height);
+    }
+
+    void SdlTextureManager::writeBufferToTexture(const std::string &textureKey, const void *buffer, int w, int h) {
+        if (m_textureMap.count(textureKey) == 0) {
+            Log::error("No texture found to write to for key ", textureKey);
+            return;
+        }
+
+        TextureContainer* container = m_textureMap[textureKey];
+
+        if (w != container->getWidth() || h != container->getHeight()) {
+            resize(container, w, h);
+        }
+
+        unsigned char *texture_data = nullptr;
+        int texture_pitch = 0;
+        size_t bufferSize = static_cast<size_t>(w) * static_cast<size_t>(h) * 4;
+
+        container->paintingLock();
+        SDL_LockTexture(container->getSdlTexture(), nullptr, (void **) &texture_data, &texture_pitch);
+        memcpy(texture_data, buffer, bufferSize);
+        SDL_UnlockTexture(container->getSdlTexture());
+        container->paintingUnlock();
+    }
+
+    SDL_Texture* createSDLTexture(SDL_Renderer* renderer, int width, int height) {
+        auto texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+        return texture;
+    }
+
+    void SdlTextureManager::resize(TextureContainer *container, int width, int height) {
+
+        if (width <= 0 || height <= 0) {
+            Log::warn("Width, ", width, ", and height, ", height, ", are bad for texture resize.");
+        }
+
+        container->drawingLock();
+        container->paintingLock();
+
+        SDL_Texture* texture = container->getSdlTexture();
+        if (texture) {
+            SDL_DestroyTexture(texture);
+        }
+
+        container->setWidth(width);
+        container->setHeight(height);
+
+        texture = createSDLTexture(m_renderer, width, height);
+        container->setSdlTexture(texture);
+
+        container->drawingUnlock();
+        container->paintingUnlock();
+    }
+
+    std::string SdlTextureManager::createTexture(int width, int height) {
+        if (width <= 0 || height <= 0) {
+            Log::warn("Width, ", width, ", and height, ", height, ", are bad for new texture");
+        }
+        auto container = new TextureContainer(createSDLTexture(m_renderer, width, height));
+        container->setWidth(width);
+        container->setHeight(height);
+        std::string textureKey = TextureContainer::generateKey();
+        m_textureMap[textureKey] = container;
+        return textureKey;
+    }
+
+    void SdlTextureManager::deleteTexture(const std::string &textureKey) {
+        if (m_textureMap.count(textureKey) == 0) {
+            Log::error("No texture found to delete for key ", textureKey);
+            return;
+        }
+
+        SDL_Texture* sdlTexture = m_textureMap[textureKey]->getSdlTexture();
+        if (sdlTexture) {
+            SDL_DestroyTexture(sdlTexture);
+        }
+        m_textureMap.erase(textureKey);
     }
 } // BattleRoom namespace

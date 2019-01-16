@@ -136,6 +136,8 @@ namespace BattleRoom {
             Log::error("CEF could not initialize!");
             throw "CEF Could not initialize";
         }
+
+        return retCode;
     }
 
     void Application::applySettings(ResourceDescriptor settings) {
@@ -282,8 +284,7 @@ namespace BattleRoom {
             DisplayWindow* window = findUniqueIn(m_windows, windowId);
             if (window) {
 
-                auto interface = InterfaceFactory::createInterface(settings,
-                        window->getWidth(), window->getHeight());
+                auto interface = InterfaceFactory::createInterface(settings, window);
 
                 auto& vec = m_viewMap.at(windowId);
                 auto itr = getViewPos(vec, interface->getLayer());

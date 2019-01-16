@@ -488,18 +488,19 @@ namespace BattleRoom {
 
     UniqueDrawable getSdlDrawableFrom(const DrawableMenu &menu, ViewInterface *view) {
 
-        SdlDrawableImage *drawable = new SdlDrawableImage();
+        auto drawable = new SdlDrawableImage();
 
-        Animation &animation = menu.getAnimation();
-        const Frame &frame = animation.getFrame(menu.getAnimationState());
 
-        px viewHeight = view->getBottomRight().getRowInt() - view->getTopLeft().getRowInt();
-        px viewWidth = view->getBottomRight().getColInt() - view->getTopLeft().getColInt();
-
-        px topLeftCol = view->getTopLeft().getCol() + menu.getTopLeft().getCol() * viewWidth;
-        px topLeftRow = view->getTopLeft().getRow() + menu.getTopLeft().getRow() * viewHeight;
-        px botRightCol = view->getTopLeft().getCol() + menu.getBottomRight().getCol() * viewWidth;
-        px botRightRow = view->getTopLeft().getRow() + menu.getBottomRight().getRow() * viewHeight;
+        px topLeftCol = view->getTopLeft().getCol();
+        px topLeftRow = view->getTopLeft().getRow();
+        px botRightCol = view->getTopLeft().getCol();
+        px botRightRow = view->getTopLeft().getRow();
+//        px viewHeight = view->getBottomRight().getRowInt() - view->getTopLeft().getRowInt();
+//        px viewWidth = view->getBottomRight().getColInt() - view->getTopLeft().getColInt();
+        //px topLeftCol = view->getTopLeft().getCol() + menu.getTopLeft().getCol() * viewWidth;
+        //px topLeftRow = view->getTopLeft().getRow() + menu.getTopLeft().getRow() * viewHeight;
+        //px botRightCol = view->getTopLeft().getCol() + menu.getBottomRight().getCol() * viewWidth;
+        //px botRightRow = view->getTopLeft().getRow() + menu.getBottomRight().getRow() * viewHeight;
 
         Pixel topLeft(topLeftRow, topLeftCol);
         Pixel botRight(botRightRow, botRightCol);
@@ -512,56 +513,11 @@ namespace BattleRoom {
         drawable->setDestinationRect(rectFrom(topLeft, botRight));
 
         // Fill SdlDrawableImage
-        drawable->setSourceRect(rectFrom(frame.getTopLeft(), frame.getBottomRight()));
-        drawable->setImageFile(animation.getImageFile());
-
-        if (keyMatch(frame.getFlip(), "horizontal")) {
-            drawable->setFlip(SDL_FLIP_HORIZONTAL);
-        } else if (keyMatch(frame.getFlip(), "vertical")) {
-            drawable->setFlip(SDL_FLIP_VERTICAL);
-        } else if (keyMatch(frame.getFlip(), "both")) {
-            drawable->setFlip((SDL_RendererFlip) (SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL));
-        }
+        drawable->setSourceRect(rectFrom(topLeft, botRight));
+        drawable->setImageFile(menu.getTextureKey());
 
         return UniqueDrawable(drawable);
 
     }
-
-    const double BUFF = 0.25;
-
-    UniqueDrawable getSdlDrawableTextFrom(const DrawableMenu &menu, ViewInterface *view) {
-        SdlDrawableText *drawable = new SdlDrawableText();
-
-        px viewHeight = view->getBottomRight().getRowInt() - view->getTopLeft().getRowInt();
-        px viewWidth = view->getBottomRight().getColInt() - view->getTopLeft().getColInt();
-
-        px menuHeight = viewHeight * (menu.getBottomRight().getRow() - menu.getTopLeft().getRow());
-        px menuWidth = viewWidth * (menu.getBottomRight().getCol() - menu.getTopLeft().getCol());
-
-        px topLeftCol = (view->getTopLeft().getCol() + menu.getTopLeft().getCol() * viewWidth) + BUFF * menuWidth;
-        px topLeftRow = (view->getTopLeft().getRow() + menu.getTopLeft().getRow() * viewHeight) + BUFF * menuHeight;
-        px botRightCol = (view->getTopLeft().getCol() + menu.getBottomRight().getCol() * viewWidth) - BUFF * menuWidth;
-        px botRightRow =
-                (view->getTopLeft().getRow() + menu.getBottomRight().getRow() * viewHeight) - BUFF * menuHeight;
-
-        Pixel topLeft(topLeftRow, topLeftCol);
-        Pixel botRight(botRightRow, botRightCol);
-
-        drawable->setIsInFrame(true);
-        drawable->setViewLayer(view->getLayer());
-        drawable->setZPosition(menu.getZLayer() + 0.1);
-        drawable->setAngle(0);
-        drawable->setDestinationRect(rectFrom(topLeft, botRight));
-
-        // Fill SdlDrawableImage
-        drawable->setColor(toSdlColor(Color()));
-        drawable->setFont("default.ttf");
-        drawable->setFontSize(50); // TODO calculate font size
-        drawable->setText(menu.getText());
-
-        return UniqueDrawable(drawable);
-
-    }
-
 } // BattleRoom namespace
 

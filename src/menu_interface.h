@@ -1,8 +1,11 @@
 #ifndef MENU_INTERFACE_H
 #define MENU_INTERFACE_H
 
+#include <third_party/cef/cef_binary_3.3396.1777.g636f29b_linux64/include/internal/cef_ptr.h>
 #include "view.h"
 #include "menu.h"
+#include "WebBrowserClient.h"
+#include "WebRenderer.h"
 
 namespace BattleRoom {
 
@@ -11,22 +14,32 @@ namespace BattleRoom {
      */
     class MenuInterface : public View {
 
-        public:
+    public:
 
-            // constructor
-            MenuInterface(ResourceDescriptor settings, int windowWidth, int windowHeight);
+        // constructor
+        MenuInterface(ResourceDescriptor settings, TextureManager* textureManager, int windowWidth, int windowHeight);
 
-            // inherited
-            std::vector<DrawableObject> getDrawableObjects() override;
-            std::vector<DrawableText> getDrawableTexts() override;
-            std::vector<DrawableMenu> getDrawableMenus() override;
-            void update(seconds timestep) override;
-            Inputs handleInputs(Inputs inputs) override;
-            void applySettings(ResourceDescriptor settings) override;
+        void onResize();
 
-        private:
+        // inherited
+        std::vector<DrawableObject> getDrawableObjects() override;
 
-            std::vector<UniqueMenu> m_menus; ///< menus to draw
+        std::vector<DrawableText> getDrawableTexts() override;
+
+        std::vector<DrawableMenu> getDrawableMenus() override;
+
+        void update(seconds timestep) override;
+
+        Inputs handleInputs(Inputs inputs) override;
+
+        void applySettings(ResourceDescriptor settings) override;
+
+    private:
+
+        CefRefPtr<WebRenderer> m_webRenderer;
+        CefRefPtr<WebBrowserClient> m_webBrowserClient;
+        CefRefPtr<CefBrowser> m_webBrowser;
+        DrawableMenu m_drawableMenu;
 
     }; // MenuInterface class
 } // BattleRoom namespace

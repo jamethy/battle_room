@@ -33,6 +33,7 @@ namespace BattleRoom {
         std::string getName() const override;
         int getWidth() const override;
         int getHeight() const override;
+        TextureManager* getTextureManager() override;
 
     private:
 

@@ -2,6 +2,7 @@
 #define INTERFACE_FACTORY_H
 
 #include "view_interface.h"
+#include "display_window.h"
 
 namespace BattleRoom {
 
@@ -19,7 +20,7 @@ namespace BattleRoom {
          * \param windowHeight Height of window view is being created for
          * \return Unique pointer to view interface
          */
-        static UniqueInterface createInterface(ResourceDescriptor settings, int windowWidth, int windowHeight);
+        static UniqueInterface createInterface(ResourceDescriptor settings, DisplayWindow* displayWindow);
 
     }; // InterfaceFactory class
 } // BattleRoom namespace

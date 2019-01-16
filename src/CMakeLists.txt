@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
+
+set(BATTLEROOM_TARGET "battleroom")
+
 # MAIN PROGRAM CLIENT
 add_executable(battleroom
         alter_world.cpp
@@ -27,8 +30,6 @@ add_executable(battleroom
         box_boundary.h
         bullet.cpp
         bullet.h
-        button.cpp
-        button.h
         camera.cpp
         camera.h
         camera_factory.cpp
@@ -96,8 +97,6 @@ add_executable(battleroom
         player.h
         projection1d.cpp
         projection1d.h
-        pull_down_menu.cpp
-        pull_down_menu.h
         pyramid_camera.cpp
         pyramid_camera.h
         quaternion.cpp
@@ -164,7 +163,12 @@ add_executable(battleroom
         WebBrowserClient.cpp
         WebBrowserClient.h
         WebRenderer.cpp
-        WebRenderer.h Logger.cpp Logger.h)
+        WebRenderer.h
+        Logger.cpp
+        Logger.h
+        TextureContainer.cpp
+        TextureContainer.h
+        TextureManager.h)
 
 # CEF properties
 include_directories(${CEF_INCLUDE_PATH})
@@ -193,9 +197,27 @@ set(BATTLEROOM_RESOURCE_FILES
         stupid_background.png
         )
 
+if(OS_LINUX)
+    # Executable target.
+#    SET_EXECUTABLE_TARGET_PROPERTIES(${BATTLEROOM_TARGET})
+
+    # Set rpath so that libraries can be placed next to the executable.
+    set_target_properties(${BATTLEROOM_TARGET} PROPERTIES INSTALL_RPATH "$ORIGIN")
+    set_target_properties(${BATTLEROOM_TARGET} PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
+    set_target_properties(${BATTLEROOM_TARGET} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
+
+    # Copy binary and resource files to the target output directory.
+    COPY_FILES("${BATTLEROOM_TARGET}" "${CEF_BINARY_FILES}" "${CEF_BINARY_DIR}" "${CEF_TARGET_OUT_DIR}")
+    COPY_FILES("${BATTLEROOM_TARGET}" "${CEF_RESOURCE_FILES}" "${CEF_RESOURCE_DIR}" "${CEF_TARGET_OUT_DIR}")
+#    COPY_FILES("${BATTLEROOM_TARGET}" "${BATTLEROOM_RESOURCE_FILES}" "${CMAKE_CURRENT_SOURCE_DIR}" "${CEF_TARGET_OUT_DIR}")
+
+    # Set SUID permissions on the chrome-sandbox target.
+    SET_LINUX_SUID_PERMISSIONS("${BATTLEROOM_TARGET}" "${CEF_TARGET_OUT_DIR}/chrome-sandbox")
+endif()
+
 add_custom_command(
         TARGET battleroom
         POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/res" "${CMAKE_CURRENT_BINARY_DIR}/res"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/res" "${CEF_TARGET_OUT_DIR}/res"
         VERBATIM
 )

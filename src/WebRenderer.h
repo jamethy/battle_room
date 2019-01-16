@@ -7,6 +7,8 @@
 
 #include "SDL.h"
 #include "include/cef_render_handler.h"
+#include "sdl_texture_manager.h"
+#include "TextureManager.h"
 
 #include <mutex>
 
@@ -22,7 +24,7 @@ namespace BattleRoom {
     class WebRenderer : public CefRenderHandler {
     public:
 
-        WebRenderer(SDL_Renderer *renderer, int initialWidth, int initialHeight);
+        WebRenderer(TextureManager* textureManager, int initialWidth, int initialHeight);
 
         ~WebRenderer() override;
 
@@ -35,12 +37,6 @@ namespace BattleRoom {
          */
         void resize(int width, int height);
 
-        /**
-         * Copies the texture to the SDL Renderer.
-         *
-         * If you do not want it over the full screen, then view rect arguments should be added
-         */
-        void render();
 
         // CefRenderHandler functions
         bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect) override;
@@ -50,12 +46,8 @@ namespace BattleRoom {
 
     private:
 
-        int width;
-        int height;
-        SDL_Renderer *renderer = nullptr;
-        SDL_Texture *texture = nullptr;
-        std::mutex paintingMutex;
-        std::mutex drawingMutex;
+        std::string m_textureKey;
+        TextureManager* m_textureManager;
 
     IMPLEMENT_REFCOUNTING(WebRenderer);
     };

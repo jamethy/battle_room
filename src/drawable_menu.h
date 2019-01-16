@@ -17,33 +17,22 @@ namespace BattleRoom {
 
         // constructor
         DrawableMenu();
-        ~DrawableMenu() {}
+        ~DrawableMenu();
 
         // getters and setters
-
-        Animation &getAnimation() const;
-
-        seconds getAnimationState() const;
+        std::string getTextureKey() const;
 
         RelPixel getTopLeft() const;
 
         RelPixel getBottomRight() const;
 
-        std::string getText() const;
-
         double getZLayer() const;
 
-        void updateAnimation(seconds timestep);
-
-        void setAnimation(Animation &animation);
-
-        void setAnimationState(seconds animationState);
+        void setTextureKey(const std::string& textureKey);
 
         void setTopLeft(RelPixel topLeft);
 
         void setBottomRight(RelPixel bottomRight);
-
-        void setText(std::string text);
 
         void setZLayer(double zLayer);
 
@@ -52,12 +41,10 @@ namespace BattleRoom {
 
     private:
 
-        Animation *m_currentAnimation; ///< Animation object is on
-        seconds m_animationState; ///< Seconds into animation
+        std::string m_textureKey;
         double m_zLayer;
         RelPixel m_topLeft;
         RelPixel m_bottomRight;
-        std::string m_text;
 
     }; // DrawableMenu class
 } // BattleRoom namespace
