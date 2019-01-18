@@ -3,12 +3,16 @@
 //
 
 #include "WebRenderer.h"
+#include "Logger.h"
 
 #include <iostream>
 
 namespace BattleRoom {
 
-    WebRenderer::WebRenderer(TextureManager* textureManager, int w, int h) : m_textureManager(textureManager) {
+    WebRenderer::WebRenderer(TextureManager *textureManager, int w, int h) :
+            m_desiredWidth(w),
+            m_desiredHeight(h),
+            m_textureManager(textureManager) {
         m_textureKey = m_textureManager->createTexture(w, h);
     }
 
@@ -18,10 +22,8 @@ namespace BattleRoom {
 
     bool WebRenderer::GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect) {
         (void) browser; // unused
-
-        int width = 0, height = 0;
-        m_textureManager->getTextureDimensions(m_textureKey, width, height);
-        rect = CefRect(0, 0, width, height);
+        rect.width = m_desiredWidth;
+        rect.height = m_desiredHeight;
         return true;
     }
 
@@ -35,6 +37,11 @@ namespace BattleRoom {
     }
 
     void WebRenderer::resize(int w, int h) {
-        m_textureManager->resizeTexture(m_textureKey, w, h);
+        m_desiredWidth = w;
+        m_desiredHeight = h;
+    }
+
+    std::string WebRenderer::getTextureKey() {
+        return m_textureKey;
     }
 } // BattRoom namespace

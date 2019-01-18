@@ -2,10 +2,5 @@ Interface: Menu
     Menu: PullDown
         OnClick: menus/popup
     Window: mainWindow
-    Position: Relative
-        ScreenAnchor: TopLeft
-        Anchor: 0, 100
-        Scale: 50
-        Ratio: 1
 
 

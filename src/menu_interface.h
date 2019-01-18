@@ -17,11 +17,11 @@ namespace BattleRoom {
     public:
 
         // constructor
-        MenuInterface(ResourceDescriptor settings, TextureManager* textureManager, int windowWidth, int windowHeight);
-
-        void onResize();
+        MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth, int windowHeight);
 
         // inherited
+        void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
+
         std::vector<DrawableObject> getDrawableObjects() override;
 
         std::vector<DrawableText> getDrawableTexts() override;

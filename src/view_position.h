@@ -22,6 +22,9 @@ namespace BattleRoom {
 
             void adjustForResize(int width, int height, int oldWidth, int oldHeight);
 
+            int getViewWidth() const;
+            int getViewHeight() const;
+
             void applySettings(ResourceDescriptor settings) override;
 
         private:
@@ -30,7 +33,7 @@ namespace BattleRoom {
             void setRelativePosition(Pixel anchor, px width, px height);
 
             void adjustAnchoredPosition(px oldWidth, px oldHeight);
-            void adjustRelativePosition(px oldWidth, px oldHeight);
+            void adjustRelativePosition(px oldWindowWidth, px oldWindowHeight);
 
             Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
             Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window

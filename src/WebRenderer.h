@@ -37,6 +37,7 @@ namespace BattleRoom {
          */
         void resize(int width, int height);
 
+        std::string getTextureKey();
 
         // CefRenderHandler functions
         bool GetViewRect(CefRefPtr<CefBrowser> browser, CefRect &rect) override;
@@ -46,6 +47,8 @@ namespace BattleRoom {
 
     private:
 
+        int m_desiredWidth;
+        int m_desiredHeight;
         std::string m_textureKey;
         TextureManager* m_textureManager;
 

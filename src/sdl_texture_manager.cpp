@@ -104,6 +104,11 @@ namespace BattleRoom {
             Log::warn("Width, ", width, ", and height, ", height, ", are bad for texture resize.");
         }
 
+        if (width == container->getWidth() && height == container->getHeight()) {
+            Log::info("Resizing to same width");
+            return;
+        }
+
         container->drawingLock();
         container->paintingLock();
 

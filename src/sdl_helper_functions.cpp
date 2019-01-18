@@ -1,6 +1,7 @@
 #include "sdl_helper_functions.h"
 #include "sdl_drawable_text.h"
 #include "sdl_drawable_image.h"
+#include "Logger.h"
 
 #include <cmath>
 #include <iostream>
@@ -482,7 +483,6 @@ namespace BattleRoom {
         }
 
         return UniqueDrawable(drawable);
-
     }
 
 
@@ -490,17 +490,12 @@ namespace BattleRoom {
 
         auto drawable = new SdlDrawableImage();
 
-
-        px topLeftCol = view->getTopLeft().getCol();
-        px topLeftRow = view->getTopLeft().getRow();
-        px botRightCol = view->getTopLeft().getCol();
-        px botRightRow = view->getTopLeft().getRow();
-//        px viewHeight = view->getBottomRight().getRowInt() - view->getTopLeft().getRowInt();
-//        px viewWidth = view->getBottomRight().getColInt() - view->getTopLeft().getColInt();
-        //px topLeftCol = view->getTopLeft().getCol() + menu.getTopLeft().getCol() * viewWidth;
-        //px topLeftRow = view->getTopLeft().getRow() + menu.getTopLeft().getRow() * viewHeight;
-        //px botRightCol = view->getTopLeft().getCol() + menu.getBottomRight().getCol() * viewWidth;
-        //px botRightRow = view->getTopLeft().getRow() + menu.getBottomRight().getRow() * viewHeight;
+        px viewHeight = view->getBottomRight().getRowInt() - view->getTopLeft().getRowInt();
+        px viewWidth = view->getBottomRight().getColInt() - view->getTopLeft().getColInt();
+        px topLeftCol = view->getTopLeft().getCol() + menu.getTopLeft().getCol() * viewWidth;
+        px topLeftRow = view->getTopLeft().getRow() + menu.getTopLeft().getRow() * viewHeight;
+        px botRightCol = view->getTopLeft().getCol() + menu.getBottomRight().getCol() * viewWidth;
+        px botRightRow = view->getTopLeft().getRow() + menu.getBottomRight().getRow() * viewHeight;
 
         Pixel topLeft(topLeftRow, topLeftCol);
         Pixel botRight(botRightRow, botRightCol);
@@ -516,8 +511,9 @@ namespace BattleRoom {
         drawable->setSourceRect(rectFrom(topLeft, botRight));
         drawable->setImageFile(menu.getTextureKey());
 
-        return UniqueDrawable(drawable);
+//        Log::debug("SDL Drawable: [", topLeftCol, ", ", topLeftRow, "], [", botRightCol, ", ", botRightRow, "] z: ", menu.getTextureKey());
 
+        return UniqueDrawable(drawable);
     }
 } // BattleRoom namespace
 

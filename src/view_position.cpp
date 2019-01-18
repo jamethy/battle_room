@@ -29,7 +29,7 @@ namespace BattleRoom {
             double scale = stod(settings.getSubResource("Scale").getValue());
             anchor.applySettings(settings.getSubResource("Anchor"));
 
-            setRelativePosition(anchor, scale, scale/ratio);
+            setRelativePosition(anchor, m_windowWidth * scale, m_windowHeight * scale/ratio);
 
         } else if (SizeType::Fill == m_sizeType) {
             m_topLeft = Pixel(0, 0);
@@ -81,23 +81,27 @@ namespace BattleRoom {
         setAnchoredPosition(topLeft, botRight);
     }
 
-    void ViewPosition::adjustRelativePosition(px oldWidth, px oldHeight) {
-        Pixel anchor; 
-        px viewWidth = m_bottomRight.getCol() - m_topLeft.getCol(); 
+    void ViewPosition::adjustRelativePosition(px oldWindowWidth, px oldWindowHeight) {
+        Pixel anchor;
+
+        px viewWidth = m_bottomRight.getCol() - m_topLeft.getCol();
+        viewWidth *= m_windowWidth/oldWindowWidth;
+
         px viewHeight = m_bottomRight.getRow() - m_topLeft.getRow();
+        viewHeight *= m_windowHeight/oldWindowHeight;
 
         switch (m_anchor) {
             case TopRight: 
-                anchor = Pixel(m_topLeft.getRow(), oldWidth - m_bottomRight.getCol());
+                anchor = Pixel(m_topLeft.getRow(), oldWindowWidth - m_bottomRight.getCol());
                 break;
             case BottomLeft: 
-                anchor = Pixel(oldHeight - m_bottomRight.getRow(), m_topLeft.getCol());
+                anchor = Pixel(oldWindowHeight - m_bottomRight.getRow(), m_topLeft.getCol());
                 break;
             case BottomRight: 
-                anchor = Pixel(oldHeight - m_bottomRight.getRow(), oldWidth - m_bottomRight.getCol());
+                anchor = Pixel(oldWindowHeight - m_bottomRight.getRow(), oldWindowWidth - m_bottomRight.getCol());
                 break;
             case Center:
-                anchor = Pixel(m_topLeft.getRow() - (oldHeight - viewHeight)/2, m_topLeft.getCol() - (oldWidth - viewWidth)/2);
+                anchor = Pixel(m_topLeft.getRow() - (oldWindowHeight - viewHeight)/2, m_topLeft.getCol() - (oldWindowWidth - viewWidth)/2);
                 break;
             case TopLeft: 
             default:
@@ -180,6 +184,14 @@ namespace BattleRoom {
         }
 
         m_bottomRight = Pixel(m_topLeft.getRow() + height, m_topLeft.getCol() + width);
+    }
+
+    int ViewPosition::getViewWidth() const {
+        return m_bottomRight.getColInt() - m_topLeft.getColInt();
+    }
+
+    int ViewPosition::getViewHeight() const {
+        return m_bottomRight.getRowInt() - m_topLeft.getRowInt();
     }
 
     SizeType parseSizeType(const std::string str) {

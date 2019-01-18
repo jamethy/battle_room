@@ -118,4 +118,12 @@ namespace BattleRoom {
         m_camera->setVerticalFov(2 * std::atan2(height * 2.0 * std::tan(horFov / 2.0), 2.0 * width));
     }
 
+    int View::getViewWdith() {
+        return m_position.getViewWidth();
+    }
+
+    int View::getViewHeight() {
+        return m_position.getViewHeight();
+    }
+
 } // BattleRoom namespace
