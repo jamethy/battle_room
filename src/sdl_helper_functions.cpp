@@ -41,6 +41,17 @@ namespace BattleRoom {
         return modifiers;
     }
 
+    Modifiers sdlModifierToInputModifier(SDL_Keymod mod) {
+        Modifiers modifiers;
+        modifiers.shift = (mod & KMOD_LSHIFT) || (mod & KMOD_RSHIFT);
+        modifiers.ctrl = (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL);
+        modifiers.alt = (mod & KMOD_LALT) || (mod & KMOD_RALT);
+        modifiers.num_lock = !(mod & KMOD_NUM);
+        modifiers.caps_lock = static_cast<bool>(mod & KMOD_CAPS);
+        modifiers.uppercase = modifiers.caps_lock == !modifiers.shift;
+        return modifiers;
+    }
+
     SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewHeight) {
 
         SDL_Rect rect;

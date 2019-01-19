@@ -54,6 +54,7 @@ namespace BattleRoom {
      * \return InputKey version of modifier
      */
     Modifiers sdlModifierToInputModifier(SDL_Event &event);
+    Modifiers sdlModifierToInputModifier(SDL_Keymod keyMod);
 
     /**
      * \brief Maps an SDL_Mouse_event button and number of clicks to a InputKey::Key

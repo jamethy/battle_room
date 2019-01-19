@@ -6,6 +6,7 @@
 
 #include "include/wrapper/cef_helpers.h"
 #include "include/cef_parser.h"
+#include "WebMessageHandler.h"
 
 #include <iostream>
 
@@ -15,9 +16,11 @@ namespace BattleRoom {
  * This class is the last step in receiving function calls from javascript (after SdlCefRenderProcessHandler and
  * WebBrowserClient message router managers).
  */
-    class SampleMessageHandler : public CefMessageRouterBrowserSide::Handler {
+    class SimpleMessageHandler : public CefMessageRouterBrowserSide::Handler {
 
     public:
+
+        explicit SimpleMessageHandler(WebMessageHandler *messageHandler) : m_webMessageHandler(messageHandler) { }
 
         bool OnQuery(CefRefPtr<CefBrowser> browser,
                      CefRefPtr<CefFrame> frame,
@@ -25,28 +28,29 @@ namespace BattleRoom {
                      const CefString &request,
                      bool persistent,
                      CefRefPtr<Callback> callback) override {
+            (void) browser; // unused
+            (void) frame; // unused
+            (void) query_id; // unused
+            (void) persistent; // unused
 
-            // could parse "request" here for any information
-            // CefRefPtr<CefDictionaryValue> requestValue = CefParseJSON(request, JSON_PARSER_RFC)->GetDictionary();
+            if (m_webMessageHandler) {
+                std::string response = m_webMessageHandler->onMessage(request.ToString());
+                callback.get()->Success(CefString(response));
+            }
 
-            CefRefPtr<CefDictionaryValue> result_dict = CefDictionaryValue::Create();
-            result_dict->SetInt("count", ++counter);
-
-            CefRefPtr<CefValue> value = CefValue::Create();
-            value->SetDictionary(result_dict);
-            CefString json = CefWriteJSON(value, JSON_WRITER_DEFAULT);
-
-            callback.get()->Success(json);
             return true;
         }
 
         void OnQueryCanceled(CefRefPtr<CefBrowser> browser,
                              CefRefPtr<CefFrame> frame,
                              int64 query_id) override {
+            (void) browser; // unused
+            (void) frame; // unused
+            (void) query_id; // unused
         }
 
     private:
-        int counter = 0;
+        WebMessageHandler *m_webMessageHandler;
     };
 
 /**
@@ -57,15 +61,19 @@ namespace BattleRoom {
                                  CefRefPtr<CefFrame> frame,
                                  CefRefPtr<CefContextMenuParams> params,
                                  CefRefPtr<CefMenuModel> model) override {
+            (void) browser; // unused
+            (void) frame; // unused
+            (void) params; // unused
             model->Clear();
         }
 
     IMPLEMENT_REFCOUNTING(NoContextMenu);
     };
 
-    WebBrowserClient::WebBrowserClient(CefRefPtr<CefRenderHandler> ptr) :
+    WebBrowserClient::WebBrowserClient(CefRefPtr<CefRenderHandler> ptr, WebMessageHandler* webMessageHandler) :
             renderHandler(ptr),
-            contextMenuHandler(new NoContextMenu) {
+            contextMenuHandler(new NoContextMenu),
+            sampleMessageHandler(new SimpleMessageHandler(webMessageHandler)){
     }
 
     WebBrowserClient::~WebBrowserClient() = default;
@@ -94,8 +102,9 @@ namespace BattleRoom {
             messageRouterBrowserSide = CefMessageRouterBrowserSide::Create(config);
 
             // Register handlers with the router.
-            sampleMessageHandler = new SampleMessageHandler();
-            messageRouterBrowserSide->AddHandler(sampleMessageHandler, false);
+            if (sampleMessageHandler) {
+                messageRouterBrowserSide->AddHandler(sampleMessageHandler, false);
+            }
         }
     }
 
@@ -175,5 +184,18 @@ namespace BattleRoom {
         CEF_REQUIRE_UI_THREAD();
 
         return messageRouterBrowserSide->OnProcessMessageReceived(browser, source_process, message);
+    }
+
+    void WebBrowserClient::setWebMessageHandler(WebMessageHandler *webMessageHandler) {
+        if (messageRouterBrowserSide) {
+            if (sampleMessageHandler) {
+                messageRouterBrowserSide->RemoveHandler(sampleMessageHandler);
+                delete sampleMessageHandler;
+            }
+            sampleMessageHandler = new SimpleMessageHandler(webMessageHandler);
+            messageRouterBrowserSide->AddHandler(sampleMessageHandler, false);
+        } else {
+            sampleMessageHandler = new SimpleMessageHandler(webMessageHandler);
+        }
     }
 } // BattleRoom namespace

@@ -168,7 +168,7 @@ add_executable(battleroom
         Logger.h
         TextureContainer.cpp
         TextureContainer.h
-        TextureManager.h HtmlMenu.cpp HtmlMenu.h input_to_cef.cpp)
+        TextureManager.h HtmlMenu.cpp HtmlMenu.h input_to_cef.cpp WebMessageHandler.h)
 
 # CEF properties
 include_directories(${CEF_INCLUDE_PATH})

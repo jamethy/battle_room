@@ -1,3 +1,4 @@
+#include <third_party/cef/cef_binary_3.3396.1777.g636f29b_linux64/include/cef_parser.h>
 #include "menu_interface.h"
 
 #include "input_gatherer.h"
@@ -21,12 +22,27 @@ namespace BattleRoom {
     MenuInterface::MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth,
                                  int windowHeight) :
             View(settings, windowWidth, windowHeight),
-            m_htmlMenu(new HtmlMenu(textureManager, windowWidth, windowHeight)),
+            m_htmlMenu(new HtmlMenu(textureManager, windowWidth, windowHeight, this)),
             m_hasFocus(true) {
         applySettings(settings);
     }
 
 // other functions
+
+    std::string MenuInterface::onMessage(const std::string &message) {
+        static int counter = 0;
+
+        CefString request(message);
+        CefRefPtr<CefDictionaryValue> requestValue = CefParseJSON(request, JSON_PARSER_RFC)->GetDictionary();
+
+        CefRefPtr<CefDictionaryValue> result_dict = CefDictionaryValue::Create();
+        result_dict->SetInt("count", ++counter);
+
+        CefRefPtr<CefValue> value = CefValue::Create();
+        value->SetDictionary(result_dict);
+        CefString json = CefWriteJSON(value, JSON_WRITER_DEFAULT);
+        return json.ToString();
+    }
 
     vector<DrawableObject> MenuInterface::getDrawableObjects() {
         return {};
@@ -37,7 +53,11 @@ namespace BattleRoom {
     }
 
     vector<DrawableMenu> MenuInterface::getDrawableMenus() {
-        return {m_htmlMenu->getDrawableMenu()};
+        if (m_hasFocus) {
+            return {m_htmlMenu->getDrawableMenu()};
+        } else {
+            return {};
+        }
     }
 
     void MenuInterface::update(seconds timestep) {
@@ -50,21 +70,30 @@ namespace BattleRoom {
 
         for (Input input : inputs) {
 
+            bool inputHandled = false;
+
             // temp for easy testing and quitting
-            if (input.getMotion() == Motion::PressedDown) {
-                if (input.getKey() == Key::Q) {
-                    ApplicationMessageReceiver::addQuitEvent();
+            if (input.getMotion() == Motion::PressedDown && input.getKey() == Key::Q) {
+                ApplicationMessageReceiver::addQuitEvent();
+                inputHandled = true;
+            }
+
+            if (input.getMotion() == Motion::PressedDown && input.getKey() == Key::Escape) {
+                m_hasFocus = !m_hasFocus;
+                inputHandled = true;
+            } else if (m_hasFocus) {
+                if (input.containsView(getUniqueId())) {
+
+                    RelPixel point = input.getViewRelIntersection(getUniqueId());
+                    int x = point.getColInt(getViewWdith());
+                    int y = point.getRowInt(getViewHeight());
+
+                    m_htmlMenu->handleInput(input, x, y);
+                    inputHandled = true;
                 }
             }
 
-            if (m_hasFocus && input.containsView(getUniqueId())) {
-
-                RelPixel point = input.getViewRelIntersection(getUniqueId());
-                int x = point.getColInt(getViewWdith());
-                int y = point.getRowInt(getViewHeight());
-
-                m_htmlMenu->handleInput(input, x, y);
-            } else {
+            if (!inputHandled) {
                 remainingInputs.addInput(input);
             }
         }

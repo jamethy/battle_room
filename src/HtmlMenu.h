@@ -10,23 +10,26 @@
 #include "WebBrowserClient.h"
 #include "input.h"
 #include "drawable_menu.h"
+#include "WebMessageHandler.h"
 
 namespace BattleRoom {
 
     class HtmlMenu {
     public:
 
-        HtmlMenu(TextureManager *textureManager, int windowWidth, int windowHeight);
+        HtmlMenu(TextureManager *textureManager, int windowWidth, int windowHeight,
+                 WebMessageHandler *webMessageHandler = nullptr);
+
         ~HtmlMenu();
 
         void resize(int width, int height);
 
         void handleInput(Input input, int x, int y);
-        
+
         DrawableMenu getDrawableMenu();
 
     private:
-        
+
         DrawableMenu m_drawableMenu;
 
         CefRefPtr<WebRenderer> m_webRenderer;

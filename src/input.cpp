@@ -3,7 +3,7 @@
 namespace BattleRoom {
 
     Input::Input() {
-        m_viewIntersections.clear(); 
+        m_viewIntersections.clear();
         m_viewRelIntersections.clear();
     }
 
@@ -34,15 +34,15 @@ namespace BattleRoom {
     }
 
     bool Input::isKeyDown(InputKey::Key k) {
-        return k == m_key 
-            && InputKey::Motion::PressedDown == m_keyMotion
-            && m_modifiers.isPlain();
+        return k == m_key
+               && InputKey::Motion::PressedDown == m_keyMotion
+               && m_modifiers.isPlain();
     }
 
     bool Input::isKeyUp(InputKey::Key k) {
-        return k == m_key 
-            && InputKey::Motion::Released == m_keyMotion
-            && m_modifiers.isPlain();
+        return k == m_key
+               && InputKey::Motion::Released == m_keyMotion
+               && m_modifiers.isPlain();
     }
 
     bool Input::isModKeyDown(InputKey::Modifier mod, InputKey::Key k) {

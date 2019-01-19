@@ -13,9 +13,11 @@ namespace BattleRoom {
     void cefHandleInput(Input input, int x, int y, CefBrowser *browser);
 
 
-    HtmlMenu::HtmlMenu(TextureManager *textureManager, int windowWidth, int windowHeight) {
+    HtmlMenu::HtmlMenu(TextureManager *textureManager, int windowWidth, int windowHeight,
+                       WebMessageHandler *webMessageHandler) {
+
         m_webRenderer = new WebRenderer(textureManager, windowWidth, windowHeight);
-        m_webBrowserClient = new WebBrowserClient(m_webRenderer);
+        m_webBrowserClient = new WebBrowserClient(m_webRenderer, webMessageHandler);
 
         // some browser settings
         CefWindowInfo window_info;

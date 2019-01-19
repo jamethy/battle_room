@@ -7,13 +7,14 @@
 #include "WebBrowserClient.h"
 #include "WebRenderer.h"
 #include "HtmlMenu.h"
+#include "WebMessageHandler.h"
 
 namespace BattleRoom {
 
     /**
      * \brief View impl for displaying a menu
      */
-    class MenuInterface : public View {
+    class MenuInterface : public View, WebMessageHandler {
 
     public:
 
@@ -21,6 +22,8 @@ namespace BattleRoom {
         MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth, int windowHeight);
 
         // inherited
+        std::string onMessage(const std::string& message) override;
+        
         void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
 
         std::vector<DrawableObject> getDrawableObjects() override;

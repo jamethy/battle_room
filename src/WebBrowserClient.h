@@ -11,6 +11,7 @@
 #include "include/internal/cef_ptr.h"
 #include "include/cef_render_handler.h"
 #include "include/cef_client.h"
+#include "WebMessageHandler.h"
 
 namespace BattleRoom {
 
@@ -24,11 +25,13 @@ namespace BattleRoom {
             public CefRequestHandler {
     public:
 
-        explicit WebBrowserClient(CefRefPtr<CefRenderHandler> ptr);
+        WebBrowserClient(CefRefPtr<CefRenderHandler> ptr, WebMessageHandler *webMessageHandler = nullptr);
 
         ~WebBrowserClient() override;
 
         bool closeAllowed() const;
+
+        void setWebMessageHandler(WebMessageHandler *webMessageHandler);
 
         // CefClient methods
         CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() override;

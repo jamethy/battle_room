@@ -12,12 +12,12 @@ namespace BattleRoom {
 
     typedef struct Modifiers {
 
-        bool shift;
-        bool ctrl;
-        bool alt;
-        bool num_lock;
-        bool caps_lock;
-        bool uppercase;
+        bool shift = false;
+        bool ctrl = false;
+        bool alt = false;
+        bool num_lock = false;
+        bool caps_lock = false;
+        bool uppercase = false;
 
         bool isPlain();
 

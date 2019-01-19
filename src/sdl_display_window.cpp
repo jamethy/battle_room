@@ -182,26 +182,26 @@ namespace BattleRoom {
                     m_mousePos = Pixel(event.motion.y, event.motion.x);
                     input.setMotion(InputKey::Motion::None);
                     input.setKey(InputKey::Key::MouseOnly);
-                    input.setModifiers(sdlModifierToInputModifier(event));
+                    input.setModifiers(sdlModifierToInputModifier(SDL_GetModState()));
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     m_mousePos = Pixel(event.motion.y, event.motion.x);
                     input.setMotion(InputKey::Motion::PressedDown);
                     input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks % 2));
-                    input.setModifiers(sdlModifierToInputModifier(event));
+                    input.setModifiers(sdlModifierToInputModifier(SDL_GetModState()));
                     break;
                 case SDL_MOUSEBUTTONUP:
                     m_mousePos = Pixel(event.motion.y, event.motion.x);
                     input.setMotion(InputKey::Motion::Released);
                     input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
-                    input.setModifiers(sdlModifierToInputModifier(event));
+                    input.setModifiers(sdlModifierToInputModifier(SDL_GetModState()));
                     break;
                 case SDL_MOUSEWHEEL:
                     if (event.wheel.y != 0) { // maybe later use horizontal scrolling
                         input.setMotion(InputKey::Motion::Scroll);
                         input.setKey(InputKey::Key::MouseOnly);
                         input.setScrollAmount(event.wheel.y);
-                        input.setModifiers(sdlModifierToInputModifier(event));
+                        input.setModifiers(sdlModifierToInputModifier(SDL_GetModState()));
                     }
                     break;
                 case SDL_WINDOWEVENT:
