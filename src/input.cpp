@@ -36,25 +36,53 @@ namespace BattleRoom {
     bool Input::isKeyDown(InputKey::Key k) {
         return k == m_key 
             && InputKey::Motion::PressedDown == m_keyMotion
-            && InputKey::Modifier::Plain == m_modifier;
+            && m_modifiers.isPlain();
     }
 
     bool Input::isKeyUp(InputKey::Key k) {
         return k == m_key 
             && InputKey::Motion::Released == m_keyMotion
-            && InputKey::Modifier::Plain == m_modifier;
+            && m_modifiers.isPlain();
     }
 
     bool Input::isModKeyDown(InputKey::Modifier mod, InputKey::Key k) {
-        return mod == m_modifier 
-            && k == m_key 
-            && InputKey::Motion::PressedDown == m_keyMotion;
+        bool keyDown = k == m_key && InputKey::Motion::PressedDown == m_keyMotion;
+        if (!keyDown) {
+            return false;
+        } else {
+            switch (mod) {
+                case InputKey::Plain:
+                    return m_modifiers.isPlain();
+                case InputKey::Shift:
+                    return m_modifiers.shift;
+                case InputKey::Ctrl:
+                    return m_modifiers.ctrl;
+                case InputKey::Alt:
+                    return m_modifiers.alt;
+                default:
+                    return false;
+            }
+        }
     }
 
     bool Input::isModKeyUp(InputKey::Modifier mod, InputKey::Key k) {
-        return mod == m_modifier 
-            && k == m_key 
-            && InputKey::Motion::Released == m_keyMotion;
+        bool keyUp = k == m_key && InputKey::Motion::Released == m_keyMotion;
+        if (keyUp) {
+            return true;
+        } else {
+            switch (mod) {
+                case InputKey::Plain:
+                    return !m_modifiers.isPlain();
+                case InputKey::Shift:
+                    return !m_modifiers.shift;
+                case InputKey::Ctrl:
+                    return !m_modifiers.ctrl;
+                case InputKey::Alt:
+                    return !m_modifiers.alt;
+                default:
+                    return false;
+            }
+        }
     }
 
 // setters and getters
@@ -67,12 +95,12 @@ namespace BattleRoom {
         m_keyMotion = motion;
     }
 
-    void Input::setModifier(InputKey::Modifier modifier) {
-        m_modifier = modifier;
-    }
-
     void Input::setScrollAmount(int amount) {
         m_scrollAmount = amount;
+    }
+
+    void Input::setModifiers(Modifiers modifiers) {
+        m_modifiers = modifiers;
     }
 
     InputKey::Key Input::getKey() {
@@ -83,12 +111,15 @@ namespace BattleRoom {
         return m_keyMotion;
     }
 
-    InputKey::Modifier Input::getModifier() {
-        return m_modifier;
-    }
-
     int Input::getScrollAmount() {
         return m_scrollAmount;
     }
 
+    Modifiers Input::getModifiers() {
+        return m_modifiers;
+    }
+
+    bool Modifiers::isPlain() {
+        return !shift && !ctrl && !alt;
+    }
 } // BattleRoom namespace

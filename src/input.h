@@ -10,6 +10,19 @@
 
 namespace BattleRoom {
 
+    typedef struct Modifiers {
+
+        bool shift;
+        bool ctrl;
+        bool alt;
+        bool num_lock;
+        bool caps_lock;
+        bool uppercase;
+
+        bool isPlain();
+
+    } Modifiers;
+
 
 /**
  * Container for input event. It holds the key in action, the motion of the key,
@@ -35,6 +48,7 @@ namespace BattleRoom {
          * \intersection Point in 3D space on the z = 0 plane where the event occurred
          */
         void addViewIntersection(UniqueId viewId, Vector3D intersection);
+
         void addViewIntersection(UniqueId viewId, RelPixel intersection);
 
         /**
@@ -43,12 +57,16 @@ namespace BattleRoom {
          * \return Zero-plane intersection of view or (0,0,-1) if view not hit
          */
         Vector3D getViewIntersection(UniqueId viewId);
+
         RelPixel getViewRelIntersection(UniqueId viewId);
 
         // useful matchers
         bool isKeyDown(InputKey::Key k);
+
         bool isKeyUp(InputKey::Key k);
+
         bool isModKeyDown(InputKey::Modifier mod, InputKey::Key k);
+
         bool isModKeyUp(InputKey::Modifier mod, InputKey::Key k);
 
         // getters and setters
@@ -57,17 +75,17 @@ namespace BattleRoom {
 
         InputKey::Motion getMotion();
 
-        InputKey::Modifier getModifier();
-
         int getScrollAmount();
+
+        Modifiers getModifiers();
 
         void setKey(InputKey::Key key);
 
         void setMotion(InputKey::Motion motion);
 
-        void setModifier(InputKey::Modifier modifier);
-
         void setScrollAmount(int amount);
+
+        void setModifiers(Modifiers modifiers);
 
     private:
 
@@ -75,7 +93,7 @@ namespace BattleRoom {
         std::unordered_map<UniqueId, RelPixel> m_viewRelIntersections; ///< Z = 0 where mouse was
         InputKey::Key m_key; ///< Key or button performing the action
         InputKey::Motion m_keyMotion; ///< Whether the key was pressed, released, or neither
-        InputKey::Modifier m_modifier; ///< Which modifier key was being pressed (or none)
+        Modifiers m_modifiers;
         int m_scrollAmount;///< Amount Scrolled - only valid when m_key == Scroll
 
     }; // Input class

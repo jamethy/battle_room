@@ -8,6 +8,39 @@
 
 namespace BattleRoom {
 
+    Modifiers sdlModifierToInputModifier(SDL_Event &event) {
+
+        Modifiers modifiers;
+        auto mod = event.key.keysym.mod;
+        modifiers.shift = (mod & KMOD_LSHIFT) || (mod & KMOD_RSHIFT);
+        modifiers.ctrl = (mod & KMOD_LCTRL) || (mod & KMOD_RCTRL);
+        modifiers.alt = (mod & KMOD_LALT) || (mod & KMOD_RALT);
+        modifiers.num_lock = !(mod & KMOD_NUM);
+        modifiers.caps_lock = static_cast<bool>(mod & KMOD_CAPS);
+        modifiers.uppercase = modifiers.caps_lock == !modifiers.shift;
+
+        /** Set the modifiers **/
+        if (event.key.state == SDL_PRESSED) {
+            switch (event.key.keysym.sym) {
+                case SDLK_LSHIFT:
+                case SDLK_RSHIFT:
+                    modifiers.shift = true;
+                    break;
+                case SDLK_LCTRL:
+                case SDLK_RCTRL:
+                    modifiers.ctrl = true;
+                    break;
+                case SDLK_LALT:
+                case SDLK_RALT:
+                    modifiers.alt = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return modifiers;
+    }
+
     SDL_Rect rectFrom(RelPixel topLeft, RelPixel bottomRight, px viewWidth, px viewHeight) {
 
         SDL_Rect rect;
@@ -94,7 +127,7 @@ namespace BattleRoom {
             case SDLK_EXCLAIM:
                 return InputKey::Key::Exclaim;
             case SDLK_QUOTEDBL:
-                return InputKey::Key::Quotedbl;
+                return InputKey::Key::DoubleQuote;
             case SDLK_HASH:
                 return InputKey::Key::Pound;
             case SDLK_PERCENT:
@@ -106,9 +139,9 @@ namespace BattleRoom {
             case SDLK_QUOTE:
                 return InputKey::Key::Quote;
             case SDLK_LEFTPAREN:
-                return InputKey::Key::Leftparen;
+                return InputKey::Key::LeftParen;
             case SDLK_RIGHTPAREN:
-                return InputKey::Key::Rightparen;
+                return InputKey::Key::RightParen;
             case SDLK_ASTERISK:
                 return InputKey::Key::Asterisk;
             case SDLK_PLUS:
@@ -156,11 +189,11 @@ namespace BattleRoom {
             case SDLK_AT:
                 return InputKey::Key::At;
             case SDLK_LEFTBRACKET:
-                return InputKey::Key::Leftbracket;
+                return InputKey::Key::LeftBracket;
             case SDLK_BACKSLASH:
                 return InputKey::Key::Backslash;
             case SDLK_RIGHTBRACKET:
-                return InputKey::Key::Rightbracket;
+                return InputKey::Key::RightBracket;
             case SDLK_CARET:
                 return InputKey::Key::Caret;
             case SDLK_UNDERSCORE:
@@ -221,30 +254,6 @@ namespace BattleRoom {
                 return InputKey::Key::Z;
             default:
                 return InputKey::Key::MouseOnly;
-        }
-    }
-
-    InputKey::Modifier sdlModifierToInputModifier(SDL_Keymod code) {
-        switch (code - 4096) {
-            case KMOD_LSHIFT:
-            case KMOD_RSHIFT:
-                return InputKey::Modifier::Shift;
-            case KMOD_LCTRL:
-            case KMOD_RCTRL:
-                return InputKey::Modifier::Ctrl;
-            case KMOD_LALT:
-            case KMOD_RALT:
-                return InputKey::Modifier::Alt;
-            case KMOD_LGUI:
-            case KMOD_RGUI:
-                return InputKey::Modifier::Cmd;
-            case KMOD_NUM:
-            case KMOD_CAPS:
-            case KMOD_MODE:
-            case KMOD_RESERVED:
-            case KMOD_NONE:
-            default:
-                return InputKey::Modifier::Plain;
         }
     }
 

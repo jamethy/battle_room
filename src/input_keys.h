@@ -14,29 +14,32 @@ namespace InputKey {
         J, K, L, M, N, O, P, Q, R,
         S, T, U, V, W, X, Y, Z,
 
-        // Numbers
+        // Numbers row
         Zero, One, Two, Three, Four,
         Five, Six, Seven, Eight, Nine,
-
-        // Number alternates
-        Exclaim, At, Pound, Dollar, Percent,
-        Caret, Ampersand, Asterisk, Leftparen, Rightparen,
+        RightParen, Exclaim, At, Pound, Dollar, Percent,
+        Caret, Ampersand, Asterisk, LeftParen,
 
         // Right keys
         Minus, Underscore,
         Equals, Plus,
-        Leftbracket,
-        Rightbracket,
+        LeftBracket, RightBracket,
+        LeftCurlyBracket, RightCurlyBracket,
         Semicolon, Colon,
-        Quote, Quotedbl,
+        Quote, DoubleQuote,
         Comma, LessThan,
         Period, GreaterThan,
         ForwardSlash, Question,
 
         // Misc keys
-        Escape, Backquote, Tab,
-        Backspace, Backslash, Return,
-        Space
+        Escape, Backquote, Tilde, Tab,
+        Backspace, Backslash, Pipe, Return,
+        Space, Left, Up, Down, Right,
+
+        Home, End, PageUp, PageDown, Insert, Delete, Divide, Multiply, Subtract, Add, Decimal,
+
+        // Function Keys
+        F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12
     };
 
     enum Motion {
@@ -51,7 +54,6 @@ namespace InputKey {
         Shift,
         Ctrl,
         Alt,
-        Cmd
     };
 
 } // InputKey namespace

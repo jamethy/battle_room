@@ -162,7 +162,7 @@ namespace BattleRoom {
 
                     if (Key::MouseOnly == input.getKey() 
                             && Motion::None == input.getMotion() 
-                            && Modifier::Plain == input.getModifier()) {
+                            && Modifier::Plain == input.getModifiers().isPlain()) {
                         cmd = Command(CommandType::Aim, m_playerId, client, point);
 
                     } else if (input.isKeyDown(Key::RightClick)) {

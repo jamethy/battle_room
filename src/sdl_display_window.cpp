@@ -171,37 +171,37 @@ namespace BattleRoom {
                 case SDL_KEYDOWN:
                     input.setMotion(InputKey::Motion::PressedDown);
                     input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
-                    input.setModifier(sdlModifierToInputModifier((SDL_Keymod)event.key.keysym.mod));
+                    input.setModifiers(sdlModifierToInputModifier(event));
                     break;
                 case SDL_KEYUP:
                     input.setMotion(InputKey::Motion::Released);
                     input.setKey(sdlKeyToInputKey(event.key.keysym.sym));
-                    input.setModifier(sdlModifierToInputModifier((SDL_Keymod)event.key.keysym.mod));
+                    input.setModifiers(sdlModifierToInputModifier(event));
                     break;
                 case SDL_MOUSEMOTION:
                     m_mousePos = Pixel(event.motion.y, event.motion.x);
                     input.setMotion(InputKey::Motion::None);
                     input.setKey(InputKey::Key::MouseOnly);
-                    input.setModifier(sdlModifierToInputModifier(SDL_GetModState()));
+                    input.setModifiers(sdlModifierToInputModifier(event));
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     m_mousePos = Pixel(event.motion.y, event.motion.x);
                     input.setMotion(InputKey::Motion::PressedDown);
                     input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks % 2));
-                    input.setModifier(sdlModifierToInputModifier(SDL_GetModState()));
+                    input.setModifiers(sdlModifierToInputModifier(event));
                     break;
                 case SDL_MOUSEBUTTONUP:
                     m_mousePos = Pixel(event.motion.y, event.motion.x);
                     input.setMotion(InputKey::Motion::Released);
                     input.setKey(sdlMouseButtonToInputKey(event.button.button, event.button.clicks));
-                    input.setModifier(sdlModifierToInputModifier(SDL_GetModState()));
+                    input.setModifiers(sdlModifierToInputModifier(event));
                     break;
                 case SDL_MOUSEWHEEL:
                     if (event.wheel.y != 0) { // maybe later use horizontal scrolling
                         input.setMotion(InputKey::Motion::Scroll);
                         input.setKey(InputKey::Key::MouseOnly);
                         input.setScrollAmount(event.wheel.y);
-                        input.setModifier(sdlModifierToInputModifier(SDL_GetModState()));
+                        input.setModifiers(sdlModifierToInputModifier(event));
                     }
                     break;
                 case SDL_WINDOWEVENT:

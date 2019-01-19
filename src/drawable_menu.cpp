@@ -1,5 +1,6 @@
 #include "drawable_menu.h"
 #include "animation_handler.h"
+#include "Logger.h"
 
 namespace BattleRoom {
 
@@ -20,9 +21,9 @@ namespace BattleRoom {
 
     DrawableMenu::DrawableMenu() :
             m_zLayer(0.0),
-            m_topLeft(RelPixel(0,0)),
-            m_bottomRight(RelPixel(1,1))
-    {}
+            m_topLeft(RelPixel(0, 0)),
+            m_bottomRight(RelPixel(1, 1)) {
+    }
 
     DrawableMenu::~DrawableMenu() = default;
 
@@ -32,6 +33,10 @@ namespace BattleRoom {
 
     std::string DrawableMenu::getTextureKey() const {
         return m_textureKey;
+    }
+
+    void DrawableMenu::setTextureKey(const std::string &textureKey) {
+        m_textureKey = textureKey;
     }
 
     RelPixel DrawableMenu::getTopLeft() const {
@@ -44,10 +49,6 @@ namespace BattleRoom {
 
     double DrawableMenu::getZLayer() const {
         return m_zLayer;
-    }
-
-    void DrawableMenu::setTextureKey(const std::string &textureKey) {
-        m_textureKey = textureKey;
     }
 
     void DrawableMenu::setTopLeft(RelPixel topLeft) {

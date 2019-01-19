@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "WebBrowserClient.h"
 #include "WebRenderer.h"
+#include "HtmlMenu.h"
 
 namespace BattleRoom {
 
@@ -36,10 +37,8 @@ namespace BattleRoom {
 
     private:
 
-        CefRefPtr<WebRenderer> m_webRenderer;
-        CefRefPtr<WebBrowserClient> m_webBrowserClient;
-        CefRefPtr<CefBrowser> m_webBrowser;
-        DrawableMenu m_drawableMenu;
+        HtmlMenu* m_htmlMenu;
+        bool m_hasFocus;
 
     }; // MenuInterface class
 } // BattleRoom namespace
