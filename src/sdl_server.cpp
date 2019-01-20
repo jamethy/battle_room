@@ -5,7 +5,7 @@
 
 // temp
 #include "query_world.h"
-#include "Logger.h"
+#include "logger.h"
 
 namespace BattleRoom {
 

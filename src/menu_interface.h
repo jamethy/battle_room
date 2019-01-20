@@ -4,10 +4,10 @@
 #include <third_party/cef/cef_binary_3.3396.1777.g636f29b_linux64/include/internal/cef_ptr.h>
 #include "view.h"
 #include "menu.h"
-#include "WebBrowserClient.h"
-#include "WebRenderer.h"
-#include "HtmlMenu.h"
-#include "WebMessageHandler.h"
+#include "web_browser_client.h"
+#include "web_renderer.h"
+#include "html_menu.h"
+#include "web_message_handler.h"
 
 namespace BattleRoom {
 
@@ -23,7 +23,7 @@ namespace BattleRoom {
 
         // inherited
         std::string onMessage(const std::string& message) override;
-        
+
         void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
 
         std::vector<DrawableObject> getDrawableObjects() override;

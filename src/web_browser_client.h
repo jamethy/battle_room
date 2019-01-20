@@ -2,16 +2,13 @@
 // Created by james on 8/27/18.
 //
 
-#ifndef PROJECT_DEATHBLADE_WEBBROWSERCLIENT_H
-#define PROJECT_DEATHBLADE_WEBBROWSERCLIENT_H
+#ifndef BATTLE_ROOM_WEBBROWSERCLIENT_H
+#define BATTLE_ROOM_WEBBROWSERCLIENT_H
 
-#include "include/cef_render_process_handler.h"
-#include "include/wrapper/cef_message_router.h"
-#include "include/cef_life_span_handler.h"
-#include "include/internal/cef_ptr.h"
-#include "include/cef_render_handler.h"
+#include "web_message_handler.h"
+
 #include "include/cef_client.h"
-#include "WebMessageHandler.h"
+#include "include/wrapper/cef_message_router.h"
 
 namespace BattleRoom {
 
@@ -78,4 +75,4 @@ namespace BattleRoom {
 
     };
 }
-#endif //PROJECT_DEATHBLADE_WEBBROWSERCLIENT_H
+#endif //BATTLE_ROOM_WEBBROWSERCLIENT_H

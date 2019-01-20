@@ -4,16 +4,16 @@ option(test "Build all tests." OFF)
 
 set (CMAKE_CXX_STANDARD 11)
 
-project(project_deathblade)
+project(project_battle_room)
 
 # Specify the CEF distribution version.
 set(CEF_VERSION "3.3396.1777.g636f29b")
 
 # Use our modified FindSDL2* modules
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${project_deathblade_SOURCE_DIR}/cmake")
-#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${project_deathblade_SOURCE_DIR}/lib")
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${project_deathblade_SOURCE_DIR}/bin")
-#set(BIN_DIR ${project_deathblade_SOURCE_DIR}/bin)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${project_battle_room_SOURCE_DIR}/cmake")
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${project_battle_room_SOURCE_DIR}/lib")
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${project_battle_room_SOURCE_DIR}/bin")
+#set(BIN_DIR ${project_battle_room_SOURCE_DIR}/bin)
 
 # Bump up warning levels appropriately for clang, gcc & msvc and build in debug mode
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")

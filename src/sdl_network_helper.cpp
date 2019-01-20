@@ -1,5 +1,5 @@
 #include "./sdl_network_helper.h"
-#include "Logger.h"
+#include "logger.h"
 
 #include <sstream>
 

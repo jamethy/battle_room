@@ -1,7 +1,7 @@
 #include "resource_descriptor.h"
 #include "file_utils.h"
 #include "application.h"
-#include "Logger.h"
+#include "logger.h"
 
 #include <fstream>
 

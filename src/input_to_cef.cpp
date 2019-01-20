@@ -3,7 +3,7 @@
 //
 #include <third_party/cef/cef_binary_3.3396.1777.g636f29b_linux64/include/cef_browser.h>
 #include "input.h"
-#include "Logger.h"
+#include "logger.h"
 
 namespace BattleRoom {
 

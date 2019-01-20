@@ -8,7 +8,7 @@
 #include "inputs.h"
 #include "resource.h"
 #include "view_interface.h"
-#include "TextureManager.h"
+#include "texture_manager.h"
 
 #include <vector>
 #include <memory>

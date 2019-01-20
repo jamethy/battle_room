@@ -13,7 +13,7 @@
 #include "web_app.h"
 
 #include "include/internal/cef_ptr.h"
-#include "Logger.h"
+#include "logger.h"
 
 #include <thread>
 #include <algorithm>

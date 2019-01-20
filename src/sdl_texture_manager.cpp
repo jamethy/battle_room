@@ -2,9 +2,9 @@
 #include "sdl_texture_manager.h"
 
 #include "file_utils.h"
-#include "WebRenderer.h"
-#include "WebBrowserClient.h"
-#include "Logger.h"
+#include "web_renderer.h"
+#include "web_browser_client.h"
+#include "logger.h"
 
 #include <iostream>
 #include <mutex>

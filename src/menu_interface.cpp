@@ -1,9 +1,10 @@
-#include <third_party/cef/cef_binary_3.3396.1777.g636f29b_linux64/include/cef_parser.h>
 #include "menu_interface.h"
 
 #include "input_gatherer.h"
 #include "application_message_receiver.h"
-#include "Logger.h"
+#include "logger.h"
+
+#include "include/cef_parser.h"
 
 using std::vector;
 using InputKey::Key;
@@ -23,7 +24,7 @@ namespace BattleRoom {
                                  int windowHeight) :
             View(settings, windowWidth, windowHeight),
             m_htmlMenu(new HtmlMenu(textureManager, windowWidth, windowHeight, this)),
-            m_hasFocus(true) {
+            m_hasFocus(false) {
         applySettings(settings);
     }
 

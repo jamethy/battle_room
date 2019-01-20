@@ -160,18 +160,23 @@ add_executable(battleroom
         world_updater_factory.h
         z_max_camera.cpp
         z_max_camera.h
-        WebBrowserClient.cpp
-        WebBrowserClient.h
-        WebRenderer.cpp
-        WebRenderer.h
-        Logger.cpp
-        Logger.h
-        TextureContainer.cpp
-        TextureContainer.h
-        TextureManager.h HtmlMenu.cpp HtmlMenu.h input_to_cef.cpp WebMessageHandler.h)
+        web_browser_client.cpp
+        web_browser_client.h
+        web_renderer.cpp
+        web_renderer.h
+        logger.cpp
+        logger.h
+        texture_container.cpp
+        texture_container.h
+        texture_manager.h 
+        html_menu.cpp 
+        html_menu.h 
+        input_to_cef.cpp 
+        web_message_handler.h 
+        )
 
 # CEF properties
-include_directories(${CEF_INCLUDE_PATH})
+target_include_directories(${BATTLEROOM_TARGET} SYSTEM PUBLIC ${CEF_INCLUDE_PATH}) # the SYSTEM ignores all the warnings
 
 # Logical target used to link the libcef library.
 ADD_LOGICAL_TARGET("libcef_lib" "${CEF_LIB_DEBUG}" "${CEF_LIB_RELEASE}")

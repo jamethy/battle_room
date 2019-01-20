@@ -2,11 +2,11 @@
 // Created by james on 8/27/18.
 //
 
-#include "WebBrowserClient.h"
+#include "web_browser_client.h"
 
 #include "include/wrapper/cef_helpers.h"
 #include "include/cef_parser.h"
-#include "WebMessageHandler.h"
+#include "web_message_handler.h"
 
 #include <iostream>
 
@@ -144,6 +144,9 @@ namespace BattleRoom {
                                           CefRefPtr<CefRequest> request,
                                           bool user_gesture,
                                           bool is_redirect) {
+        (void) request; // unused
+        (void) user_gesture; // unused
+        (void) is_redirect; // unused
 
         CEF_REQUIRE_UI_THREAD();
 
@@ -155,6 +158,10 @@ namespace BattleRoom {
             CefRefPtr<CefBrowser> browser,
             CefRefPtr<CefFrame> frame,
             CefRefPtr<CefRequest> request) {
+        (void) browser; // unused
+        (void) frame; // unused
+        (void) request; // unused
+
         CEF_REQUIRE_IO_THREAD();
 
 //    const std::string& url = request->GetURL();
@@ -172,6 +179,7 @@ namespace BattleRoom {
 
     void WebBrowserClient::OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser,
                                                      TerminationStatus status) {
+        (void) status; // unused
 
         CEF_REQUIRE_UI_THREAD();
 

@@ -11,7 +11,7 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "SDL.h"
-#include "Logger.h"
+#include "logger.h"
 
 #include <cmath>
 #include <string>

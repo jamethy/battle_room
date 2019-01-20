@@ -1,7 +1,7 @@
 #include "sdl_helper_functions.h"
 #include "sdl_drawable_text.h"
 #include "sdl_drawable_image.h"
-#include "Logger.h"
+#include "logger.h"
 
 #include <cmath>
 #include <iostream>

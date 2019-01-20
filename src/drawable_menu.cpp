@@ -1,6 +1,6 @@
 #include "drawable_menu.h"
 #include "animation_handler.h"
-#include "Logger.h"
+#include "logger.h"
 
 namespace BattleRoom {
 

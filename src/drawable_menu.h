@@ -6,8 +6,8 @@
 #include "vector2d.h"
 #include "animation.h"
 #include "rel_pixel.h"
-#include "WebBrowserClient.h"
-#include "WebRenderer.h"
+#include "web_browser_client.h"
+#include "web_renderer.h"
 #include "input.h"
 
 namespace BattleRoom {

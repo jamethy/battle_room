@@ -50,6 +50,7 @@ namespace BattleRoom {
     class SdlCefBrowserProcessHandler : public CefBrowserProcessHandler {
 
         void OnScheduleMessagePumpWork(int64 delay_ms) override {
+            (void) delay_ms; // unused
 //        std::this_thread::sleep_for(std::chrono::milliseconds(delay_ms));
 //        CefDoMessageLoopWork();
         }

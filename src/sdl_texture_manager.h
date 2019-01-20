@@ -3,8 +3,8 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
-#include "TextureContainer.h"
-#include "TextureManager.h"
+#include "texture_container.h"
+#include "texture_manager.h"
 
 #include <string>
 #include <unordered_map>

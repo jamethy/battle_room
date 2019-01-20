@@ -2,7 +2,7 @@
 #include "player.h"
 #include "bullet.h"
 #include "ball.h"
-#include "Logger.h"
+#include "logger.h"
 
 #include <map>
 

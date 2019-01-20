@@ -2,7 +2,6 @@
 #define WEB_APP_H
 
 #include "include/cef_app.h"
-#include "include/wrapper/cef_message_router.h"
 
 namespace BattleRoom {
 
