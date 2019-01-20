@@ -2,14 +2,14 @@
 // Created by james on 1/19/19.
 //
 
-#ifndef BATTLE_ROOM_HTMLMENU_H
-#define BATTLE_ROOM_HTMLMENU_H
+#ifndef BATTLE_ROOM_HTML_MENU_H
+#define BATTLE_ROOM_HTML_MENU_H
 
-#include "web_renderer.h"
+#include "drawable_menu.h"
+#include "input.h"
 #include "web_browser_client.h"
 #include "web_message_handler.h"
-#include "input.h"
-#include "drawable_menu.h"
+#include "web_renderer.h"
 
 namespace BattleRoom {
 
@@ -22,6 +22,8 @@ namespace BattleRoom {
         ~HtmlMenu();
 
         void resize(int width, int height);
+
+        void navigateTo(const std::string& location);
 
         void handleInput(Input input, int x, int y);
 
@@ -37,4 +39,4 @@ namespace BattleRoom {
 
     }; // HtmlMenu class
 } // BattleRoom namespace
-#endif //BATTLE_ROOM_HTMLMENU_H
+#endif //BATTLE_ROOM_HTML_MENU_H

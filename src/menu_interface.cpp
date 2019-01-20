@@ -16,6 +16,11 @@ namespace BattleRoom {
 
     void MenuInterface::applySettings(ResourceDescriptor settings) {
         View::applySettings(settings);
+
+        ResourceDescriptor sub = settings.getSubResource("Url");
+        if (isNotEmpty(sub.getValue())) {
+            m_htmlMenu->navigateTo(sub.getValue());
+        }
     }
 
 // constructors

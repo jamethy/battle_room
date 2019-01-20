@@ -65,5 +65,13 @@ namespace BattleRoom {
      */
     bool isNumber(const std::string &str);
 
+    /**
+     * \brief Chcks if the string starts with the prefix
+     * \param str String to observe
+     * \param prefix String to check for
+     * \return True if it {@code str} starts with {@code prefix}
+     */
+    bool startsWith(const std::string &str, const std::string &prefix);
+
 } // BattleRoom namespace
 #endif // STRING_UTILS_H

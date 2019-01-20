@@ -6,6 +6,7 @@
 
 #include "html_menu.h"
 #include "logger.h"
+#include "file_utils.h"
 
 namespace BattleRoom {
 
@@ -18,6 +19,30 @@ namespace BattleRoom {
 
         m_webRenderer = new WebRenderer(textureManager, windowWidth, windowHeight);
         m_webBrowserClient = new WebBrowserClient(m_webRenderer, webMessageHandler);
+        m_drawableMenu.setTextureKey(m_webRenderer->getTextureKey());
+    }
+
+    HtmlMenu::~HtmlMenu() {
+        Log::debug("Closing drawable menu");
+        if (m_webBrowser) {
+            m_webBrowser->GetHost()->CloseBrowser(true);
+        }
+    }
+
+
+    void HtmlMenu::resize(int width, int height) {
+        m_webRenderer->resize(width, height);
+        if (m_webBrowser) {
+            m_webBrowser->GetHost()->WasResized();
+        }
+    }
+
+    // TODO bound to be a better way
+    void HtmlMenu::navigateTo(const std::string &location) {
+
+        if (m_webBrowser) {
+            m_webBrowser->GetHost()->CloseBrowser(true);
+        }
 
         // some browser settings
         CefWindowInfo window_info;
@@ -27,31 +52,24 @@ namespace BattleRoom {
         browserSettings.windowless_frame_rate = 60;
         browserSettings.background_color = 0; // allows for transparency
 
+        std::string url = location;
+        if (!startsWith(url, "http")) {
+            url = "file://" + getResourcePath() + url;
+        }
+        Log::debug("Loading url ", url);
+
         // Create the browser object to interpret the HTML
-        std::string htmlFile = "file://" + std::string(SDL_GetBasePath()) + "sdl_cef_html.html";
-        Log::debug("Creating menu with dimensions [", windowWidth, ", ", windowHeight, "] of ", htmlFile);
         m_webBrowser = CefBrowserHost::CreateBrowserSync(window_info,
                                                          m_webBrowserClient,
-                                                         htmlFile,
+                                                         url,
                                                          browserSettings,
                                                          nullptr);
-
-        m_drawableMenu.setTextureKey(m_webRenderer->getTextureKey());
-    }
-
-    HtmlMenu::~HtmlMenu() {
-        Log::debug("Closing drawable menu");
-        m_webBrowser->GetHost()->CloseBrowser(false);
-    }
-
-
-    void HtmlMenu::resize(int width, int height) {
-        m_webRenderer->resize(width, height);
-        m_webBrowser->GetHost()->WasResized();
     }
 
     void HtmlMenu::handleInput(Input input, int x, int y) {
-        cefHandleInput(std::move(input), x, y, m_webBrowser.get());
+        if (m_webBrowser) {
+            cefHandleInput(std::move(input), x, y, m_webBrowser.get());
+        }
     }
 
     DrawableMenu HtmlMenu::getDrawableMenu() {

@@ -1,7 +1,5 @@
-#include "./sdl_network_helper.h"
 #include "logger.h"
-
-#include <sstream>
+#include "sdl_network_helper.h"
 
 namespace BattleRoom {
 
@@ -92,9 +90,7 @@ namespace BattleRoom {
         }
 
         if (bytesRead < (int)Message::Size) {
-            std::stringstream ss;
-            ss << "Did not receive full header: " << bytesRead;
-            Log::error(ss.str());
+            Log::error("Did not receive full header: ", bytesRead);
             return -1;
         }
 
@@ -120,9 +116,7 @@ namespace BattleRoom {
             }
 
             if (message.getBodyHash() != dataStream.hash()) {
-                std::stringstream ss;
-                ss << "Body hash did not meet calculations: header: " << message.getBodyHash() << " bs: " << dataStream.hash();
-                Log::error(ss.str());
+                Log::error("Body hash did not meet calculations: header: ", message.getBodyHash(), " bs: ", dataStream.hash());
                 return -1;
             }
         }

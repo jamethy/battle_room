@@ -1,6 +1,0 @@
-Interface: Menu
-    Menu: PullDown
-        OnClick: menus/popup
-    Window: mainWindow
-
-

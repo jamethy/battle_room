@@ -1,26 +1,25 @@
 #include <utility>
 
-#include <utility>
-
 #include "file_utils.h"
 #include "logger.h"
 
 #include <regex>
 #include <fstream>
 #include <iostream>
+#include <zconf.h>
 
 using std::string;
 using std::vector;
 
 namespace BattleRoom {
 
-/**
- * Static variable of the resource path
- * See setResourcePathFromExe and getResourcePath
- */
-    std::string m_resourcePath = "../res/";
+    /**
+     * Static variable of the resource path
+     * See setResourcePathFromExe and getResourcePath
+     */
+    string m_resourcePath = "../res/";
 
-    string getFilePath(string fullFilePath) {
+    string getFilePath(const string &fullFilePath) {
 
         string filepath = "./";
 
@@ -36,7 +35,7 @@ namespace BattleRoom {
         return filepath;
     }
 
-    string getFileName(string fullFilePath) {
+    string getFileName(const string &fullFilePath) {
 
         string filename;
 
@@ -53,15 +52,15 @@ namespace BattleRoom {
         return filename;
     }
 
-    string getFileExtension(string filename) {
+    string getFileExtension(const string &filename) {
 
-        string ext = "";
 
         // .*\\. file name and path including the dot before the extension
         // ([\\w]+) at least one word character designating the extension (group 1)
         // $ end of line
         std::regex rgx_ext(".*\\.([\\w]+)$");
         std::smatch sm;
+        string ext;
         if (std::regex_search(filename, sm, rgx_ext)) {
             ext = sm[1].str();
         }
@@ -69,7 +68,7 @@ namespace BattleRoom {
         return ext;
     }
 
-    vector<string> readEntireResourceFile(string fullFilePath) {
+    vector<string> readEntireResourceFile(const string &fullFilePath) {
 
         vector<string> lines;
 
@@ -91,20 +90,25 @@ namespace BattleRoom {
         return lines;
     }
 
-    void setResourcePathFromExe(std::string exeFilePath) {
+    void setResourcePathFromExe(const string &exeFilePath) {
 
-        std::string exePath = getFilePath(std::move(exeFilePath));
-        m_resourcePath = exePath + "res/";
+        string exePath = getFilePath(exeFilePath);
+
+        char resolved_path[PATH_MAX];
+        realpath((exePath + "res/").c_str(), resolved_path);
+        m_resourcePath = std::string(resolved_path) + "/";
     }
 
-    void setResourcePathFromStartupScript(std::string startupFilePath) {
+    void setResourcePathFromStartupScript(const string &startupFilePath) {
 
-        std::string startupPath = getFilePath(std::move(startupFilePath));
-        m_resourcePath = startupPath;
+        string startupPath = getFilePath(startupFilePath);
+
+        char resolved_path[PATH_MAX];
+        realpath(startupPath.c_str(), resolved_path);
+        m_resourcePath = std::string(resolved_path) + "/";
     }
 
-    std::string getResourcePath() {
+    string getResourcePath() {
         return m_resourcePath;
     }
-
 } // BattleRoom namesace

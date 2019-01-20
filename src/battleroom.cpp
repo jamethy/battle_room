@@ -13,6 +13,8 @@ int main(int argc, char **argv) {
 
     Log::debug("Hello World!");
 
+    std::string settings_file = getStartupScriptFromArgs(argc, argv);
+
     // if called for web rendering process, return code
     auto renderProcessCode = Application::initializeWeb(argc, argv);
     if (renderProcessCode >= 0) {
@@ -21,7 +23,6 @@ int main(int argc, char **argv) {
     }
 
     // Read in the startup script settings file
-    std::string settings_file = getStartupScriptFromArgs(argc, argv);
     ResourceDescriptor rd = ResourceDescriptor::readFile(settings_file);
 
     Log::info("Instantiating the application");
@@ -49,7 +50,7 @@ std::string getStartupScriptFromArgs(int argc, char **argv) {
     setResourcePathFromExe(argv[0]);
     std::string startupScript = getResourcePath() + "/startup" + DESCRIPTOR_EXTENSION;
 
-    if (argc > 1) {
+    if (argc > 1 && !startsWith(argv[1], "--")) {
         std::string arg = argv[1];
 
         // try with no additions

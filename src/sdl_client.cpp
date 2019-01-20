@@ -1,9 +1,7 @@
 
-#include "./sdl_client.h"
-#include "./sdl_network_helper.h"
 #include "logger.h"
-
-#include <sstream>
+#include "sdl_client.h"
+#include "sdl_network_helper.h"
 
 namespace BattleRoom {
 
@@ -11,9 +9,7 @@ namespace BattleRoom {
 
         SDLNet_SocketSet socketSet = SDLNet_AllocSocketSet(1);
         if (SDLNet_TCP_AddSocket(socketSet, client.m_socket) == -1) {
-            std::stringstream ss;
-            ss << "SDLNet_TCP_AddSocket: " << SDL_GetError();
-            Log::error(ss.str());
+            Log::error("SDLNet_TCP_AddSocket: ", SDL_GetError());
             return;
         }
 
@@ -54,33 +50,25 @@ namespace BattleRoom {
 
         /* initialize SDL */
         if (SDL_Init(0) == -1) {
-            std::stringstream ss;
-            ss << "SDL_Init: " << SDL_GetError();
-            Log::error(ss.str());
+            Log::error("SDL_Init: ", SDL_GetError());
             return false;
         }
 
         /* initialize SDL_net */
         if (SDLNet_Init() == -1) {
-            std::stringstream ss;
-            ss << "SDLNet_Init: " << SDLNet_GetError();
-            Log::error(ss.str());
+            Log::error("SDLNet_Init: ", SDLNet_GetError());
             return false;
         }
 
         IPaddress serverIp;
-        if (SDLNet_ResolveHost(&serverIp, host.c_str(), port) == -1) {
-            std::stringstream ss;
-            ss << "SDLNet_ResolveHost: " << SDLNet_GetError();
-            Log::error(ss.str());
+        if (SDLNet_ResolveHost(&serverIp, host.c_str(), static_cast<Uint16>(port)) == -1) {
+            Log::error("SDLNet_ResolveHost: ", SDLNet_GetError());
             return false;
         }
 
         m_socket = SDLNet_TCP_Open(&serverIp);
         if (!m_socket) {
-            std::stringstream ss;
-            ss << "SDLNet_TCP_Open: " << SDLNet_GetError();
-            Log::error(ss.str());
+            Log::error("SDLNet_TCP_Open: ", SDLNet_GetError());
             return false;
         }
 

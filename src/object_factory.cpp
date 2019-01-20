@@ -9,13 +9,13 @@
 namespace BattleRoom {
 
     std::map<ObjectType, ResourceDescriptor> OBJECT_TEMPLATES = {
-        { ObjectType::Player, ResourceDescriptor("Player", "") },
-        { ObjectType::Bullet, ResourceDescriptor("Bullet", "") },
-        { ObjectType::Ball, ResourceDescriptor("Ball", "") },
-        { ObjectType::None, ResourceDescriptor("Object", "") }
+            {ObjectType::Player, ResourceDescriptor("Player", "")},
+            {ObjectType::Bullet, ResourceDescriptor("Bullet", "")},
+            {ObjectType::Ball,   ResourceDescriptor("Ball", "")},
+            {ObjectType::None,   ResourceDescriptor("Object", "")}
     };
 
-    ObjectType keyToType(const std::string& key) {
+    ObjectType keyToType(const std::string &key) {
         if (keyMatch(key, "Player")) {
             return ObjectType::Player;
         } else if (keyMatch(key, "Bullet")) {
@@ -27,7 +27,7 @@ namespace BattleRoom {
         }
     }
 
-    std::string typeToKey(const ObjectType& type) {
+    std::string typeToKey(const ObjectType &type) {
         switch (type) {
             case ObjectType::None:
                 return "None";
@@ -39,12 +39,15 @@ namespace BattleRoom {
                 return "Bullet";
             case ObjectType::Player:
                 return "Player";
+            default:
+                Log::error("Unknown object type to key: ", (int) type);
+                return "None";
         }
     }
 
     void ObjectFactory::applySettings(ResourceDescriptor settings) {
 
-        for (const ResourceDescriptor& sub : settings.getSubResources()) {
+        for (const ResourceDescriptor &sub : settings.getSubResources()) {
             ObjectType type = keyToType(sub.getKey());
             OBJECT_TEMPLATES.at(type) = sub;
             Log::info("Read in object template for " + sub.getKey() + " to " + typeToKey(type));
@@ -53,7 +56,7 @@ namespace BattleRoom {
 
     UniqueGameObject createTemplateObject(ResourceDescriptor settings) {
 
-        GameObject* obj = nullptr;
+        GameObject *obj = nullptr;
 
         if (keyMatch("Player", settings.getKey())) {
             obj = new Player(UniqueId::generateNewNetworkId());
@@ -72,8 +75,8 @@ namespace BattleRoom {
     std::vector<UniqueGameObject> ObjectFactory::getGameObjects(ResourceDescriptor settings) {
         std::vector<UniqueGameObject> objects;
 
-        for (const auto& objTemplate : OBJECT_TEMPLATES) {
-            for (const ResourceDescriptor& objDesc : settings.getSubResources(objTemplate.second.getKey())) {
+        for (const auto &objTemplate : OBJECT_TEMPLATES) {
+            for (const ResourceDescriptor &objDesc : settings.getSubResources(objTemplate.second.getKey())) {
                 auto obj = createTemplateObject(objTemplate.second);
                 obj->applySettings(objDesc);
                 objects.push_back(std::move(obj));
@@ -99,8 +102,8 @@ namespace BattleRoom {
         }
     }
 
-    UniqueGameObject ObjectFactory::deserializeObject(BinaryStream& bs) {
-        const ObjectType type = (ObjectType)bs.peekInt();
+    UniqueGameObject ObjectFactory::deserializeObject(BinaryStream &bs) {
+        const ObjectType type = (ObjectType) bs.peekInt();
         switch (type) {
             case ObjectType::Ball:
                 return UniqueGameObject(new Ball(Ball::deserialize(bs)));

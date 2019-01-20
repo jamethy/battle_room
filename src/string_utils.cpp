@@ -1,10 +1,10 @@
 
 #include "string_utils.h"
 
-#include <sstream>
-#include <string>
 #include <algorithm>
 #include <regex>
+#include <sstream>
+#include <string>
 
 using std::string;
 using std::vector;
@@ -33,7 +33,7 @@ namespace BattleRoom {
 
     bool keyMatch(string a, string b) {
         // compare returns the number of characters that differ
-        return toLower(a).compare(toLower(b)) == 0;
+        return toLower(a) == toLower(b);
     }
 
     bool isNotEmpty(const string &str) {
@@ -68,9 +68,17 @@ namespace BattleRoom {
             return false;
         }
 
-        std::regex rgx_char("^\\s*-?\\d+\\s*$");
+        std::regex rgx_char(R"(^\s*-?\d+\s*$)");
         std::smatch sm;
         return std::regex_search(str, sm, rgx_char);
+    }
+
+    bool startsWith(const std::string &str, const std::string &prefix) {
+
+        if (prefix.empty()) {
+            return true;
+        }
+        return str.find(prefix) == 0;
     }
 
 } // BattleRoom namespace

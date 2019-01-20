@@ -3,22 +3,21 @@
 
 #include <cstring>
 #include <stdexcept>
-#include <sstream>
 
 namespace BattleRoom {
 
     BinaryStream::BinaryStream(size_t bufferSize) :
-        m_bufferSize(bufferSize),
-        m_dataLength(0),
-        m_buffer(new char[m_bufferSize]()),
-        m_loc(0) { }
+            m_bufferSize(bufferSize),
+            m_dataLength(0),
+            m_buffer(new char[m_bufferSize]()),
+            m_loc(0) {}
 
-    BinaryStream::~BinaryStream() { 
-        delete[] m_buffer; 
+    BinaryStream::~BinaryStream() {
+        delete[] m_buffer;
     }
 
-    void BinaryStream::reset() { 
-        m_loc = 0; 
+    void BinaryStream::reset() {
+        m_loc = 0;
         m_dataLength = 0;
     }
 
@@ -26,11 +25,9 @@ namespace BattleRoom {
 
         if (length > m_bufferSize) {
 
-            std::stringstream ss;
-            ss << "Increasing buffer size from " << m_bufferSize << " to " << length;
-            Log::debug(ss.str());
+            Log::debug("Increasing buffer size from ", m_bufferSize, " to ", length);
 
-            char* old = m_buffer;
+            char *old = m_buffer;
             m_bufferSize = length;
             m_buffer = new char[m_bufferSize]();
             if (m_dataLength > 0) {
@@ -45,17 +42,17 @@ namespace BattleRoom {
         m_loc = pos;
     }
 
-    char* BinaryStream::getBuffer() { 
-        return m_buffer; 
+    char *BinaryStream::getBuffer() {
+        return m_buffer;
     }
 
-    size_t BinaryStream::getLength() const { 
-        return m_dataLength; 
-    } 
+    size_t BinaryStream::getLength() const {
+        return m_dataLength;
+    }
 
-    size_t BinaryStream::getPosition() const { 
-        return m_loc; 
-    } 
+    size_t BinaryStream::getPosition() const {
+        return m_loc;
+    }
 
     void BinaryStream::writeInt(int val) {
         incrementWriteLoc(sizeof(int));
@@ -96,7 +93,7 @@ namespace BattleRoom {
         int size = readInt();
         incrementReadLoc(size);
         std::string retVal(size, '\0');
-        memcpy((void*)retVal.data(), m_buffer + m_loc - size, size);
+        memcpy((void *) retVal.data(), m_buffer + m_loc - size, size);
         return retVal;
     }
 
@@ -122,7 +119,7 @@ namespace BattleRoom {
     std::string BinaryStream::peekString() {
         int size = peekInt();
         std::string retVal(size, '\0');
-        memcpy((void*)retVal.data() , m_buffer + m_loc + sizeof(int), size);
+        memcpy((void *) retVal.data(), m_buffer + m_loc + sizeof(int), size);
         return retVal;
     }
 
@@ -135,12 +132,10 @@ namespace BattleRoom {
     void BinaryStream::incrementWriteLoc(size_t by) {
         if (m_loc + by > m_bufferSize) {
 
-            std::stringstream ss;
-            ss << "Doubling buffer size from " << m_bufferSize << " to " << 2*m_bufferSize;
-            Log::debug(ss.str());
+            Log::debug("Doubling buffer size from ", m_bufferSize, " to ", 2 * m_bufferSize);
 
-            char* old = m_buffer;
-            m_bufferSize = 2*m_bufferSize;
+            char *old = m_buffer;
+            m_bufferSize = 2 * m_bufferSize;
             m_buffer = new char[m_bufferSize]();
             if (m_dataLength > 0) {
                 memcpy(m_buffer, old, m_dataLength);
@@ -169,14 +164,23 @@ namespace BattleRoom {
     // unit versions
 
     void BinaryStream::writeSeconds(seconds val) { writeDouble(val); }
+
     void BinaryStream::writeMeters(meters val) { writeDouble(val); }
+
     void BinaryStream::writeRadians(radians val) { writeDouble(val); }
+
     void BinaryStream::writeDegrees(degrees val) { writeDouble(val); }
+
     void BinaryStream::writeKilograms(kilograms val) { writeDouble(val); }
+
     seconds BinaryStream::readSeconds() { return readDouble(); }
+
     meters BinaryStream::readMeters() { return readDouble(); }
+
     radians BinaryStream::readRadians() { return readDouble(); }
+
     degrees BinaryStream::readDegrees() { return readDouble(); }
+
     kilograms BinaryStream::readKilograms() { return readDouble(); }
 
 } // BattleRoom namespace
