@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "animation_handler.h"
 #include "object_factory.h"
 #include "player.h"
@@ -133,17 +135,18 @@ namespace BattleRoom {
     }
 
     void Player::shootBullet(Vector2D aim) {
-        m_aim = aim;
-        Bullet *bullet = (Bullet*)(ObjectFactory::createObjectOfType(ObjectType::Bullet).release());
+        m_aim = std::move(aim);
         Vector2D bulletVelUnit = m_aim.minus(getPosition()).getUnit();
 
         const Frame& frame = getAnimation().getFrame(getAnimationState());
         meters dist = std::max(frame.getWidth(), frame.getHeight()) / 2;
-
         double speed = std::max(m_gunCharge*MAX_BULLET_SPEED, MIN_BULLET_SPEED);
+
+        Bullet *bullet = (Bullet*)(ObjectFactory::createObjectOfType(ObjectType::Bullet).release());
         bullet->setVelocity(bulletVelUnit.times(speed).plus(getVelocity()));
         bullet->setRotation(bulletVelUnit.angle());
         bullet->setPosition(getPosition().plus(bulletVelUnit.times(dist)));
+        bullet->setSource(getUniqueId());
 
         // kickback
         if (!isStatic() && bullet->getMass() > EPS_KILOGRAMS) {

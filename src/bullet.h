@@ -15,6 +15,8 @@ namespace BattleRoom {
         // constructor
         Bullet(UniqueId id);
 
+        void setSource(UniqueId id);
+
         // inherited
         void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) override;
 
@@ -36,6 +38,8 @@ namespace BattleRoom {
         };
 
         BulletState m_state; /// Current state of the ball object
+        UniqueId m_bulletSource;
+        seconds m_timeSinceFired;
 
         Bullet(const GameObject& obj);
 

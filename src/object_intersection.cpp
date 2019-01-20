@@ -306,7 +306,9 @@ namespace BattleRoom {
                 GameObject *objectA = objects.at(i);
                 GameObject *objectB = objects.at(j);
 
-                if (objectA->isStatic() && objectB->isStatic()) {
+                if (!objectA->isCollidable() || !objectB->isCollidable()) {
+                    continue;
+                } else if (objectA->isStatic() && objectB->isStatic()) {
                     continue;
                 } else if (objectB->isStatic()) {
                     std::swap(objectA, objectB);
@@ -314,7 +316,7 @@ namespace BattleRoom {
 
                 SatIntersection intersection = checkForIntersection(objectA, objectB);
                 if (intersection.doesIntersect()) {
-                    intersections.push_back(ObjectIntersection(objectA, objectB, intersection));
+                    intersections.emplace_back(objectA, objectB, intersection);
                 }
             }
         }

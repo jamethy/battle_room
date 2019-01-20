@@ -47,6 +47,8 @@ namespace BattleRoom {
 
         bool isStatic() const;
 
+        bool isCollidable() const;
+
         bool destroy() const;
 
         kilograms getMass() const;
@@ -64,6 +66,8 @@ namespace BattleRoom {
         void setAngularVelocity(double radiansPerSecond);
 
         void setIsStatic(bool isStatic);
+
+        void setIsCollidable(bool isCollidable);
 
         void setToDestroy(bool destroy);
 
@@ -86,6 +90,7 @@ namespace BattleRoom {
         Vector2D m_velocity; ///< Object's velocity
         double m_angularVelocity; ///< Object's angular velocity about z-axis in radians per second
         bool m_isStatic; ///< If object is static, it does not move or intersect other static objects
+        bool m_isCollidable; ///< If object is collidable, it can intersect other objects
         bool m_destroy; ///< if the object should be destroyed at the end of the frame
         kilograms m_mass; ///< mass in kilograms of the object
         std::string m_name; ///< label used for debugging

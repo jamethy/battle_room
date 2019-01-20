@@ -36,6 +36,11 @@ namespace BattleRoom {
             setIsStatic(keyMatch("True", sub.getValue()));
         }
 
+        sub = settings.getSubResource("Collidable");
+        if (isNotEmpty(sub.getValue())) {
+            setIsCollidable(keyMatch("False", sub.getValue()));
+        }
+
         sub = settings.getSubResource("Mass");
         if (isNotEmpty(sub.getValue())) {
             setMass(toKilograms(sub.getValue()));
@@ -50,6 +55,7 @@ namespace BattleRoom {
         m_uniqueId(uniqueId),
         m_angularVelocity(0.0),
         m_isStatic(false),
+        m_isCollidable(true),
         m_destroy(false),
         m_type(type) {}
 
@@ -60,6 +66,7 @@ namespace BattleRoom {
         m_uniqueId(UniqueId::generateInvalidId()),
         m_angularVelocity(0.0),
         m_isStatic(false),
+        m_isCollidable(true),
         m_destroy(false),
         m_type(ObjectType::None) {}
 
@@ -144,6 +151,10 @@ namespace BattleRoom {
         return m_isStatic;
     }
 
+    bool GameObject::isCollidable() const {
+        return m_isCollidable;
+    }
+
     bool GameObject::destroy() const {
         return m_destroy;
     }
@@ -168,6 +179,10 @@ namespace BattleRoom {
 
     void GameObject::setIsStatic(bool isStatic) {
         m_isStatic = isStatic;
+    }
+
+    void GameObject::setIsCollidable(bool isCollidable) {
+        m_isCollidable = isCollidable;
     }
 
     void GameObject::setToDestroy(bool destroy) {
@@ -202,6 +217,7 @@ namespace BattleRoom {
         m_velocity.serialize(bs);
         bs.writeDouble(m_angularVelocity); // nn
         bs.writeBool(m_isStatic); // nn?
+        bs.writeBool(m_isCollidable);
         bs.writeBool(m_destroy); // nn
         bs.writeKilograms(m_mass);
         bs.writeString(m_name);
@@ -219,6 +235,7 @@ namespace BattleRoom {
         obj.m_velocity = Vector2D::deserialize(bs);
         obj.m_angularVelocity = bs.readDouble();
         obj.m_isStatic = bs.readBool();
+        obj.m_isCollidable = bs.readBool();
         obj.m_destroy = bs.readBool();
         obj.m_mass = bs.readKilograms();
         obj.m_name = bs.readString();
