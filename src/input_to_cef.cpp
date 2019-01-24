@@ -340,7 +340,7 @@ namespace BattleRoom {
         browser->GetHost()->SendMouseClickEvent(
                 event,
                 mouseButtonType,
-                input.getMotion() == Motion::PressedDown,
+                input.getMotion() != Motion::PressedDown,
                 clickNum
         );
     }

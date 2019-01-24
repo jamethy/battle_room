@@ -20,7 +20,7 @@ namespace BattleRoom {
 
     public:
 
-        explicit SimpleMessageHandler(WebMessageHandler *messageHandler) : m_webMessageHandler(messageHandler) { }
+        explicit SimpleMessageHandler(WebMessageHandler *messageHandler) : m_webMessageHandler(messageHandler) {}
 
         bool OnQuery(CefRefPtr<CefBrowser> browser,
                      CefRefPtr<CefFrame> frame,
@@ -34,8 +34,12 @@ namespace BattleRoom {
             (void) persistent; // unused
 
             if (m_webMessageHandler) {
-                std::string response = m_webMessageHandler->onMessage(request.ToString());
-                callback.get()->Success(CefString(response));
+                auto response = m_webMessageHandler->onMessage(request.ToString());
+                if (response.statusCode == WebMessageResponse::SUCCESS_CODE) {
+                    callback.get()->Success(CefString(response.message));
+                } else {
+                    callback.get()->Failure(response.statusCode, CefString(response.message));
+                }
             }
 
             return true;
@@ -70,10 +74,10 @@ namespace BattleRoom {
     IMPLEMENT_REFCOUNTING(NoContextMenu);
     };
 
-    WebBrowserClient::WebBrowserClient(CefRefPtr<CefRenderHandler> ptr, WebMessageHandler* webMessageHandler) :
+    WebBrowserClient::WebBrowserClient(CefRefPtr<CefRenderHandler> ptr, WebMessageHandler *webMessageHandler) :
             renderHandler(ptr),
             contextMenuHandler(new NoContextMenu),
-            sampleMessageHandler(new SimpleMessageHandler(webMessageHandler)){
+            sampleMessageHandler(new SimpleMessageHandler(webMessageHandler)) {
     }
 
     WebBrowserClient::~WebBrowserClient() = default;

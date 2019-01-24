@@ -9,9 +9,17 @@
 
 namespace BattleRoom {
 
+    struct WebMessageResponse {
+        int statusCode;
+        std::string message;
+        static const int SUCCESS_CODE = 200;
+    };
+
+
     class WebMessageHandler {
     public:
-        virtual std::string onMessage(const std::string &message) = 0;
+
+        virtual WebMessageResponse onMessage(const std::string &message) = 0;
 
     }; // WebMessageHandler class
 } // BattleRoom namespace

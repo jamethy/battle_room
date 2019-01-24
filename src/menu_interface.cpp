@@ -7,10 +7,11 @@
 #include "include/cef_parser.h"
 
 using std::vector;
-using InputKey::Key;
-using InputKey::Motion;
 
 namespace BattleRoom {
+
+    using InputKey::Key;
+    using InputKey::Motion;
 
 // apply settings
 
@@ -35,11 +36,23 @@ namespace BattleRoom {
 
 // other functions
 
-    std::string MenuInterface::onMessage(const std::string &message) {
+    WebMessageResponse MenuInterface::onMessage(const std::string &message) {
         static int counter = 0;
 
         CefString request(message);
         CefRefPtr<CefDictionaryValue> requestValue = CefParseJSON(request, JSON_PARSER_RFC)->GetDictionary();
+        auto method = requestValue->GetString("method").ToString();
+        auto route = requestValue->GetString("route").ToString();
+        Log::debug("MenuInterface Message: Method: ", method, ", Route: ", route);
+
+
+        if (method == "POST" && route == "/quit") {
+            ApplicationMessageReceiver::addQuitEvent();
+            return {WebMessageResponse::SUCCESS_CODE, ""};
+        } else if (method == "POST" && route == "something") {
+            auto body = requestValue->GetString("body").ToString();
+            // TODO pass on to application message or resource descriptor or something
+        }
 
         CefRefPtr<CefDictionaryValue> result_dict = CefDictionaryValue::Create();
         result_dict->SetInt("count", ++counter);
@@ -47,7 +60,8 @@ namespace BattleRoom {
         CefRefPtr<CefValue> value = CefValue::Create();
         value->SetDictionary(result_dict);
         CefString json = CefWriteJSON(value, JSON_WRITER_DEFAULT);
-        return json.ToString();
+
+        return {WebMessageResponse::SUCCESS_CODE, json.ToString()};
     }
 
     vector<DrawableObject> MenuInterface::getDrawableObjects() {

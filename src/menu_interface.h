@@ -22,7 +22,7 @@ namespace BattleRoom {
         MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth, int windowHeight);
 
         // inherited
-        std::string onMessage(const std::string& message) override;
+        WebMessageResponse onMessage(const std::string& message) override;
 
         void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
 

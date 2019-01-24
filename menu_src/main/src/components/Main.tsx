@@ -1,5 +1,6 @@
 import * as React from "react";
 import {PopupBox, PopupBoxProps} from "./PopupBox";
+import {quitGame, testAppCall} from "../AppCalls";
 
 export interface MainProps {
 }
@@ -22,7 +23,7 @@ const popupStyle: React.CSSProperties = {
 
 export class Main extends React.Component<MainProps, MainState> {
 
-    private readonly pages : Map<MainPage, PopupBoxProps>;
+    private readonly pages: Map<MainPage, PopupBoxProps>;
 
     constructor(props: MainProps) {
         super(props);
@@ -56,7 +57,7 @@ export class Main extends React.Component<MainProps, MainState> {
                 },
                 {
                     label: "Quit",
-                    onClick: () => this.navigateTo(MainPage.Home),
+                    onClick: quitGame,
                 },
             ]
         });
@@ -66,7 +67,7 @@ export class Main extends React.Component<MainProps, MainState> {
             buttons: [
                 {
                     label: "Play",
-                    onClick: () => this.navigateTo(MainPage.SinglePlayer),
+                    onClick: testAppCall,
                 },
                 {
                     label: "Back",
@@ -81,7 +82,12 @@ export class Main extends React.Component<MainProps, MainState> {
     }
 
     render() {
-        const currentPageProps = this.pages.get(this.state.currentPage);
+        let currentPage = this.state.currentPage;
+        if (!this.pages.has(currentPage)) {
+            console.error("Unknown page requested: " + currentPage + ". Going home.");
+            currentPage = MainPage.Home;
+        }
+        const currentPageProps = this.pages.get(currentPage);
         return <PopupBox {...currentPageProps} />
     }
 }
