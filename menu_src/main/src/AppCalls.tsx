@@ -46,15 +46,32 @@ export function quitGame() {
     );
 }
 
+
+// Window: mainWindow
+//     Width: 1500
+//     Height: 1000
+//
+// Interface: Game
+//     Window: mainWindow
+//     Layer: 10
+//     Camera: Pyramid
+
 export function testAppCall() {
     appCall(
         {
             method: "POST",
             route: "/test",
             body: {
-                field1: "Field 1 string",
-                nested: {
-                    subfield1: 3
+                window: {
+                    value: "secondWindow",
+                    width: 1000,
+                    height: 1000,
+                },
+                interface: {
+                    value: "game",
+                    window: "secondWindow",
+                    layer: 10,
+                    camera: "pyramid"
                 }
             }
         },

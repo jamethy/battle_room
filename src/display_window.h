@@ -25,7 +25,7 @@ namespace BattleRoom {
     public:
 
         // destructor
-        virtual ~DisplayWindow() {};
+        ~DisplayWindow() override = default;;
 
         /*!
          * \breif Collects window inputs to the InputGatherer

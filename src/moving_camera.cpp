@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "moving_camera.h"
 
 #include <cmath>
@@ -33,22 +35,32 @@ namespace BattleRoom {
         if (isNotEmpty(sub.getValue())) {
             m_minimumCameraZ = std::stod(sub.getValue());
         }
-
-
     }
+
+    ResourceDescriptor MovingCamera::getSettings() const {
+        ResourceDescriptor rd = Camera::getSettings();
+        rd.setValue("MovingCamera");
+        std::vector<ResourceDescriptor> subs = rd.getSubResources();
+
+        subs.emplace_back("CameraFriction", std::to_string(m_cameraFriction));
+        subs.emplace_back("ZoomInMultiplier", std::to_string(m_zoomInMultiplier));
+        subs.emplace_back("ZoomOutMultiplier", std::to_string(m_zoomOutMultiplier));
+        subs.emplace_back("MinimumCameraZ", std::to_string(m_minimumCameraZ));
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 
 // constructors
 
-    MovingCamera::MovingCamera() {
-
-    }
+    MovingCamera::MovingCamera() = default;
 
     MovingCamera::MovingCamera(ResourceDescriptor settings) {
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
-    MovingCamera::~MovingCamera() {
-    }
+    MovingCamera::~MovingCamera() = default;
 
     void MovingCamera::clearBounds() {
         m_boundsMin = Vector3D(MAX_METERS, MAX_METERS, MAX_METERS);
@@ -114,15 +126,15 @@ namespace BattleRoom {
                         // MOVE CAMERA UP
                         camVelocityDelta = camVelocityDelta.plus(
                                 Vector3D(0, 0, -m_zoomInMultiplier * input.getScrollAmount())
-                                );
+                        );
                     } else {
                         // MOVE CAMERA TOWRAD POS
                         camVelocityDelta = camVelocityDelta.plus(
                                 input.getViewIntersection(viewId)
-                                .minus(m_location)
-                                .getUnit()
-                                .times(m_zoomOutMultiplier * input.getScrollAmount())
-                                );
+                                        .minus(m_location)
+                                        .getUnit()
+                                        .times(m_zoomOutMultiplier * input.getScrollAmount())
+                        );
                     }
                     continue;
                 } else if (input.isModKeyDown(Modifier::Ctrl, Key::LeftClick)) {
@@ -130,8 +142,8 @@ namespace BattleRoom {
                     RelPixel point = fromLocation(input.getViewIntersection(viewId));
                     m_originalClick = std::atan2(0.5 - point.getRow(), point.getCol() - 0.5);
                     m_originalAngle = std::atan2(m_right.y(), m_right.x());
-                    if (m_originalClick < 0) m_originalClick += 2*PI;
-                    if (m_originalAngle < 0) m_originalAngle += 2*PI;
+                    if (m_originalClick < 0) m_originalClick += 2 * PI;
+                    if (m_originalAngle < 0) m_originalAngle += 2 * PI;
 
                 } else if (m_rotating && Key::LeftClick == input.getKey() && Motion::Released == input.getMotion()) {
                     m_rotating = false;
@@ -139,8 +151,8 @@ namespace BattleRoom {
                     RelPixel point = fromLocation(input.getViewIntersection(viewId));
                     radians click = std::atan2(0.5 - point.getRow(), point.getCol() - 0.5);
                     radians currentDelta = std::atan2(m_right.y(), m_right.x());
-                    if (click < 0) click += 2*PI;
-                    if (currentDelta < 0) currentDelta += 2*PI;
+                    if (click < 0) click += 2 * PI;
+                    if (currentDelta < 0) currentDelta += 2 * PI;
 
                     camRotDelta = (-currentDelta + m_originalAngle - (click - m_originalClick));
                 }
@@ -177,6 +189,5 @@ namespace BattleRoom {
         clearBounds();
         Camera::setOrientation(orientation);
     }
-
 } // BattleRoom namespace
 

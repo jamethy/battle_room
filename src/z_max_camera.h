@@ -17,14 +17,18 @@ namespace BattleRoom {
 
         ZMaxCamera();
 
-        ZMaxCamera(ResourceDescriptor settings);
+        explicit ZMaxCamera(ResourceDescriptor settings);
 
-        virtual ~ZMaxCamera() override;
+        ~ZMaxCamera() override;
 
-        virtual Camera *clone() override;
+        Camera *clone() override;
 
         // inherited
         void move(Vector3D deltaVelocity) override;
+
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     }; // ZMaxCamera class
 } // BattleRoom namespace

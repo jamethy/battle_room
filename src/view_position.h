@@ -12,44 +12,49 @@ namespace BattleRoom {
     };
 
     class ViewPosition : public Resource {
-        public:
+    public:
 
-            ViewPosition(ResourceDescriptor settings, int windowWidth, int windowHeight);
+        ViewPosition(ResourceDescriptor settings, int windowWidth, int windowHeight);
 
-            Pixel getTopLeft() const;
+        Pixel getTopLeft() const;
 
-            Pixel getBottomRight() const;
+        Pixel getBottomRight() const;
 
-            void adjustForResize(int width, int height, int oldWidth, int oldHeight);
+        void adjustForResize(int width, int height, int oldWidth, int oldHeight);
 
-            int getViewWidth() const;
-            int getViewHeight() const;
+        int getViewWidth() const;
 
-            void applySettings(ResourceDescriptor settings) override;
+        int getViewHeight() const;
 
-        private:
+        void applySettings(ResourceDescriptor settings) override;
 
-            void setAnchoredPosition(Pixel topLeft, Pixel botRight);
-            void setRelativePosition(Pixel anchor, px width, px height);
+        ResourceDescriptor getSettings() const override;
 
-            void adjustAnchoredPosition(px oldWidth, px oldHeight);
-            void adjustRelativePosition(px oldWindowWidth, px oldWindowHeight);
+    private:
 
-            Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
-            Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
+        void setAnchoredPosition(Pixel topLeft, Pixel botRight);
 
-            SizeType m_sizeType;
-            ScreenAnchor m_anchor;
+        void setRelativePosition(Pixel anchor, px width, px height);
+
+        void adjustAnchoredPosition(px oldWidth, px oldHeight);
+
+        void adjustRelativePosition(px oldWindowWidth, px oldWindowHeight);
+
+        Pixel m_topLeft; ///< Coordinate of top left of the view on the display window
+        Pixel m_bottomRight; ///< Coordinate of bottom rightof the view on the display window
+
+        SizeType m_sizeType;
+        ScreenAnchor m_anchor;
 
 
-            px m_windowWidth;
-            px m_windowHeight;
-            
-            //positioning
-                // abs = topleft, botright
-                // fill = none
-                // anchored = anchor, width, height
-                // rel = ancho, ratio, scale
+        px m_windowWidth;
+        px m_windowHeight;
+
+        //positioning
+        // abs = topleft, botright
+        // fill = none
+        // anchored = anchor, width, height
+        // rel = ancho, ratio, scale
 
     };
 } // BattleRoom namespace

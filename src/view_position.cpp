@@ -1,10 +1,15 @@
+#include <utility>
+
 #include "view_position.h"
+#include "logger.h"
 
 namespace BattleRoom {
 
     // defined later
-    ScreenAnchor parseScreenAnchor(std::string str);
-    SizeType parseSizeType(const std::string str);
+    ScreenAnchor parseScreenAnchor(const std::string &str);
+    SizeType parseSizeType(const std::string &str);
+    std::string screenAnchorToString(ScreenAnchor screenAnchor);
+    std::string sizeTypeToString(SizeType type);
 
     // apply settings
     void ViewPosition::applySettings(ResourceDescriptor settings) {
@@ -37,13 +42,47 @@ namespace BattleRoom {
         }
     }
 
+    ResourceDescriptor ViewPosition::getSettings() const {
+        ResourceDescriptor rd("Position", sizeTypeToString(m_sizeType));
+        std::vector<ResourceDescriptor> subs = {};
+
+        subs.emplace_back("ScreenAnchor", screenAnchorToString(m_anchor));
+
+        ResourceDescriptor sub;
+
+        // todo fill this
+        switch (m_sizeType) {
+            case Absolute:
+                sub = m_topLeft.getSettings();
+                sub.setKey("TopLeft");
+                subs.push_back(sub);
+                sub = m_bottomRight.getSettings();
+                sub.setKey("BottomRight");
+                subs.push_back(sub);
+                break;
+            case Anchored:
+                Log::error("Size type Anchored not yet implemented");
+                break;
+            case Relative:
+                Log::error("Size type Relative not yet implemented");
+                break;
+            case Fill:
+            default:
+                break;
+        }
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
     // constructor
     ViewPosition::ViewPosition(ResourceDescriptor settings, int windowWidth, int windowHeight) :
+        m_sizeType(SizeType::Fill),
         m_anchor(ScreenAnchor::TopLeft),
         m_windowWidth(windowWidth),
         m_windowHeight(windowHeight)
     {
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
     Pixel ViewPosition::getTopLeft() const {
@@ -194,7 +233,7 @@ namespace BattleRoom {
         return m_bottomRight.getRowInt() - m_topLeft.getRowInt();
     }
 
-    SizeType parseSizeType(const std::string str) {
+    SizeType parseSizeType(const std::string &str) {
         if (keyMatch(str, "Absolute")) {
             return SizeType::Absolute;
         } else if (keyMatch(str, "Anchored")) {
@@ -206,7 +245,21 @@ namespace BattleRoom {
         }
     }
 
-    ScreenAnchor parseScreenAnchor(std::string str) {
+    std::string sizeTypeToString(SizeType type) {
+        switch (type) {
+            case Absolute:
+                return "Absolute";
+            case Anchored:
+                return "Anchored";
+            case Relative:
+                return "Relative";
+            case Fill:
+            default:
+                return "Fill";
+        }
+    }
+
+    ScreenAnchor parseScreenAnchor(const std::string &str) {
         if (keyMatch("TopRight", str)) {
             return ScreenAnchor::TopRight;
         } else if (keyMatch("BottomLeft", str)) {
@@ -217,6 +270,22 @@ namespace BattleRoom {
             return ScreenAnchor::Center;
         } else {
             return ScreenAnchor::TopLeft;
+        }
+    }
+
+    std::string screenAnchorToString(ScreenAnchor screenAnchor) {
+        switch (screenAnchor) {
+            case TopRight:
+                return "TopRight";
+            case BottomLeft:
+                return "BottomLeft";
+            case BottomRight:
+                return "BottomRight";
+            case Center:
+                return "Center";
+            case TopLeft:
+            default:
+                return "TopLeft";
         }
     }
 

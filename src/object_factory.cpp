@@ -118,4 +118,12 @@ namespace BattleRoom {
         }
     }
 
+    ResourceDescriptor ObjectFactory::getSettings() {
+        ResourceDescriptor rd("ObjectTemplates", "");
+        std::vector<ResourceDescriptor> subs = {};
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 } // BattleRoom namespace

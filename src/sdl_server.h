@@ -20,15 +20,20 @@ namespace BattleRoom {
     public:
 
         // constructors
-        SdlServer(ResourceDescriptor settings);
-        ~SdlServer();
+        explicit SdlServer(ResourceDescriptor settings);
+
+        ~SdlServer() override;
 
         void adjustSocketSet();
 
         // inherited
         bool start(int port) override;
-        void sendMessage(Message& message, BinaryStream& data, UniqueId clientId) override;
+
+        void sendMessage(Message &message, BinaryStream &data, UniqueId clientId) override;
+
         void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
         std::thread m_receivingThread; ///< Thread to update world on
         bool m_keepReceiving; ///< Set to false when ready to destroy
@@ -38,6 +43,8 @@ namespace BattleRoom {
         SDLNet_SocketSet m_socketSet;
         std::mutex m_writingLock;
         std::mutex m_listenLock;
+
+        int m_port;
     }; // SdlClient class
 } // BattleRoom namespace
 #endif // SDL_SERVER_H

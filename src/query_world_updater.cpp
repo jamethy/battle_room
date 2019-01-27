@@ -9,8 +9,15 @@ namespace BattleRoom {
         }
     }
 
-    QueryWorldUpdater::~QueryWorldUpdater() {
+    ResourceDescriptor QueryWorldUpdater::getSettings() const {
+        ResourceDescriptor rd("WorldUpdater", "Empty");
+        std::vector<ResourceDescriptor> subs = {};
+        subs.emplace_back("UniqueId", m_uniqueId.toString());
+        rd.setSubResources(subs);
+        return rd;
     }
+
+    QueryWorldUpdater::~QueryWorldUpdater() = default;
 
     void QueryWorldUpdater::clientUpdate() {
     }

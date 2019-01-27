@@ -6,7 +6,6 @@
 #include "web_browser_client.h"
 #include "logger.h"
 
-#include <iostream>
 #include <mutex>
 
 using std::string;

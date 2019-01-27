@@ -22,9 +22,11 @@ namespace BattleRoom {
         // Constructors
         ResourceDescriptor();
 
-        ResourceDescriptor(std::string key, std::string value);
+        ResourceDescriptor(const std::string &key, const std::string &value);
 
         ResourceDescriptor(std::vector<std::string> lines);
+
+        static ResourceDescriptor fromJson(const std::string& json);
 
         /**
          * \brief Returns the filtered subresources whose Key matches fileter (ignoring case)

@@ -20,28 +20,43 @@ namespace BattleRoom {
 
         // constructors
         View(ResourceDescriptor settings, int windowWidth, int windowHeight);
+
         View(const View &original);
+
         View &operator=(const View &original);
-        virtual ~View() {}
+
+        ~View() override = default;
 
         // getters and setters
         void setLayer(int layer);
 
         // inherited
         Inputs handleInputs(Inputs inputs) override;
+
         void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
+
         RelPixel fromLocation(Vector3D point) override;
+
         Vector3D zeroPlaneIntersection(Pixel point) const override;
+
         Pixel getTopLeft() const override;
+
         Pixel getBottomRight() const override;
+
         int getLayer() const override;
+
         UniqueId getUniqueId() const override;
+
         void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     protected:
 
         UniqueCamera m_camera;
+
         int getViewWdith();
+
         int getViewHeight();
 
     private:

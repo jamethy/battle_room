@@ -71,6 +71,9 @@ namespace BattleRoom {
          */
         Vector2D getRotated(radians angle) const;
 
+        meters getX() const;
+        meters getY() const;
+
         /**
          * \brief Writes the vector to the string
          * \return String of vector
@@ -84,10 +87,9 @@ namespace BattleRoom {
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
+        ResourceDescriptor getSettings() const override;
         void serialize(BinaryStream& bs) const;
         static Vector2D deserialize(BinaryStream& bs);
-
-        ResourceDescriptor writeToSetting(std::string key);
 
     private:
 

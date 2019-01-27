@@ -18,7 +18,7 @@ namespace BattleRoom {
         // constructors
         LocalUpdatingWorld();
 
-        LocalUpdatingWorld(ResourceDescriptor settings);
+        explicit LocalUpdatingWorld(ResourceDescriptor settings);
 
         /**
          * Update everything in the world. This will iterate the time
@@ -28,6 +28,8 @@ namespace BattleRoom {
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     private:
 

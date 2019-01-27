@@ -22,9 +22,9 @@ namespace BattleRoom {
 
         Camera();
 
-        Camera(ResourceDescriptor settings);
+        explicit Camera(ResourceDescriptor settings);
 
-        virtual ~Camera();
+        ~Camera() override;
 
         virtual Camera *clone();
 
@@ -92,6 +92,8 @@ namespace BattleRoom {
 
         // inherited
         virtual void applySettings(ResourceDescriptor settings);
+
+        virtual ResourceDescriptor getSettings() const override;
 
     protected:
 

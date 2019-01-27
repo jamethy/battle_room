@@ -14,17 +14,20 @@ namespace BattleRoom {
     public:
 
         // destructor
-        virtual ~QueryWorldUpdater();
+        ~QueryWorldUpdater() override;
 
         virtual void clientUpdate();
 
         virtual void registerUser(User user);
+
         virtual void unregisterUser(UniqueId userId);
 
         const UniqueId getUniqueId() const;
 
         // inherited
-        virtual void applySettings(ResourceDescriptor settings) override;
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     private:
 

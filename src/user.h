@@ -9,28 +9,34 @@ namespace BattleRoom {
 
     class User : public Resource {
 
-        public:
+    public:
 
-            User();
-            User(ResourceDescriptor settings);
+        User();
 
-            // setters and getters
-            void setUniqueId(UniqueId id);
-            void setName(std::string name);
+        explicit User(ResourceDescriptor settings);
 
-            UniqueId getUniqueId() const;
-            std::string getName() const;
+        // setters and getters
+        void setUniqueId(UniqueId id);
 
-            void serialize(BinaryStream& bs) const;
-            static User deserialize(BinaryStream& bs);
+        void setName(std::string name);
 
-            // inherited
-            void applySettings(ResourceDescriptor settings) override;
+        UniqueId getUniqueId() const;
 
-        private:
+        std::string getName() const;
 
-            UniqueId m_uniqueId;
-            std::string m_name;
+        void serialize(BinaryStream &bs) const;
+
+        static User deserialize(BinaryStream &bs);
+
+        // inherited
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
+
+    private:
+
+        UniqueId m_uniqueId;
+        std::string m_name;
 
     }; // User
 } // BattleRoom namespace

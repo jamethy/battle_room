@@ -1,17 +1,28 @@
+#include <utility>
+
 #include "z_max_camera.h"
 
 #include <cmath>
 
 namespace BattleRoom {
 
+    void ZMaxCamera::applySettings(ResourceDescriptor settings) {
+        MovingCamera::applySettings(settings);
+    }
+
+    ResourceDescriptor ZMaxCamera::getSettings() const {
+        auto rd = MovingCamera::getSettings();
+        rd.setValue("ZMax");
+        return rd;
+    }
 
 // constructors
-    ZMaxCamera::ZMaxCamera() {}
+    ZMaxCamera::ZMaxCamera() = default;
 
     ZMaxCamera::ZMaxCamera(ResourceDescriptor settings)
-            : MovingCamera(settings) {}
+            : MovingCamera(std::move(settings)) {}
 
-    ZMaxCamera::~ZMaxCamera() {}
+    ZMaxCamera::~ZMaxCamera() = default;
 
     Camera *ZMaxCamera::clone() {
         return new ZMaxCamera(*this);

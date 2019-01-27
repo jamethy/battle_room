@@ -30,8 +30,16 @@ namespace BattleRoom {
         }
     }
 
-    ResourceDescriptor Vector2D::writeToSetting(string key) {
-        return ResourceDescriptor(std::move(key), toString());
+    ResourceDescriptor Vector2D::getSettings() const {
+        ResourceDescriptor rd;
+        std::vector<ResourceDescriptor> subs;
+        subs.clear();
+
+        subs.emplace_back("X", std::to_string(m_x));
+        subs.emplace_back("Y", std::to_string(m_y));
+
+        rd.setSubResources(subs);
+        return rd;
     }
 
 // constructors
@@ -110,6 +118,14 @@ namespace BattleRoom {
     std::string Vector2D::toString() const {
         return std::to_string(m_x) + ", " +
                std::to_string(m_y);
+    }
+
+    meters Vector2D::getX() const {
+        return m_x;
+    }
+
+    meters Vector2D::getY() const {
+        return m_y;
     }
 
 } // BattleRoom namespace

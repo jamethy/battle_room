@@ -2,7 +2,6 @@
 #include "camera_factory.h"
 
 #include <cmath>
-#include <iostream>
 
 namespace BattleRoom {
 
@@ -28,6 +27,26 @@ namespace BattleRoom {
         }
 
         recalculateVerticalFov();
+    }
+
+    ResourceDescriptor View::getSettings() const {
+        ResourceDescriptor rd("Interface", "Game");
+        std::vector<ResourceDescriptor> subs = {};
+
+        ResourceDescriptor sub = m_position.getSettings();
+        sub.setKey("Position");
+        subs.push_back(sub);
+
+        subs.emplace_back("Layer", std::to_string(getLayer()));
+
+        sub = m_camera->getSettings();
+        sub.setKey("Camera");
+        subs.push_back(sub);
+
+        subs.emplace_back("FieldOfView", std::to_string(m_camera->getHorizontalFov()));
+
+        rd.setSubResources(subs);
+        return rd;
     }
 
 // constructors

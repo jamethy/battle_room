@@ -20,20 +20,32 @@ namespace BattleRoom {
     public:
 
         // constructors
-        SdlDisplayWindow(ResourceDescriptor settings);
-        ~SdlDisplayWindow();
+        explicit SdlDisplayWindow(ResourceDescriptor settings);
+
+        ~SdlDisplayWindow() override;
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
-        void gatherInputs(const std::vector<UniqueInterface>& views) override;
-        void addViewDrawables(ViewInterface* view) override;
+
+        ResourceDescriptor getSettings() const override;
+
+        void gatherInputs(const std::vector<UniqueInterface> &views) override;
+
+        void addViewDrawables(ViewInterface *view) override;
+
         void drawScreen() override;
+
         void switchBuffers() override;
+
         const UniqueId getUniqueId() const override;
+
         std::string getName() const override;
+
         int getWidth() const override;
+
         int getHeight() const override;
-        TextureManager* getTextureManager() override;
+
+        TextureManager *getTextureManager() override;
 
     private:
 
@@ -42,7 +54,7 @@ namespace BattleRoom {
          * \param oldWidth New width of window
          * \param oldHeight New height of window
          */
-        void resizeViews(int oldWidth, int oldHeight, const std::vector<UniqueInterface>& views);
+        void resizeViews(int oldWidth, int oldHeight, const std::vector<UniqueInterface> &views);
 
         SdlTextureManager m_sdlTextureManager; ///< Manages textures using the SDL Renderer
         SDL_Renderer *m_renderer; ///< Reads in textures and draws everything

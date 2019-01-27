@@ -38,6 +38,19 @@ namespace BattleRoom {
         }
     }
 
+    ResourceDescriptor Quaternion::getSettings() const {
+        ResourceDescriptor rd;
+        std::vector<ResourceDescriptor> subs = {};
+
+        subs.emplace_back("W", std::to_string(m_w));
+        subs.emplace_back("I", std::to_string(m_i));
+        subs.emplace_back("J", std::to_string(m_j));
+        subs.emplace_back("K", std::to_string(m_k));
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 // constructors
 
     Quaternion::Quaternion()

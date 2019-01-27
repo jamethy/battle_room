@@ -1,7 +1,9 @@
+#include <utility>
+
 #include "animation.h"
+#include "logger.h"
 
 #include <algorithm>
-#include <iostream>
 
 using std::string;
 using std::vector;
@@ -25,12 +27,12 @@ namespace BattleRoom {
         }
 
         vector<ResourceDescriptor> subs = settings.getSubResources("Frame");
-        if (subs.size() > 0) {
+        if (!subs.empty()) {
 
             m_frames.clear();
 
             for (ResourceDescriptor &rd : subs) {
-                m_frames.push_back(Frame(rd));
+                m_frames.emplace_back(rd);
             }
 
             std::sort(m_frames.begin(), m_frames.end(),
@@ -40,17 +42,29 @@ namespace BattleRoom {
             );
         }
 
-        if (m_frames.size() == 0) {
+        if (m_frames.empty()) {
             // throw exception
-            std::cerr << "There are no frames in animation with image file " << m_imageFile <<
-                      ". This will crash the game.\n";
+            Log::error("There are no frames in animation with image file ", m_imageFile, ". This will crash the game.\n");
         }
+    }
+
+    ResourceDescriptor Animation::getSettings() const {
+        ResourceDescriptor rd("Animation", m_name);
+        vector<ResourceDescriptor> subs;
+        subs.clear();
+        subs.emplace_back("ImageFile", m_imageFile);
+        subs.emplace_back("NextAnimation", m_nextAnimation);
+        for (const auto& frame : m_frames) {
+           subs.push_back(frame.getSettings());
+        }
+        rd.setSubResources(subs);
+        return rd;
     }
 
 // constructor
 
     Animation::Animation(ResourceDescriptor descriptor) {
-        applySettings(descriptor);
+        applySettings(std::move(descriptor));
     }
 
 // getters

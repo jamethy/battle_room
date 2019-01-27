@@ -1,18 +1,30 @@
+#include <utility>
+
 #include "pyramid_camera.h"
 
 #include <cmath>
 
 namespace BattleRoom {
 
-// constructors
-    PyramidCamera::PyramidCamera() {}
-
-    PyramidCamera::PyramidCamera(ResourceDescriptor settings)
-            : MovingCamera(settings) {
-        m_camVelocity = Vector3D(0, 0, 0.1);
+    void PyramidCamera::applySettings(ResourceDescriptor settings) {
+        MovingCamera::applySettings(settings);
     }
 
-    PyramidCamera::~PyramidCamera() {}
+    ResourceDescriptor PyramidCamera::getSettings() const {
+        auto rd = MovingCamera::getSettings();
+        rd.setValue("Pyramid");
+        return rd;
+    }
+
+// constructors
+    PyramidCamera::PyramidCamera() = default;
+
+    PyramidCamera::PyramidCamera(ResourceDescriptor settings)
+            : MovingCamera(std::move(settings)) {
+        m_camVelocity = Vector3D(0, 0, 0.2);
+    }
+
+    PyramidCamera::~PyramidCamera() = default;
 
     Camera *PyramidCamera::clone() {
         return new PyramidCamera(*this);
@@ -88,5 +100,4 @@ namespace BattleRoom {
             }
         }
     }
-
 } // BattleRoom namespace

@@ -1,3 +1,5 @@
+#include <utility>
+
 
 #include "sdl_display_window.h"
 #include "sdl_font_manager.h"
@@ -17,7 +19,6 @@
 #include <string>
 #include <unordered_map>
 #include <exception>
-#include <iostream>
 #include <algorithm>
 #include <utility>
 
@@ -35,7 +36,7 @@ namespace BattleRoom {
         SDL_GetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
 
         // if window name matches, settings are for this window
-        if (m_windowName.compare(settings.getValue()) == 0) {
+        if (m_windowName == settings.getValue()) {
 
             // TODO figure out what a SDL_DisplayMode is
 
@@ -49,6 +50,17 @@ namespace BattleRoom {
                 m_windowHeight = stoi(sub.getValue());
             }
         }
+    }
+
+    ResourceDescriptor SdlDisplayWindow::getSettings() const {
+        ResourceDescriptor rd("Window", m_windowName);
+        std::vector<ResourceDescriptor> subs = {};
+
+        subs.emplace_back("Width", std::to_string(m_windowWidth));
+        subs.emplace_back("Height", std::to_string(m_windowHeight));
+
+        rd.setSubResources(subs);
+        return rd;
     }
 
     int SdlDisplayWindow::m_windowCount = 0;
@@ -73,11 +85,11 @@ namespace BattleRoom {
 
         // TODO throw exceptions instead of cerr
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-            std::cerr << "SDL_Init error: " << SDL_GetError() << std::endl;
+            Log::fatal("SDL_Init error: ", SDL_GetError());
         }
 
         if (TTF_Init() != 0) {
-            std::cerr << "TTF_Init error: " << SDL_GetError() << std::endl;
+            Log::fatal("TTF_Init error: ", SDL_GetError());
             SDL_Quit();
         }
 
@@ -85,13 +97,13 @@ namespace BattleRoom {
                                     SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
         if (m_window == nullptr) {
-            std::cerr << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
+            Log::fatal("SDL_CreateWindow error: ", SDL_GetError());
             SDL_Quit();
         }
 
         m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
         if (m_renderer == nullptr) {
-            std::cerr << "SDL_CreateRenderer error: " << SDL_GetError() << std::endl;
+            Log::fatal("SDL_CreateRenderer error: ", SDL_GetError());
             SDL_DestroyWindow(m_window);
             SDL_Quit();
         }
@@ -134,7 +146,7 @@ namespace BattleRoom {
             // Find special processes - anything non-window specific
             // If Ctrl-C is used, or the window is closed
             if (event.type == SDL_QUIT) {
-                ApplicationMessageReceiver::addQuitEvent();
+                ApplicationMessageReceiver::quit();
                 continue;
 
                 // if the OS is repeating a held down key, ignore it
@@ -326,10 +338,10 @@ namespace BattleRoom {
     UniqueDisplayWindow createDisplayWindow(ResourceDescriptor settings) {
 
         try {
-            return UniqueDisplayWindow(new SdlDisplayWindow(settings));
+            return UniqueDisplayWindow(new SdlDisplayWindow(std::move(settings)));
         }
         catch (std::exception &e) {
-            std::cerr << e.what() << std::endl;
+            Log::error("Error creating display window: ", e.what());
             return nullptr;
         }
     }

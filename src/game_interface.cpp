@@ -22,6 +22,12 @@ namespace BattleRoom {
         View::applySettings(settings);
     }
 
+    ResourceDescriptor GameInterface::getSettings() const {
+        auto rd = View::getSettings();
+        rd.setValue("Game");
+        return rd;
+    }
+
 // constructors
 
     GameInterface::GameInterface(ResourceDescriptor settings, int windowWidth, int windowHeight) : 

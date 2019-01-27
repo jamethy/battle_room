@@ -58,6 +58,8 @@ namespace BattleRoom {
         // inherited
         void applySettings(ResourceDescriptor settings) override;
 
+        ResourceDescriptor getSettings() const override;
+
     private:
 
         px m_row = 0.0;

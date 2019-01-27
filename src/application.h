@@ -18,61 +18,65 @@ namespace BattleRoom {
      */
     class Application : public Resource {
 
-        public:
+    public:
 
-            // constructor
-            explicit Application(ResourceDescriptor settings);
-            ~Application();
+        // constructor
+        explicit Application(ResourceDescriptor settings);
 
-            /**
-             * \brief main application loop
-             *
-             * Does the following until an application message quit event is received
-             *  - gathers inputs from windows
-             *  - views handle inputs
-             *  - update query world buffer
-             *  - copy drawables from views to windows
-             *  - draw screen
-             *  - handle application messages
-             */
-            void runApplicationLoop();
+        ~Application() override;
 
-            static int initializeWeb(int argc, char **argv);
+        /**
+         * \brief main application loop
+         *
+         * Does the following until an application message quit event is received
+         *  - gathers inputs from windows
+         *  - views handle inputs
+         *  - update query world buffer
+         *  - copy drawables from views to windows
+         *  - draw screen
+         *  - handle application messages
+         */
+        void runApplicationLoop();
 
-            // inherited
-            void applySettings(ResourceDescriptor settings) override;
+        static int initializeWeb(int argc, char **argv);
 
-        private:
+        // inherited
+        void applySettings(ResourceDescriptor settings) override;
 
-            // adds a resource from settings
-            void addResource(ResourceDescriptor settings);
+        ResourceDescriptor getSettings() const override;
 
-            // modifies a resource with uniqueId target by using settings
-            void modifyResource(UniqueId target, ResourceDescriptor settings);
+    private:
 
-            // removes a resource with uniqueId target
-            void removeResource(UniqueId target);
+        // adds a resource from settings
+        void addResource(ResourceDescriptor settings);
 
-            // apply application message to application
-            void applyMessage(ApplicationMessage message);
+        // modifies a resource with uniqueId target by using settings
+        void modifyResource(UniqueId target, ResourceDescriptor settings);
 
+        // removes a resource with uniqueId target
+        void removeResource(UniqueId target);
 
-            // add window using settings - and adds to m_viewMap
-            void addWindow(ResourceDescriptor settings);
+        // apply application message to application
+        void applyMessage(ApplicationMessage message);
 
-            // add view using settings to the window with given uniqueId
-            void addViewTo(UniqueId windowId, ResourceDescriptor settings);
+        void updateApplicationState();
 
-            // remove the window with the given id
-            bool removeWindow(UniqueId windowId);
+        // add window using settings - and adds to m_viewMap
+        void addWindow(ResourceDescriptor settings);
 
-            // remove the view with the given id
-            bool removeView(UniqueId viewId);
+        // add view using settings to the window with given uniqueId
+        void addViewTo(UniqueId windowId, ResourceDescriptor settings);
 
-            std::vector<UniqueDisplayWindow> m_windows; ///< app windows
-            std::map<UniqueId, std::vector<UniqueInterface>> m_viewMap; ///< map of window Id to list of views
+        // remove the window with the given id
+        bool removeWindow(UniqueId windowId);
 
-            UniqueWorldUpdater m_worldUpdater; ///< query world updater
+        // remove the view with the given id
+        bool removeView(UniqueId viewId);
+
+        std::vector<UniqueDisplayWindow> m_windows; ///< app windows
+        std::map<UniqueId, std::vector<UniqueInterface>> m_viewMap; ///< map of window Id to list of views
+
+        UniqueWorldUpdater m_worldUpdater; ///< query world updater
 
     }; // GameInterface class
 } // BattleRoom namespace

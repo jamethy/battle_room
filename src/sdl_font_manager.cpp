@@ -1,8 +1,8 @@
 #include "sdl_font_manager.h"
 #include "file_utils.h"
+#include "logger.h"
 
 #include <unordered_map>
-#include <iostream>
 
 namespace BattleRoom {
 
@@ -18,8 +18,8 @@ namespace BattleRoom {
             std::string font_path = getResourcePath() + "/fonts/" + fontKey;
 
             TTF_Font *font = TTF_OpenFont(font_path.c_str(), size);
-            if (font == NULL) {
-                std::cerr << "Could not find font " << fontKey << std::endl;
+            if (font == nullptr) {
+                Log::error("Could not find font ", fontKey);
             }
             m_fontMap[fullFontKey] = font;
         }

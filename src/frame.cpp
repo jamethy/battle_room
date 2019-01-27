@@ -1,4 +1,8 @@
+#include <utility>
+
 #include "frame.h"
+
+using std::to_string;
 
 namespace BattleRoom {
 
@@ -27,12 +31,36 @@ namespace BattleRoom {
         m_boundarySet = BoundarySet(settings.getSubResources("Boundary"));
     }
 
+    ResourceDescriptor Frame::getSettings() const {
+        ResourceDescriptor rd("Frame", "");
+        std::vector<ResourceDescriptor> subs;
+        subs.clear();
+
+        ResourceDescriptor sub = m_topLeft.getSettings();
+        sub.setKey("TopLeft");
+        subs.push_back(sub);
+
+        sub = m_bottomRight.getSettings();
+        sub.setKey("BottomRight");
+        subs.push_back(sub);
+
+        subs.emplace_back("EndTime", to_string(m_endTime));
+        subs.emplace_back("Scale", to_string(m_scale));
+        subs.emplace_back("Flip", m_flip);
+
+        for (const auto &boundary : m_boundarySet) {
+            subs.push_back(boundary->getSettings());
+        }
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 // constructor
 
     Frame::Frame(ResourceDescriptor descriptor) :
-        m_scale(1), m_flip("none")
-    {
-        applySettings(descriptor);
+            m_scale(1), m_flip("none") {
+        applySettings(std::move(descriptor));
     }
 
 // getters

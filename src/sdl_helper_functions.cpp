@@ -4,7 +4,6 @@
 #include "logger.h"
 
 #include <cmath>
-#include <iostream>
 
 namespace BattleRoom {
 

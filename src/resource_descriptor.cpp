@@ -1,7 +1,14 @@
+#include <utility>
+
 
 #include "resource_descriptor.h"
 #include "file_utils.h"
 #include "string_utils.h"
+
+#include "include/internal/cef_string.h"
+#include "include/internal/cef_types.h"
+#include "include/cef_values.h"
+#include "include/cef_parser.h"
 
 #include <fstream>
 #include <algorithm>
@@ -15,13 +22,82 @@ namespace BattleRoom {
     ResourceDescriptor::ResourceDescriptor()
             : m_key(""), m_value("") {}
 
-    ResourceDescriptor::ResourceDescriptor(string key, string value)
+    ResourceDescriptor::ResourceDescriptor(const string &key, const string &value)
             : m_key(key), m_value(value) {}
 
     ResourceDescriptor::ResourceDescriptor(vector<string> lines)
             : m_key(""), m_value("") {
         unsigned start = 0;
-        fillFromInput(lines, start);
+        fillFromInput(std::move(lines), start);
+    }
+
+
+    void fillFromJson(ResourceDescriptor &resourceDescriptor, const CefRefPtr<CefDictionaryValue> &dictionary) {
+
+        CefDictionaryValue::KeyList keys;
+        dictionary->GetKeys(keys);
+
+        vector<ResourceDescriptor> subResources;
+        subResources.clear();
+
+        for (const auto &key : keys) {
+            auto valueType = dictionary->GetType(key);
+
+            CefRefPtr<CefListValue> listValue;
+            ResourceDescriptor subValue;
+
+            switch (valueType) {
+                case VTYPE_DICTIONARY:
+                    subValue.setKey(key.ToString());
+                    fillFromJson(subValue, dictionary->GetDictionary(key));
+                    subResources.push_back(subValue);
+                    break;
+                    // set sub resources
+                case VTYPE_BOOL:
+                    subResources.emplace_back(key.ToString(), std::to_string(dictionary->GetBool(key)));
+                    break;
+                case VTYPE_INT:
+                    subResources.emplace_back(key.ToString(), std::to_string(dictionary->GetInt(key)));
+                    break;
+                case VTYPE_DOUBLE:
+                    subResources.emplace_back(key.ToString(), std::to_string(dictionary->GetDouble(key)));
+                    break;
+                case VTYPE_STRING:
+                    if (key == "value") {
+                        resourceDescriptor.setValue(dictionary->GetString(key).ToString());
+                    } else {
+                        subResources.emplace_back(key.ToString(), dictionary->GetString(key).ToString());
+                    }
+                    break;
+
+                case VTYPE_LIST:
+                    listValue = dictionary->GetList(key);
+                    for (size_t i = 0; i < listValue->GetSize(); ++i) {
+                        fillFromJson(subValue, listValue->GetDictionary(i));
+                        subResources.push_back(subValue);
+                    }
+                    break;
+
+                case VTYPE_INVALID:
+                    break;
+                case VTYPE_NULL:
+                    break;
+                case VTYPE_BINARY:
+                    break;
+            }
+
+        }
+
+        resourceDescriptor.setSubResources(subResources);
+    }
+
+    ResourceDescriptor ResourceDescriptor::fromJson(const std::string &json) {
+        auto requestValue = CefParseJSON(CefString(json), JSON_PARSER_RFC)->GetDictionary();
+
+        ResourceDescriptor resourceDescriptor;
+        fillFromJson(resourceDescriptor, requestValue);
+
+        return resourceDescriptor;
     }
 
     vector<ResourceDescriptor> ResourceDescriptor::getSubResources(string filter) const {
@@ -152,7 +228,7 @@ namespace BattleRoom {
             setSubResources(subs);
 
             // check for Resource sub
-            for (ResourceDescriptor subResource : getSubResources("Resource")) {
+            for (const ResourceDescriptor &subResource : getSubResources("Resource")) {
 
                 vector<ResourceDescriptor> newSubs = readResource(subResource.getValue()).getSubResources();
                 m_subResources.insert(m_subResources.end(), newSubs.begin(), newSubs.end());
@@ -193,15 +269,15 @@ namespace BattleRoom {
 
 
     void ResourceDescriptor::setKey(string key) {
-        m_key = key;
+        m_key = std::move(key);
     }
 
     void ResourceDescriptor::setValue(string value) {
-        m_value = value;
+        m_value = std::move(value);
     }
 
     void ResourceDescriptor::setSubResources(vector<ResourceDescriptor> subResources) {
-        m_subResources = subResources;
+        m_subResources = std::move(subResources);
     }
 
     void ResourceDescriptor::addSubResources(std::vector<ResourceDescriptor> subResources) {

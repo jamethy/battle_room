@@ -17,17 +17,22 @@ namespace BattleRoom {
 
         // constructor
         ClientConnection();
-        virtual ~ClientConnection() {};
+
+        ~ClientConnection() override = default;;
 
         virtual bool connectToServer(std::string host, int port) = 0;
 
-        virtual void sendMessage(Message& message, BinaryStream& bs) = 0;
+        virtual void sendMessage(Message &message, BinaryStream &bs) = 0;
 
-        void handleMessage(Message& message, BinaryStream& body);
+        void handleMessage(Message &message, BinaryStream &body);
 
         // inherited
-        virtual void applySettings(ResourceDescriptor settings) override;
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
+
         void clientUpdate() override;
+
         void registerUser(User user) override;
 
     private:

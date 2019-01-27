@@ -1,3 +1,9 @@
+#include <utility>
+
+#include <utility>
+
+#include <utility>
+
 
 #include "application_message.h"
 
@@ -6,14 +12,14 @@ namespace BattleRoom {
         m_type(Type::Remove), m_target(UniqueId::generateInvalidId()) {}
 
     ApplicationMessage::ApplicationMessage(Type type, UniqueId target, ResourceDescriptor settings) :
-        m_type(type), m_target(target), m_settings(settings) {}
+        m_type(type), m_target(target), m_settings(std::move(settings)) {}
 
     ApplicationMessage ApplicationMessage::add(ResourceDescriptor settings) {
-        return ApplicationMessage(Type::Add, UniqueId::generateInvalidId(), settings);
+        return ApplicationMessage(Type::Add, UniqueId::generateInvalidId(), std::move(settings));
     }
 
     ApplicationMessage ApplicationMessage::modify(UniqueId target, ResourceDescriptor settings) {
-        return ApplicationMessage(Type::Modify, target, settings);
+        return ApplicationMessage(Type::Modify, target, std::move(settings));
     }
 
     ApplicationMessage ApplicationMessage::remove(UniqueId target) {

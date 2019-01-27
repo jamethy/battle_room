@@ -1,10 +1,11 @@
+#include <utility>
+
 #include "local_updating_world.h"
 
 #include "object_intersection.h"
 
 #include "command_receiver.h"
 
-#include <iostream>
 #include <map>
 #include <cmath>
 
@@ -37,13 +38,22 @@ namespace BattleRoom {
         } // TODO else create one?
     }
 
-    // constructors
-    LocalUpdatingWorld::LocalUpdatingWorld() {
+    ResourceDescriptor LocalUpdatingWorld::getSettings() const {
+        auto rd = World::getSettings();
+        auto subs = rd.getSubResources();
+
+        subs.push_back(m_boundary->getSettings());
+
+        rd.setSubResources(subs);
+        return rd;
     }
+
+    // constructors
+    LocalUpdatingWorld::LocalUpdatingWorld() = default;
 
     LocalUpdatingWorld::LocalUpdatingWorld(ResourceDescriptor settings)
             : LocalUpdatingWorld() {
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
     std::unordered_map<GameObject *, long> countObjectIntersections(vector<ObjectIntersection> intersections) {

@@ -12,20 +12,22 @@
 
 namespace BattleRoom {
 
-/**
- * \brief Object that is drawable on a view
- */
+    /**
+     * \brief Object that is drawable on a view
+     */
     class DrawableMenu : public Resource {
 
     public:
 
         // constructor
         DrawableMenu();
+
         ~DrawableMenu() override;
 
         // getters and setters
         std::string getTextureKey() const;
-        void setTextureKey(const std::string& textureKey);
+
+        void setTextureKey(const std::string &textureKey);
 
         RelPixel getTopLeft() const;
 
@@ -40,7 +42,9 @@ namespace BattleRoom {
         void setZLayer(double zLayer);
 
         // inherited
-        virtual void applySettings(ResourceDescriptor settings) override;
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     private:
 

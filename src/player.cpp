@@ -24,28 +24,36 @@ namespace BattleRoom {
         }
     }
 
+    ResourceDescriptor Player::getSettings() const {
+        ResourceDescriptor rd = GameObject::getSettings();
+        auto subs = rd.getSubResources();
+
+        subs.emplace_back("Client", m_client.toString());
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
     // constructors
-    Player::Player(UniqueId id) : 
-        GameObject(id, ObjectType::Player),
-        m_client(UniqueId::generateInvalidId()),
-        m_state(PlayerState::Flying),
-        m_chargingGun(false),
-        m_gunCharge(0),
-        m_chargingJump(false),
-        m_jumpCharge(0)
-    {
+    Player::Player(UniqueId id) :
+            GameObject(id, ObjectType::Player),
+            m_client(UniqueId::generateInvalidId()),
+            m_state(PlayerState::Flying),
+            m_chargingGun(false),
+            m_gunCharge(0),
+            m_chargingJump(false),
+            m_jumpCharge(0) {
         setAnimation(AnimationHandler::getAnimation("man_0"));
     }
 
-    Player::Player(const GameObject& obj) :
-        GameObject(obj),
-        m_client(UniqueId::generateInvalidId()),
-        m_state(PlayerState::Flying),
-        m_chargingGun(false),
-        m_gunCharge(0),
-        m_chargingJump(false),
-        m_jumpCharge(0)
-    { }
+    Player::Player(const GameObject &obj) :
+            GameObject(obj),
+            m_client(UniqueId::generateInvalidId()),
+            m_state(PlayerState::Flying),
+            m_chargingGun(false),
+            m_gunCharge(0),
+            m_chargingJump(false),
+            m_jumpCharge(0) {}
 
 
     // other functions
@@ -67,7 +75,7 @@ namespace BattleRoom {
             m_state = PlayerState::Landed;
 
             // move to wall after rotating
-            const Frame& frame = getAnimation().getFrame(getAnimationState());
+            const Frame &frame = getAnimation().getFrame(getAnimationState());
             Projection1D upright = frame.getBoundarySet().projectOnto(Vector2D(0, 1));
 
             Projection1D rotated = projectOnto(intersectionNormal);
@@ -88,14 +96,14 @@ namespace BattleRoom {
             // should be dependent on m_state, m_chargingGun, m_chargingJump
 
             Vector2D delta = m_aim.minus(getPosition());
-            radians exactAngle = (PI*0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
-            degrees aimAngle = under180(45*round(toDegrees(exactAngle)/45));
+            radians exactAngle = (PI * 0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
+            degrees aimAngle = under180(45 * round(toDegrees(exactAngle) / 45));
 
             std::string animationName = "man_";
             if (aimAngle < 0) {
-                animationName += "n" + std::to_string((int)std::abs(aimAngle));
+                animationName += "n" + std::to_string((int) std::abs(aimAngle));
             } else {
-                animationName += std::to_string((int)std::abs(aimAngle));
+                animationName += std::to_string((int) std::abs(aimAngle));
             }
 
             setAnimation(AnimationHandler::getAnimation(animationName));
@@ -104,20 +112,20 @@ namespace BattleRoom {
     }
 
     radians diffOfAngles(radians a, radians b) {
-        return fmod(a - b + PI, 2*PI) - PI;
+        return fmod(a - b + PI, 2 * PI) - PI;
 
     }
 
     double calcFlyingAngularVelocity(Vector2D vel, radians angle, double current) {
 
         if (current > MAX_ANGULAR_VEL) {
-            return 0.9*current;
+            return 0.9 * current;
         } else {
             radians desired = std::atan2(vel.x(), -vel.y());
             radians diff = diffOfAngles(desired, angle);
 
-            if (diff*current < 0) {
-                diff = diff + (current > 0 ? 2*PI : -2*PI);
+            if (diff * current < 0) {
+                diff = diff + (current > 0 ? 2 * PI : -2 * PI);
             }
             return diff;
         }
@@ -138,11 +146,11 @@ namespace BattleRoom {
         m_aim = std::move(aim);
         Vector2D bulletVelUnit = m_aim.minus(getPosition()).getUnit();
 
-        const Frame& frame = getAnimation().getFrame(getAnimationState());
+        const Frame &frame = getAnimation().getFrame(getAnimationState());
         meters dist = std::max(frame.getWidth(), frame.getHeight()) / 2;
-        double speed = std::max(m_gunCharge*MAX_BULLET_SPEED, MIN_BULLET_SPEED);
+        double speed = std::max(m_gunCharge * MAX_BULLET_SPEED, MIN_BULLET_SPEED);
 
-        Bullet *bullet = (Bullet*)(ObjectFactory::createObjectOfType(ObjectType::Bullet).release());
+        Bullet *bullet = (Bullet *) (ObjectFactory::createObjectOfType(ObjectType::Bullet).release());
         bullet->setVelocity(bulletVelUnit.times(speed).plus(getVelocity()));
         bullet->setRotation(bulletVelUnit.angle());
         bullet->setPosition(getPosition().plus(bulletVelUnit.times(dist)));
@@ -150,8 +158,8 @@ namespace BattleRoom {
 
         // kickback
         if (!isStatic() && bullet->getMass() > EPS_KILOGRAMS) {
-            double bullet_kinetic = 0.5*bullet->getMass()*speed*speed;
-            double delta = std::sqrt(2*bullet_kinetic/getMass());
+            double bullet_kinetic = 0.5 * bullet->getMass() * speed * speed;
+            double delta = std::sqrt(2 * bullet_kinetic / getMass());
             setVelocity(getVelocity().minus(bullet->getVelocity().getUnit().times(delta)));
         }
 
@@ -166,7 +174,7 @@ namespace BattleRoom {
 
             setIsStatic(false);
             m_state = PlayerState::Flying;
-            double speed = std::max(m_jumpCharge*MAX_JUMP_SPEED, MIN_JUMP_SPEED);
+            double speed = std::max(m_jumpCharge * MAX_JUMP_SPEED, MIN_JUMP_SPEED);
             setVelocity(aim.minus(getPosition()).getUnit().times(speed));
 
         }
@@ -174,7 +182,7 @@ namespace BattleRoom {
         m_chargingJump = false;
     }
 
-    bool Player::interpretCommand(const Command& cmd) {
+    bool Player::interpretCommand(const Command &cmd) {
         if (GameObject::interpretCommand(cmd)) {
 
             if (m_client != cmd.getCommander() && CommandType::Freeze != cmd.getType()) {
@@ -221,13 +229,13 @@ namespace BattleRoom {
         return false;
     }
 
-    std::vector<GameObject*> Player::getAddedObjects() {
-        std::vector<GameObject*> objects = m_addedObjects;
+    std::vector<GameObject *> Player::getAddedObjects() {
+        std::vector<GameObject *> objects = m_addedObjects;
         m_addedObjects.clear(); // TODO FIX THIS BAD MEM LEAK
         return objects;
     }
 
-    GameObject* Player::clone() const {
+    GameObject *Player::clone() const {
         return new Player(*this);
     }
 
@@ -256,10 +264,10 @@ namespace BattleRoom {
         m_client = id;
     }
 
-    void Player::serialize(BinaryStream& bs) const {
+    void Player::serialize(BinaryStream &bs) const {
         GameObject::serialize(bs);
         m_client.serialize(bs);
-        bs.writeInt((int)m_state);
+        bs.writeInt((int) m_state);
         m_aim.serialize(bs);
         bs.writeBool(m_chargingGun);
         bs.writeDouble(m_gunCharge);
@@ -267,12 +275,12 @@ namespace BattleRoom {
         bs.writeDouble(m_jumpCharge);
     }
 
-    Player Player::deserialize(BinaryStream& bs) {
+    Player Player::deserialize(BinaryStream &bs) {
 
         Player player(GameObject::deserialize(bs));
 
         player.m_client = UniqueId::deserialize(bs);
-        player.m_state = (PlayerState)bs.readInt();
+        player.m_state = (PlayerState) bs.readInt();
         player.m_aim = Vector2D::deserialize(bs);
         player.m_chargingGun = bs.readBool();
         player.m_gunCharge = bs.readDouble();
@@ -281,6 +289,5 @@ namespace BattleRoom {
 
         return player;
     }
-
 } // BattleRoom namespace
 

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "circle_boundary.h"
 
 namespace BattleRoom {
@@ -14,12 +16,26 @@ namespace BattleRoom {
         }
     }
 
+    ResourceDescriptor CircleBoundary::getSettings() const {
+        ResourceDescriptor rd("Boundary", "Box");
+        std::vector<ResourceDescriptor> subs = {};
+
+        ResourceDescriptor sub = m_center.getSettings();
+        sub.setKey("Center");
+        subs.push_back(sub);
+
+        subs.emplace_back("Radius", std::to_string(m_radius));
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 // constructor
 
     CircleBoundary::CircleBoundary(ResourceDescriptor settings)
             : m_center(Vector2D(0, 0)),
               m_radius(0) {
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
     Boundary *CircleBoundary::clone() const {
@@ -35,7 +51,7 @@ namespace BattleRoom {
 
     Projection1D CircleBoundary::projectOnto(Vector2D axis) const {
         (void) axis; // unused
-        return Projection1D(-m_radius, m_radius);
+        return {-m_radius, m_radius};
     }
 
     std::vector<Vector2D> CircleBoundary::getSideNormals() const {

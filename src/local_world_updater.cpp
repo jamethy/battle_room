@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "local_world_updater.h"
 #include "query_world.h"
 #include "alter_world.h"
@@ -6,6 +8,8 @@
 
 #include <algorithm>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfor-loop-analysis"
 namespace BattleRoom {
 
     // apply settings
@@ -14,7 +18,18 @@ namespace BattleRoom {
         QueryWorldUpdater::applySettings(settings);
     }
 
-    void worldUpdaterFunction(LocalUpdatingWorld &world, bool &keepUpdating, LocalWorldUpdater& updater) {
+    ResourceDescriptor LocalWorldUpdater::getSettings() const {
+        auto rd = QueryWorldUpdater::getSettings();
+        rd.setValue("Local");
+        auto subs = rd.getSubResources();
+
+        subs.push_back(m_world.getSettings());
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
+    void worldUpdaterFunction(LocalUpdatingWorld &world, bool &keepUpdating, LocalWorldUpdater &updater) {
 
         while (keepUpdating) {
             world.update();
@@ -27,23 +42,21 @@ namespace BattleRoom {
         if (!m_keepUpdating) {
             m_keepUpdating = true;
             m_worldThread = std::thread(worldUpdaterFunction,
-                    std::ref(m_world),
-                    std::ref(m_keepUpdating),
-                    std::ref(*this)
-                    );
+                                        std::ref(m_world),
+                                        std::ref(m_keepUpdating),
+                                        std::ref(*this)
+            );
         }
     }
 
-    LocalWorldUpdater::LocalWorldUpdater(ResourceDescriptor settings) : 
-        m_keepUpdating(false) 
-    { 
-        applySettings(settings);
+    LocalWorldUpdater::LocalWorldUpdater(ResourceDescriptor settings) :
+            m_keepUpdating(false) {
+        applySettings(std::move(settings));
         start();
     }
 
-    LocalWorldUpdater::LocalWorldUpdater() : 
-        m_keepUpdating(false) 
-    { }
+    LocalWorldUpdater::LocalWorldUpdater() :
+            m_keepUpdating(false) {}
 
     LocalWorldUpdater::~LocalWorldUpdater() {
         m_keepUpdating = false; //TODO make this an atomic boolean
@@ -70,7 +83,7 @@ namespace BattleRoom {
         }
 
         UniqueGameObject obj = ObjectFactory::createObjectOfType(ObjectType::Player);
-        Player* player = (Player*)obj.get();
+        auto *player = (Player *) obj.get();
         player->setClient(userId);
 
         // TODO create spawning rules
@@ -80,7 +93,7 @@ namespace BattleRoom {
         AlterWorld::addObject(std::move(obj));
     }
 
-    std::vector<User>::iterator findIn(std::vector<User>& users, UniqueId id) {
+    std::vector<User>::iterator findIn(std::vector<User> &users, UniqueId id) {
         std::vector<User>::iterator itr;
         for (itr = users.begin(); itr != users.end(); ++itr) {
             if ((*itr).getUniqueId() == id) {
@@ -98,3 +111,5 @@ namespace BattleRoom {
     }
 
 } // BattleRoom namespace
+
+#pragma clang diagnostic pop

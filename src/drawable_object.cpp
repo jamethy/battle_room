@@ -34,6 +34,25 @@ namespace BattleRoom {
         }
     }
 
+    ResourceDescriptor DrawableObject::getSettings() const {
+        ResourceDescriptor rd("Object", "");
+        std::vector<ResourceDescriptor> subs = {};
+
+        ResourceDescriptor sub = m_location.getSettings();
+        sub.setKey("Location");
+        subs.push_back(sub);
+
+        sub = m_orientation.getSettings();
+        sub.setKey("Orientation");
+        subs.push_back(sub);
+
+        subs.emplace_back("Animation", getAnimation().getName());
+        subs.emplace_back("AnimationState", std::to_string(getAnimationState()));
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 // Constructor
 
     DrawableObject::DrawableObject() :
@@ -89,6 +108,4 @@ namespace BattleRoom {
         obj.m_orientation = Quaternion::deserialize(bs);
         return obj;
     }
-
-
 } // BattleRoom namespace

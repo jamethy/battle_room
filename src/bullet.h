@@ -13,7 +13,7 @@ namespace BattleRoom {
     public:
 
         // constructor
-        Bullet(UniqueId id);
+        explicit Bullet(UniqueId id);
 
         void setSource(UniqueId id);
 
@@ -22,10 +22,11 @@ namespace BattleRoom {
 
         void updateAnimation(seconds timestep) override;
 
-        GameObject* clone() const override;
+        GameObject *clone() const override;
 
-        virtual void serialize(BinaryStream& bs) const override;
-        static Bullet deserialize(BinaryStream& bs);
+        void serialize(BinaryStream &bs) const override;
+
+        static Bullet deserialize(BinaryStream &bs);
 
     private:
 
@@ -41,7 +42,7 @@ namespace BattleRoom {
         UniqueId m_bulletSource;
         seconds m_timeSinceFired;
 
-        Bullet(const GameObject& obj);
+        explicit Bullet(const GameObject &obj);
 
     }; // Bullet class
 } // BattleRoom namespace

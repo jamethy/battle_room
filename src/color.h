@@ -28,17 +28,19 @@ namespace BattleRoom {
 
         void setAlpha(int alpha);
 
-        int getRed();
+        int getRed() const;
 
-        int getGreen();
+        int getGreen() const;
 
-        int getBlue();
+        int getBlue() const;
 
-        int getAlpha();
+        int getAlpha() const;
 
         // inherited
 
-        void applySettings(ResourceDescriptor settings);
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     private:
 

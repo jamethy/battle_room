@@ -20,8 +20,20 @@ namespace BattleRoom {
 
         ResourceDescriptor sub = settings.getSubResource("Url");
         if (isNotEmpty(sub.getValue())) {
-            m_htmlMenu->navigateTo(sub.getValue());
+            url = sub.getValue();
+            m_htmlMenu->navigateTo(url);
         }
+    }
+
+    ResourceDescriptor MenuInterface::getSettings() const {
+        auto rd = View::getSettings();
+        rd.setValue("Menu");
+        auto subs = rd.getSubResources();
+
+        subs.emplace_back("Url", url);
+
+        rd.setSubResources(subs);
+        return rd;
     }
 
 // constructors
@@ -39,19 +51,22 @@ namespace BattleRoom {
     WebMessageResponse MenuInterface::onMessage(const std::string &message) {
         static int counter = 0;
 
-        CefString request(message);
-        CefRefPtr<CefDictionaryValue> requestValue = CefParseJSON(request, JSON_PARSER_RFC)->GetDictionary();
+        CefRefPtr<CefDictionaryValue> requestValue = CefParseJSON(CefString(message), JSON_PARSER_RFC)->GetDictionary();
         auto method = requestValue->GetString("method").ToString();
         auto route = requestValue->GetString("route").ToString();
         Log::debug("MenuInterface Message: Method: ", method, ", Route: ", route);
 
 
         if (method == "POST" && route == "/quit") {
-            ApplicationMessageReceiver::addQuitEvent();
+            ApplicationMessageReceiver::quit();
             return {WebMessageResponse::SUCCESS_CODE, ""};
-        } else if (method == "POST" && route == "something") {
+
+        } else if (method == "POST" && route == "/test") {
             auto body = requestValue->GetString("body").ToString();
-            // TODO pass on to application message or resource descriptor or something
+            ResourceDescriptor resourceDescriptor = ResourceDescriptor::fromJson(body);
+            for (const auto &sub : resourceDescriptor.getSubResources()) {
+                ApplicationMessageReceiver::addMessage(ApplicationMessage::add(sub));
+            }
         }
 
         CefRefPtr<CefDictionaryValue> result_dict = CefDictionaryValue::Create();
@@ -94,7 +109,7 @@ namespace BattleRoom {
 
             // temp for easy testing and quitting
             if (input.getMotion() == Motion::PressedDown && input.getKey() == Key::Q) {
-                ApplicationMessageReceiver::addQuitEvent();
+                ApplicationMessageReceiver::quit();
                 inputHandled = true;
             }
 

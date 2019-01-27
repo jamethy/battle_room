@@ -17,6 +17,25 @@ namespace BattleRoom {
         }
     }
 
+    ResourceDescriptor DrawableMenu::getSettings() const {
+        ResourceDescriptor rd;
+        std::vector<ResourceDescriptor> subs = {};
+
+        ResourceDescriptor sub = m_topLeft.getSettings();
+        sub.setKey("TopLeft");
+        subs.push_back(sub);
+
+        sub = m_bottomRight.getSettings();
+        sub.setKey("BottomRight");
+        subs.push_back(sub);
+
+        subs.emplace_back("ZLayer", std::to_string(getZLayer()));
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
+
 // Constructor
 
     DrawableMenu::DrawableMenu() :
@@ -62,6 +81,5 @@ namespace BattleRoom {
     void DrawableMenu::setZLayer(double zLayer) {
         m_zLayer = zLayer;
     }
-
 } // BattleRoom namespace
 

@@ -22,7 +22,7 @@ namespace BattleRoom {
         MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth, int windowHeight);
 
         // inherited
-        WebMessageResponse onMessage(const std::string& message) override;
+        WebMessageResponse onMessage(const std::string &message) override;
 
         void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
 
@@ -38,10 +38,13 @@ namespace BattleRoom {
 
         void applySettings(ResourceDescriptor settings) override;
 
+        ResourceDescriptor getSettings() const override;
+
     private:
 
-        HtmlMenu* m_htmlMenu;
+        HtmlMenu *m_htmlMenu;
         bool m_hasFocus;
+        std::string url;
 
     }; // MenuInterface class
 } // BattleRoom namespace

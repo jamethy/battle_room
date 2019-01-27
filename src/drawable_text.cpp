@@ -32,6 +32,12 @@ namespace BattleRoom {
 
     }
 
+    ResourceDescriptor DrawableText::getSettings() const {
+        ResourceDescriptor rd;
+        // todo delete whole class
+        return rd;
+    }
+
 // getters and setters
 
     void DrawableText::setText(std::string text) {
@@ -90,5 +96,4 @@ namespace BattleRoom {
     meters DrawableText::getHeight() const {
         return m_height;
     }
-
 } // BattleRoom namespace

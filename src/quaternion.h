@@ -13,7 +13,7 @@ namespace BattleRoom {
         // constructors
         Quaternion();
 
-        Quaternion(radians angle); // angle about z
+        explicit Quaternion(radians angle); // angle about z
 
         Quaternion(double w, double i, double j, double k);
 
@@ -88,8 +88,12 @@ namespace BattleRoom {
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
-        void serialize(BinaryStream& bs) const;
-        static Quaternion deserialize(BinaryStream& bs);
+
+        ResourceDescriptor getSettings() const override;
+
+        void serialize(BinaryStream &bs) const;
+
+        static Quaternion deserialize(BinaryStream &bs);
 
     private:
 

@@ -5,8 +5,6 @@
 #include "web_renderer.h"
 #include "logger.h"
 
-#include <iostream>
-
 namespace BattleRoom {
 
     WebRenderer::WebRenderer(TextureManager *textureManager, int w, int h) :

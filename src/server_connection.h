@@ -11,21 +11,25 @@ namespace BattleRoom {
     /**
      * 
      */
-    class ServerConnection : public LocalWorldUpdater { 
+    class ServerConnection : public LocalWorldUpdater {
 
     public:
 
         ServerConnection();
-        virtual ~ServerConnection();
+
+        ~ServerConnection() override;
 
         virtual bool start(int port) = 0;
 
-        virtual void sendMessage(Message& message, BinaryStream& data, UniqueId clientId) = 0;
+        virtual void sendMessage(Message &message, BinaryStream &data, UniqueId clientId) = 0;
 
-        void handleMessage(Message& message, BinaryStream& data, UniqueId clientId);
+        void handleMessage(Message &message, BinaryStream &data, UniqueId clientId);
 
-        virtual void applySettings(ResourceDescriptor settings) override;
-        virtual void afterUpdate() override;
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
+
+        void afterUpdate() override;
 
     private:
 

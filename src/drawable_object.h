@@ -19,7 +19,8 @@ namespace BattleRoom {
 
         // constructor
         DrawableObject();
-        ~DrawableObject() {}
+
+        ~DrawableObject() override = default;
 
         // getters and setters
 
@@ -40,9 +41,13 @@ namespace BattleRoom {
         void setOrientation(Quaternion orientation);
 
         // inherited
-        virtual void applySettings(ResourceDescriptor settings) override;
-        virtual void serialize(BinaryStream& bs) const;
-        static DrawableObject deserialize(BinaryStream& bs);
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
+
+        virtual void serialize(BinaryStream &bs) const;
+
+        static DrawableObject deserialize(BinaryStream &bs);
 
     private:
 

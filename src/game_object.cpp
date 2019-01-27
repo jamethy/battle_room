@@ -47,6 +47,28 @@ namespace BattleRoom {
         }
     }
 
+    ResourceDescriptor GameObject::getSettings() const {
+        ResourceDescriptor rd = DrawableObject::getSettings();
+        auto subs = rd.getSubResources();
+
+        ResourceDescriptor sub = m_position.getSettings();
+        sub.setKey("Location");
+        subs.push_back(sub);
+
+        sub = m_velocity.getSettings();
+        sub.setKey("Velocity");
+        subs.push_back(sub);
+
+        subs.emplace_back("Rotation", std::to_string(m_rotation));
+        subs.emplace_back("AngularVelocity", std::to_string(m_angularVelocity));
+        subs.emplace_back("Static", m_isStatic ? "True" : "False");
+        subs.emplace_back("Collidable", m_isCollidable ? "True" : "False");
+        subs.emplace_back("Mass", std::to_string(m_mass));
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 // constructors
 
     GameObject::GameObject(UniqueId uniqueId, ObjectType type) : 

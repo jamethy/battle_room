@@ -13,17 +13,18 @@ namespace BattleRoom {
     public:
 
         // constructor
-        Ball(UniqueId id);
+        explicit Ball(UniqueId id);
 
         // inherited
         void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) override;
 
         void updateAnimation(seconds timestep) override;
 
-        GameObject* clone() const override;
+        GameObject *clone() const override;
 
-        virtual void serialize(BinaryStream& bs) const override;
-        static Ball deserialize(BinaryStream& bs);
+        void serialize(BinaryStream &bs) const override;
+
+        static Ball deserialize(BinaryStream &bs);
 
     private:
 
@@ -38,7 +39,7 @@ namespace BattleRoom {
         Vector2D m_storedVelocity; /// Velocity resulting from a collision
         BallState m_state; /// Current state of the ball object
 
-        Ball(const GameObject& obj);
+        Ball(const GameObject &obj);
 
     }; // Ball class
 } // BattleRoom namespace

@@ -1,3 +1,5 @@
+#include <utility>
+
 
 #include "logger.h"
 #include "sdl_client.h"
@@ -32,7 +34,7 @@ namespace BattleRoom {
 // constructors
     SdlClient::SdlClient(ResourceDescriptor settings) :
             m_keepReceiving(false) {
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
     SdlClient::~SdlClient() {
@@ -94,11 +96,25 @@ namespace BattleRoom {
         ResourceDescriptor hostSub = settings.getSubResource("Host");
         ResourceDescriptor portSub = settings.getSubResource("Port");
 
+
         if (isNotEmpty(hostSub.getValue()) && isNotEmpty(portSub.getValue())) {
-            connectToServer(hostSub.getValue(), stoi(portSub.getValue()));
+            m_host = hostSub.getValue();
+            m_port = stoi(portSub.getValue());
+            connectToServer(m_host, m_port);
         }
 
         ClientConnection::applySettings(settings);
+    }
+
+    ResourceDescriptor SdlClient::getSettings() const {
+        auto rd = ClientConnection::getSettings();
+        auto subs = rd.getSubResources();
+
+        subs.emplace_back("Host", m_host);
+        subs.emplace_back("Port", std::to_string(m_port));
+
+        rd.setSubResources(subs);
+        return rd;
     }
 
 } // BattleRoom namespace

@@ -9,14 +9,16 @@ namespace BattleRoom {
 
     public:
 
-        BoxBoundary(ResourceDescriptor settings);
+        explicit BoxBoundary(ResourceDescriptor settings);
 
         // inherited
-        bool contains(Vector2D delta) const;
+        bool contains(Vector2D delta) const override;
 
-        void applySettings(ResourceDescriptor settings);
+        void applySettings(ResourceDescriptor settings) override;
 
-        Boundary *clone() const;
+        ResourceDescriptor getSettings() const override;
+
+        Boundary *clone() const override;
 
     protected:
 

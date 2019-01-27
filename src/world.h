@@ -14,32 +14,39 @@ namespace BattleRoom {
      */
     class World : public Resource {
 
-        public:
+    public:
 
-            // constructors
-            World();
-            World(ResourceDescriptor settings);
+        // constructors
+        World();
 
-            World clone() const;
+        explicit World(ResourceDescriptor settings);
 
-            const std::vector<UniqueGameObject>& getAllGameObjects() const; // TEMP
-            const GameObject* getGameObject(UniqueId id) const;
-            const std::vector<UniqueDrawableObject>& getBackgroundObjects() const;
-            const GameObject* findIntersectingObject(Vector2D point) const;
+        World clone() const;
 
-            // getters
-            seconds getGameTime() const;
+        const std::vector<UniqueGameObject> &getAllGameObjects() const; // TEMP
+        const GameObject *getGameObject(UniqueId id) const;
 
-            // inherited
-            virtual void applySettings(ResourceDescriptor settings) override;
-            void serialize(BinaryStream& bs) const;
-            static World deserialize(BinaryStream& bs);
+        const std::vector<UniqueDrawableObject> &getBackgroundObjects() const;
 
-        protected:
+        const GameObject *findIntersectingObject(Vector2D point) const;
 
-            std::vector<UniqueGameObject> m_gameObjects; // walls, stars, etc
-            std::vector<UniqueDrawableObject> m_backgroundObjects; // background
-            seconds m_gameTime; // Time in game
+        // getters
+        seconds getGameTime() const;
+
+        // inherited
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
+
+        void serialize(BinaryStream &bs) const;
+
+        static World deserialize(BinaryStream &bs);
+
+    protected:
+
+        std::vector<UniqueGameObject> m_gameObjects; // walls, stars, etc
+        std::vector<UniqueDrawableObject> m_backgroundObjects; // background
+        seconds m_gameTime; // Time in game
 
     }; // World class
 } // BattleRoom namespace

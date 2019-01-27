@@ -25,7 +25,17 @@ namespace BattleRoom {
         if (isNotEmpty(sub.getValue())) {
             setRow(toPx(sub.getValue()));
         }
+    }
 
+    ResourceDescriptor Pixel::getSettings() const {
+        ResourceDescriptor rd;
+        std::vector<ResourceDescriptor> subs = {};
+
+        subs.emplace_back("Col", std::to_string(getCol()));
+        subs.emplace_back("Row", std::to_string(getRow()));
+
+        rd.setSubResources(subs);
+        return rd;
     }
 
 // constructors

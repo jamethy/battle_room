@@ -8,8 +8,6 @@
 #include "include/cef_parser.h"
 #include "web_message_handler.h"
 
-#include <iostream>
-
 namespace BattleRoom {
 
 /**

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "box_boundary.h"
 
 namespace BattleRoom {
@@ -43,7 +45,7 @@ namespace BattleRoom {
         };
 
         m_corners.clear();
-        for (Vector2D corner : unrotated_corners) {
+        for (const auto &corner : unrotated_corners) {
             m_corners.push_back(center.plus(corner.getRotated(angle)));
         }
 
@@ -56,9 +58,41 @@ namespace BattleRoom {
 
     }
 
+    ResourceDescriptor BoxBoundary::getSettings() const {
+        ResourceDescriptor rd("Boundary", "Box");
+        std::vector<ResourceDescriptor> subs = {};
+
+        Vector2D center(0, 0);
+        for (const auto &corner : m_corners) {
+            center.x() += corner.getX();
+            center.y() += corner.getY();
+        }
+        center.x() /= m_corners.size();
+        center.y() /= m_corners.size();
+
+        ResourceDescriptor sub = center.getSettings();
+        sub.setKey("Center");
+        subs.push_back(sub);
+
+        Vector2D sideNormal = m_sideNormals[1];
+        const radians angle = sideNormal.angle();
+
+        // logic probably wrong, but not what I need right now
+        Vector2D unrotatedCorner = m_corners[0].getRotated(-angle).minus(center);
+        meters width = -unrotatedCorner.getX() * 2.0;
+        meters height = unrotatedCorner.getY() * 2.0;
+
+        subs.emplace_back("Rotation", std::to_string(angle));
+        subs.emplace_back("Width", std::to_string(width));
+        subs.emplace_back("Height", std::to_string(height));
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 // constructor
     BoxBoundary::BoxBoundary(ResourceDescriptor settings) {
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
     Boundary *BoxBoundary::clone() const {
@@ -81,7 +115,7 @@ namespace BattleRoom {
     Projection1D BoxBoundary::projectOnto(Vector2D axis) const {
 
         Projection1D projection;
-        for (Vector2D corner : m_corners) {
+        for (const auto &corner : m_corners) {
             projection.adjustForPoint(corner.dot(axis));
         }
         return projection;

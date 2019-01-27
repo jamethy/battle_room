@@ -27,10 +27,10 @@ namespace BattleRoom {
 
         const auto commands = CommandReceiver::getAndClearCommands();
 
-        if (commands.size() > 0) {
+        if (!commands.empty()) {
 
             m_commandStream.reset();
-            m_commandStream.writeInt(commands.size());
+            m_commandStream.writeInt(static_cast<int>(commands.size()));
 
             for (const auto& cmd : commands) {
                 cmd.serialize(m_commandStream);
@@ -52,6 +52,12 @@ namespace BattleRoom {
 
     void ClientConnection::applySettings(ResourceDescriptor settings) {
         QueryWorldUpdater::applySettings(settings);
+    }
+
+    ResourceDescriptor ClientConnection::getSettings() const {
+        auto rd = QueryWorldUpdater::getSettings();
+        rd.setValue("Client");
+        return rd;
     }
 
 } // BattleRoom namespace

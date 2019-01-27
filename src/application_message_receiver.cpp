@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "application_message_receiver.h"
 
 #include <mutex>
@@ -34,12 +36,24 @@ namespace BattleRoom {
         return returnMessages;
     }
 
-    void ApplicationMessageReceiver::addQuitEvent() {
+    void ApplicationMessageReceiver::quit() {
         m_quitEvent = true;
     }
 
     bool ApplicationMessageReceiver::containsQuitEvent() {
         return m_quitEvent;
+    }
+
+    void ApplicationMessageReceiver::add(ResourceDescriptor settings) {
+        addMessage(ApplicationMessage::add(std::move(settings)));
+    }
+
+    void ApplicationMessageReceiver::modify(UniqueId target, ResourceDescriptor settings) {
+        addMessage(ApplicationMessage::modify(target, std::move(settings)));
+    }
+
+    void ApplicationMessageReceiver::remove(UniqueId target) {
+        addMessage(ApplicationMessage::remove(target));
     }
 
 } // BattleRoom namespace

@@ -16,7 +16,8 @@ namespace BattleRoom {
 
         // constructors
         Message();
-        Message(MessageType type);
+
+        explicit Message(MessageType type);
 
         int hash() const;
 

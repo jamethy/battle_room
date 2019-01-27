@@ -38,6 +38,20 @@ namespace BattleRoom {
 
     }
 
+    ResourceDescriptor Color::getSettings() const {
+        ResourceDescriptor rd;
+        std::vector<ResourceDescriptor> subs = {};
+
+        subs.emplace_back("Red", std::to_string(getRed()));
+        subs.emplace_back("Green", std::to_string(getGreen()));
+        subs.emplace_back("Blue", std::to_string(getBlue()));
+        subs.emplace_back("Alpha", std::to_string(getAlpha()));
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
+
 // constructors
 
     Color::Color()
@@ -77,22 +91,21 @@ namespace BattleRoom {
     }
 
 
-    int Color::getRed() {
+    int Color::getRed() const {
         return m_red;
     }
 
-    int Color::getGreen() {
+    int Color::getGreen() const {
         return m_green;
     }
 
-    int Color::getBlue() {
+    int Color::getBlue() const {
         return m_blue;
     }
 
-    int Color::getAlpha() {
+    int Color::getAlpha() const {
         return m_alpha;
     }
-
 
 // inherited
 

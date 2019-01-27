@@ -15,7 +15,11 @@ namespace BattleRoom {
 
         static std::vector<ApplicationMessage> getAndClearMessages();
 
-        static void addQuitEvent();
+        static void quit();
+        
+        static void add(ResourceDescriptor settings);
+        static void modify(UniqueId target, ResourceDescriptor settings);
+        static void remove(UniqueId target);
 
         /**
          * \brief Returns if a quit event has occurred

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "camera.h"
 
 #include <cmath>
@@ -11,22 +13,39 @@ namespace BattleRoom {
     void Camera::applySettings(ResourceDescriptor settings) {
 
         m_location.applySettings(settings.getSubResource("Location"));
-        m_orientation.applySettings(settings.getSubResource("Orientation"));
+
+        Quaternion orientation;
+        orientation.applySettings(settings.getSubResource("Orientation"));
 
         ResourceDescriptor sub = settings.getSubResource("Rotation");
         if (isNotEmpty(sub.getValue())) {
-            Quaternion orientation;
+            orientation = Quaternion();
             orientation.rotateAboutZ(toRadians(sub.getValue()));
-            setOrientation(orientation);
         }
 
         sub = settings.getSubResource("DegRotation");
         if (isNotEmpty(sub.getValue())) {
             radians angle = toRadians(toDegrees(sub.getValue()));
-            Quaternion orientation;
+            orientation = Quaternion();
             orientation.rotateAboutZ(angle);
-            setOrientation(orientation);
         }
+        setOrientation(orientation);
+    }
+
+    ResourceDescriptor Camera::getSettings() const {
+        ResourceDescriptor rd("Camera", "Abstract");
+        std::vector<ResourceDescriptor> subs = {};
+
+        ResourceDescriptor sub = m_location.getSettings();
+        sub.setKey("Location");
+        subs.push_back(sub);
+
+        sub = m_orientation.getSettings();
+        sub.setKey("Orientation");
+        subs.push_back(sub);
+
+        rd.setSubResources(subs);
+        return rd;
     }
 
 // constructors
@@ -38,10 +57,10 @@ namespace BattleRoom {
               m_right(Vector3D(1, 0, 0)) {}
 
     Camera::Camera(ResourceDescriptor settings) : Camera() {
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
-    Camera::~Camera() {}
+    Camera::~Camera() = default;
 
     Camera *Camera::clone() {
         return new Camera(*this);

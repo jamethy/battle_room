@@ -7,16 +7,16 @@
 
 namespace BattleRoom {
 
-/**
- * The start of the basis for any resource read in through a file
- * This could be an animation, map, character, etc.
- */
+    /**
+     * The start of the basis for any resource read in through a file
+     * This could be an animation, map, character, etc.
+     */
     class Resource {
 
     public:
 
         // destructor
-        virtual ~Resource() {}
+        virtual ~Resource() = default;
 
         /**
          * \brief Fills the member variables from the settings
@@ -25,6 +25,8 @@ namespace BattleRoom {
          * \param settings ResourceDescriptor containing applicable settings
          */
         virtual void applySettings(ResourceDescriptor settings) = 0;
+
+        virtual ResourceDescriptor getSettings() const = 0;
 
     }; // Resource class
 } // BattleRoom namespace

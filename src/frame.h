@@ -19,7 +19,7 @@ namespace BattleRoom {
     public:
 
         // Constructors
-        Frame(ResourceDescriptor descriptor);
+        explicit Frame(ResourceDescriptor descriptor);
 
         /**
          * \brief Calculates and returns the width from topLeft/botRight
@@ -49,6 +49,8 @@ namespace BattleRoom {
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     private:
 

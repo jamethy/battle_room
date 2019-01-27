@@ -19,18 +19,23 @@ namespace BattleRoom {
 
         // constructors
         LocalWorldUpdater();
-        LocalWorldUpdater(ResourceDescriptor settings);
+
+        explicit LocalWorldUpdater(ResourceDescriptor settings);
 
         void start();
 
-        virtual ~LocalWorldUpdater();
+        ~LocalWorldUpdater() override;
 
         virtual void afterUpdate();
-        virtual void registerUser(User user) override;
-        virtual void unregisterUser(UniqueId userId) override;
+
+        void registerUser(User user) override;
+
+        void unregisterUser(UniqueId userId) override;
 
         // inherited
-        virtual void applySettings(ResourceDescriptor settings) override;
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     protected:
 

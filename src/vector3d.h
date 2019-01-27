@@ -87,10 +87,12 @@ namespace BattleRoom {
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
-        void serialize(BinaryStream& bs) const;
-        static Vector3D deserialize(BinaryStream& bs);
 
-        ResourceDescriptor writeToSetting(std::string key);
+        ResourceDescriptor getSettings() const override;
+
+        void serialize(BinaryStream &bs) const;
+
+        static Vector3D deserialize(BinaryStream &bs);
 
     private:
 

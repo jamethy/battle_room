@@ -27,7 +27,7 @@ namespace BattleRoom {
 
         Projection1D projectOnto(Vector2D axis) const override {
             (void) axis; // unused
-            return Projection1D();
+            return {};
         }
 
         std::vector<Vector2D> getSideNormals() const override {
@@ -36,6 +36,10 @@ namespace BattleRoom {
 
         void applySettings(ResourceDescriptor settings) override {
             (void) settings;
+        }
+
+        ResourceDescriptor getSettings() const override {
+            return ResourceDescriptor("Boundary", "Empty");
         }
     }; // EmptyBoundary class
 
@@ -47,7 +51,7 @@ namespace BattleRoom {
         m_boundaries.clear();
     }
 
-    Boundary *createBoundaryPtr(ResourceDescriptor settings) {
+    Boundary *createBoundaryPtr(const ResourceDescriptor &settings) {
 
         if (keyMatch("Circle", settings.getValue())) {
             return new CircleBoundary(settings);
@@ -64,7 +68,7 @@ namespace BattleRoom {
 
     BoundarySet::BoundarySet(std::vector<ResourceDescriptor> boundarySettings)
             : BoundarySet() {
-        for (ResourceDescriptor setting : boundarySettings) {
+        for (const ResourceDescriptor &setting : boundarySettings) {
             m_boundaries.push_back(createBoundaryPtr(setting));
         }
     }

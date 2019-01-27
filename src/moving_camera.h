@@ -17,9 +17,9 @@ namespace BattleRoom {
 
         MovingCamera();
 
-        MovingCamera(ResourceDescriptor settings);
+        explicit MovingCamera(ResourceDescriptor settings);
 
-        virtual ~MovingCamera() override;
+        ~MovingCamera() override;
 
         /**
          * \brief Implementations of this class will move the camera and
@@ -55,6 +55,8 @@ namespace BattleRoom {
         void setOrientation(Quaternion orientation) override;
 
         void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     protected:
 

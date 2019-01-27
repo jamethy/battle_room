@@ -19,14 +19,18 @@ namespace BattleRoom {
 
         PyramidCamera();
 
-        PyramidCamera(ResourceDescriptor settings);
+        explicit PyramidCamera(ResourceDescriptor settings);
 
-        virtual ~PyramidCamera() override;
+        ~PyramidCamera() override;
 
-        virtual Camera *clone() override;
+        Camera *clone() override;
 
         // inherited
         void move(Vector3D deltaVelocity) override;
+
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
     private:
 

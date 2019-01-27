@@ -5,7 +5,6 @@
 
 #include <regex>
 #include <fstream>
-#include <iostream>
 #include <zconf.h>
 
 using std::string;

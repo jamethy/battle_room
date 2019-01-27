@@ -10,29 +10,36 @@ namespace BattleRoom {
      */
     class GameInterface : public View {
 
-        public:
+    public:
 
-            // constructor
-            GameInterface(ResourceDescriptor settings, int windowWidth, int windowHeight);
+        // constructor
+        GameInterface(ResourceDescriptor settings, int windowWidth, int windowHeight);
 
-            // inherited
-            std::vector<DrawableObject> getDrawableObjects() override;
-            std::vector<DrawableText> getDrawableTexts() override;
-            std::vector<DrawableMenu> getDrawableMenus() override;
-            void update(seconds timestep) override;
-            Inputs handleInputs(Inputs inputs) override;
-            void applySettings(ResourceDescriptor settings) override;
+        // inherited
+        std::vector<DrawableObject> getDrawableObjects() override;
 
-        private:
+        std::vector<DrawableText> getDrawableTexts() override;
 
-            UniqueId m_idToTrack; ///< Tracks the given unique id
+        std::vector<DrawableMenu> getDrawableMenus() override;
 
-            // figure out better way to store this stuff
-            // player spatial elements
-            UniqueId m_playerId;
-            UniqueDrawableObject m_selectedBackground;
-            UniqueDrawableObject m_chargingGun;
-            UniqueDrawableObject m_chargingJump;
+        void update(seconds timestep) override;
+
+        Inputs handleInputs(Inputs inputs) override;
+
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
+
+    private:
+
+        UniqueId m_idToTrack; ///< Tracks the given unique id
+
+        // figure out better way to store this stuff
+        // player spatial elements
+        UniqueId m_playerId;
+        UniqueDrawableObject m_selectedBackground;
+        UniqueDrawableObject m_chargingGun;
+        UniqueDrawableObject m_chargingJump;
 
 
     }; // GameInterface class

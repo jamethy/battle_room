@@ -15,7 +15,8 @@ namespace BattleRoom {
 
         // constructor
         GameObject(UniqueId uniqueId, ObjectType type);
-        virtual ~GameObject() {}
+
+        ~GameObject() override {}
 
         virtual void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal);
 
@@ -23,11 +24,11 @@ namespace BattleRoom {
 
         virtual void updateForNext(seconds timestep);
 
-        virtual bool interpretCommand(const Command& cmd);
+        virtual bool interpretCommand(const Command &cmd);
 
-        virtual std::vector<GameObject*> getAddedObjects();
+        virtual std::vector<GameObject *> getAddedObjects();
 
-        virtual GameObject* clone() const;
+        virtual GameObject *clone() const;
 
         void setUp(Vector2D up);
 
@@ -77,9 +78,13 @@ namespace BattleRoom {
 
         // inherited
 
-        virtual void applySettings(ResourceDescriptor settings) override;
-        virtual void serialize(BinaryStream& bs) const override;
-        static GameObject deserialize(BinaryStream& bs);
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
+
+        void serialize(BinaryStream &bs) const override;
+
+        static GameObject deserialize(BinaryStream &bs);
 
     private:
 
@@ -96,7 +101,7 @@ namespace BattleRoom {
         std::string m_name; ///< label used for debugging
         ObjectType m_type; ///< Type of object
 
-        GameObject(const DrawableObject& base);
+        GameObject(const DrawableObject &base);
 
     }; // GameObject class
 

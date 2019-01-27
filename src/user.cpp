@@ -1,6 +1,23 @@
+#include <utility>
+
 #include "user.h"
 
 namespace BattleRoom {
+
+    void User::applySettings(ResourceDescriptor settings) {
+        if (isNotEmpty(settings.getValue())) {
+            m_name = settings.getValue();
+        }
+    }
+
+    ResourceDescriptor User::getSettings() const {
+        ResourceDescriptor rd("User", m_name);
+        std::vector<ResourceDescriptor> subs = {};
+        subs.emplace_back("UniqueId", m_uniqueId.toString());
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 
     User::User() :
         m_uniqueId(UniqueId::generateNewLocalId()),
@@ -9,7 +26,7 @@ namespace BattleRoom {
 
     User::User(ResourceDescriptor settings) : User() 
     {
-        applySettings(settings);
+        applySettings(std::move(settings));
     }
 
     UniqueId User::getUniqueId() const {
@@ -39,11 +56,4 @@ namespace BattleRoom {
         user.m_name = bs.readString();
         return user;
     }
-
-    void User::applySettings(ResourceDescriptor settings) {
-        if (isNotEmpty(settings.getValue())) {
-            m_name = settings.getValue();
-        }
-    }
-
 } // BattleRoom namespace

@@ -1,15 +1,14 @@
 
-#include <iostream>
-#include "./sdl_server.h"
-#include "./sdl_network_helper.h"
+#include "sdl_server.h"
+#include "sdl_network_helper.h"
+#include "logger.h"
 
 // temp
 #include "query_world.h"
-#include "logger.h"
 
 namespace BattleRoom {
 
-    void listenLoop(SdlServer& server) {
+    void listenLoop(SdlServer &server) {
 
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(100);
@@ -21,7 +20,7 @@ namespace BattleRoom {
             server.m_listenLock.lock();
             int socketsWithData = SDLNet_CheckSockets(server.m_socketSet, 500);
 
-            if(socketsWithData <= 0) {
+            if (socketsWithData <= 0) {
                 server.m_listenLock.unlock();
                 continue;
             }
@@ -40,12 +39,12 @@ namespace BattleRoom {
                 }
             }
 
-            if(socketsWithData <= 0) {
+            if (socketsWithData <= 0) {
                 server.m_listenLock.unlock();
                 continue;
             }
 
-            for (const auto& entry : server.m_clientSockets) {
+            for (const auto &entry : server.m_clientSockets) {
 
                 if (socketsWithData == 0) {
                     break;
@@ -80,9 +79,8 @@ namespace BattleRoom {
     }
 
 // constructors
-    SdlServer::SdlServer(ResourceDescriptor settings) : 
-        m_keepReceiving(false) 
-    { 
+    SdlServer::SdlServer(ResourceDescriptor settings) :
+            m_keepReceiving(false) {
         m_clientSockets.clear();
         applySettings(settings);
         LocalWorldUpdater::start();
@@ -90,7 +88,7 @@ namespace BattleRoom {
 
     SdlServer::~SdlServer() {
         if (m_keepReceiving) {
-            m_keepReceiving = false; 
+            m_keepReceiving = false;
             if (m_receivingThread.joinable()) {
                 m_receivingThread.join();
             }
@@ -102,37 +100,32 @@ namespace BattleRoom {
         // connect and stuff
 
         /* initialize SDL */
-        if(SDL_Init(0) == -1)
-        {
-            std::cerr << "SDL_Init: " << SDL_GetError() << std::endl;
+        if (SDL_Init(0) == -1) {
+            Log::fatal("SDL_Init: ", SDL_GetError());
             return false;
         }
 
         /* initialize SDL_net */
-        if(SDLNet_Init() == -1)
-        {
-            std::cerr << "SDLNet_Init: " << SDLNet_GetError() << std::endl;
+        if (SDLNet_Init() == -1) {
+            Log::fatal("SDLNet_Init: ", SDLNet_GetError());
             return false;
         }
 
         IPaddress serverIp;
-        if(SDLNet_ResolveHost(&serverIp, nullptr, port) == -1)
-        {
-            std::cerr << "SDLNet_ResolveHost: " << SDLNet_GetError() << std::endl;
+        if (SDLNet_ResolveHost(&serverIp, nullptr, static_cast<Uint16>(port)) == -1) {
+            Log::fatal("SDLNet_ResolveHost: ", SDLNet_GetError());
             return false;
         }
 
         m_serverSocket = SDLNet_TCP_Open(&serverIp);
-        if(!m_serverSocket)
-        {
-            std::cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << std::endl;
+        if (!m_serverSocket) {
+            Log::fatal("SDLNet_TCP_Open: ", SDLNet_GetError());
             return false;
         }
 
         m_socketSet = SDLNet_AllocSocketSet(1);
-        if(SDLNet_TCP_AddSocket(m_socketSet, m_serverSocket) == -1)
-        {
-            std::cerr << "SDLNet_TCP_AddSocket: " << SDL_GetError() << std::endl;
+        if (SDLNet_TCP_AddSocket(m_socketSet, m_serverSocket) == -1) {
+            Log::fatal("SDLNet_TCP_AddSocket: ", SDLNet_GetError());
             return false;
         }
 
@@ -141,17 +134,17 @@ namespace BattleRoom {
         return true;
     }
 
-    void SdlServer::sendMessage(Message& message, BinaryStream& data, UniqueId clientId) {
+    void SdlServer::sendMessage(Message &message, BinaryStream &data, UniqueId clientId) {
 
         if (!clientId.isNetwork()) {
             return;
         }
 
         if (m_clientSockets.count(clientId) <= 0) {
-            std::cerr << "No client of that ID is connected.\n";
+            Log::error("No client of that ID is connected.");
             return;
         }
-        
+
         BinaryStream headerStream(Message::Size);
 
         m_writingLock.lock();
@@ -162,27 +155,38 @@ namespace BattleRoom {
     void SdlServer::adjustSocketSet() {
 
         SDLNet_FreeSocketSet(m_socketSet);
-        m_socketSet = SDLNet_AllocSocketSet(m_clientSockets.size() + 1);
+        m_socketSet = SDLNet_AllocSocketSet(static_cast<int>(m_clientSockets.size() + 1));
 
         if (SDLNet_TCP_AddSocket(m_socketSet, m_serverSocket) == -1) {
-            std::cerr << "SDLNet_TCP_AddSocket: " << SDL_GetError() << std::endl;
+            Log::error("SDLNet_TCP_AddSocket: ", SDL_GetError());
             return;
         }
 
-        for (const auto& client : m_clientSockets) {
+        for (const auto &client : m_clientSockets) {
             if (SDLNet_TCP_AddSocket(m_socketSet, client.second) == -1) {
-                std::cerr << "SDLNet_TCP_AddSocket: " << SDL_GetError() << std::endl;
+                Log::error("SDLNet_TCP_AddSocket: ", SDL_GetError());
             }
-        } 
+        }
     }
 
     void SdlServer::applySettings(ResourceDescriptor settings) {
         ResourceDescriptor portSub = settings.getSubResource("Port");
 
         if (isNotEmpty(portSub.getValue())) {
-            start(stoi(portSub.getValue()));
+            m_port = stoi(portSub.getValue());
+            start(m_port);
         }
 
         ServerConnection::applySettings(settings);
+    }
+
+    ResourceDescriptor SdlServer::getSettings() const {
+        auto rd = ServerConnection::getSettings();
+        auto subs = rd.getSubResources();
+
+        subs.emplace_back("Port", std::to_string(m_port));
+
+        rd.setSubResources(subs);
+        return rd;
     }
 } // BattleRoom namespace

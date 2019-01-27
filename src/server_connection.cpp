@@ -13,7 +13,6 @@ namespace BattleRoom {
     ServerConnection::~ServerConnection() { }
 
     void ServerConnection::handleMessage(Message& message, BinaryStream& body, UniqueId clientId) {
-        Message response;
         m_responseStream.reset();
 
         MessageType requestType = message.getMessageType();
@@ -21,13 +20,14 @@ namespace BattleRoom {
         if (MessageType::GetWorldRequest == requestType) {
 
             QueryWorld::serialize(m_responseStream);
-            response.setMessageType(GetWorldResponse);
+
+            Message response(GetWorldResponse);
             sendMessage(response, m_responseStream, clientId);
 
         } else if (MessageType::PostCommandsRequest == requestType) {
             
             int count = body.readInt();
-            std::vector<Command> commands(count);
+            std::vector<Command> commands(static_cast<unsigned long>(count));
             for (int i = 0; i < count; ++i) {
                 commands[i] = Command::deserialize(body);
             }
@@ -40,9 +40,9 @@ namespace BattleRoom {
             registerUser(user);
 
             // respnose
-            Message message(MessageType::RegisterUserResponse);
+            Message response(MessageType::RegisterUserResponse);
             user.serialize(m_responseStream);
-            sendMessage(message, m_responseStream, clientId);
+            sendMessage(response, m_responseStream, clientId);
         }
         // else unrecognized
 
@@ -63,6 +63,12 @@ namespace BattleRoom {
         for (const auto& user : m_users) {
             sendMessage(msg, m_worldStream, user.getUniqueId());
         }
+    }
+
+    ResourceDescriptor ServerConnection::getSettings() const {
+        auto rd = LocalWorldUpdater::getSettings();
+        rd.setValue("Server");
+        return rd;
     }
 
 } // BattleRoom namespace

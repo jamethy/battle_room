@@ -22,6 +22,8 @@ namespace BattleRoom {
 
         static void applySettings(ResourceDescriptor settings);
 
+        static ResourceDescriptor getSettings();
+
     }; // ObjectFactory class
 } // BattleRoom namespace
 #endif // OBJECT_FACTORY_H
