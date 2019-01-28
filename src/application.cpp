@@ -163,11 +163,21 @@ namespace BattleRoom {
     }
 
     ResourceDescriptor Application::getSettings() const {
-        ResourceDescriptor rd;
+        ResourceDescriptor rd("Application", "");
         std::vector<ResourceDescriptor> subs = {};
 
         subs.push_back(ObjectFactory::getSettings());
         subs.push_back(m_worldUpdater->getSettings());
+
+        for (const auto &window : m_windows) {
+            subs.push_back(window->getSettings());
+        }
+
+        for (const auto &windowMap : m_viewMap) {
+            for (const auto &interface : windowMap.second) {
+                subs.push_back(interface->getSettings());
+            }
+        }
 
         rd.setSubResources(subs);
         return rd;
@@ -314,7 +324,7 @@ namespace BattleRoom {
             DisplayWindow *window = findUniqueIn(m_windows, windowId);
             if (window) {
 
-                auto interface = InterfaceFactory::createInterface(std::move(settings), window);
+                auto interface = InterfaceFactory::createInterface(std::move(settings), window, this);
 
                 auto &vec = m_viewMap.at(windowId);
                 auto itr = getViewPos(vec, interface->getLayer());

@@ -8,6 +8,7 @@
 #include "web_renderer.h"
 #include "html_menu.h"
 #include "web_message_handler.h"
+#include "application.h"
 
 namespace BattleRoom {
 
@@ -19,7 +20,8 @@ namespace BattleRoom {
     public:
 
         // constructor
-        MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth, int windowHeight);
+        MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth, int windowHeight,
+                      Application *application);
 
         // inherited
         WebMessageResponse onMessage(const std::string &message) override;
@@ -45,6 +47,7 @@ namespace BattleRoom {
         HtmlMenu *m_htmlMenu;
         bool m_hasFocus;
         std::string url;
+        Application *m_application;
 
     }; // MenuInterface class
 } // BattleRoom namespace

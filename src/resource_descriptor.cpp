@@ -19,6 +19,10 @@ using std::vector;
 
 namespace BattleRoom {
 
+    const std::string KEY_KEY = "key";
+    const std::string VALUE_KEY = "value";
+    const std::string SUBS_KEY = "subs";
+
     ResourceDescriptor::ResourceDescriptor()
             : m_key(""), m_value("") {}
 
@@ -31,73 +35,80 @@ namespace BattleRoom {
         fillFromInput(std::move(lines), start);
     }
 
+    ResourceDescriptor toResource(const CefRefPtr<CefDictionaryValue> &dictionary) {
 
-    void fillFromJson(ResourceDescriptor &resourceDescriptor, const CefRefPtr<CefDictionaryValue> &dictionary) {
+        ResourceDescriptor rd;
 
-        CefDictionaryValue::KeyList keys;
-        dictionary->GetKeys(keys);
+        auto valueType = dictionary->GetType(VALUE_KEY);
 
-        vector<ResourceDescriptor> subResources;
-        subResources.clear();
+        std::string value;
+        switch (valueType) {
+                // set sub resources
+            case VTYPE_BOOL:
+                value = std::to_string(dictionary->GetBool(VALUE_KEY));
+                break;
+            case VTYPE_INT:
+                value = std::to_string(dictionary->GetInt(VALUE_KEY));
+                break;
+            case VTYPE_DOUBLE:
+                value = std::to_string(dictionary->GetDouble(VALUE_KEY));
+                break;
+            case VTYPE_STRING:
+                value = dictionary->GetString(VALUE_KEY);
+                break;
 
-        for (const auto &key : keys) {
-            auto valueType = dictionary->GetType(key);
-
-            CefRefPtr<CefListValue> listValue;
-            ResourceDescriptor subValue;
-
-            switch (valueType) {
-                case VTYPE_DICTIONARY:
-                    subValue.setKey(key.ToString());
-                    fillFromJson(subValue, dictionary->GetDictionary(key));
-                    subResources.push_back(subValue);
-                    break;
-                    // set sub resources
-                case VTYPE_BOOL:
-                    subResources.emplace_back(key.ToString(), std::to_string(dictionary->GetBool(key)));
-                    break;
-                case VTYPE_INT:
-                    subResources.emplace_back(key.ToString(), std::to_string(dictionary->GetInt(key)));
-                    break;
-                case VTYPE_DOUBLE:
-                    subResources.emplace_back(key.ToString(), std::to_string(dictionary->GetDouble(key)));
-                    break;
-                case VTYPE_STRING:
-                    if (key == "value") {
-                        resourceDescriptor.setValue(dictionary->GetString(key).ToString());
-                    } else {
-                        subResources.emplace_back(key.ToString(), dictionary->GetString(key).ToString());
-                    }
-                    break;
-
-                case VTYPE_LIST:
-                    listValue = dictionary->GetList(key);
-                    for (size_t i = 0; i < listValue->GetSize(); ++i) {
-                        fillFromJson(subValue, listValue->GetDictionary(i));
-                        subResources.push_back(subValue);
-                    }
-                    break;
-
-                case VTYPE_INVALID:
-                    break;
-                case VTYPE_NULL:
-                    break;
-                case VTYPE_BINARY:
-                    break;
-            }
-
+            case VTYPE_LIST:
+            case VTYPE_INVALID:
+            case VTYPE_NULL:
+            case VTYPE_BINARY:
+            case VTYPE_DICTIONARY:
+                // not allowed
+                break;
         }
 
-        resourceDescriptor.setSubResources(subResources);
+        vector<ResourceDescriptor> subs = {};
+        auto subList = dictionary->GetList(SUBS_KEY);
+        for (size_t i = 0; i < subList->GetSize(); ++i) {
+            subs.push_back(toResource(subList->GetDictionary(i)));
+        }
+
+        rd.setKey(dictionary->GetString(KEY_KEY));
+        rd.setValue(value);
+        rd.setSubResources(subs);
+        return rd;
     }
 
     ResourceDescriptor ResourceDescriptor::fromJson(const std::string &json) {
-        auto requestValue = CefParseJSON(CefString(json), JSON_PARSER_RFC)->GetDictionary();
+        return toResource(CefParseJSON(CefString(json), JSON_PARSER_RFC)->GetDictionary());
+    }
 
-        ResourceDescriptor resourceDescriptor;
-        fillFromJson(resourceDescriptor, requestValue);
+    CefRefPtr<CefDictionaryValue> toDictionary(const ResourceDescriptor &settings) {
+        auto dictionary = CefDictionaryValue::Create();
 
-        return resourceDescriptor;
+        auto key = CefValue::Create();
+        key->SetString(settings.getKey());
+        dictionary->SetValue(KEY_KEY, key);
+
+        auto value = CefValue::Create();
+        value->SetString(settings.getValue());
+        dictionary->SetValue(VALUE_KEY, value);
+
+        auto subs = CefListValue::Create();
+        auto rdSubs = settings.getSubResources();
+        subs->SetSize(rdSubs.size());
+        for (size_t i = 0; i < rdSubs.size(); ++i) {
+            subs->SetDictionary(i, toDictionary(rdSubs[i]));
+        }
+        dictionary->SetList(SUBS_KEY, subs);
+
+        return dictionary;
+    }
+
+    std::string ResourceDescriptor::toJson(const ResourceDescriptor &settings) {
+        auto dictionary = toDictionary(settings);
+        auto value = CefValue::Create();
+        value->SetDictionary(dictionary);
+        return CefWriteJSON(value, JSON_WRITER_DEFAULT).ToString();
     }
 
     vector<ResourceDescriptor> ResourceDescriptor::getSubResources(string filter) const {
@@ -108,7 +119,7 @@ namespace BattleRoom {
 
         vector<ResourceDescriptor> returnVector;
         for (const ResourceDescriptor &descriptor : m_subResources) {
-            if (filter.compare(descriptor.getKey()) == 0) {
+            if (filter == descriptor.getKey()) {
                 returnVector.push_back(descriptor);
             }
         }
@@ -119,7 +130,7 @@ namespace BattleRoom {
     ResourceDescriptor ResourceDescriptor::getSubResource(string filter) const {
 
         for (const ResourceDescriptor &descriptor : m_subResources) {
-            if (filter.compare(descriptor.getKey()) == 0) {
+            if (filter == descriptor.getKey()) {
                 return descriptor;
             }
         }
@@ -132,9 +143,9 @@ namespace BattleRoom {
      * \param line String with white space, key, ': ', and the value
      * \return The matched Value
      */
-    string parseOutValue(std::string line) {
+    string parseOutValue(const std::string &line) {
 
-        string value = "";
+        string value;
 
         // ^ beginning of line
         // \\s* All whitespace between beginning and key
@@ -154,9 +165,9 @@ namespace BattleRoom {
      * \param line String with white space, key, ': ', and the value
      * \return The matched Key
      */
-    string parseOutKey(string line) {
+    string parseOutKey(const string &line) {
 
-        string key = "";
+        string key;
 
         // ^ beginning of line
         // \\s* All whitespace between beginning and key
@@ -178,7 +189,7 @@ namespace BattleRoom {
      * \param line containing key-value pair
      * \return Number of tabs before the key
      */
-    int getLevel(string line) {
+    int getLevel(const string &line) {
 
         // \\t A tab character
         std::regex rgx_tab("\\t");
@@ -187,7 +198,7 @@ namespace BattleRoom {
         size_t firstNonSpace = newline.find_first_not_of(' ');
 
         // since zero-index, firstNonSpace = number of spaces
-        return (firstNonSpace + 1) / 4;
+        return static_cast<int>((firstNonSpace + 1) / 4);
 
     }
 

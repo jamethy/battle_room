@@ -39,23 +39,24 @@ namespace BattleRoom {
 // constructors
 
     MenuInterface::MenuInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth,
-                                 int windowHeight) :
+                                 int windowHeight, Application *application) :
             View(settings, windowWidth, windowHeight),
             m_htmlMenu(new HtmlMenu(textureManager, windowWidth, windowHeight, this)),
-            m_hasFocus(false) {
+            m_hasFocus(false),
+            m_application(application) {
         applySettings(settings);
     }
 
 // other functions
 
     WebMessageResponse MenuInterface::onMessage(const std::string &message) {
-        static int counter = 0;
 
         CefRefPtr<CefDictionaryValue> requestValue = CefParseJSON(CefString(message), JSON_PARSER_RFC)->GetDictionary();
         auto method = requestValue->GetString("method").ToString();
         auto route = requestValue->GetString("route").ToString();
         Log::debug("MenuInterface Message: Method: ", method, ", Route: ", route);
 
+        std::string response;
 
         if (method == "POST" && route == "/quit") {
             ApplicationMessageReceiver::quit();
@@ -67,16 +68,11 @@ namespace BattleRoom {
             for (const auto &sub : resourceDescriptor.getSubResources()) {
                 ApplicationMessageReceiver::addMessage(ApplicationMessage::add(sub));
             }
+        } else if (method == "GET" && route == "/application") {
+            auto applicationState = m_application->getSettings();
+            response = ResourceDescriptor::toJson(applicationState);
         }
-
-        CefRefPtr<CefDictionaryValue> result_dict = CefDictionaryValue::Create();
-        result_dict->SetInt("count", ++counter);
-
-        CefRefPtr<CefValue> value = CefValue::Create();
-        value->SetDictionary(result_dict);
-        CefString json = CefWriteJSON(value, JSON_WRITER_DEFAULT);
-
-        return {WebMessageResponse::SUCCESS_CODE, json.ToString()};
+        return {WebMessageResponse::SUCCESS_CODE, response};
     }
 
     vector<DrawableObject> MenuInterface::getDrawableObjects() {

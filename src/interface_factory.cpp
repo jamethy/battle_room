@@ -4,14 +4,15 @@
 
 namespace BattleRoom {
 
-    UniqueInterface InterfaceFactory::createInterface(ResourceDescriptor settings, DisplayWindow *displayWindow) {
+    UniqueInterface InterfaceFactory::createInterface(ResourceDescriptor settings, DisplayWindow* displayWindow, Application* application) {
 
         if (keyMatch("Menu", settings.getValue())) {
             return UniqueInterface(new MenuInterface(
                     settings,
                     displayWindow->getTextureManager(),
                     displayWindow->getWidth(),
-                    displayWindow->getHeight()
+                    displayWindow->getHeight(),
+                    application
             ));
         } else {
             return UniqueInterface(new GameInterface(

@@ -21,7 +21,7 @@ namespace BattleRoom {
 
     PyramidCamera::PyramidCamera(ResourceDescriptor settings)
             : MovingCamera(std::move(settings)) {
-        m_camVelocity = Vector3D(0, 0, 0.2);
+        m_camVelocity = Vector3D(0, 0, 0.2); // todo figure out why I need an initial velocity for this to work
     }
 
     PyramidCamera::~PyramidCamera() = default;

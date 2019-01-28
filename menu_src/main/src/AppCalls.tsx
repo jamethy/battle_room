@@ -59,21 +59,8 @@ export function quitGame() {
 export function testAppCall() {
     appCall(
         {
-            method: "POST",
-            route: "/test",
-            body: {
-                window: {
-                    value: "secondWindow",
-                    width: 1000,
-                    height: 1000,
-                },
-                interface: {
-                    value: "game",
-                    window: "secondWindow",
-                    layer: 10,
-                    camera: "pyramid"
-                }
-            }
+            method: "GET",
+            route: "/application",
         },
         logSuccess,
         logFailure,
