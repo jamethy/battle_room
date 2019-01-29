@@ -27,6 +27,7 @@ namespace BattleRoom {
     ResourceDescriptor Player::getSettings() const {
         ResourceDescriptor rd = GameObject::getSettings();
         auto subs = rd.getSubResources();
+        rd.setKey("Player");
 
         subs.emplace_back("Client", m_client.toString());
 

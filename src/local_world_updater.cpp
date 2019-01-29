@@ -8,8 +8,6 @@
 
 #include <algorithm>
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfor-loop-analysis"
 namespace BattleRoom {
 
     // apply settings
@@ -111,5 +109,3 @@ namespace BattleRoom {
     }
 
 } // BattleRoom namespace
-
-#pragma clang diagnostic pop

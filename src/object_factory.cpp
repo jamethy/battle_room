@@ -12,6 +12,7 @@ namespace BattleRoom {
             {ObjectType::Player, ResourceDescriptor("Player", "")},
             {ObjectType::Bullet, ResourceDescriptor("Bullet", "")},
             {ObjectType::Ball,   ResourceDescriptor("Ball", "")},
+            {ObjectType::Ball,   ResourceDescriptor("Wall", "")},
             {ObjectType::None,   ResourceDescriptor("Object", "")}
     };
 
@@ -22,6 +23,8 @@ namespace BattleRoom {
             return ObjectType::Bullet;
         } else if (keyMatch(key, "Ball")) {
             return ObjectType::Ball;
+        } else if (keyMatch(key, "Wall")) {
+            return ObjectType::Wall;
         } else {
             return ObjectType::None;
         }
@@ -54,7 +57,7 @@ namespace BattleRoom {
         }
     }
 
-    UniqueGameObject createTemplateObject(ResourceDescriptor settings) {
+    UniqueGameObject createTemplateObject(const ResourceDescriptor &settings) {
 
         GameObject *obj = nullptr;
 
@@ -103,7 +106,7 @@ namespace BattleRoom {
     }
 
     UniqueGameObject ObjectFactory::deserializeObject(BinaryStream &bs) {
-        const ObjectType type = (ObjectType) bs.peekInt();
+        const auto type = (ObjectType) bs.peekInt();
         switch (type) {
             case ObjectType::Ball:
                 return UniqueGameObject(new Ball(Ball::deserialize(bs)));
@@ -121,6 +124,12 @@ namespace BattleRoom {
     ResourceDescriptor ObjectFactory::getSettings() {
         ResourceDescriptor rd("ObjectTemplates", "");
         std::vector<ResourceDescriptor> subs = {};
+
+        subs.push_back(OBJECT_TEMPLATES[ObjectType::None]);
+        subs.push_back(OBJECT_TEMPLATES[ObjectType::Ball]);
+        subs.push_back(OBJECT_TEMPLATES[ObjectType::Wall]);
+        subs.push_back(OBJECT_TEMPLATES[ObjectType::Bullet]);
+        subs.push_back(OBJECT_TEMPLATES[ObjectType::Player]);
 
         rd.setSubResources(subs);
         return rd;

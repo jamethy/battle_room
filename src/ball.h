@@ -26,7 +26,9 @@ namespace BattleRoom {
 
         static Ball deserialize(BinaryStream &bs);
 
-    private:
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
         /**
          * State of ball object
@@ -35,6 +37,8 @@ namespace BattleRoom {
             Normal = 0,
             Bouncing
         };
+
+    private:
 
         Vector2D m_storedVelocity; /// Velocity resulting from a collision
         BallState m_state; /// Current state of the ball object

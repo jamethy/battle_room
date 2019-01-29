@@ -31,15 +31,7 @@ namespace BattleRoom {
     }
 
     ResourceDescriptor Vector2D::getSettings() const {
-        ResourceDescriptor rd;
-        std::vector<ResourceDescriptor> subs;
-        subs.clear();
-
-        subs.emplace_back("X", std::to_string(m_x));
-        subs.emplace_back("Y", std::to_string(m_y));
-
-        rd.setSubResources(subs);
-        return rd;
+        return ResourceDescriptor("Vector2D", std::to_string(m_x) + "," + std::to_string(m_y));
     }
 
 // constructors

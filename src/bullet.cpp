@@ -84,4 +84,45 @@ namespace BattleRoom {
         m_bulletSource = id;
     }
 
+    std::string bulletStateString(Bullet::BulletState state) {
+        switch (state) {
+            case Bullet::BulletState::Hit:
+                return "Hit";
+            case Bullet::BulletState::Normal:
+            default:
+                return "Normal";
+        }
+    }
+
+    Bullet::BulletState stringBulletState(const std::string &str) {
+        if (str == "Hit") {
+            return Bullet::BulletState::Hit;
+        } else {
+            return Bullet::BulletState::Normal;
+        }
+    }
+
+    void Bullet::applySettings(ResourceDescriptor settings) {
+        GameObject::applySettings(settings);
+
+        m_state = stringBulletState(settings.getSubResource("State").getValue());
+        m_bulletSource = UniqueId::fromString(settings.getSubResource("Source").getValue());
+        auto sub = settings.getSubResource("TimeSinceFired").getValue();
+        if (isNotEmpty(sub)) {
+            m_timeSinceFired = toSeconds(sub);
+        }
+    }
+
+    ResourceDescriptor Bullet::getSettings() const {
+        auto rd = GameObject::getSettings();
+        auto subs = rd.getSubResources();
+
+        rd.setKey("Bullet");
+        subs.emplace_back("State", bulletStateString(m_state));
+        subs.emplace_back("Source", m_bulletSource.toString());
+        subs.emplace_back("TimeSinceFired", m_bulletSource.toString());
+
+        rd.setSubResources(subs);
+        return rd;
+    }
 } // BattleRoom namespace

@@ -1,6 +1,6 @@
 import * as React from "react";
 import {PopupBox, PopupBoxProps} from "./PopupBox";
-import {quitGame, testAppCall} from "../AppCalls";
+import {quitGame} from "../AppCalls";
 
 export interface MainProps {
 }
@@ -67,7 +67,7 @@ export class Main extends React.Component<MainProps, MainState> {
             buttons: [
                 {
                     label: "Play",
-                    onClick: testAppCall,
+                    onClick: () => {},
                 },
                 {
                     label: "Back",

@@ -39,27 +39,23 @@ namespace BattleRoom {
     }
 
     ResourceDescriptor Quaternion::getSettings() const {
-        ResourceDescriptor rd;
-        std::vector<ResourceDescriptor> subs = {};
-
-        subs.emplace_back("W", std::to_string(m_w));
-        subs.emplace_back("I", std::to_string(m_i));
-        subs.emplace_back("J", std::to_string(m_j));
-        subs.emplace_back("K", std::to_string(m_k));
-
-        rd.setSubResources(subs);
-        return rd;
+        return ResourceDescriptor("Quaternion",
+                                  std::to_string(m_w) + "," +
+                                  std::to_string(m_i) + "," +
+                                  std::to_string(m_j) + "," +
+                                  std::to_string(m_k)
+        );
     }
 
 // constructors
 
     Quaternion::Quaternion()
-        : m_w(1.0), m_i(0.0), m_j(0.0), m_k(0.0) {}
+            : m_w(1.0), m_i(0.0), m_j(0.0), m_k(0.0) {}
 
     Quaternion::Quaternion(radians angle)
-        : m_w(1.0), m_i(0.0), m_j(0.0), m_k(0.0) {
-            this->rotateAboutZ(angle);
-        }
+            : m_w(1.0), m_i(0.0), m_j(0.0), m_k(0.0) {
+        this->rotateAboutZ(angle);
+    }
 
     Quaternion::Quaternion(double w, double i, double j, double k)
             : m_w(w), m_i(i), m_j(j), m_k(k) {}
@@ -140,19 +136,19 @@ namespace BattleRoom {
         return m_k;
     }
 
-    void Quaternion::serialize(BinaryStream& bs) const {
+    void Quaternion::serialize(BinaryStream &bs) const {
         bs.writeDouble(m_w);
         bs.writeDouble(m_i);
         bs.writeDouble(m_j);
         bs.writeDouble(m_k);
     }
 
-    Quaternion Quaternion::deserialize(BinaryStream& bs) {
+    Quaternion Quaternion::deserialize(BinaryStream &bs) {
         double w = bs.readDouble();
         double i = bs.readDouble();
         double j = bs.readDouble();
         double k = bs.readDouble();
-        
+
         return Quaternion(w, i, j, k);
     }
 

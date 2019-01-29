@@ -28,7 +28,9 @@ namespace BattleRoom {
 
         static Bullet deserialize(BinaryStream &bs);
 
-    private:
+        void applySettings(ResourceDescriptor settings) override;
+
+        ResourceDescriptor getSettings() const override;
 
         /**
          * State of ball object
@@ -37,6 +39,8 @@ namespace BattleRoom {
             Normal = 0,
             Hit
         };
+
+    private:
 
         BulletState m_state; /// Current state of the ball object
         UniqueId m_bulletSource;

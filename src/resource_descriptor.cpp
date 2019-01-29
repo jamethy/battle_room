@@ -37,44 +37,47 @@ namespace BattleRoom {
 
     ResourceDescriptor toResource(const CefRefPtr<CefDictionaryValue> &dictionary) {
 
-        ResourceDescriptor rd;
+        ResourceDescriptor rd(dictionary->GetString(KEY_KEY), "");
 
-        auto valueType = dictionary->GetType(VALUE_KEY);
+        if (dictionary->HasKey(VALUE_KEY)) {
+            auto valueType = dictionary->GetType(VALUE_KEY);
 
-        std::string value;
-        switch (valueType) {
+            std::string value;
+            switch (valueType) {
                 // set sub resources
-            case VTYPE_BOOL:
-                value = std::to_string(dictionary->GetBool(VALUE_KEY));
-                break;
-            case VTYPE_INT:
-                value = std::to_string(dictionary->GetInt(VALUE_KEY));
-                break;
-            case VTYPE_DOUBLE:
-                value = std::to_string(dictionary->GetDouble(VALUE_KEY));
-                break;
-            case VTYPE_STRING:
-                value = dictionary->GetString(VALUE_KEY);
-                break;
+                case VTYPE_BOOL:
+                    value = std::to_string(dictionary->GetBool(VALUE_KEY));
+                    break;
+                case VTYPE_INT:
+                    value = std::to_string(dictionary->GetInt(VALUE_KEY));
+                    break;
+                case VTYPE_DOUBLE:
+                    value = std::to_string(dictionary->GetDouble(VALUE_KEY));
+                    break;
+                case VTYPE_STRING:
+                    value = dictionary->GetString(VALUE_KEY);
+                    break;
 
-            case VTYPE_LIST:
-            case VTYPE_INVALID:
-            case VTYPE_NULL:
-            case VTYPE_BINARY:
-            case VTYPE_DICTIONARY:
-                // not allowed
-                break;
+                case VTYPE_LIST:
+                case VTYPE_INVALID:
+                case VTYPE_NULL:
+                case VTYPE_BINARY:
+                case VTYPE_DICTIONARY:
+                    // not allowed
+                    break;
+            }
+            rd.setValue(value);
         }
 
-        vector<ResourceDescriptor> subs = {};
-        auto subList = dictionary->GetList(SUBS_KEY);
-        for (size_t i = 0; i < subList->GetSize(); ++i) {
-            subs.push_back(toResource(subList->GetDictionary(i)));
+        if (dictionary->HasKey(VALUE_KEY)) {
+            vector<ResourceDescriptor> subs = {};
+            auto subList = dictionary->GetList(SUBS_KEY);
+            for (size_t i = 0; i < subList->GetSize(); ++i) {
+                subs.push_back(toResource(subList->GetDictionary(i)));
+            }
+            rd.setSubResources(subs);
         }
 
-        rd.setKey(dictionary->GetString(KEY_KEY));
-        rd.setValue(value);
-        rd.setSubResources(subs);
         return rd;
     }
 
@@ -89,17 +92,21 @@ namespace BattleRoom {
         key->SetString(settings.getKey());
         dictionary->SetValue(KEY_KEY, key);
 
-        auto value = CefValue::Create();
-        value->SetString(settings.getValue());
-        dictionary->SetValue(VALUE_KEY, value);
-
-        auto subs = CefListValue::Create();
-        auto rdSubs = settings.getSubResources();
-        subs->SetSize(rdSubs.size());
-        for (size_t i = 0; i < rdSubs.size(); ++i) {
-            subs->SetDictionary(i, toDictionary(rdSubs[i]));
+        if (isNotEmpty(settings.getValue())) {
+            auto value = CefValue::Create();
+            value->SetString(settings.getValue());
+            dictionary->SetValue(VALUE_KEY, value);
         }
-        dictionary->SetList(SUBS_KEY, subs);
+
+        auto rdSubs = settings.getSubResources();
+        if (!rdSubs.empty()) {
+            auto subs = CefListValue::Create();
+            subs->SetSize(rdSubs.size());
+            for (size_t i = 0; i < rdSubs.size(); ++i) {
+                subs->SetDictionary(i, toDictionary(rdSubs[i]));
+            }
+            dictionary->SetList(SUBS_KEY, subs);
+        }
 
         return dictionary;
     }

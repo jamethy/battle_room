@@ -76,6 +76,46 @@ namespace BattleRoom {
         return ball;
     }
 
+    std::string ballStateString(Ball::BallState state) {
+        switch (state) {
+            case Ball::BallState::Bouncing:
+                return "Bouncing";
+            case Ball::BallState::Normal:
+            default:
+                return "Normal";
+        }
+    }
+
+    Ball::BallState stringBallState(const std::string &str) {
+        if (str == "Bouncing") {
+            return Ball::BallState::Bouncing;
+        } else {
+            return Ball::BallState::Normal;
+        }
+    }
+
+    void Ball::applySettings(ResourceDescriptor settings) {
+        GameObject::applySettings(settings);
+
+        m_state = stringBallState(settings.getSubResource("State").getValue());
+        m_storedVelocity.applySettings(settings.getSubResource("StoredVelocity"));
+    }
+
+    ResourceDescriptor Ball::getSettings() const {
+        auto rd = GameObject::getSettings();
+        auto subs = rd.getSubResources();
+
+        rd.setKey("Ball");
+        subs.emplace_back("State", ballStateString(m_state));
+
+        auto subRd = m_storedVelocity.getSettings();
+        subRd.setKey("StoreVelocity");
+        subs.push_back(subRd);
+
+        rd.setSubResources(subs);
+        return rd;
+    }
+
 } // BattleRoom namespace
 
 

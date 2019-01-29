@@ -107,8 +107,7 @@ namespace BattleRoom {
             }
 
             // apply application message
-            std::vector<ApplicationMessage> messages = ApplicationMessageReceiver::getAndClearMessages();
-            for (auto &message : messages) {
+            for (auto &message : ApplicationMessageReceiver::getAndClearMessages()) {
                 applyMessage(message);
                 updateApplicationState();
             }

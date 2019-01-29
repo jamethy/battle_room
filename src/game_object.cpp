@@ -45,6 +45,11 @@ namespace BattleRoom {
         if (isNotEmpty(sub.getValue())) {
             setMass(toKilograms(sub.getValue()));
         }
+
+        sub = settings.getSubResource("UniqueId");
+        if (isNotEmpty(sub.getValue())) {
+            m_uniqueId = UniqueId::fromString(sub.getValue());
+        }
     }
 
     ResourceDescriptor GameObject::getSettings() const {
@@ -59,6 +64,7 @@ namespace BattleRoom {
         sub.setKey("Velocity");
         subs.push_back(sub);
 
+        subs.emplace_back("UniqueId", m_uniqueId.toString());
         subs.emplace_back("Rotation", std::to_string(m_rotation));
         subs.emplace_back("AngularVelocity", std::to_string(m_angularVelocity));
         subs.emplace_back("Static", m_isStatic ? "True" : "False");

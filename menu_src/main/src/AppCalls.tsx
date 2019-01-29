@@ -1,19 +1,15 @@
-interface CefQuery {
-    request: string,
-    persistent: boolean,
-    onSuccess: (response: string) => void,
-    onFailure: (error_code: number, error_message: string) => void,
-}
+export type AppCallSuccessFunction = (response: string) => void;
+export type AppCallFailureFunction = (error_code: number, error_message: string) => void;
 
 interface Request {
-    method: string,
-    route: string,
-    body?: Object,
+    method: string;
+    route: string;
+    body?: Object;
 }
 
 function appCall(request: Request,
-                 onSuccess: (response: string) => void,
-                 onFailure: (error_code: number, error_message: string) => void) {
+                 onSuccess: AppCallSuccessFunction,
+                 onFailure: AppCallFailureFunction) {
     // @ts-ignore
     window.cefQuery({
         request: JSON.stringify({
@@ -27,42 +23,26 @@ function appCall(request: Request,
     });
 }
 
-function logSuccess(response: string) {
+let logSuccess: AppCallSuccessFunction = function (response: string): void {
     console.log(`Success response: ${response}.`);
-}
+};
 
-function logFailure(error_code: number, error_message: string) {
+let logFailure: AppCallFailureFunction = function (error_code: number, error_message: string): void {
     console.error(`Failure response: {${error_code}, ${error_message}}`);
-}
+};
 
 export function quitGame() {
     appCall(
-        {
-            method: "POST",
-            route: "/quit",
-        },
+        {method: "POST", route: "/quit"},
         logSuccess,
         logFailure
     );
 }
 
-
-// Window: mainWindow
-//     Width: 1500
-//     Height: 1000
-//
-// Interface: Game
-//     Window: mainWindow
-//     Layer: 10
-//     Camera: Pyramid
-
-export function testAppCall() {
+export function getApplicationState(onSuccess: AppCallSuccessFunction) {
     appCall(
-        {
-            method: "GET",
-            route: "/application",
-        },
-        logSuccess,
+        {method: "GET", route: "/application"},
+        onSuccess,
         logFailure,
     )
 }

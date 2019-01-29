@@ -62,12 +62,10 @@ namespace BattleRoom {
             ApplicationMessageReceiver::quit();
             return {WebMessageResponse::SUCCESS_CODE, ""};
 
-        } else if (method == "POST" && route == "/test") {
+        } else if (method == "POST" && route == "/message") {
             auto body = requestValue->GetString("body").ToString();
             ResourceDescriptor resourceDescriptor = ResourceDescriptor::fromJson(body);
-            for (const auto &sub : resourceDescriptor.getSubResources()) {
-                ApplicationMessageReceiver::addMessage(ApplicationMessage::add(sub));
-            }
+            ApplicationMessageReceiver::addMessage(ApplicationMessage::add(resourceDescriptor));
         } else if (method == "GET" && route == "/application") {
             auto applicationState = m_application->getSettings();
             response = ResourceDescriptor::toJson(applicationState);
