@@ -42,7 +42,7 @@ namespace BattleRoom {
                                  int windowHeight, Application *application) :
             View(settings, windowWidth, windowHeight),
             m_htmlMenu(new HtmlMenu(textureManager, windowWidth, windowHeight, this)),
-            m_hasFocus(false),
+            m_hasFocus(true),
             m_application(application) {
         applySettings(settings);
     }
@@ -56,21 +56,29 @@ namespace BattleRoom {
         auto route = requestValue->GetString("route").ToString();
         Log::debug("MenuInterface Message: Method: ", method, ", Route: ", route);
 
+        int responseCode = WebMessageResponse::SUCCESS_CODE;
         std::string response;
 
         if (method == "POST" && route == "/quit") {
             ApplicationMessageReceiver::quit();
-            return {WebMessageResponse::SUCCESS_CODE, ""};
+
+        } else if (method == "POST" && route == "/close") {
+            m_hasFocus = false;
 
         } else if (method == "POST" && route == "/message") {
             auto body = requestValue->GetString("body").ToString();
             ResourceDescriptor resourceDescriptor = ResourceDescriptor::fromJson(body);
             ApplicationMessageReceiver::addMessage(ApplicationMessage::add(resourceDescriptor));
+
         } else if (method == "GET" && route == "/application") {
             auto applicationState = m_application->getSettings();
             response = ResourceDescriptor::toJson(applicationState);
+
+        } else {
+            responseCode = WebMessageResponse::NOT_FOUND_CODE;
         }
-        return {WebMessageResponse::SUCCESS_CODE, response};
+
+        return {responseCode, response};
     }
 
     vector<DrawableObject> MenuInterface::getDrawableObjects() {

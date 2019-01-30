@@ -1,16 +1,17 @@
-WorldUpdater: Server
-    Port: 8000
-    Resource: worlds/test_world
-    User: username
 
 Window: mainWindow
     Width: 1500
     Height: 1000
 
-Interface: Game
-    Window: mainWindow
-    Layer: 10
-    Camera: Pyramid
+#WorldUpdater: Server
+#    Port: 8000
+#    Resource: worlds/test_world
+#    User: username
+
+#Interface: Game
+#    Window: mainWindow
+#    Layer: 10
+#    Camera: Pyramid
 
 Resource: menus/main
 

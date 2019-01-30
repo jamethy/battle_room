@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "input_gatherer.h"
 
 namespace BattleRoom {
@@ -12,7 +14,7 @@ namespace BattleRoom {
     }
 
     void InputGatherer::addInput(Input input) {
-        m_inputs.addInput(input);
+        m_inputs.addInput(std::move(input));
     }
 
 } // BattleRoom namespace

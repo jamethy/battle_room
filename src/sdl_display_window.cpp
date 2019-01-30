@@ -83,14 +83,16 @@ namespace BattleRoom {
             Log::error("Must give a name during window construction.");
         }
 
-        // TODO throw exceptions instead of cerr
-        if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-            Log::fatal("SDL_Init error: ", SDL_GetError());
-        }
+        if (m_windowCount == 0) {
+            // TODO throw exceptions instead of cerr
+            if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+                Log::fatal("SDL_Init error: ", SDL_GetError());
+            }
 
-        if (TTF_Init() != 0) {
-            Log::fatal("TTF_Init error: ", SDL_GetError());
-            SDL_Quit();
+            if (TTF_Init() != 0) {
+                Log::fatal("TTF_Init error: ", SDL_GetError());
+                SDL_Quit();
+            }
         }
 
         m_window = SDL_CreateWindow(m_windowName.c_str(), 0, 0, 500, 500,
@@ -139,7 +141,7 @@ namespace BattleRoom {
     void SdlDisplayWindow::gatherInputs(const std::vector<UniqueInterface>& views) {
 
         // For each SDL_Event that pertains to this window, create an Input
-        for (vector<SDL_Event>::iterator it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
+        for (auto it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
 
             SDL_Event event = *it;
 

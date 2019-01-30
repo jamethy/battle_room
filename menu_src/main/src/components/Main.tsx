@@ -1,6 +1,6 @@
 import * as React from "react";
 import {PopupBox, PopupBoxProps} from "./PopupBox";
-import {quitGame} from "../AppCalls";
+import {closeMenu, postResource, quitGame} from "../AppCalls";
 
 export interface MainProps {
 }
@@ -17,10 +17,6 @@ interface MainState {
     currentPage: MainPage,
 }
 
-const popupStyle: React.CSSProperties = {
-    backgroundColor: "grey"
-};
-
 export class Main extends React.Component<MainProps, MainState> {
 
     private readonly pages: Map<MainPage, PopupBoxProps>;
@@ -36,8 +32,7 @@ export class Main extends React.Component<MainProps, MainState> {
 
         this.pages = new Map<MainPage, PopupBoxProps>();
         this.pages.set(MainPage.Home, {
-            header: "BATTLE ROOM",
-            style: popupStyle,
+            header: "Battle Room",
             buttons: [
                 {
                     label: "Single Player",
@@ -56,17 +51,67 @@ export class Main extends React.Component<MainProps, MainState> {
                     onClick: () => this.navigateTo(MainPage.Settings),
                 },
                 {
+                    label: "Close",
+                    onClick: closeMenu,
+                },
+                {
                     label: "Quit",
                     onClick: quitGame,
                 },
             ]
         });
         this.pages.set(MainPage.SinglePlayer, {
-            header: "SINGLE PLAYER",
-            style: popupStyle,
+            header: "Single Player",
             buttons: [
                 {
                     label: "Play",
+                    onClick: () => {
+                        postResource({
+                            key: "WorldUpdater",
+                            value: "Server",
+                            subs: [
+                                {
+                                    key: "Resource",
+                                    value: "worlds/test_world",
+                                },
+                                {
+                                    key: "User",
+                                    value: "username",
+                                }
+                            ]
+                        });
+                        postResource({
+                            key: "Interface",
+                            value: "Game",
+                            subs: [
+                                {
+                                    key: "Window",
+                                    value: "mainWindow",
+                                },
+                                {
+                                    key: "Layer",
+                                    value: 10,
+                                },
+                                {
+                                    key: "Camera",
+                                    value: "Pyramid",
+                                },
+                            ]
+                        });
+                        closeMenu();
+                    },
+                },
+                {
+                    label: "Back",
+                    onClick: () => this.navigateTo(MainPage.Home),
+                },
+            ]
+        });
+        this.pages.set(MainPage.Settings, {
+            header: "Settings",
+            buttons: [
+                {
+                    label: "Add screen",
                     onClick: () => {},
                 },
                 {

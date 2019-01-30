@@ -300,12 +300,6 @@ namespace BattleRoom {
 
 
     void Application::updateApplicationState() {
-
-        // world updater
-        // windows
-            // id
-                // game interface
-                // menu interface
     }
 
     std::vector<UniqueInterface>::iterator getViewPos(std::vector<UniqueInterface> &vec, int layer) {

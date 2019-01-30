@@ -7,6 +7,12 @@ interface Request {
     body?: Object;
 }
 
+interface Resource {
+    key: string;
+    value?: string | number | boolean;
+    subs?: Resource[];
+}
+
 function appCall(request: Request,
                  onSuccess: AppCallSuccessFunction,
                  onFailure: AppCallFailureFunction) {
@@ -34,6 +40,30 @@ let logFailure: AppCallFailureFunction = function (error_code: number, error_mes
 export function quitGame() {
     appCall(
         {method: "POST", route: "/quit"},
+        logSuccess,
+        logFailure
+    );
+}
+
+export function closeMenu() {
+    appCall(
+        {method: "POST", route: "/close"},
+        logSuccess,
+        logFailure
+    );
+}
+
+export function postResource(resource: Resource) {
+    appCall(
+        {method: "POST", route: "/message", body: resource},
+        logSuccess,
+        logFailure
+    );
+}
+
+export function putResource(resource: Resource) {
+    appCall(
+        {method: "PUT", route: "/message", body: resource},
         logSuccess,
         logFailure
     );

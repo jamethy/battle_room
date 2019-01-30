@@ -13,6 +13,7 @@ namespace BattleRoom {
         int statusCode;
         std::string message;
         static const int SUCCESS_CODE = 200;
+        static const int NOT_FOUND_CODE = 404;
     };
 
 

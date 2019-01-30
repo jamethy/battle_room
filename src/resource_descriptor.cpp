@@ -69,11 +69,17 @@ namespace BattleRoom {
             rd.setValue(value);
         }
 
-        if (dictionary->HasKey(VALUE_KEY)) {
-            vector<ResourceDescriptor> subs = {};
+        if (dictionary->HasKey(SUBS_KEY)) {
+            auto subs = rd.getSubResources();
             auto subList = dictionary->GetList(SUBS_KEY);
             for (size_t i = 0; i < subList->GetSize(); ++i) {
-                subs.push_back(toResource(subList->GetDictionary(i)));
+                auto sub = toResource(subList->GetDictionary(i));
+                if (sub.getKey() == "Resource") {
+                    auto newSubs = ResourceDescriptor::readResource(sub.getValue()).getSubResources();
+                    subs.insert(subs.end(), newSubs.begin(), newSubs.end());
+                } else {
+                    subs.push_back(sub);
+                }
             }
             rd.setSubResources(subs);
         }
