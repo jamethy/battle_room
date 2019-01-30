@@ -21,6 +21,12 @@ namespace BattleRoom {
 
         ~HtmlMenu();
 
+        void hide();
+
+        void show();
+
+        bool isShowing() const;
+
         void resize(int width, int height);
 
         void navigateTo(const std::string& location);
@@ -30,6 +36,8 @@ namespace BattleRoom {
         DrawableMenu getDrawableMenu();
 
     private:
+
+        bool m_isShowing;
 
         DrawableMenu m_drawableMenu;
 

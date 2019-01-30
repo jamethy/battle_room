@@ -42,7 +42,6 @@ namespace BattleRoom {
                                  int windowHeight, Application *application) :
             View(settings, windowWidth, windowHeight),
             m_htmlMenu(new HtmlMenu(textureManager, windowWidth, windowHeight, this)),
-            m_hasFocus(true),
             m_application(application) {
         applySettings(settings);
     }
@@ -63,7 +62,7 @@ namespace BattleRoom {
             ApplicationMessageReceiver::quit();
 
         } else if (method == "POST" && route == "/close") {
-            m_hasFocus = false;
+            m_htmlMenu->hide();
 
         } else if (method == "POST" && route == "/message") {
             auto body = requestValue->GetString("body").ToString();
@@ -90,7 +89,7 @@ namespace BattleRoom {
     }
 
     vector<DrawableMenu> MenuInterface::getDrawableMenus() {
-        if (m_hasFocus) {
+        if (m_htmlMenu->isShowing()) {
             return {m_htmlMenu->getDrawableMenu()};
         } else {
             return {};
@@ -116,9 +115,13 @@ namespace BattleRoom {
             }
 
             if (input.getMotion() == Motion::PressedDown && input.getKey() == Key::Escape) {
-                m_hasFocus = !m_hasFocus;
+                if (m_htmlMenu->isShowing()) {
+                    m_htmlMenu->hide();
+                } else {
+                    m_htmlMenu->show();
+                }
                 inputHandled = true;
-            } else if (m_hasFocus) {
+            } else if (m_htmlMenu->isShowing()) {
                 if (input.containsView(getUniqueId())) {
 
                     RelPixel point = input.getViewRelIntersection(getUniqueId());

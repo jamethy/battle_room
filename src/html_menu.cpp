@@ -1,4 +1,5 @@
 #include <utility>
+#include <thread>
 
 //
 // Created by james on 1/19/19.
@@ -15,7 +16,7 @@ namespace BattleRoom {
 
 
     HtmlMenu::HtmlMenu(TextureManager *textureManager, int windowWidth, int windowHeight,
-                       WebMessageHandler *webMessageHandler) {
+                       WebMessageHandler *webMessageHandler) : m_isShowing(true) {
 
         m_webRenderer = new WebRenderer(textureManager, windowWidth, windowHeight);
         m_webBrowserClient = new WebBrowserClient(m_webRenderer, webMessageHandler);
@@ -26,6 +27,10 @@ namespace BattleRoom {
         Log::debug("Closing drawable menu");
         if (m_webBrowser) {
             m_webBrowser->GetHost()->CloseBrowser(true);
+        }
+        int count = 0;
+        while (!m_webBrowserClient->closeAllowed() && ++count < 1000) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
 
@@ -74,5 +79,19 @@ namespace BattleRoom {
 
     DrawableMenu HtmlMenu::getDrawableMenu() {
         return m_drawableMenu;
+    }
+
+    void HtmlMenu::hide() {
+        m_isShowing = false;
+        m_webBrowser->GetHost()->WasHidden(true);
+    }
+
+    void HtmlMenu::show() {
+        m_isShowing = true;
+        m_webBrowser->GetHost()->WasHidden(false);
+    }
+
+    bool HtmlMenu::isShowing() const {
+        return m_isShowing;
     }
 } // BattleRoom namespace

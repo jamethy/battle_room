@@ -45,7 +45,6 @@ namespace BattleRoom {
     private:
 
         HtmlMenu *m_htmlMenu;
-        bool m_hasFocus;
         std::string url;
         Application *m_application;
 
