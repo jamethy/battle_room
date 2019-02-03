@@ -6,6 +6,7 @@
 #include "vector3d.h"
 #include "quaternion.h"
 #include "unique_id.h"
+#include "view.h"
 
 namespace BattleRoom {
 
@@ -15,6 +16,8 @@ namespace BattleRoom {
         GameUIElement();
 
         virtual std::string getType() const = 0;
+
+        virtual std::string getJson(Camera* camera, View* view) const = 0;
 
         // getters and setters
 

@@ -51,13 +51,13 @@ namespace BattleRoom {
 
         ResourceDescriptor getSettings() const override;
 
-    protected:
-
-        UniqueCamera m_camera;
-
         int getViewWidth();
 
         int getViewHeight();
+
+    protected:
+
+        UniqueCamera m_camera;
 
     private:
 

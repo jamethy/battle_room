@@ -173,7 +173,7 @@ add_executable(battleroom
         input_to_cef.cpp 
         web_message_handler.h
         game_ui_element.cpp
-        game_ui_element.h charge_bar.cpp charge_bar.h)
+        game_ui_element.h player_select.cpp player_select.h)
 
 # CEF properties
 target_include_directories(${BATTLEROOM_TARGET} SYSTEM PUBLIC ${CEF_INCLUDE_PATH}) # the SYSTEM ignores all the warnings

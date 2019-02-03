@@ -1,36 +1,26 @@
 import * as React from "react";
 
-export interface BaseGameElementProps {
-    uniqueId: string,
-    x: number,
-    y: number,
-}
-
-export interface ChargeBarProps extends BaseGameElementProps{
-    chargePercent: number,
+export interface ChargeBarProps {
+    charge: number, // 0 - 1
     width: number, // in pixels
+    type: "GunCharge" | "JumpCharge",
 }
 
 export class ChargeBar extends React.Component<ChargeBarProps, {}> {
 
     render() {
-        const {uniqueId, chargePercent, width, x, y} = this.props;
-        let limitedChargePercent = Math.min(100, Math.max(0, chargePercent));
+        const {charge, width, type} = this.props;
+        let limitedCharge = Math.min(1, Math.max(0, charge));
         let height = width / 15;
-        let top = y - height / 2;
-        let left = x - width / 2;
 
         const barStyle: React.CSSProperties = {
-            background: 'green',
-            position: 'fixed',
+            background: type === 'GunCharge' ? 'red' : 'green',
             height: height + 'px',
-            width: (width * limitedChargePercent / 100) + 'px',
-            top: top + 'px',
-            left: left + 'px',
+            width: (width * limitedCharge) + 'px',
         };
 
         return (
-            <div id={`charge-bar-${uniqueId}`} style={barStyle}/>
+            <div style={barStyle}/>
         );
     }
 }

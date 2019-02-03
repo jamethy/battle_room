@@ -4,7 +4,7 @@
 #include "view.h"
 #include "html_menu.h"
 #include "game_ui_element.h"
-#include "charge_bar.h"
+#include "player_select.h"
 
 namespace BattleRoom {
 
@@ -45,8 +45,7 @@ namespace BattleRoom {
         // player spatial elements
         UniqueId m_playerId;
         UniqueDrawableObject m_selectedBackground;
-        UniqueDrawableObject m_chargingGun;
-        std::unique_ptr<ChargeBar> m_chargingJump;
+        std::unique_ptr<PlayerSelect> m_playerSelect;
 
         HtmlMenu *m_htmlMenu;
         std::string url;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ChargeBar} from "./ChargeBar";
+import {PlayerSelect} from "./PlayerSelect";
 import {getGameElements, GameElement} from "../GameElementsAppCalls";
 
 export interface GameElementsContainerProps {
@@ -11,8 +11,8 @@ interface GameElementsContainerState {
 
 function mapGameElement(element: GameElement): React.ReactElement<any> {
     switch (element.type) {
-        case 'ChargeBar':
-            return <ChargeBar {...element.props} />;
+        case 'PlayerSelect':
+            return <PlayerSelect {...element.props} />;
         default:
             return <div {...element.props} style={{color: 'white'}}>Unknown game element</div>;
     }

@@ -6,29 +6,24 @@
 #define BATTLE_ROOM_CHARGE_BAR_H
 
 #include "game_ui_element.h"
+#include "player.h"
 
 namespace BattleRoom {
 
-    class ChargeBar : public GameUIElement {
+    class PlayerSelect : public GameUIElement {
     public:
 
-        explicit ChargeBar(meters width);
-
-        // getters and setters
-        double getPercentCharged() const;
-
-        void setPercentCharged(double percentCharged);
-
-        meters getWidth() const;
-
-        void setWidth(meters width);
+        void update(const Player *player);
 
         // inherited
         std::string getType() const override;
+        std::string getJson(Camera* camera, View* view) const override;
 
     private:
-        double m_percentCharged;
-        meters m_width;
+        meters m_playerWidth = 0;
+        meters m_playerHeight = 0;
+        double m_jumpCharge = 0; // 0-1
+        double m_gunCharge = 0; // 0-1
     }; // charge_bar class
 }// BattleRoom namespace
 #endif //PROJECT_BATTLE_ROOM_CHARGE_BAR_H

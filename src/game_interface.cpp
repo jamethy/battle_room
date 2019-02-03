@@ -59,47 +59,11 @@ namespace BattleRoom {
         std::string response;
 
         if (method == "GET" && route == "/game-elements") {
-            auto gameElementArray = CefListValue::Create();
-            gameElementArray->SetSize(0);
-            if (m_chargingJump) {
-                auto topDictionary = CefDictionaryValue::Create();
-                auto type = CefValue::Create();
-                type->SetString(m_chargingJump->getType());
-                topDictionary->SetValue("type", type);
-
-                auto dictionary = CefDictionaryValue::Create();
-
-                auto rel = m_camera->fromLocation(m_chargingJump->getLocation());
-
-                auto uniqueId = CefValue::Create();
-                uniqueId->SetString(m_chargingJump->getUniqueId().toString());
-                dictionary->SetValue("uniqueId", uniqueId);
-
-                auto x = CefValue::Create();
-                x->SetDouble(rel.getCol() * getViewWidth());
-                dictionary->SetValue("x", x);
-
-                auto y = CefValue::Create();
-                y->SetDouble(rel.getRow() * getViewHeight());
-                dictionary->SetValue("y", y);
-
-                auto chargePercent = CefValue::Create();
-                chargePercent->SetDouble(m_chargingJump->getPercentCharged());
-                dictionary->SetValue("chargePercent", chargePercent);
-
-                auto width = CefValue::Create();
-                width->SetDouble(getViewWidth() * m_camera->zeroPlaneLength(m_chargingJump->getWidth()));
-                dictionary->SetValue("width", width);
-
-                topDictionary->SetDictionary("props", dictionary);
-
-                gameElementArray->SetSize(gameElementArray->GetSize() + 1);
-                gameElementArray->SetDictionary(gameElementArray->GetSize() - 1, topDictionary);
+            if (m_playerSelect) {
+                response = "[" + m_playerSelect->getJson(m_camera.get(), this) + "]";
+            } else {
+                response = "[]";
             }
-
-            auto value = CefValue::Create();
-            value->SetList(gameElementArray);
-            response = CefWriteJSON(value, JSON_WRITER_DEFAULT).ToString();
         } else {
             responseCode = WebMessageResponse::NOT_FOUND_CODE;
         }
@@ -121,9 +85,6 @@ namespace BattleRoom {
 
         if (m_selectedBackground.get()) {
             objects.emplace_back(*m_selectedBackground);
-        }
-        if (m_chargingGun.get()) {
-            objects.emplace_back(*m_chargingGun);
         }
 
         return objects;
@@ -149,6 +110,8 @@ namespace BattleRoom {
     }
 
     void GameInterface::update(seconds timestep) {
+        (void) timestep; // unused
+
         if (m_playerId.isValid()) {
             const auto *player = (const Player *) QueryWorld::getGameObject(m_playerId);
             if (player) {
@@ -157,64 +120,12 @@ namespace BattleRoom {
                     m_selectedBackground->setLocation(Vector3D(loc.x(), loc.y(), -0.1));
                 }
 
-                if (player->isChargingGun() && !m_chargingGun) {
-                    m_chargingGun = UniqueDrawableObject(new DrawableObject());
-                    m_chargingGun->setAnimation(AnimationHandler::getAnimation("spatial/charging_gun"));
+                if (!m_playerSelect) {
+                    m_playerSelect = std::unique_ptr<PlayerSelect>(new PlayerSelect());
                 }
-
-                if (m_chargingGun) {
-                    if (player->isChargingGun()) {
-
-                        // orient gun charge bar
-                        Vector3D diff(0, -1.25, 0);
-                        diff = m_camera->getOrientation().getRotated(diff);
-                        m_chargingGun->setLocation(Vector3D(loc.x(), loc.y(), 0.1).plus(diff));
-                        m_chargingGun->setOrientation(m_camera->getOrientation());
-
-                        if (player->getGunCharge() > 0.999) {
-
-                            Animation &animation = m_chargingGun->getAnimation();
-                            seconds newState = m_chargingGun->getAnimationState() + timestep;
-
-                            if (newState > animation.getLength()) {
-
-                                // find the new animation
-                                m_chargingGun->setAnimation(
-                                        AnimationHandler::getAnimation(animation.getNextAnimation()));
-
-                                // set the new state (time elapsed since end of last animation)
-                                m_chargingGun->setAnimationState(newState - animation.getLength());
-                            } else {
-
-                                // iterate object->animation
-                                m_chargingGun->setAnimationState(newState);
-                            }
-                        } else {
-                            m_chargingGun->setAnimationState(player->getGunCharge());
-                        }
-                    } else {
-                        m_chargingGun = nullptr;
-                    }
-                }
-
-                if (player->isChargingJump() && !m_chargingJump) {
-                    m_chargingJump = std::unique_ptr<ChargeBar>(new ChargeBar(1.2));
-                }
-
-                if (m_chargingJump) {
-                    if (player->isChargingJump()) {
-
-                        // orient gun charge bar
-                        Vector3D diff(0, -1.25, 0);
-                        diff = m_camera->getOrientation().getRotated(diff);
-                        m_chargingJump->setLocation(Vector3D(loc.x(), loc.y(), 0.1).plus(diff));
-                        m_chargingJump->setPercentCharged(player->getJumpCharge() * 100);
-                        m_chargingJump->setWidth(1.2);
-
-                    } else {
-                        m_chargingJump = nullptr;
-                    }
-                }
+                m_playerSelect->update(player);
+            } else if (m_playerSelect) {
+                m_playerSelect = nullptr;
             }
         }
 
@@ -300,14 +211,10 @@ namespace BattleRoom {
                         m_playerId = obj->getUniqueId();
                         m_selectedBackground = UniqueDrawableObject(new DrawableObject());
                         m_selectedBackground->setAnimation(AnimationHandler::getAnimation("spatial/selected"));
-                        m_chargingGun = nullptr;
-                        m_chargingJump = nullptr;
                     } else {
                         m_playerId = UniqueId::generateInvalidId();
                         m_idToTrack = UniqueId::generateInvalidId();
                         m_selectedBackground = nullptr;
-                        m_chargingGun = nullptr;
-                        m_chargingJump = nullptr;
                     }
                 }
             }

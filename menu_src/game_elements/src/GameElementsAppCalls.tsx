@@ -1,4 +1,4 @@
-import {ChargeBarProps} from "./components/ChargeBar";
+import {PlayerSelectProps} from "./components/PlayerSelect";
 
 export type AppCallSuccessFunction = (response: string) => void;
 export type AppCallFailureFunction = (error_code: number, error_message: string) => void;
@@ -54,8 +54,8 @@ let logFailure: AppCallFailureFunction = function (error_code: number, error_mes
 };
 
 export interface GameElement {
-    type: 'ChargeBar',
-    props: ChargeBarProps,
+    type: 'PlayerSelect',
+    props: PlayerSelectProps,
 }
 
 export function getGameElements(onSuccess: (elements: GameElement[]) => void) {

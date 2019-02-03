@@ -94,7 +94,7 @@ namespace BattleRoom {
     void Player::updateAnimation(seconds timestep) {
 
         if (m_state != PlayerState::Frozen) {
-            // should be dependent on m_state, m_chargingGun, m_chargingJump
+            // should be dependent on m_state, m_chargingGun, m_playerSelect
 
             Vector2D delta = m_aim.minus(getPosition());
             radians exactAngle = (PI * 0.5 + getRotation()) - std::atan2(delta.y(), delta.x());
