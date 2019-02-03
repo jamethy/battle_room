@@ -24,13 +24,13 @@ namespace BattleRoom {
     const std::string SUBS_KEY = "subs";
 
     ResourceDescriptor::ResourceDescriptor()
-            : m_key(""), m_value("") {}
+            : m_key(""), m_value(""), m_subResources({}) {}
 
     ResourceDescriptor::ResourceDescriptor(const string &key, const string &value)
-            : m_key(key), m_value(value) {}
+            : m_key(key), m_value(value), m_subResources({}) {}
 
     ResourceDescriptor::ResourceDescriptor(vector<string> lines)
-            : m_key(""), m_value("") {
+            : m_key(""), m_value(""), m_subResources({}) {
         unsigned start = 0;
         fillFromInput(std::move(lines), start);
     }
@@ -306,6 +306,14 @@ namespace BattleRoom {
 
     void ResourceDescriptor::addSubResources(std::vector<ResourceDescriptor> subResources) {
         m_subResources.insert(m_subResources.end(), subResources.begin(), subResources.end());
+    }
+
+    void ResourceDescriptor::addSubResource(const ResourceDescriptor &sub) {
+        m_subResources.push_back(sub);
+    }
+
+    void ResourceDescriptor::emplaceSubResource(const std::string &key, const std::string &value) {
+        m_subResources.emplace_back(key, value);
     }
 
 } // BattleRoom namespace

@@ -51,6 +51,10 @@ namespace BattleRoom {
          */
         ResourceDescriptor getSubResource(std::string filter) const;
 
+        void addSubResource(const ResourceDescriptor &sub);
+
+        void emplaceSubResource(const std::string &key, const std::string &value);
+
         /**
          * \brief Gets the resource Descriptor from the file
          *

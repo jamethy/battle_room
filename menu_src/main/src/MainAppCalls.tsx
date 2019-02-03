@@ -13,9 +13,9 @@ interface Resource {
     subs?: Resource[];
 }
 
-function appCall(request: Request,
-                 onSuccess: AppCallSuccessFunction,
-                 onFailure: AppCallFailureFunction) {
+let appCall = function (request: Request,
+                        onSuccess: AppCallSuccessFunction,
+                        onFailure: AppCallFailureFunction) {
     // @ts-ignore
     window.cefQuery({
         request: JSON.stringify({
@@ -27,6 +27,20 @@ function appCall(request: Request,
         onSuccess,
         onFailure,
     });
+};
+
+// overwrite appCall function if cefQuery does not exist (testing in browser)
+// @ts-ignore
+if (!window.cefQuery) {
+    appCall = function (request: Request,
+                        onSuccess: AppCallSuccessFunction,
+                        onFailure: AppCallFailureFunction) {
+        console.log({
+            method: request.method,
+            route: request.route,
+            body: request.body,
+        });
+    }
 }
 
 let logSuccess: AppCallSuccessFunction = function (response: string): void {

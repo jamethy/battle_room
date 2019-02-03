@@ -125,7 +125,7 @@ namespace BattleRoom {
                 if (input.containsView(getUniqueId())) {
 
                     RelPixel point = input.getViewRelIntersection(getUniqueId());
-                    int x = point.getColInt(getViewWdith());
+                    int x = point.getColInt(getViewWidth());
                     int y = point.getRowInt(getViewHeight());
 
                     m_htmlMenu->handleInput(input, x, y);

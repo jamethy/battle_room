@@ -17,6 +17,7 @@ namespace BattleRoom {
         } else {
             return UniqueInterface(new GameInterface(
                     settings,
+                    displayWindow->getTextureManager(),
                     displayWindow->getWidth(),
                     displayWindow->getHeight()
             ));

@@ -253,7 +253,7 @@ namespace BattleRoom {
         return m_gunCharge;
     }
 
-    double Player::getJumCharge() const {
+    double Player::getJumpCharge() const {
         return m_jumpCharge;
     }
 

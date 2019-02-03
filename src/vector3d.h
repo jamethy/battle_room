@@ -85,6 +85,12 @@ namespace BattleRoom {
 
         meters &z();
 
+        meters getX() const;
+
+        meters getY() const;
+
+        meters getZ() const;
+
         // inherited
         void applySettings(ResourceDescriptor settings) override;
 

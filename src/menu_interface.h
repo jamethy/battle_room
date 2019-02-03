@@ -1,7 +1,6 @@
 #ifndef MENU_INTERFACE_H
 #define MENU_INTERFACE_H
 
-#include <third_party/cef/cef_binary_3.3396.1777.g636f29b_linux64/include/internal/cef_ptr.h>
 #include "view.h"
 #include "menu.h"
 #include "web_browser_client.h"

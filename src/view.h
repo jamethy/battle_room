@@ -55,7 +55,7 @@ namespace BattleRoom {
 
         UniqueCamera m_camera;
 
-        int getViewWdith();
+        int getViewWidth();
 
         int getViewHeight();
 

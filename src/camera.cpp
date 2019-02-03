@@ -152,6 +152,11 @@ namespace BattleRoom {
         return res;
     }
 
+    relpx Camera::zeroPlaneLength(meters dist) const {
+        // todo do this right
+        return dist / (2 * m_location.getZ() * tan(m_horizontalFov / 2.0));
+    }
+
     Inputs Camera::handleInputs(Inputs inputs, const UniqueId viewId) {
         (void) viewId; // unused
         return inputs;

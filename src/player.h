@@ -25,7 +25,7 @@ namespace BattleRoom {
 
         double getGunCharge() const;
 
-        double getJumCharge() const;
+        double getJumpCharge() const;
 
         // inherited
         void reactToCollision(Vector2D velocityResult, Vector2D intersectionNormal) override;

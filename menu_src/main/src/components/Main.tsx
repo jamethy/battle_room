@@ -1,6 +1,6 @@
 import * as React from "react";
 import {PopupBox, PopupBoxProps} from "./PopupBox";
-import {closeMenu, postResource, quitGame} from "../AppCalls";
+import {closeMenu, postResource, quitGame} from "../MainAppCalls";
 
 export interface MainProps {
 }
@@ -95,6 +95,10 @@ export class Main extends React.Component<MainProps, MainState> {
                                 {
                                     key: "Camera",
                                     value: "Pyramid",
+                                },
+                                {
+                                    key: "Url",
+                                    value: "menus/game_elements.html",
                                 },
                             ]
                         });

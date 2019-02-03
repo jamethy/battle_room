@@ -140,4 +140,16 @@ namespace BattleRoom {
                std::to_string(m_z);
     }
 
+    meters Vector3D::getX() const {
+        return m_x;
+    }
+
+    meters Vector3D::getY() const {
+        return m_y;
+    }
+
+    meters Vector3D::getZ() const {
+        return m_z;
+    }
+
 } // BattleRoom namespace

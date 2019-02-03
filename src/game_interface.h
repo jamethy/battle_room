@@ -2,20 +2,27 @@
 #define GAME_INTERFACE_H
 
 #include "view.h"
+#include "html_menu.h"
+#include "game_ui_element.h"
+#include "charge_bar.h"
 
 namespace BattleRoom {
 
     /**
      * \brief View impl for displaying the game world
      */
-    class GameInterface : public View {
+    class GameInterface : public View, WebMessageHandler {
 
     public:
 
         // constructor
-        GameInterface(ResourceDescriptor settings, int windowWidth, int windowHeight);
+        GameInterface(ResourceDescriptor settings, TextureManager* textureManager, int windowWidth, int windowHeight);
 
         // inherited
+        WebMessageResponse onMessage(const std::string &message) override;
+
+        void adjustForResize(int width, int height, int oldWidth, int oldHeight) override;
+
         std::vector<DrawableObject> getDrawableObjects() override;
 
         std::vector<DrawableText> getDrawableTexts() override;
@@ -39,8 +46,10 @@ namespace BattleRoom {
         UniqueId m_playerId;
         UniqueDrawableObject m_selectedBackground;
         UniqueDrawableObject m_chargingGun;
-        UniqueDrawableObject m_chargingJump;
+        std::unique_ptr<ChargeBar> m_chargingJump;
 
+        HtmlMenu *m_htmlMenu;
+        std::string url;
 
     }; // GameInterface class
 } // BattleRoom namespace

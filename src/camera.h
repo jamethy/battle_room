@@ -64,6 +64,8 @@ namespace BattleRoom {
          */
         Vector3D zeroPlaneIntersection(RelPixel pixel) const;
 
+        relpx zeroPlaneLength(meters dist) const;
+
         /**
          * \brief Applys the inputs for the given view to alter the camera
          * \param inputs Input list to look through

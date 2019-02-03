@@ -21,6 +21,7 @@ namespace BattleRoom {
         m_webRenderer = new WebRenderer(textureManager, windowWidth, windowHeight);
         m_webBrowserClient = new WebBrowserClient(m_webRenderer, webMessageHandler);
         m_drawableMenu.setTextureKey(m_webRenderer->getTextureKey());
+        m_drawableMenu.setZLayer(100);
     }
 
     HtmlMenu::~HtmlMenu() {
@@ -45,30 +46,31 @@ namespace BattleRoom {
     // TODO bound to be a better way
     void HtmlMenu::navigateTo(const std::string &location) {
 
-        if (m_webBrowser) {
-            m_webBrowser->GetHost()->CloseBrowser(true);
+        if (!m_webBrowser) {
+
+            // some browser settings
+            CefWindowInfo window_info;
+            window_info.SetAsWindowless(kNullWindowHandle);
+
+            CefBrowserSettings browserSettings;
+            browserSettings.windowless_frame_rate = 60;
+            browserSettings.background_color = 0; // allows for transparency
+
+            std::string url = location;
+            if (!startsWith(url, "http")) {
+                url = "file://" + getResourcePath() + url;
+            }
+            Log::debug("Loading url ", url);
+
+            // Create the browser object to interpret the HTML
+            m_webBrowser = CefBrowserHost::CreateBrowserSync(window_info,
+                                                             m_webBrowserClient,
+                                                             url,
+                                                             browserSettings,
+                                                             nullptr);
+        } else {
+            m_webBrowser->GetMainFrame()->LoadURL(location);
         }
-
-        // some browser settings
-        CefWindowInfo window_info;
-        window_info.SetAsWindowless(kNullWindowHandle);
-
-        CefBrowserSettings browserSettings;
-        browserSettings.windowless_frame_rate = 60;
-        browserSettings.background_color = 0; // allows for transparency
-
-        std::string url = location;
-        if (!startsWith(url, "http")) {
-            url = "file://" + getResourcePath() + url;
-        }
-        Log::debug("Loading url ", url);
-
-        // Create the browser object to interpret the HTML
-        m_webBrowser = CefBrowserHost::CreateBrowserSync(window_info,
-                                                         m_webBrowserClient,
-                                                         url,
-                                                         browserSettings,
-                                                         nullptr);
     }
 
     void HtmlMenu::handleInput(Input input, int x, int y) {

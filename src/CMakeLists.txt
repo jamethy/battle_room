@@ -38,7 +38,6 @@ add_executable(battleroom
         circle_boundary.h
         client_connection.cpp
         client_connection.h
-        client_network_handler.h
         color.cpp
         color.h
         command.cpp
@@ -172,8 +171,9 @@ add_executable(battleroom
         html_menu.cpp 
         html_menu.h 
         input_to_cef.cpp 
-        web_message_handler.h 
-        )
+        web_message_handler.h
+        game_ui_element.cpp
+        game_ui_element.h charge_bar.cpp charge_bar.h)
 
 # CEF properties
 target_include_directories(${BATTLEROOM_TARGET} SYSTEM PUBLIC ${CEF_INCLUDE_PATH}) # the SYSTEM ignores all the warnings

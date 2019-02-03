@@ -3,11 +3,12 @@
 #include "input_gatherer.h"
 #include "query_world.h"
 #include "command_receiver.h"
-
 #include "animation_handler.h"
+#include "include/cef_parser.h"
 
 // probably will move
 #include "player.h"
+#include "logger.h"
 
 using std::vector;
 using InputKey::Key;
@@ -20,36 +21,101 @@ namespace BattleRoom {
 
     void GameInterface::applySettings(ResourceDescriptor settings) {
         View::applySettings(settings);
+
+        ResourceDescriptor sub = settings.getSubResource("Url");
+        if (isNotEmpty(sub.getValue())) {
+            url = sub.getValue();
+            m_htmlMenu->navigateTo(url);
+        }
     }
 
     ResourceDescriptor GameInterface::getSettings() const {
         auto rd = View::getSettings();
         rd.setValue("Game");
+        rd.emplaceSubResource("Url", url);
         return rd;
     }
 
 // constructors
 
-    GameInterface::GameInterface(ResourceDescriptor settings, int windowWidth, int windowHeight) : 
-        View(settings, windowWidth, windowHeight),
-        m_idToTrack(UniqueId::generateInvalidId()),
-        m_playerId(UniqueId::generateInvalidId())
-    {
-            applySettings(settings);
+    GameInterface::GameInterface(ResourceDescriptor settings, TextureManager *textureManager, int windowWidth,
+                                 int windowHeight) :
+            View(settings, windowWidth, windowHeight),
+            m_idToTrack(UniqueId::generateInvalidId()),
+            m_playerId(UniqueId::generateInvalidId()),
+            m_htmlMenu(new HtmlMenu(textureManager, windowWidth, windowHeight, this)) {
+        applySettings(settings);
     }
 
 // other functions
 
+    WebMessageResponse GameInterface::onMessage(const std::string &message) {
+
+        CefRefPtr<CefDictionaryValue> requestValue = CefParseJSON(CefString(message), JSON_PARSER_RFC)->GetDictionary();
+        auto method = requestValue->GetString("method").ToString();
+        auto route = requestValue->GetString("route").ToString();
+
+        int responseCode = WebMessageResponse::SUCCESS_CODE;
+        std::string response;
+
+        if (method == "GET" && route == "/game-elements") {
+            auto gameElementArray = CefListValue::Create();
+            gameElementArray->SetSize(0);
+            if (m_chargingJump) {
+                auto topDictionary = CefDictionaryValue::Create();
+                auto type = CefValue::Create();
+                type->SetString(m_chargingJump->getType());
+                topDictionary->SetValue("type", type);
+
+                auto dictionary = CefDictionaryValue::Create();
+
+                auto rel = m_camera->fromLocation(m_chargingJump->getLocation());
+
+                auto uniqueId = CefValue::Create();
+                uniqueId->SetString(m_chargingJump->getUniqueId().toString());
+                dictionary->SetValue("uniqueId", uniqueId);
+
+                auto x = CefValue::Create();
+                x->SetDouble(rel.getCol() * getViewWidth());
+                dictionary->SetValue("x", x);
+
+                auto y = CefValue::Create();
+                y->SetDouble(rel.getRow() * getViewHeight());
+                dictionary->SetValue("y", y);
+
+                auto chargePercent = CefValue::Create();
+                chargePercent->SetDouble(m_chargingJump->getPercentCharged());
+                dictionary->SetValue("chargePercent", chargePercent);
+
+                auto width = CefValue::Create();
+                width->SetDouble(getViewWidth() * m_camera->zeroPlaneLength(m_chargingJump->getWidth()));
+                dictionary->SetValue("width", width);
+
+                topDictionary->SetDictionary("props", dictionary);
+
+                gameElementArray->SetSize(gameElementArray->GetSize() + 1);
+                gameElementArray->SetDictionary(gameElementArray->GetSize() - 1, topDictionary);
+            }
+
+            auto value = CefValue::Create();
+            value->SetList(gameElementArray);
+            response = CefWriteJSON(value, JSON_WRITER_DEFAULT).ToString();
+        } else {
+            responseCode = WebMessageResponse::NOT_FOUND_CODE;
+        }
+
+        return {responseCode, response};
+    }
+
     vector<DrawableObject> GameInterface::getDrawableObjects() {
 
-        vector<DrawableObject> objects;
-        objects.clear();
+        vector<DrawableObject> objects = {};
 
-        for (const auto& obj : QueryWorld::getBackgroundObjects()) {
+        for (const auto &obj : QueryWorld::getBackgroundObjects()) {
             objects.emplace_back(*obj);
         }
 
-        for (const auto& obj : QueryWorld::getAllGameObjects()) {
+        for (const auto &obj : QueryWorld::getAllGameObjects()) {
             objects.emplace_back(*obj);
         }
 
@@ -59,25 +125,22 @@ namespace BattleRoom {
         if (m_chargingGun.get()) {
             objects.emplace_back(*m_chargingGun);
         }
-        if (m_chargingJump.get()) {
-            objects.emplace_back(*m_chargingJump);
-        }
 
         return objects;
     }
 
     vector<DrawableText> GameInterface::getDrawableTexts() {
-        return vector<DrawableText>();
+        return {};
     }
 
     vector<DrawableMenu> GameInterface::getDrawableMenus() {
-        return vector<DrawableMenu>();
+        return {m_htmlMenu->getDrawableMenu()};
     }
 
-    void moveCameraToCenter(Camera* camera, UniqueId uniqueId) {
+    void moveCameraToCenter(Camera *camera, UniqueId uniqueId) {
 
         if (uniqueId.isValid()) {
-            const GameObject* obj = QueryWorld::getGameObject(uniqueId);
+            const GameObject *obj = QueryWorld::getGameObject(uniqueId);
             if (obj) {
                 Vector3D loc = obj->getLocation();
                 camera->setLocation(Vector3D(loc.x(), loc.y(), camera->getLocation().z()));
@@ -87,7 +150,7 @@ namespace BattleRoom {
 
     void GameInterface::update(seconds timestep) {
         if (m_playerId.isValid()) {
-            const auto * player = (const Player*)QueryWorld::getGameObject(m_playerId);
+            const auto *player = (const Player *) QueryWorld::getGameObject(m_playerId);
             if (player) {
                 Vector3D loc = player->getLocation();
                 if (m_selectedBackground) {
@@ -116,7 +179,8 @@ namespace BattleRoom {
                             if (newState > animation.getLength()) {
 
                                 // find the new animation
-                                m_chargingGun->setAnimation(AnimationHandler::getAnimation(animation.getNextAnimation()));
+                                m_chargingGun->setAnimation(
+                                        AnimationHandler::getAnimation(animation.getNextAnimation()));
 
                                 // set the new state (time elapsed since end of last animation)
                                 m_chargingGun->setAnimationState(newState - animation.getLength());
@@ -131,11 +195,25 @@ namespace BattleRoom {
                     } else {
                         m_chargingGun = nullptr;
                     }
-                } else {
-                    m_chargingGun = nullptr;
+                }
+
+                if (player->isChargingJump() && !m_chargingJump) {
+                    m_chargingJump = std::unique_ptr<ChargeBar>(new ChargeBar(1.2));
                 }
 
                 if (m_chargingJump) {
+                    if (player->isChargingJump()) {
+
+                        // orient gun charge bar
+                        Vector3D diff(0, -1.25, 0);
+                        diff = m_camera->getOrientation().getRotated(diff);
+                        m_chargingJump->setLocation(Vector3D(loc.x(), loc.y(), 0.1).plus(diff));
+                        m_chargingJump->setPercentCharged(player->getJumpCharge() * 100);
+                        m_chargingJump->setWidth(1.2);
+
+                    } else {
+                        m_chargingJump = nullptr;
+                    }
                 }
             }
         }
@@ -150,7 +228,7 @@ namespace BattleRoom {
 
         // TODO figure out better way
         UniqueId playerClientId = UniqueId::generateInvalidId();
-        const auto * player = (const Player*)QueryWorld::getGameObject(m_playerId);
+        const auto *player = (const Player *) QueryWorld::getGameObject(m_playerId);
         if (player) {
             playerClientId = player->getClient();
         }
@@ -166,9 +244,9 @@ namespace BattleRoom {
 
                 if (m_playerId.isValid() && playerClientId == client) {
 
-                    if (Key::MouseOnly == input.getKey() 
-                            && Motion::None == input.getMotion() 
-                            && input.getModifiers().isPlain()) {
+                    if (Key::MouseOnly == input.getKey()
+                        && Motion::None == input.getMotion()
+                        && input.getModifiers().isPlain()) {
                         cmd = Command(CommandType::Aim, m_playerId, client, point);
 
                     } else if (input.isKeyDown(Key::RightClick)) {
@@ -191,7 +269,7 @@ namespace BattleRoom {
                 }
 
                 if (input.isKeyDown(Key::C)) {
-                    const GameObject* clientPlayer = QueryWorld::getClientPlayer();
+                    const GameObject *clientPlayer = QueryWorld::getClientPlayer();
                     if (clientPlayer) {
                         m_playerId = clientPlayer->getUniqueId();
                         m_selectedBackground = UniqueDrawableObject(new DrawableObject());
@@ -203,7 +281,7 @@ namespace BattleRoom {
                     if (m_idToTrack.isValid()) {
                         m_idToTrack = UniqueId::generateInvalidId();
                     } else {
-                        const GameObject* clientPlayer = QueryWorld::getClientPlayer();
+                        const GameObject *clientPlayer = QueryWorld::getClientPlayer();
                         if (clientPlayer) {
                             m_playerId = clientPlayer->getUniqueId();
                             m_selectedBackground = UniqueDrawableObject(new DrawableObject());
@@ -217,7 +295,7 @@ namespace BattleRoom {
 
                     // check spatial components
                     // check game objects
-                    const GameObject* obj = QueryWorld::findIntersectingObject(point);
+                    const GameObject *obj = QueryWorld::findIntersectingObject(point);
                     if (obj != nullptr && ObjectType::Player == obj->getType()) {
                         m_playerId = obj->getUniqueId();
                         m_selectedBackground = UniqueDrawableObject(new DrawableObject());
@@ -231,7 +309,7 @@ namespace BattleRoom {
                         m_chargingGun = nullptr;
                         m_chargingJump = nullptr;
                     }
-                } 
+                }
             }
 
             if (cmd.getType() == CommandType::Invalid) {
@@ -244,6 +322,11 @@ namespace BattleRoom {
         CommandReceiver::addCommands(commands);
 
         return View::handleInputs(remainingInputs);
+    }
+
+    void GameInterface::adjustForResize(int width, int height, int oldWidth, int oldHeight) {
+        View::adjustForResize(width, height, oldWidth, oldHeight);
+        m_htmlMenu->resize(width, height);
     }
 
 } // BattleRoom namespace

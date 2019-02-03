@@ -396,7 +396,7 @@ namespace BattleRoom {
      * \param objHeight Height of object in space:w
      */
     void fillBaseDrawable(SdlDrawable *drawable, ViewInterface *view,
-                          Vector3D objCenter, Quaternion orientation, meters objWidth, meters objHeight) {
+                          Vector3D objCenter, const Quaternion &orientation, meters objWidth, meters objHeight) {
 
         Vector3D xOffset = orientation.getRotated(Vector3D(objWidth / 2.0, 0, 0));
         Vector3D yOffset = orientation.getRotated(Vector3D(0, objHeight / 2.0, 0));
@@ -461,7 +461,7 @@ namespace BattleRoom {
 
     UniqueDrawable getSdlDrawableFrom(const DrawableText &text, ViewInterface *view) {
 
-        SdlDrawableText *drawable = new SdlDrawableText();
+        auto *drawable = new SdlDrawableText();
 
         // Fill base SdlDrawable
         fillBaseDrawable(drawable, view, text.getLocation(), text.getOrientation(),
