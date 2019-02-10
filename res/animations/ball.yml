@@ -1,12 +1,11 @@
-
 ImageFile: ball.png
 NextAnimation: ball
 
 Frame:
-    EndTime: 99999999
-    TopLeft: 0,0
-    BottomRight: 100, 100
-    Scale: 0.01
-    Boundary: Circle
-        Radius: 0.5
+  EndTime: 99999999
+  TopLeft: 0,0
+  BottomRight: 100, 100
+  Scale: 0.01
+  Boundary: Circle
+    Radius: 0.5
 

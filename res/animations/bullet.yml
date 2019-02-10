@@ -1,29 +1,28 @@
-
 ImageFile: bullet.png
 NextAnimation: bullet
 
 Frame:
-    EndTime: 0.2
-    TopLeft: 0, 0
-    BottomRight: 20,50
-    Scale: 0.01
-    Boundary: Box
-        Width: 0.45
-        Height: 0.15
+  EndTime: 0.2
+  TopLeft: 0, 0
+  BottomRight: 20,50
+  Scale: 0.01
+  Boundary: Box
+    Width: 0.45
+    Height: 0.15
 Frame:
-    EndTime: 0.4
-    TopLeft: 20,0
-    BottomRight: 40,50
-    Scale: 0.01
-    Boundary: Box
-        Width: 0.45
-        Height: 0.15
+  EndTime: 0.4
+  TopLeft: 20,0
+  BottomRight: 40,50
+  Scale: 0.01
+  Boundary: Box
+    Width: 0.45
+    Height: 0.15
 Frame:
-    EndTime: 0.6
-    TopLeft: 40,0
-    BottomRight: 60,50
-    Scale: 0.01
-    Boundary: Box
-        Width: 0.45
-        Height: 0.15
+  EndTime: 0.6
+  TopLeft: 40,0
+  BottomRight: 60,50
+  Scale: 0.01
+  Boundary: Box
+    Width: 0.45
+    Height: 0.15
 

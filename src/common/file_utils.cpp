@@ -78,7 +78,7 @@ namespace BattleRoom {
 
             string line;
             while (getline(file, line)) {
-                lines.push_back("\t" + line);
+                lines.push_back("  " + line);
             }
         } else {
             Log::error("Unable to open file " + fullFilePath);

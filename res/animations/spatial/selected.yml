@@ -1,8 +1,7 @@
-
 ImageFile: spatial/selected.png
 NextAnimation: spatial/selected.png
 Frame:
-    EndTime: 99999
-    TopLeft: 0, 0
-    BottomRight: 15, 15
-    Scale: 0.175
+  EndTime: 99999
+  TopLeft: 0, 0
+  BottomRight: 15, 15
+  Scale: 0.175

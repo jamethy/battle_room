@@ -1,9 +1,8 @@
-
 ImageFile: cheap_player.png
 NextAnimation: player_landed
 
 Frame:
-    EndTime: 9999999
-    TopLeft: 327, 183
-    BottomRight: 393, 200
-    Scale: 0.0223
+  EndTime: 9999999
+  TopLeft: 327, 183
+  BottomRight: 393, 200
+  Scale: 0.0223

@@ -208,7 +208,7 @@ namespace BattleRoom {
         size_t firstNonSpace = newline.find_first_not_of(' ');
 
         // since zero-index, firstNonSpace = number of spaces
-        return static_cast<int>((firstNonSpace + 1) / 4);
+        return static_cast<int>((firstNonSpace + 1) / 2);
 
     }
 
