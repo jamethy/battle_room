@@ -15,7 +15,7 @@ namespace BattleRoom {
     }
 
     ResourceDescriptor CircleBoundary::getSettings() const {
-        ResourceDescriptor rd("Boundary", "Box");
+        ResourceDescriptor rd("Boundary", "Circle");
         std::vector<ResourceDescriptor> subs = {};
 
         ResourceDescriptor sub = m_center.getSettings();

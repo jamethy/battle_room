@@ -5,18 +5,32 @@
 
 namespace BattleRoom {
 
+    /**
+     * Boundary defined by a simple circle
+     *
+     * Resource:
+     *
+     * Boundary: Circle
+     *   Center: <vector2D>
+     *   Radius: <meters>
+     */
     class CircleBoundary : public Boundary {
 
     public:
 
+        /// construct
+
         explicit CircleBoundary(ResourceDescriptor settings);
 
-        // inherited
-        bool contains(Vector2D delta) const override;
+        /// inherited from Resource
 
         void applySettings(ResourceDescriptor settings) override;
 
         ResourceDescriptor getSettings() const override;
+
+        /// inherited from Boundary
+
+        bool contains(Vector2D delta) const override;
 
         Boundary *clone() const override;
 

@@ -5,13 +5,29 @@
 
 namespace BattleRoom {
 
+    /**
+     * Boundary that is a simple four-sided object. Can be a rectangle or
+     * a non-parallelagram object
+     *
+     * Resource:
+     *
+     * Boundary: Box
+     *   Center: <Vector2D>
+     *   Width: <meters>
+     *   Height: <meters>
+     *   Rotation: <radians>
+     *   DegRotation: <degrees>
+     */
     class BoxBoundary : public Boundary {
 
     public:
 
+        /// constructors
+
         explicit BoxBoundary(ResourceDescriptor settings);
 
-        // inherited
+        /// inherited from Boundary
+
         bool contains(Vector2D delta) const override;
 
         void applySettings(ResourceDescriptor settings) override;

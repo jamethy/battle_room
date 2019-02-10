@@ -5,14 +5,14 @@
 
 namespace BattleRoom {
 
-/**
- * key to get missing-animation animation
- */
+    /**
+     * key to get missing-animation animation
+     */
     const std::string MISSING_ANIMATION = "missing_animation";
 
-/**
- * Singleton class to handle retrieving animations via keys
- */
+    /**
+     * Singleton class to handle retrieving animations via keys
+     */
     class AnimationHandler {
 
     public:

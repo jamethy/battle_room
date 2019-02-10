@@ -53,3 +53,9 @@ WorldUpdater: Client
     User: <your username>
 ```
 
+
+# Code Parts
+I'm just going to describe the various sections of the codebase here.
+
+## animation
+An animation in Battle Room describes what to display for an in-game object and how it is shaped. The general structure of an animation is ...

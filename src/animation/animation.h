@@ -9,13 +9,21 @@
 
 namespace BattleRoom {
 
-/**
- * \brief Container of frames describing an animation
- *
- * Should only get these from AnimationHandler
- * The game engine will assign an object an animation and animation state,
- * then the graphics engine will use the state to get the frame from the animation
- */
+    /**
+     * \brief Container of frames describing an animation
+     *
+     * Should only get these from AnimationHandler
+     * The game engine will assign an object an animation and animation state,
+     * then the graphics engine will use the state to get the frame from the animation
+     *
+     * Resource:
+     *
+     * Animation: <name>
+     *   ImageFile: <file name>
+     *   NextAnimation: <animation name>
+     *   Frames: <list of frames> // TODO this
+     *
+     */
     class Animation : public Resource {
 
     public:
@@ -34,10 +42,10 @@ namespace BattleRoom {
          */
         const Frame &getFrame(seconds animationState) const;
 
+        /// getters
+
         seconds getLength() const;
 
-        // getters
-        
         const std::string &getName() const;
 
         const std::string &getImageFile() const;
@@ -46,8 +54,9 @@ namespace BattleRoom {
 
         const std::vector<Frame> &getFrames() const;
 
-        // inherited
+        /// inherited from Resource
         void applySettings(ResourceDescriptor settings) override;
+
         ResourceDescriptor getSettings() const override;
 
     private:
@@ -59,7 +68,6 @@ namespace BattleRoom {
         std::string m_nextAnimation; ///< Animation to go to when this one is done
 
         std::vector<Frame> m_frames; ///< Frames of animation (sorted by endTime)
-
 
     }; // Animation class
 } // BattleRoom namespace
