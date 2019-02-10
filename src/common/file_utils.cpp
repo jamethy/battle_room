@@ -74,7 +74,8 @@ namespace BattleRoom {
         if (file.is_open()) {
 
             // create header line
-            lines.push_back(getFileName(fullFilePath) + ": " + getFileExtension(fullFilePath));
+            lines.push_back(getFileName(fullFilePath) + ":");
+            lines.push_back("  Type: " + getFileExtension(fullFilePath));
 
             string line;
             while (getline(file, line)) {

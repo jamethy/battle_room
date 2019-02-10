@@ -9,7 +9,6 @@ namespace BattleRoom {
 
     void GameObject::applySettings(ResourceDescriptor settings) {
 
-        setName(settings.getValue());
         DrawableObject::applySettings(settings);
 
         m_position.applySettings(settings.getSubResource("Location"));
@@ -49,28 +48,31 @@ namespace BattleRoom {
         if (isNotEmpty(sub.getValue())) {
             m_uniqueId = UniqueId::fromString(sub.getValue());
         }
+
+        sub = settings.getSubResource("Name");
+        if (isNotEmpty(sub.getValue())) {
+            setName(sub.getValue());
+        }
     }
 
     ResourceDescriptor GameObject::getSettings() const {
         ResourceDescriptor rd = DrawableObject::getSettings();
-        auto subs = rd.getSubResources();
 
         ResourceDescriptor sub = m_position.getSettings();
         sub.setKey("Location");
-        subs.push_back(sub);
+        rd.addSubResource(sub);
 
         sub = m_velocity.getSettings();
         sub.setKey("Velocity");
-        subs.push_back(sub);
+        rd.addSubResource(sub);
 
-        subs.emplace_back("UniqueId", m_uniqueId.toString());
-        subs.emplace_back("Rotation", std::to_string(m_rotation));
-        subs.emplace_back("AngularVelocity", std::to_string(m_angularVelocity));
-        subs.emplace_back("Static", m_isStatic ? "True" : "False");
-        subs.emplace_back("Collidable", m_isCollidable ? "True" : "False");
-        subs.emplace_back("Mass", std::to_string(m_mass));
+        rd.emplaceSubResource("UniqueId", m_uniqueId.toString());
+        rd.emplaceSubResource("Rotation", std::to_string(m_rotation));
+        rd.emplaceSubResource("AngularVelocity", std::to_string(m_angularVelocity));
+        rd.emplaceSubResource("Static", m_isStatic ? "True" : "False");
+        rd.emplaceSubResource("Collidable", m_isCollidable ? "True" : "False");
+        rd.emplaceSubResource("Mass", std::to_string(m_mass));
 
-        rd.setSubResources(subs);
         return rd;
     }
 

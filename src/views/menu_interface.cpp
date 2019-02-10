@@ -27,12 +27,8 @@ namespace BattleRoom {
 
     ResourceDescriptor MenuInterface::getSettings() const {
         auto rd = View::getSettings();
-        rd.setValue("Menu");
-        auto subs = rd.getSubResources();
-
-        subs.emplace_back("Url", url);
-
-        rd.setSubResources(subs);
+        rd.emplaceSubResource("Type", "Menu");
+        rd.emplaceSubResource("Url", url);
         return rd;
     }
 

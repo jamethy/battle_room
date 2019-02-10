@@ -103,16 +103,13 @@ namespace BattleRoom {
 
     ResourceDescriptor Ball::getSettings() const {
         auto rd = GameObject::getSettings();
-        auto subs = rd.getSubResources();
+        rd.emplaceSubResource("Type", "Ball");
+        rd.emplaceSubResource("State", ballStateString(m_state));
 
-        rd.setKey("Ball");
-        subs.emplace_back("State", ballStateString(m_state));
+        auto sub = m_storedVelocity.getSettings();
+        sub.setKey("StoreVelocity");
+        rd.addSubResource(sub);
 
-        auto subRd = m_storedVelocity.getSettings();
-        subRd.setKey("StoreVelocity");
-        subs.push_back(subRd);
-
-        rd.setSubResources(subs);
         return rd;
     }
 

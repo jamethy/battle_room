@@ -53,9 +53,11 @@ namespace BattleRoom {
 
     Boundary *createBoundaryPtr(const ResourceDescriptor &settings) {
 
-        if (keyMatch("Circle", settings.getValue())) {
+        auto boundaryType = settings.getSubResource("Type").getValue();
+
+        if (keyMatch("Circle", boundaryType)) {
             return new CircleBoundary(settings);
-        } else if (keyMatch("Box", settings.getValue())) {
+        } else if (keyMatch("Box", boundaryType)) {
             return new BoxBoundary(settings);
         } else {
             return new EmptyBoundary();

@@ -31,12 +31,12 @@ namespace BattleRoom {
 
         SDL_GetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
 
-        // if window name matches, settings are for this window
-        if (m_windowName == settings.getValue()) {
+        ResourceDescriptor sub = settings.getSubResource("Name");
+        if (sub.getValue() == m_windowName) {
 
             // TODO figure out what a SDL_DisplayMode is
 
-            ResourceDescriptor sub = settings.getSubResource("Width");
+            sub = settings.getSubResource("Width");
             if (isNotEmpty(sub.getValue())) {
                 m_windowWidth = stoi(sub.getValue());
             }
@@ -45,17 +45,17 @@ namespace BattleRoom {
             if (isNotEmpty(sub.getValue())) {
                 m_windowHeight = stoi(sub.getValue());
             }
+
+        } else {
+            Log::error("Name is required to setting window settings");
         }
     }
 
     ResourceDescriptor SdlDisplayWindow::getSettings() const {
-        ResourceDescriptor rd("Window", m_windowName);
-        std::vector<ResourceDescriptor> subs = {};
-
-        subs.emplace_back("Width", std::to_string(m_windowWidth));
-        subs.emplace_back("Height", std::to_string(m_windowHeight));
-
-        rd.setSubResources(subs);
+        ResourceDescriptor rd("Window", "");
+        rd.emplaceSubResource("Name", m_windowName);
+        rd.emplaceSubResource("Width", std::to_string(m_windowWidth));
+        rd.emplaceSubResource("Height", std::to_string(m_windowHeight));
         return rd;
     }
 
@@ -65,16 +65,15 @@ namespace BattleRoom {
 
 // constructors
 
-    SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings) : 
-        m_uniqueId(UniqueId::generateNewLocalId())
-    {
+    SdlDisplayWindow::SdlDisplayWindow(ResourceDescriptor settings) :
+            m_uniqueId(UniqueId::generateNewLocalId()) {
         m_sdlEvents.clear();
         m_drawablesA.clear();
         m_drawablesB.clear();
 
-        if (isNotEmpty(settings.getValue())) {
-            m_windowName = settings.getValue();
-        } else {
+        m_windowName = settings.getSubResource("Name").getValue();
+
+        if (isEmpty(m_windowName)) {
             m_windowName = "PROVIDE WINDOW DURING CONSTRUCTION.\n";
             Log::error("Must give a name during window construction.");
         }
@@ -131,10 +130,10 @@ namespace BattleRoom {
         return RelPixel(
                 (p.getRow() - topLeft.getRow()) / (botRight.getRow() - topLeft.getRow()),
                 (p.getCol() - topLeft.getCol()) / (botRight.getCol() - topLeft.getCol())
-                );
+        );
     }
 
-    void SdlDisplayWindow::gatherInputs(const std::vector<UniqueInterface>& views) {
+    void SdlDisplayWindow::gatherInputs(const std::vector<UniqueInterface> &views) {
 
         // For each SDL_Event that pertains to this window, create an Input
         for (auto it = m_sdlEvents.begin(); it != m_sdlEvents.end(); ++it) {
@@ -222,7 +221,7 @@ namespace BattleRoom {
             }
 
             // Set view intersections
-            for (auto& view : views) {
+            for (auto &view : views) {
 
                 // If it intersects the view, calculate the zero-plane intersection
                 if (m_mousePos.isBetween(view->getTopLeft(), view->getBottomRight())) {
@@ -235,8 +234,8 @@ namespace BattleRoom {
                     px width = view->getBottomRight().getCol() - view->getTopLeft().getCol();
                     px height = view->getBottomRight().getRow() - view->getTopLeft().getRow();
 
-                    relpx col = (m_mousePos.getCol() - view->getTopLeft().getCol())/width;
-                    relpx row = (m_mousePos.getRow() - view->getTopLeft().getRow())/height;
+                    relpx col = (m_mousePos.getCol() - view->getTopLeft().getCol()) / width;
+                    relpx row = (m_mousePos.getRow() - view->getTopLeft().getRow()) / height;
                     input.addViewIntersection(view->getUniqueId(), RelPixel(row, col));
                 }
             }
@@ -260,7 +259,7 @@ namespace BattleRoom {
         return m_windowName;
     }
 
-    void SdlDisplayWindow::addViewDrawables(ViewInterface* view) {
+    void SdlDisplayWindow::addViewDrawables(ViewInterface *view) {
 
         vector<UniqueDrawable> &drawables = m_drawingA ? m_drawablesB : m_drawablesA;
 
@@ -341,7 +340,7 @@ namespace BattleRoom {
         }
     }
 
-    void SdlDisplayWindow::resizeViews(int oldWidth, int oldHeight, const std::vector<UniqueInterface>& views) {
+    void SdlDisplayWindow::resizeViews(int oldWidth, int oldHeight, const std::vector<UniqueInterface> &views) {
 
         int width = 0, height = 0;
         SDL_GetWindowSize(m_window, &width, &height);
@@ -352,7 +351,7 @@ namespace BattleRoom {
         m_windowWidth = width;
         m_windowHeight = height;
 
-        for (const auto& view : views) {
+        for (const auto &view : views) {
             view->adjustForResize(width, height, oldWidth, oldHeight);
         }
     }

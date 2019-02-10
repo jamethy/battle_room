@@ -6,10 +6,14 @@
 #include "include/internal/cef_types.h"
 #include "include/cef_values.h"
 #include "include/cef_parser.h"
+#include "logger.h"
+#include "resource_descriptor.h"
+
 
 #include <fstream>
 #include <algorithm>
 #include <regex>
+#include <set>
 
 using std::string;
 using std::vector;
@@ -21,13 +25,16 @@ namespace BattleRoom {
     const std::string SUBS_KEY = "subs";
 
     ResourceDescriptor::ResourceDescriptor()
-            : m_key(""), m_value(""), m_subResources({}) {}
+            : m_key(""), m_value(""), m_subResources({}), m_isArrayValue(false) {}
+
+    ResourceDescriptor::ResourceDescriptor(const string &key)
+            : m_key(key), m_value(""), m_subResources({}), m_isArrayValue(false) {}
 
     ResourceDescriptor::ResourceDescriptor(const string &key, const string &value)
-            : m_key(key), m_value(value), m_subResources({}) {}
+            : m_key(key), m_value(value), m_subResources({}), m_isArrayValue(false) {}
 
     ResourceDescriptor::ResourceDescriptor(vector<string> lines)
-            : m_key(""), m_value(""), m_subResources({}) {
+            : m_key(""), m_value(""), m_subResources({}), m_isArrayValue(false) {
         unsigned start = 0;
         fillFromInput(std::move(lines), start);
     }
@@ -149,6 +156,21 @@ namespace BattleRoom {
     }
 
     /**
+     * \brief Utility function to tell if the resource is a value in an array
+     * @param line String that may be array value
+     * @return true if is value in array
+     */
+    bool parseOutIfArrayValue(const string &line) {
+
+        // ^ beginning of line
+        // \\s* All whitespace between beginning and key
+        // -  Key part that tells if it is an array value
+        // .+:.* The colon-space deliminator and the rest of the line
+        std::regex rgx_array("^\\s*- .+:.*");
+        return std::regex_match(line, rgx_array);
+    }
+
+    /**
      * \brief Utility function to get the resource's value from a line
      * \param line String with white space, key, ': ', and the value
      * \return The matched Value
@@ -159,13 +181,14 @@ namespace BattleRoom {
 
         // ^ beginning of line
         // \\s* All whitespace between beginning and key
-        // .*:  Key and colon-space deliminator
-        // (.*) The value (group 1)
+        // (- ) If array (group 1)
+        // .+:  Key and colon-space deliminator
+        // (.*) The value (group 2)
         // $ end of line
-        std::regex rgx_value("^\\s*.*: (.*)$");
+        std::regex rgx_value("^\\s*(- )?.+: (.+)$");
         std::smatch sm;
         if (std::regex_search(line, sm, rgx_value)) {
-            value = sm[1].str();
+            value = sm[2].str();
         }
         return value;
     }
@@ -181,12 +204,13 @@ namespace BattleRoom {
 
         // ^ beginning of line
         // \\s* All whitespace between beginning and key
-        // (.*) The Key (group 1)
+        // (- ) If array (group 1)
+        // (.+) The Key (group 2)
         // :.* The colon-space deliminator and the rest of the line
-        std::regex rgx_key("^\\s*(.*):.*");
+        std::regex rgx_key("^\\s*(- )?(.+):.*");
         std::smatch sm;
         if (std::regex_search(line, sm, rgx_key)) {
-            key = sm[1].str();
+            key = sm[2].str();
         }
         return key;
     }
@@ -222,9 +246,10 @@ namespace BattleRoom {
             // set this resource descriptor's values
             setKey(parseOutKey(firstLine));
             setValue(parseOutValue(firstLine));
+            setIsArrayValue(parseOutIfArrayValue(firstLine));
 
             // then get it's subs
-            vector<ResourceDescriptor> subs;
+            vector<ResourceDescriptor> subs = {};
 
             while (++start < lines.size()) {
                 string nextLine = lines[start];
@@ -243,6 +268,22 @@ namespace BattleRoom {
                         --start;
                         break;
                     }
+                }
+            }
+
+            if (!subs.empty()) {
+
+                bool isArray = subs[0].isArrayValue();
+                std::set<std::string> keySet = {};
+
+                for (auto &sub : subs) {
+                    if (sub.isArrayValue() != isArray) {
+                        Log::error("Mismatch of array values and key-values in ", getKey());
+                    }
+                    keySet.emplace(toLower(sub.getKey()));
+                }
+                if (!isArray && keySet.size() != subs.size()) {
+                    Log::error("Non-unique keys in ", getKey());
                 }
             }
 
@@ -311,6 +352,14 @@ namespace BattleRoom {
 
     void ResourceDescriptor::emplaceSubResource(const std::string &key, const std::string &value) {
         m_subResources.emplace_back(key, value);
+    }
+
+    bool ResourceDescriptor::isArrayValue() const {
+        return m_isArrayValue;
+    }
+
+    void ResourceDescriptor::setIsArrayValue(const bool &value) {
+        m_isArrayValue = value;
     }
 
 } // BattleRoom namespace

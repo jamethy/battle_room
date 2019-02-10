@@ -115,14 +115,10 @@ namespace BattleRoom {
 
     ResourceDescriptor Bullet::getSettings() const {
         auto rd = GameObject::getSettings();
-        auto subs = rd.getSubResources();
-
-        rd.setKey("Bullet");
-        subs.emplace_back("State", bulletStateString(m_state));
-        subs.emplace_back("Source", m_bulletSource.toString());
-        subs.emplace_back("TimeSinceFired", m_bulletSource.toString());
-
-        rd.setSubResources(subs);
+        rd.emplaceSubResource("Type", "Bullet");
+        rd.emplaceSubResource("State", bulletStateString(m_state));
+        rd.emplaceSubResource("Source", m_bulletSource.toString());
+        rd.emplaceSubResource("TimeSinceFired", m_bulletSource.toString());
         return rd;
     }
 } // BattleRoom namespace

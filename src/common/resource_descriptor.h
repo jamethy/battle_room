@@ -22,6 +22,8 @@ namespace BattleRoom {
         // Constructors
         ResourceDescriptor();
 
+        explicit ResourceDescriptor(const std::string &key);
+
         ResourceDescriptor(const std::string &key, const std::string &value);
 
         explicit ResourceDescriptor(std::vector<std::string> lines);
@@ -81,9 +83,13 @@ namespace BattleRoom {
 
         std::string getValue() const;
 
+        bool isArrayValue() const;
+
         void setKey(std::string key);
 
         void setValue(std::string value);
+
+        void setIsArrayValue(const bool& value);
 
         void setSubResources(std::vector<ResourceDescriptor> subResources);
 
@@ -104,7 +110,8 @@ namespace BattleRoom {
 
         std::string m_key; ///< What the descriptor is describing
         std::string m_value; ///< The value of what the descriptor is describing
-        std::vector<ResourceDescriptor> m_subResources; ///< Entites contained in the current
+        std::vector<ResourceDescriptor> m_subResources; ///< Entities contained in the current
+        bool m_isArrayValue;
 
     }; // RecourseDescriptor class
 } // BattleRoom namespace

@@ -6,7 +6,8 @@ Frame:
   TopLeft: 26, 18
   BottomRight: 63, 99
   Scale: 0.0223
-  Boundary: Box
+  Boundary:
+    Type: Box
     Width: 1.81
     Height: 0.82
 Frame:
@@ -14,6 +15,7 @@ Frame:
   TopLeft: 29, 119
   BottomRight: 60, 202
   Scale: 0.0223
-  Boundary: Box
+  Boundary:
+    Type: Box
     Width: 1.81
     Height: 0.82

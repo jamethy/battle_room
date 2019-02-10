@@ -71,19 +71,27 @@ export class Main extends React.Component<MainProps, MainState> {
                             value: "Server",
                             subs: [
                                 {
+                                    key: "Type",
+                                    value: "Server"
+                                },
+                                {
                                     key: "Resource",
                                     value: "worlds/test_world",
                                 },
                                 {
                                     key: "User",
                                     value: "username",
-                                }
+                                },
                             ]
                         });
                         postResource({
                             key: "Interface",
                             value: "Game",
                             subs: [
+                                {
+                                    key: "Type",
+                                    value: "Game"
+                                },
                                 {
                                     key: "Window",
                                     value: "mainWindow",
@@ -116,7 +124,8 @@ export class Main extends React.Component<MainProps, MainState> {
             buttons: [
                 {
                     label: "Add screen",
-                    onClick: () => {},
+                    onClick: () => {
+                    },
                 },
                 {
                     label: "Back",

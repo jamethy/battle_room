@@ -10,6 +10,7 @@ Frame:
   BottomRight: 35, 35
   Scale: 0.1
   Flip: horizontal
-  Boundary: Box
+  Boundary:
+    Type: Box
     Width: 1.2
     Height: 1.6

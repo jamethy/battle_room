@@ -1,13 +1,13 @@
-Object: object
+Object:
   Animation: star
   Mass: 100
   Static: true
 
-Player: man
+Player:
   Animation: man_0
   Mass: 80
 
-Ball: ball
+Ball:
   Animation: ball
   Mass: 10
 

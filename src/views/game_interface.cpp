@@ -30,7 +30,7 @@ namespace BattleRoom {
 
     ResourceDescriptor GameInterface::getSettings() const {
         auto rd = View::getSettings();
-        rd.setValue("Game");
+        rd.emplaceSubResource("Type", "Game");
         rd.emplaceSubResource("Url", url);
         return rd;
     }

@@ -6,6 +6,7 @@ Frame:
   TopLeft: 0, 0
   BottomRight: 10, 100
   Scale: 0.1
-  Boundary: Box
+  Boundary:
+    Type: Box
     Width: 10
     Height: 1

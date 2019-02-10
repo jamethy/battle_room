@@ -1,18 +1,22 @@
-Window: mainWindow
+Window:
+  Name: mainWindow
   Width: 1500
   Height: 1000
 
-#WorldUpdater: Server
-#    Port: 8000
-#    Resource: worlds/test_world
-#    User: username
+#WorldUpdater:
+#  Type: Server
+#  Port: 8000
+#  Resource: worlds/test_world
+#  User: username
 
-#Interface: Game
-#    Window: mainWindow
-#    Layer: 10
-#    Camera: Pyramid
+#Interface:
+#  Type: Game
+#  Window: mainWindow
+#  Layer: 10
+#  Camera: Pyramid
 
-Interface: Menu
+Interface:
+  Type: Menu
   Window: mainWindow
   Url: menus/main.html
 
