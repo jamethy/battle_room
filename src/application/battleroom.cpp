@@ -11,8 +11,6 @@ std::string getStartupScriptFromArgs(int argc, char **argv);
 
 int main(int argc, char **argv) {
 
-    Log::debug("Hello World!");
-
     std::string settings_file = getStartupScriptFromArgs(argc, argv);
 
     // if called for web rendering process, return code

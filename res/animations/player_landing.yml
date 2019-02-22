@@ -1,57 +1,58 @@
 ImageFile: cheap_player.png
 NextAnimation: player_landed
 
-Frame:
+Frames:
+- Frame:
   EndTime: 0.04
   TopLeft: 26, 18
   BottomRight: 63, 99
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.08
   TopLeft: 29, 119
   BottomRight: 60, 202
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.12
   TopLeft: 33, 226
   BottomRight: 60, 290
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.16
   TopLeft: 133, 33
   BottomRight: 165, 94
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.20
   TopLeft: 133, 137
   BottomRight: 172, 190
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.24
   TopLeft: 133, 247
   BottomRight: 177, 288
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.28
   TopLeft: 225, 54
   BottomRight: 292, 91
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.32
   TopLeft: 230, 160
   BottomRight: 290, 193
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.36
   TopLeft: 228, 269
   BottomRight: 292, 297
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.40
   TopLeft: 331, 72
   BottomRight: 391, 99
   Scale: 0.0223
-Frame:
+- Frame:
   EndTime: 0.44
   TopLeft: 327, 183
   BottomRight: 393, 200

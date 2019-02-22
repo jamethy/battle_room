@@ -4,7 +4,8 @@ NextAnimation: man_n90
 # hand goes 0 - 180 degress over 1 second
 
 # 75-105 degress
-Frame:
+Frames:
+- Frame:
   EndTime: 0.583
   TopLeft: 18, 18
   BottomRight: 35, 35

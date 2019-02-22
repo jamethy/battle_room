@@ -3,8 +3,9 @@ NextAnimation: tiny_man
 
 # hand goes 0 - 180 degress over 1 second
 
+Frames:
 # 0-30 degress
-Frame:
+- Frame:
   EndTime: 0.167
   TopLeft: 36, 18
   BottomRight: 53, 35
@@ -15,7 +16,7 @@ Frame:
     Height: 1.6
 
 # 30-75 degress
-Frame:
+- Frame:
   EndTime: 0.417
   TopLeft: 36, 0
   BottomRight: 53, 17
@@ -26,7 +27,7 @@ Frame:
     Height: 1.6
 
 # 75-105 degress
-Frame:
+- Frame:
   EndTime: 0.583
   TopLeft: 18, 18
   BottomRight: 35, 35
@@ -37,7 +38,7 @@ Frame:
     Height: 1.6
 
 # 105-150 degress
-Frame:
+- Frame:
   EndTime: 0.833
   TopLeft: 18, 0
   BottomRight: 35, 17
@@ -48,7 +49,7 @@ Frame:
     Height: 1.6
 
 # 150-180 degress
-Frame:
+- Frame:
   EndTime: 1
   TopLeft: 0, 0
   BottomRight: 17, 17

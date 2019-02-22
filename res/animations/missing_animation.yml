@@ -1,7 +1,8 @@
 ImageFile: missing_animation.png
 NextAnimtaion: missing_animation
 
-Frame:
+Frames:
+- Frame:
   EndTime: 9999999999
   TopLeft: 0,0
   BottomRight: 255,255

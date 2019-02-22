@@ -1,6 +1,8 @@
 ImageFile: spatial/selected.png
 NextAnimation: spatial/selected.png
-Frame:
+
+Frames:
+- Frame:
   EndTime: 99999
   TopLeft: 0, 0
   BottomRight: 15, 15

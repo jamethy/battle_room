@@ -24,7 +24,7 @@ namespace BattleRoom {
             m_nextAnimation = sub.getValue();
         }
 
-        vector<ResourceDescriptor> subs = settings.getSubResources("Frame");
+        vector<ResourceDescriptor> subs = settings.getSubResource("Frames").getSubResources();
         if (!subs.empty()) {
 
             m_frames.clear();

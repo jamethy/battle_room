@@ -1,7 +1,0 @@
-WorldUpdater: Server
-  Port: 8000
-  Resource: worlds/test_world
-  User: username
-
-ObjectTemplates:
-  Resource: worlds/object_templates

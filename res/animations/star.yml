@@ -1,7 +1,8 @@
 ImageFile: star.png
 NextAnimation: star
 
-Frame:
+Frames:
+- Frame:
   EndTime: 99999999
   TopLeft: 0, 0
   BottomRight: 256, 256

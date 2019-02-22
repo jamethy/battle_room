@@ -1,27 +1,28 @@
 ImageFile: boy_walking.jpg
 NextAnimation: boy_walking
 
-Frame:
+Frames:
+- Frame:
   EndTime: 0.2
   TopLeft: 213, 81
   BottomRight: 1150, 481
   Scale: 1
-Frame:
+- Frame:
   EndTime: 0.4
   TopLeft: 213, 500
   BottomRight: 1150, 900
   Scale: 1
-Frame:
+- Frame:
   EndTime: 0.6
   TopLeft: 213, 944
   BottomRight: 1150, 1344
   Scale: 1
-Frame:
+- Frame:
   EndTime: 0.8
   TopLeft: 213, 1344
   BottomRight: 1150, 1744
   Scale: 1
-Frame:
+- Frame:
   EndTime: 1.0
   TopLeft: 213, 1780
   BottomRight: 1150, 2180

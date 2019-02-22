@@ -1,7 +1,8 @@
 ImageFile: cheap_player.png
 NextAnimation: player_flying
 
-Frame:
+Frames:
+- Frame:
   EndTime: 1
   TopLeft: 26, 18
   BottomRight: 63, 99
@@ -10,7 +11,7 @@ Frame:
     Type: Box
     Width: 1.81
     Height: 0.82
-Frame:
+- Frame:
   EndTime: 2
   TopLeft: 29, 119
   BottomRight: 60, 202

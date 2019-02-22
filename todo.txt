@@ -7,16 +7,12 @@ Running ToDo List
 For full program
 
     add overlays
-        jump charge
     camera
         move on edges
     gameinterface
-        select my player
         select object (to defend, attack, etc)
         select group of players
         select point
-
-    add clone to game object for templates
 
     fix background bounds
     smart camera
@@ -24,7 +20,6 @@ For full program
     Add speed to animations
     Move object intersection to testable code
     Create an exception scheme
-    Add saving configs
     path tracing for high speed intersection
 
 Maybe for fun
@@ -34,10 +29,7 @@ Maybe for fun
         Records times globally
         Track FPS and rate of other functions
     Add a cleanup file paths function in file utils.
-    Split up common somehow
     use menus to spawn objects (map creator)
-
-Look into blender or other program
 
 Persistent to do
     Look for // TODO in the code

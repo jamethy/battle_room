@@ -1,7 +1,8 @@
 ImageFile: bullet.png
 NextAnimation: bullet
 
-Frame:
+Frames:
+- Frame:
   EndTime: 0.2
   TopLeft: 0, 0
   BottomRight: 20,50
@@ -10,7 +11,7 @@ Frame:
     Type: Box
     Width: 0.45
     Height: 0.15
-Frame:
+- Frame:
   EndTime: 0.4
   TopLeft: 20,0
   BottomRight: 40,50
@@ -19,7 +20,7 @@ Frame:
     Type: Box
     Width: 0.45
     Height: 0.15
-Frame:
+- Frame:
   EndTime: 0.6
   TopLeft: 40,0
   BottomRight: 60,50
