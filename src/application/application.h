@@ -64,6 +64,8 @@ namespace BattleRoom {
         // add window using settings - and adds to m_viewMap
         void addWindow(ResourceDescriptor settings);
 
+        void addInterface(ResourceDescriptor settings);
+
         // add view using settings to the window with given uniqueId
         void addViewTo(UniqueId windowId, ResourceDescriptor settings);
 

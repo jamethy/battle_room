@@ -1,17 +1,18 @@
-Object:
+ObjectTemplates:
+- Object:
   Animation: star
   Mass: 100
   Static: true
 
-Player:
+- Player:
   Animation: man_0
   Mass: 80
 
-Ball:
+- Ball:
   Animation: ball
   Mass: 10
 
-Bullet:
+- Bullet:
   Animation: bullet
   Mass: 0.0001
 

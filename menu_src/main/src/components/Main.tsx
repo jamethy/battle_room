@@ -67,48 +67,20 @@ export class Main extends React.Component<MainProps, MainState> {
                     label: "Play",
                     onClick: () => {
                         postResource({
-                            key: "WorldUpdater",
-                            value: "Server",
-                            subs: [
+                            worldUpdater: {
+                                type: "Server",
+                                resource: "worlds/test_world",
+                                user: "username",
+                            },
+                            interfaces: [
                                 {
-                                    key: "Type",
-                                    value: "Server"
-                                },
-                                {
-                                    key: "Resource",
-                                    value: "worlds/test_world",
-                                },
-                                {
-                                    key: "User",
-                                    value: "username",
-                                },
-                            ]
-                        });
-                        postResource({
-                            key: "Interface",
-                            value: "Game",
-                            subs: [
-                                {
-                                    key: "Type",
-                                    value: "Game"
-                                },
-                                {
-                                    key: "Window",
-                                    value: "mainWindow",
-                                },
-                                {
-                                    key: "Layer",
-                                    value: 10,
-                                },
-                                {
-                                    key: "Camera",
-                                    value: "Pyramid",
-                                },
-                                {
-                                    key: "Url",
-                                    value: "menus/game_elements.html",
-                                },
-                            ]
+                                    type: "Game",
+                                    window: "mainWindow",
+                                    layer: 10,
+                                    camera: "Pyramid",
+                                    url: "menus/game_elements.html"
+                                }
+                            ],
                         });
                         closeMenu();
                     },

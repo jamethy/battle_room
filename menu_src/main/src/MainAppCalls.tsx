@@ -7,10 +7,23 @@ interface Request {
     body?: Object;
 }
 
+interface WorldUpdater {
+    type: "Server";
+    user: string;
+    resource?: string;
+}
+
+interface Interface {
+    type: "Game" | "Menu";
+    window: string;
+    layer?: number;
+    url?: string;
+    camera?: "Pyramid";
+}
+
 interface Resource {
-    key: string;
-    value?: string | number | boolean;
-    subs?: Resource[];
+    worldUpdater?: WorldUpdater;
+    interfaces?: Interface[];
 }
 
 let appCall = function (request: Request,

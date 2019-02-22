@@ -146,12 +146,12 @@ namespace BattleRoom {
         m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings.getSubResource("WorldUpdater"));
 
         // Create the windows for displaying - including view/camera setup in each
-        for (const ResourceDescriptor &window : settings.getSubResources("Window")) {
-            addResource(window);
+        for (const ResourceDescriptor &window : settings.getSubResource("Windows").getSubResources()) {
+            addWindow(window);
         }
 
-        for (const ResourceDescriptor &interface : settings.getSubResources("Interface")) {
-            addResource(interface);
+        for (const ResourceDescriptor &interface : settings.getSubResource("Interfaces").getSubResources()) {
+            addInterface(interface);
         }
     }
 
@@ -226,12 +226,7 @@ namespace BattleRoom {
             addWindow(settings);
 
         } else if (keyMatch("Interface", settings.getKey())) {
-
-            ResourceDescriptor sub = settings.getSubResource("Window");
-            DisplayWindow *window = findWindow(m_windows, sub.getValue());
-            if (window) {
-                addViewTo(window->getUniqueId(), settings);
-            }
+            addInterface(settings);
 
         } else if (keyMatch("WorldUpdater", settings.getKey())) {
             m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings);
@@ -332,6 +327,16 @@ namespace BattleRoom {
             }
         }
         return false;
+    }
+
+    void Application::addInterface(ResourceDescriptor settings) {
+        ResourceDescriptor sub = settings.getSubResource("Window");
+        DisplayWindow *window = findWindow(m_windows, sub.getValue());
+        if (window) {
+            addViewTo(window->getUniqueId(), settings);
+        } else {
+            Log::error("Window ", sub.getValue(), " not found!");
+        }
     }
 
     void Application::addWindow(ResourceDescriptor settings) {

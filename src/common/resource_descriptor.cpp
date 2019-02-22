@@ -258,13 +258,19 @@ namespace BattleRoom {
                 if (isNotEmpty(nextLine)) {
 
                     // if the next line is a sub of this one
-                    if (getLevel(nextLine) > getLevel(firstLine)) {
+                    int nextLevel = getLevel(nextLine);
+                    int thisLevel = getLevel(firstLine);
+                    if (nextLevel == thisLevel && parseOutIfArrayValue(nextLine) && !isArrayValue()) {
+                        ResourceDescriptor sub;
+                        sub.fillFromInput(lines, start);
+                        sub.emplaceSubResource("Type", sub.getKey());
+                        subs.push_back(sub);
+                    } else if (nextLevel > thisLevel) {
                         ResourceDescriptor sub;
                         sub.fillFromInput(lines, start);
                         subs.push_back(sub);
-                    }
-                        // else, undo iteration and let the upper layer handle the next line
-                    else {
+
+                    } else { // else, undo iteration and let the upper layer handle the next line
                         --start;
                         break;
                     }
@@ -279,11 +285,13 @@ namespace BattleRoom {
                 for (auto &sub : subs) {
                     if (sub.isArrayValue() != isArray) {
                         Log::error("Mismatch of array values and key-values in ", getKey());
+                        // TODO throw error?
                     }
                     keySet.emplace(toLower(sub.getKey()));
                 }
                 if (!isArray && keySet.size() != subs.size()) {
                     Log::error("Non-unique keys in ", getKey());
+                    // TODO throw error?
                 }
             }
 

@@ -24,7 +24,7 @@ namespace BattleRoom {
             m_gameTime = toSeconds(sub.getValue());
         }
 
-        auto objects = ObjectFactory::getGameObjects(settings);
+        auto objects = ObjectFactory::getGameObjects(settings.getSubResource("Objects"));
         std::move(objects.begin(), objects.end(), std::back_inserter(m_gameObjects));
     }
 

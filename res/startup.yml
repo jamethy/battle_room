@@ -1,7 +1,20 @@
-Window:
-  Name: mainWindow
-  Width: 1500
-  Height: 1000
+Windows:
+  Window:
+    Name: mainWindow
+    Width: 1500
+    Height: 1000
+
+## must go after windows
+Interfaces:
+  - Interface:
+    Type: Menu
+    Window: mainWindow
+    Url: menus/main.html
+#  - Interface:
+#    Type: Game
+#    Window: mainWindow
+#    Layer: 10
+#    Camera: Pyramid
 
 #WorldUpdater:
 #  Type: Server
@@ -9,16 +22,4 @@ Window:
 #  Resource: worlds/test_world
 #  User: username
 
-#Interface:
-#  Type: Game
-#  Window: mainWindow
-#  Layer: 10
-#  Camera: Pyramid
-
-Interface:
-  Type: Menu
-  Window: mainWindow
-  Url: menus/main.html
-
-ObjectTemplates:
-  Resource: worlds/object_templates
+Resource: worlds/object_templates

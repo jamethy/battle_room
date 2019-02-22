@@ -25,7 +25,7 @@ namespace BattleRoom {
                     displayWindow->getHeight()
             ));
         } else {
-            Log::error("Unrecgonized interface type: ", interfaceType);
+            Log::error("Unrecognized interface type: ", interfaceType);
             return nullptr;
             // TODO create a blank interface
         }
