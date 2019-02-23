@@ -172,7 +172,7 @@ add_executable(battleroom
         world/world.h
         world/world_updater_factory.cpp
         world/world_updater_factory.h
-        )
+        networking/laggy_client.cpp networking/laggy_client.h)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 target_include_directories(${BATTLEROOM_TARGET} SYSTEM PUBLIC ${CEF_INCLUDE_PATH}) # the SYSTEM ignores all the warnings

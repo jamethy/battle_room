@@ -15,6 +15,8 @@ namespace BattleRoom {
             Command();
             Command(CommandType type, UniqueId target, UniqueId commander, Vector2D point);
 
+            std::string toString() const;
+
             // getters and setters
             CommandType getType() const;
             UniqueId getTarget() const;

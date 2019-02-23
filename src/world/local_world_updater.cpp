@@ -3,6 +3,7 @@
 #include "world/alter_world.h"
 #include "world/object_factory.h"
 #include "world/player.h"
+#include "command_receiver.h"
 
 #include <algorithm>
 
@@ -28,7 +29,7 @@ namespace BattleRoom {
     void worldUpdaterFunction(LocalUpdatingWorld &world, bool &keepUpdating, LocalWorldUpdater &updater) {
 
         while (keepUpdating) {
-            world.update();
+            world.update(CommandReceiver::getAndClearCommands());
             QueryWorld::updateCopyWorld(world);
             updater.afterUpdate();
         }

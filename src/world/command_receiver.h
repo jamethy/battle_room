@@ -15,6 +15,8 @@ namespace BattleRoom {
 
         static std::vector<Command> getAndClearCommands();
 
+        static std::vector<Command> getAndKeepCommands();
+
     }; // CommandReceiver class
 } // BattleRoom namespace
 #endif // BATTLE_ROOM_COMMAND_RECEIVER_H

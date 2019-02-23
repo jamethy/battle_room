@@ -1,3 +1,4 @@
+#include <networking/laggy_client.h>
 #include "networking/laggy_server.h"
 #include "world/world_updater_factory.h"
 #include "world/local_world_updater.h"
@@ -21,6 +22,10 @@ namespace BattleRoom {
 
         } else if (keyMatch("Client", type)) {
             return UniqueWorldUpdater(new SdlClient(settings));
+
+        } else if (keyMatch("LaggyClient", type)) {
+            return UniqueWorldUpdater(new LaggyClient(settings));
+
         } else {
             return createEmptyUpdater();
         }

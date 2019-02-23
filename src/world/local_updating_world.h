@@ -20,7 +20,7 @@ namespace BattleRoom {
          * Update everything in the world. This will iterate the time
          * and updating everything else accordingly.
          */
-        void update();
+        void update(std::vector<Command> commands);
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;

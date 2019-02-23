@@ -1,3 +1,4 @@
+#include <common/logger.h>
 #include "networking/client_connection.h"
 #include "world/query_world.h"
 #include "world/command_receiver.h"
@@ -7,11 +8,41 @@ namespace BattleRoom {
 
         while (keepUpdating) {
             worldMutex.lock();
-            world.update();
+            world.update(CommandReceiver::getAndKeepCommands());
             worldMutex.unlock();
             QueryWorld::updateCopyWorld(world);
 //            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
+    }
+
+    void commandStreamFunction(bool &keepUpdating, ClientConnection &client) {
+
+        BinaryStream commandStream(400);
+        while (keepUpdating) {
+            const auto commands = CommandReceiver::getAndClearCommands();
+
+            if (!commands.empty()) {
+
+                commandStream.reset();
+                commandStream.writeInt(static_cast<int>(commands.size()));
+
+                for (const auto &cmd : commands) {
+                    cmd.serialize(commandStream);
+                    if (cmd.getType() != Aim) {
+                        Log::debug("Sending command ", cmd.toString());
+                    }
+                }
+
+                Message msg;
+                msg.setMessageType(MessageType::PostCommandsRequest);
+
+                client.sendMessage(msg, commandStream);
+            } else {
+                // just wait a bit for some commands to come in
+                std::this_thread::sleep_for(std::chrono::milliseconds(20));
+            }
+        }
+
     }
 
     ClientConnection::ClientConnection() :
@@ -25,6 +56,10 @@ namespace BattleRoom {
                                         std::ref(m_keepUpdating),
                                         std::ref(m_worldMutex)
             );
+            m_commandThread = std::thread(commandStreamFunction,
+                                          std::ref(m_keepUpdating),
+                                          std::ref(*this)
+            );
         }
         return true;
     }
@@ -33,6 +68,9 @@ namespace BattleRoom {
         m_keepUpdating = false; //TODO make this an atomic boolean
         if (m_worldThread.joinable()) {
             m_worldThread.join();
+        }
+        if (m_commandThread.joinable()) {
+            m_commandThread.join();
         }
     }
 
@@ -52,26 +90,6 @@ namespace BattleRoom {
             QueryWorld::setClientId(user.getUniqueId());
         }
 
-    }
-
-    void ClientConnection::clientUpdate() {
-
-        const auto commands = CommandReceiver::getAndClearCommands();
-
-        if (!commands.empty()) {
-
-            m_commandStream.reset();
-            m_commandStream.writeInt(static_cast<int>(commands.size()));
-
-            for (const auto &cmd : commands) {
-                cmd.serialize(m_commandStream);
-            }
-
-            Message msg;
-            msg.setMessageType(MessageType::PostCommandsRequest);
-
-            sendMessage(msg, m_commandStream);
-        }
     }
 
     void ClientConnection::registerUser(User user) {

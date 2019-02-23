@@ -147,12 +147,12 @@ namespace BattleRoom {
         }
     }
 
-    void LocalUpdatingWorld::update() {
+    void LocalUpdatingWorld::update(vector<Command> commands) {
 
         std::vector<GameObject*> addedObjects;
 
         // get user/ai input
-        for (auto& cmd : CommandReceiver::getAndClearCommands()) {
+        for (auto& cmd : commands) {
             for (const auto& obj : m_gameObjects) {
                 if (obj->interpretCommand(cmd)) {
                     std::vector<GameObject*> objects = obj->getAddedObjects();

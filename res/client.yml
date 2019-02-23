@@ -1,7 +1,8 @@
 User: username
 
 WorldUpdater:
-  Type: Client
+  Type: LaggyClient
+  Lag: 0
   Host: localhost
   Port: 8000
 
@@ -22,6 +23,7 @@ Interfaces:
   Type: Menu
   Window: mainWindow
   Url: menus/main.html
+  IsShowing: false
 
 Resource: worlds/object_templates
 

@@ -21,8 +21,6 @@ namespace BattleRoom {
         // destructor
         ~QueryWorldUpdater() override;
 
-        virtual void clientUpdate();
-
         virtual bool start();
 
         virtual void registerUser(User user);

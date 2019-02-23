@@ -1,4 +1,6 @@
 #include "world/command.h"
+#include "command.h"
+
 
 namespace BattleRoom {
 
@@ -59,6 +61,37 @@ namespace BattleRoom {
         cmd.m_commander = UniqueId::deserialize(bs);
         cmd.m_point = Vector2D::deserialize(bs);
         return cmd;
+    }
+
+    std::string Command::toString() const {
+        std::string message = m_commander.toString() + ": ";
+        switch (m_type) {
+            case Aim:
+                message += "Aim: [" + m_point.toString() + "]";
+                break;
+            case ShootCharge:
+                message += "ShootCharge";
+                break;
+            case ShootRelease:
+                message += "ShootRelease";
+                break;
+            case JumpCharge:
+                message += "JumpCharge";
+                break;
+            case JumpRelease:
+                message += "JumpRelease";
+                break;
+            case Freeze:
+                message += "Freeze";
+                break;
+            case Unfreeze:
+                message += "Unfreeze";
+                break;
+            case Invalid:
+                message += "Invalid";
+                break;
+        }
+        return message;
     }
 
 } // BattleRoom namespace

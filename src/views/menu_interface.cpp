@@ -23,6 +23,11 @@ namespace BattleRoom {
             url = sub.getValue();
             m_htmlMenu->navigateTo(url);
         }
+
+        sub = settings.getSubResource("IsShowing");
+        if (keyMatch("false", sub.getValue())) {
+            m_htmlMenu->hide();
+        }
     }
 
     ResourceDescriptor MenuInterface::getSettings() const {

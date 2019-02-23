@@ -5,6 +5,9 @@
 
 namespace BattleRoom {
 
+    /**
+     * Extension of SDL Server that simulates a laggy server where each request takes a long time to process
+     */
     class LaggyServer : public SdlServer {
 
     public:

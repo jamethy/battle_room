@@ -1,3 +1,4 @@
+#include <common/logger.h>
 #include "networking/server_connection.h"
 #include "world/query_world.h"
 #include "world/command_receiver.h"
@@ -32,6 +33,9 @@ namespace BattleRoom {
             std::vector<Command> commands(static_cast<unsigned long>(count));
             for (int i = 0; i < count; ++i) {
                 commands[i] = Command::deserialize(body);
+                if (commands[i].getType() != Aim) {
+                    Log::debug(commands[i].toString());
+                }
             }
             CommandReceiver::addCommands(commands);
 

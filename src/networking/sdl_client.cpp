@@ -20,7 +20,7 @@ namespace BattleRoom {
         BinaryStream dataStream(10000);
 
         while (client.keepReceiving()) {
-            if (SDLNet_CheckSockets(socketSet, 500) > 0 && SDLNet_SocketReady(client.getSocket())) {
+            if (SDLNet_CheckSockets(socketSet, 100) > 0 && SDLNet_SocketReady(client.getSocket())) {
 
                 Message message;
                 if (sdlReceiveTCPMessage(message, messageStream, dataStream, client.getSocket()) > 0) {

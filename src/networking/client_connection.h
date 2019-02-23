@@ -29,14 +29,12 @@ namespace BattleRoom {
 
         virtual void sendMessage(Message &message, BinaryStream &bs) = 0;
 
-        void handleMessage(Message &message, BinaryStream &body);
+        virtual void handleMessage(Message &message, BinaryStream &body);
 
         // inherited
         void applySettings(ResourceDescriptor settings) override;
 
         ResourceDescriptor getSettings() const override;
-
-        void clientUpdate() override;
 
         void registerUser(User user) override;
 
@@ -47,6 +45,7 @@ namespace BattleRoom {
         LocalUpdatingWorld m_world; ///< World that updates itself
         std::mutex m_worldMutex;
         std::thread m_worldThread; ///< Thread to update world on
+        std::thread m_commandThread; ///< Thread to update world on
         bool m_keepUpdating; ///< Set to false when ready to destroy
 
     }; // Client class

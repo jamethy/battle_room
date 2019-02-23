@@ -16,9 +16,6 @@ namespace BattleRoom {
 
     QueryWorldUpdater::~QueryWorldUpdater() = default;
 
-    void QueryWorldUpdater::clientUpdate() {
-    }
-
     void QueryWorldUpdater::registerUser(User user) {
         (void) user; // unused
     }

@@ -1,4 +1,6 @@
 #include "world/command_receiver.h"
+#include "command_receiver.h"
+
 
 #include <mutex>
 
@@ -21,6 +23,14 @@ namespace BattleRoom {
         m_stackLock.lock();
         vector<Command> returnCommands = m_commandStack;
         m_commandStack.clear();
+        m_stackLock.unlock();
+
+        return returnCommands;
+    }
+
+    std::vector<Command> CommandReceiver::getAndKeepCommands() {
+        m_stackLock.lock();
+        vector<Command> returnCommands = m_commandStack;
         m_stackLock.unlock();
 
         return returnCommands;
