@@ -1,0 +1,27 @@
+User: username
+
+WorldUpdater:
+  Type: Client
+  Host: localhost
+  Port: 8000
+
+Windows:
+- Window:
+  Name: mainWindow
+  Width: 1500
+  Height: 1000
+
+Interfaces:
+- Interface: 
+  Type: Game
+  Window: mainWindow
+  Layer: 10
+  Camera: Pyramid
+  Url: menus/game_elements.html
+- Interface:
+  Type: Menu
+  Window: mainWindow
+  Url: menus/main.html
+
+Resource: worlds/object_templates
+

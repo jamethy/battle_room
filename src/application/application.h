@@ -80,6 +80,8 @@ namespace BattleRoom {
 
         UniqueWorldUpdater m_worldUpdater; ///< query world updater
 
+        User m_user;
+
     }; // GameInterface class
 } // BattleRoom namespace
 #endif // BATTLE_ROOM_APPLICATION_H

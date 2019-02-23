@@ -17,7 +17,7 @@ namespace BattleRoom {
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(100);
 
-        Log::info("Server listening");
+        Log::info("Server listening on port ", server.m_port);
         server.m_keepReceiving = true;
         while (server.m_keepReceiving) {
 
@@ -187,11 +187,7 @@ namespace BattleRoom {
 
     ResourceDescriptor SdlServer::getSettings() const {
         auto rd = ServerConnection::getSettings();
-        auto subs = rd.getSubResources();
-
-        subs.emplace_back("Port", std::to_string(m_port));
-
-        rd.setSubResources(subs);
+        rd.emplaceSubResource("Port", std::to_string(m_port));
         return rd;
     }
 } // BattleRoom namespace

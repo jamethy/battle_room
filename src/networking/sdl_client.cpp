@@ -9,7 +9,7 @@ namespace BattleRoom {
     void listenLoop(SdlClient &client) {
 
         SDLNet_SocketSet socketSet = SDLNet_AllocSocketSet(1);
-        if (SDLNet_TCP_AddSocket(socketSet, client.m_socket) == -1) {
+        if (SDLNet_TCP_AddSocket(socketSet, client.getSocket()) == -1) {
             Log::error("SDLNet_TCP_AddSocket: ", SDL_GetError());
             return;
         }
@@ -19,11 +19,11 @@ namespace BattleRoom {
         BinaryStream messageStream(Message::Size);
         BinaryStream dataStream(10000);
 
-        while (client.m_keepReceiving) {
-            if (SDLNet_CheckSockets(socketSet, 500) > 0 && SDLNet_SocketReady(client.m_socket)) {
+        while (client.keepReceiving()) {
+            if (SDLNet_CheckSockets(socketSet, 500) > 0 && SDLNet_SocketReady(client.getSocket())) {
 
                 Message message;
-                if (sdlReceiveTCPMessage(message, messageStream, dataStream, client.m_socket) > 0) {
+                if (sdlReceiveTCPMessage(message, messageStream, dataStream, client.getSocket()) > 0) {
                     client.handleMessage(message, dataStream);
                 }
             }
@@ -32,7 +32,10 @@ namespace BattleRoom {
 
 // constructors
     SdlClient::SdlClient(ResourceDescriptor settings) :
-            m_keepReceiving(false) {
+            m_keepReceiving(false),
+            m_socket(nullptr),
+            m_host(""),
+            m_port(0) {
         applySettings(std::move(settings));
     }
 
@@ -117,6 +120,14 @@ namespace BattleRoom {
 
     bool SdlClient::start() {
         return ClientConnection::start() && connectToServer(m_host, m_port);
+    }
+
+    bool SdlClient::keepReceiving() const {
+        return m_keepReceiving;
+    }
+
+    TCPsocket SdlClient::getSocket() const {
+        return m_socket;
     }
 
 } // BattleRoom namespace

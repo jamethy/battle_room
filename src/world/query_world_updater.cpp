@@ -4,18 +4,13 @@
 
 namespace BattleRoom {
 
-    void QueryWorldUpdater::applySettings(ResourceDescriptor settings) { 
-        ResourceDescriptor sub = settings.getSubResource("User");
-        if (isNotEmpty(sub.getValue())) {
-            registerUser(User(sub));
-        }
+    void QueryWorldUpdater::applySettings(ResourceDescriptor settings) {
+        (void) settings; // unused
     }
 
     ResourceDescriptor QueryWorldUpdater::getSettings() const {
-        ResourceDescriptor rd("WorldUpdater", "Empty");
-        std::vector<ResourceDescriptor> subs = {};
-        subs.emplace_back("UniqueId", m_uniqueId.toString());
-        rd.setSubResources(subs);
+        ResourceDescriptor rd("WorldUpdater", "");
+        rd.emplaceSubResource("UniqueId", m_uniqueId.toString());
         return rd;
     }
 
@@ -27,6 +22,7 @@ namespace BattleRoom {
     void QueryWorldUpdater::registerUser(User user) {
         (void) user; // unused
     }
+
     void QueryWorldUpdater::unregisterUser(UniqueId userId) {
         (void) userId; // unused
     }

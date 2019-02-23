@@ -20,6 +20,10 @@ namespace BattleRoom {
         // constructors
         explicit SdlClient(ResourceDescriptor settings);
 
+        bool keepReceiving() const;
+
+        TCPsocket getSocket() const;
+
         ~SdlClient() override;
 
         bool start() override;
@@ -31,6 +35,8 @@ namespace BattleRoom {
         void applySettings(ResourceDescriptor settings) override;
 
         ResourceDescriptor getSettings() const override;
+
+    private:
 
         std::thread m_receivingThread; ///< Thread to update world on
         bool m_keepReceiving; ///< Set to false when ready to destroy

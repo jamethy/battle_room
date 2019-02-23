@@ -7,6 +7,8 @@ namespace BattleRoom {
 
     class LaggyServer : public SdlServer {
 
+    public:
+
         // constructors
         explicit LaggyServer(ResourceDescriptor settings);
 
@@ -17,6 +19,10 @@ namespace BattleRoom {
         void applySettings(ResourceDescriptor settings) override;
 
         ResourceDescriptor getSettings() const override;
+
+    private:
+
+        int m_simulatedLag; // ms
 
     }; // LaggyServer class
 

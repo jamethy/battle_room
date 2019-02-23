@@ -1,0 +1,8 @@
+WorldUpdater:
+  Type: LaggyServer
+  Lag: 500
+  Port: 8000
+  Resource: worlds/test_world
+  User: username
+
+Resource: worlds/object_templates

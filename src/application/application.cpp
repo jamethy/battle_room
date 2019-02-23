@@ -139,6 +139,11 @@ namespace BattleRoom {
 
     void Application::applySettings(ResourceDescriptor settings) {
 
+        ResourceDescriptor sub = settings.getSubResource("User");
+        if (isNotEmpty(sub.getValue())) {
+            m_user = User(sub);
+        }
+
         ObjectFactory::applySettings(settings.getSubResource("ObjectTemplates"));
 
         // Create the world updater - empty if startup menu, or a server connection,
@@ -146,6 +151,9 @@ namespace BattleRoom {
         m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings.getSubResource("WorldUpdater"));
         if (!m_worldUpdater->start()) {
             Log::fatal("Unable to start world updater...");
+        }
+        if (m_user.getUniqueId().isValid()) {
+            m_worldUpdater->registerUser(m_user);
         }
 
         // Create the windows for displaying - including view/camera setup in each
@@ -235,6 +243,9 @@ namespace BattleRoom {
             m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings);
             if (!m_worldUpdater->start()) {
                 Log::fatal("Unable to start world updater...");
+            }
+            if (m_user.getUniqueId().isValid()) {
+                m_worldUpdater->registerUser(m_user);
             }
         }
     }
