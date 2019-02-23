@@ -87,6 +87,8 @@ add_executable(battleroom
         display_window/texture_manager.h
         networking/client_connection.cpp
         networking/client_connection.h
+        networking/laggy_server.cpp
+        networking/laggy_server.h
         networking/network_message_handler.h
         networking/sdl_client.cpp
         networking/sdl_client.h

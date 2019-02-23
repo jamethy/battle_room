@@ -22,6 +22,8 @@ namespace BattleRoom {
 
         ~SdlClient() override;
 
+        bool start() override;
+
         bool connectToServer(std::string host, int port) override;
 
         void sendMessage(Message &message, BinaryStream &bs) override;

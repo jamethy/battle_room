@@ -13,9 +13,9 @@ namespace BattleRoom {
 
     int sdlWrite(TCPsocket socket, BinaryStream& bs);
 
-    int sdlSendMessage(Message& message, BinaryStream& messageStream, BinaryStream& body, TCPsocket socket);
+    int sdlSendTCPMessage(Message &message, BinaryStream &messageStream, BinaryStream &body, TCPsocket socket);
 
-    int sdlReceiveMessage(Message& message, BinaryStream& messageStream, BinaryStream& dataStream, TCPsocket socket);
+    int sdlReceiveTCPMessage(Message &message, BinaryStream &messageStream, BinaryStream &dataStream, TCPsocket socket);
 
 } // BattleRoom namespace
 #endif // BATTLE_ROOM_SDL_NETWORK_HELPER_H

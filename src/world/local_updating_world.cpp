@@ -47,11 +47,6 @@ namespace BattleRoom {
     // constructors
     LocalUpdatingWorld::LocalUpdatingWorld() = default;
 
-    LocalUpdatingWorld::LocalUpdatingWorld(ResourceDescriptor settings)
-            : LocalUpdatingWorld() {
-        applySettings(std::move(settings));
-    }
-
     std::unordered_map<GameObject *, long> countObjectIntersections(vector<ObjectIntersection> intersections) {
         std::unordered_map<GameObject *, long> counts;
         for (ObjectIntersection &intersection : intersections) {
@@ -197,7 +192,7 @@ namespace BattleRoom {
         } 
 
         // delete destroyed
-        for (vector<UniqueGameObject>::iterator it = m_gameObjects.begin(); it != m_gameObjects.end();) {
+        for (auto it = m_gameObjects.begin(); it != m_gameObjects.end();) {
             if ((*it)->destroy()) {
                 it = m_gameObjects.erase(it);
             } else {

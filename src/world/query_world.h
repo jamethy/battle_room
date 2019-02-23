@@ -5,6 +5,10 @@
 
 namespace BattleRoom {
 
+    /**
+     * Singleton layer on top of static copies of the world that can be queried
+     * with thread safety.
+     */
     class QueryWorld {
 
     public:
@@ -15,11 +19,13 @@ namespace BattleRoom {
          */
         static void updateBuffer();
 
-        /*
+        /**
          * \brief Copies the parameter into the query world
          * \param world World to copy into the query worldt
          */
         static void updateCopyWorld(const World &world);
+
+        static void copyTo(World *world);
 
         static void serialize(BinaryStream& bs);
 

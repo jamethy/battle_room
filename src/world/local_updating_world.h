@@ -6,10 +6,8 @@
 
 namespace BattleRoom {
 
-    class AlterWorld;
-
     /**
-     * Game world - includes all the objects, the time, and meta data
+     * Local updating world - contains the world and all the logic to update it
      */
     class LocalUpdatingWorld : public World {
 
@@ -17,8 +15,6 @@ namespace BattleRoom {
 
         // constructors
         LocalUpdatingWorld();
-
-        explicit LocalUpdatingWorld(ResourceDescriptor settings);
 
         /**
          * Update everything in the world. This will iterate the time
@@ -35,8 +31,6 @@ namespace BattleRoom {
 
         GameTime m_timeController; // Game time object
         UniqueBoundary m_boundary = nullptr; // limits of the world
-
-        friend class AlterWorld;
 
     }; // LocalUpdatingWorld class
 } // BattleRoom namespace

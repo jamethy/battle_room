@@ -25,6 +25,12 @@ namespace BattleRoom {
         m_copyWorldLock.unlock();
     }
 
+    void QueryWorld::copyTo(World *world) {
+        m_queryWorldLock.lock();
+        world->copy(m_queryWorld);
+        m_queryWorldLock.unlock();
+    }
+
     const std::vector<UniqueGameObject>& QueryWorld::getAllGameObjects() {
         return m_queryWorld.getAllGameObjects();
     }

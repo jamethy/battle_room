@@ -8,11 +8,11 @@
 
 namespace BattleRoom {
 
-/**
- * Implmentation of queryWorldUpdater for locally run or hosted games
- * Updates a LocalUpdatingWorld on a thread and copies that to the QueryWorld
- * Gets commands directly from CommandReciever
- */
+    /**
+     * Implementation of queryWorldUpdater for locally run or hosted games
+     * Updates a LocalUpdatingWorld on a thread and copies that to the QueryWorld
+     * Gets commands directly from CommandReceiver
+     */
     class LocalWorldUpdater : public QueryWorldUpdater {
 
     public:
@@ -22,17 +22,18 @@ namespace BattleRoom {
 
         explicit LocalWorldUpdater(ResourceDescriptor settings);
 
-        void start();
-
         ~LocalWorldUpdater() override;
+
+        bool start() override;
 
         virtual void afterUpdate();
 
+
+        // inherited/overridden
         void registerUser(User user) override;
 
         void unregisterUser(UniqueId userId) override;
 
-        // inherited
         void applySettings(ResourceDescriptor settings) override;
 
         ResourceDescriptor getSettings() const override;

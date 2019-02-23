@@ -38,7 +38,7 @@ namespace BattleRoom {
         return sdlWriteInternal(socket, bs, 0, bs.getLength());
     }
 
-    int sdlSendMessage(Message& message, BinaryStream& messageStream, BinaryStream& body, TCPsocket socket) {
+    int sdlSendTCPMessage(Message &message, BinaryStream &messageStream, BinaryStream &body, TCPsocket socket) {
 
         message.setDataSize(body.getLength());
         message.setBodyHash(body.hash());
@@ -76,7 +76,7 @@ namespace BattleRoom {
         return 1;
     }
 
-    int sdlReceiveMessage(Message& message, BinaryStream& messageStream, BinaryStream& dataStream, TCPsocket socket) {
+    int sdlReceiveTCPMessage(Message &message, BinaryStream &messageStream, BinaryStream &dataStream, TCPsocket socket) {
 
         messageStream.reset();
         dataStream.reset();

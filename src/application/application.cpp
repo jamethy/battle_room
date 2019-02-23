@@ -144,6 +144,9 @@ namespace BattleRoom {
         // Create the world updater - empty if startup menu, or a server connection,
         // or a local updater
         m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings.getSubResource("WorldUpdater"));
+        if (!m_worldUpdater->start()) {
+            Log::fatal("Unable to start world updater...");
+        }
 
         // Create the windows for displaying - including view/camera setup in each
         for (const ResourceDescriptor &window : settings.getSubResource("Windows").getSubResources()) {
@@ -230,7 +233,9 @@ namespace BattleRoom {
 
         } else if (keyMatch("WorldUpdater", settings.getKey())) {
             m_worldUpdater = WorldUpdaterFactory::createWorldUpdater(settings);
-
+            if (!m_worldUpdater->start()) {
+                Log::fatal("Unable to start world updater...");
+            }
         }
     }
 

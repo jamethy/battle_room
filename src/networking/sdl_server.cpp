@@ -1,3 +1,5 @@
+#include <utility>
+
 
 #include "networking/sdl_server.h"
 #include "networking/sdl_network_helper.h"
@@ -5,6 +7,8 @@
 
 // temp
 #include "world/query_world.h"
+#include "sdl_server.h"
+
 
 namespace BattleRoom {
 
@@ -57,7 +61,7 @@ namespace BattleRoom {
                     --socketsWithData;
 
                     Message message;
-                    int res = sdlReceiveMessage(message, messageStream, dataStream, clientSocket);
+                    int res = sdlReceiveTCPMessage(message, messageStream, dataStream, clientSocket);
                     if (res <= 0) {
 
                         Log::info("Disconnecting client");
@@ -82,8 +86,7 @@ namespace BattleRoom {
     SdlServer::SdlServer(ResourceDescriptor settings) :
             m_keepReceiving(false) {
         m_clientSockets.clear();
-        applySettings(settings);
-        LocalWorldUpdater::start();
+        applySettings(std::move(settings));
     }
 
     SdlServer::~SdlServer() {
@@ -95,7 +98,10 @@ namespace BattleRoom {
         }
     }
 
-    bool SdlServer::start(int port) {
+    bool SdlServer::start() {
+        if (!LocalWorldUpdater::start()) {
+            return false;
+        }
 
         // connect and stuff
 
@@ -112,7 +118,7 @@ namespace BattleRoom {
         }
 
         IPaddress serverIp;
-        if (SDLNet_ResolveHost(&serverIp, nullptr, static_cast<Uint16>(port)) == -1) {
+        if (SDLNet_ResolveHost(&serverIp, nullptr, static_cast<Uint16>(m_port)) == -1) {
             Log::fatal("SDLNet_ResolveHost: ", SDLNet_GetError());
             return false;
         }
@@ -148,7 +154,7 @@ namespace BattleRoom {
         BinaryStream headerStream(Message::Size);
 
         m_writingLock.lock();
-        sdlSendMessage(message, headerStream, data, m_clientSockets.at(clientId));
+        sdlSendTCPMessage(message, headerStream, data, m_clientSockets.at(clientId));
         m_writingLock.unlock();
     }
 
@@ -174,7 +180,6 @@ namespace BattleRoom {
 
         if (isNotEmpty(portSub.getValue())) {
             m_port = stoi(portSub.getValue());
-            start(m_port);
         }
 
         ServerConnection::applySettings(settings);

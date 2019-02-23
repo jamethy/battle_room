@@ -57,25 +57,23 @@ namespace BattleRoom {
 
     World World::clone() const {
         World world;
-        world.m_gameTime = m_gameTime;
-
-        world.m_gameObjects = std::vector<UniqueGameObject>(m_gameObjects.size());
-        world.m_gameObjects.clear();
-        for (const auto &obj : m_gameObjects) {
-            world.m_gameObjects.push_back(UniqueGameObject(obj->clone()));
-        }
-        world.m_backgroundObjects = std::vector<UniqueDrawableObject>(m_backgroundObjects.size());
-        world.m_backgroundObjects.clear();
-        for (const auto &obj : m_backgroundObjects) {
-            world.m_backgroundObjects.push_back(UniqueDrawableObject(new DrawableObject(*obj)));
-        }
-
+        world.copy(*this);
         return world;
     }
 
-    World::World(ResourceDescriptor settings)
-            : World() {
-        applySettings(std::move(settings));
+    void World::copy(const World &other) {
+        m_gameTime = other.m_gameTime;
+
+        m_gameObjects = std::vector<UniqueGameObject>(other.m_gameObjects.size());
+        m_gameObjects.clear();
+        for (const auto &obj : other.m_gameObjects) {
+            m_gameObjects.push_back(UniqueGameObject(obj->clone()));
+        }
+        m_backgroundObjects = std::vector<UniqueDrawableObject>(other.m_backgroundObjects.size());
+        m_backgroundObjects.clear();
+        for (const auto &obj : other.m_backgroundObjects) {
+            m_backgroundObjects.push_back(UniqueDrawableObject(new DrawableObject(*obj)));
+        }
     }
 
     const vector<UniqueGameObject> &World::getAllGameObjects() const {

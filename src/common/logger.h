@@ -76,6 +76,7 @@ namespace BattleRoom {
             if (m_level <= FATAL) {
                 print("FATAL", t, args...);
             }
+            exit(1);
         }
 
     private:

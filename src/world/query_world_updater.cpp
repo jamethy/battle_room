@@ -1,4 +1,6 @@
 #include "world/query_world_updater.h"
+#include "query_world_updater.h"
+
 
 namespace BattleRoom {
 
@@ -31,5 +33,10 @@ namespace BattleRoom {
 
     const UniqueId QueryWorldUpdater::getUniqueId() const {
         return m_uniqueId;
+    }
+
+    bool QueryWorldUpdater::start() {
+        return true;
+
     }
 } // BattleRoom namespace

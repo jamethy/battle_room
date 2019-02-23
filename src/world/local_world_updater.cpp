@@ -34,7 +34,7 @@ namespace BattleRoom {
         }
     }
 
-    void LocalWorldUpdater::start() {
+    bool LocalWorldUpdater::start() {
         if (!m_keepUpdating) {
             m_keepUpdating = true;
             m_worldThread = std::thread(worldUpdaterFunction,
@@ -43,6 +43,7 @@ namespace BattleRoom {
                                         std::ref(*this)
             );
         }
+        return true;
     }
 
     LocalWorldUpdater::LocalWorldUpdater(ResourceDescriptor settings) :

@@ -27,7 +27,7 @@ namespace BattleRoom {
         void adjustSocketSet();
 
         // inherited
-        bool start(int port) override;
+        bool start() override;
 
         void sendMessage(Message &message, BinaryStream &data, UniqueId clientId) override;
 

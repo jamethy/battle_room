@@ -3,18 +3,48 @@
 #include "world/command_receiver.h"
 
 namespace BattleRoom {
+    void worldUpdaterFunction(LocalUpdatingWorld &world, bool &keepUpdating, std::mutex &worldMutex) {
+
+        while (keepUpdating) {
+            worldMutex.lock();
+            world.update();
+            worldMutex.unlock();
+            QueryWorld::updateCopyWorld(world);
+        }
+    }
 
     ClientConnection::ClientConnection() :
-        m_commandStream(BinaryStream(400))
-    {}
+            m_commandStream(BinaryStream(400)) {}
 
-    void ClientConnection::handleMessage(Message& message, BinaryStream& body) {
+    bool ClientConnection::start() {
+        if (!m_keepUpdating) {
+            m_keepUpdating = true;
+            m_worldThread = std::thread(worldUpdaterFunction,
+                                        std::ref(m_world),
+                                        std::ref(m_keepUpdating),
+                                        std::ref(m_worldMutex)
+            );
+        }
+        return true;
+    }
+
+    ClientConnection::~ClientConnection() {
+        m_keepUpdating = false; //TODO make this an atomic boolean
+        if (m_worldThread.joinable()) {
+            m_worldThread.join();
+        }
+    }
+
+
+    void ClientConnection::handleMessage(Message &message, BinaryStream &body) {
 
         MessageType requestType = message.getMessageType();
 
         if (MessageType::GetWorldResponse == requestType) {
 
-            QueryWorld::updateCopyWorld(World::deserialize(body));
+            m_worldMutex.lock();
+            m_world.copy(World::deserialize(body));
+            m_worldMutex.unlock();
 
         } else if (MessageType::RegisterUserResponse == requestType) {
             User user = User::deserialize(body);
@@ -32,7 +62,7 @@ namespace BattleRoom {
             m_commandStream.reset();
             m_commandStream.writeInt(static_cast<int>(commands.size()));
 
-            for (const auto& cmd : commands) {
+            for (const auto &cmd : commands) {
                 cmd.serialize(m_commandStream);
             }
 

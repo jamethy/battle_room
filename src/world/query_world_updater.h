@@ -9,6 +9,11 @@
 
 namespace BattleRoom {
 
+    /**
+     * Base class for classes that will update a game world.
+     *
+     * Doesn't really update the world at all
+     */
     class QueryWorldUpdater : public Resource {
 
     public:
@@ -17,6 +22,8 @@ namespace BattleRoom {
         ~QueryWorldUpdater() override;
 
         virtual void clientUpdate();
+
+        virtual bool start();
 
         virtual void registerUser(User user);
 

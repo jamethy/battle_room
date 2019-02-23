@@ -1,6 +1,8 @@
 #include "common/logger.h"
 #include "networking/sdl_client.h"
 #include "networking/sdl_network_helper.h"
+#include "sdl_client.h"
+
 
 namespace BattleRoom {
 
@@ -21,7 +23,7 @@ namespace BattleRoom {
             if (SDLNet_CheckSockets(socketSet, 500) > 0 && SDLNet_SocketReady(client.m_socket)) {
 
                 Message message;
-                if (sdlReceiveMessage(message, messageStream, dataStream, client.m_socket) > 0) {
+                if (sdlReceiveTCPMessage(message, messageStream, dataStream, client.m_socket) > 0) {
                     client.handleMessage(message, dataStream);
                 }
             }
@@ -85,7 +87,7 @@ namespace BattleRoom {
         } else {
 
             BinaryStream headerStream(Message::Size);
-            sdlSendMessage(message, headerStream, bs, m_socket);
+            sdlSendTCPMessage(message, headerStream, bs, m_socket);
         }
     }
 
@@ -97,7 +99,6 @@ namespace BattleRoom {
         if (isNotEmpty(hostSub.getValue()) && isNotEmpty(portSub.getValue())) {
             m_host = hostSub.getValue();
             m_port = stoi(portSub.getValue());
-            connectToServer(m_host, m_port);
         }
 
         ClientConnection::applySettings(settings);
@@ -112,6 +113,10 @@ namespace BattleRoom {
 
         rd.setSubResources(subs);
         return rd;
+    }
+
+    bool SdlClient::start() {
+        return ClientConnection::start() && connectToServer(m_host, m_port);
     }
 
 } // BattleRoom namespace

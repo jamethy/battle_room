@@ -2,9 +2,12 @@
 #define BATTLE_ROOM_CLIENT_CONNECTION_H
 
 #include "world/query_world_updater.h"
+#include "world/local_updating_world.h"
 #include "application/message.h"
 
 #include <memory>
+#include <thread>
+#include <mutex>
 
 namespace BattleRoom {
 
@@ -18,7 +21,9 @@ namespace BattleRoom {
         // constructor
         ClientConnection();
 
-        ~ClientConnection() override = default;;
+        ~ClientConnection() override;
+
+        bool start() override;
 
         virtual bool connectToServer(std::string host, int port) = 0;
 
@@ -38,6 +43,11 @@ namespace BattleRoom {
     private:
 
         BinaryStream m_commandStream;
+
+        LocalUpdatingWorld m_world; ///< World that updates itself
+        std::mutex m_worldMutex;
+        std::thread m_worldThread; ///< Thread to update world on
+        bool m_keepUpdating; ///< Set to false when ready to destroy
 
     }; // Client class
 } // BattleRoom namespace

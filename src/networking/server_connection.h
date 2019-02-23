@@ -9,7 +9,7 @@
 namespace BattleRoom {
 
     /**
-     * 
+     * Abstract server connection class that updates local world and helps serve it
      */
     class ServerConnection : public LocalWorldUpdater {
 
@@ -19,13 +19,9 @@ namespace BattleRoom {
 
         ~ServerConnection() override;
 
-        virtual bool start(int port) = 0;
-
         virtual void sendMessage(Message &message, BinaryStream &data, UniqueId clientId) = 0;
 
-        void handleMessage(Message &message, BinaryStream &data, UniqueId clientId);
-
-        void applySettings(ResourceDescriptor settings) override;
+        virtual void handleMessage(Message &message, BinaryStream &data, UniqueId clientId);
 
         ResourceDescriptor getSettings() const override;
 

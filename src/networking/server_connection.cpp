@@ -1,6 +1,8 @@
 #include "networking/server_connection.h"
 #include "world/query_world.h"
 #include "world/command_receiver.h"
+#include "server_connection.h"
+
 
 namespace BattleRoom {
 
@@ -10,7 +12,7 @@ namespace BattleRoom {
         m_worldStream(16000)
     { }
 
-    ServerConnection::~ServerConnection() { }
+    ServerConnection::~ServerConnection() = default;
 
     void ServerConnection::handleMessage(Message& message, BinaryStream& body, UniqueId clientId) {
         m_responseStream.reset();
@@ -48,10 +50,6 @@ namespace BattleRoom {
 
     }
 
-    void ServerConnection::applySettings(ResourceDescriptor settings) {
-        LocalWorldUpdater::applySettings(settings);
-    }
-
     void ServerConnection::afterUpdate() {
 
         LocalWorldUpdater::afterUpdate();
@@ -60,6 +58,7 @@ namespace BattleRoom {
         m_worldStream.reset();
         QueryWorld::serialize(m_worldStream);
 
+        // todo parallelze
         for (const auto& user : m_users) {
             sendMessage(msg, m_worldStream, user.getUniqueId());
         }
